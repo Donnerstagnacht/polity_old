@@ -1,0 +1,110 @@
+<app-wrapper-full-creen-center>
+  <div>
+    <h1 class="text-center">Polity.</h1>
+    <form (ngSubmit)="createAccount()" #createAccountForm = "ngForm" class="form-group" >
+  <div class="flex flex-column">
+    <div class="flex">
+      <p> Registrieren Sie sich für ihr Konto</p>
+    </div>
+    <div class=" flex justify-content-left m-2 p-input-filled form-group">
+      <span class="p-float-label w-full p-input-icon-right">
+        <i class="pi pi-check success-color" [class.hide]="name.invalid"></i>
+        <input
+              required  #name="ngModel"
+              name="name" [(ngModel)]="account.name"
+              pInputText
+              id="name-input" type="text"
+              class="form-control transparent-background w-full">
+        <label for="name-input" >Vor- und Nachname</label>
+        <div [hidden]="name.valid || name.pristine">
+          <small id="name-error" class="p-error block">Nur Buchstaben erlaubt.</small>
+        </div>
+      </span>
+    </div>
+    <div class="flex justify-content-left m-2 p-input-filled form-group">
+      <span class="p-float-label  w-full p-input-icon-right">
+        <i class="pi pi-check success-color" [class.hide]="email.invalid"></i>
+        <input
+              required pattern="[^ @]*@[^ @]*" #email="ngModel"
+              name="email" [(ngModel)]="account.email"
+              pInputText
+              id="email-input" type="email"
+              class="form-control transparent-background w-full">
+          <label for="email-input">Email</label>
+          <div [hidden]="email.valid || email.pristine">
+            <small id="email-error" class="p-error block">Bitte eine gültige Email eingeben.</small>
+          </div>
+          </span>
+    </div>
+    <div class="flex justify-content-left m-2 p-input-filled form-group">
+      <span class="p-float-label  w-full p-input-icon-right">
+        <i class="pi pi-check success-color" [class.hide]="password.invalid"></i>
+        <input
+              required minlength="8" #password="ngModel"
+              name="password" [(ngModel)]="account.password"
+              id="password-input" type="password"
+              pPassword [feedback]="false"
+              class="form-control transparent-background w-full">
+        <label for="password-input">Passwort</label>
+        <div [hidden]="password.valid || password.pristine">
+          <small id="password-error" class="p-error block">Bitte mindestens 8 Zeichen verwenden.</small>
+        </div>
+      </span>
+    </div>
+    <div class="flex justify-content-center w-full">
+        <p class="max-w-20rem text-left w-full"> Durch die Anmeldung akzeptierst du unsere
+          <mark class="curser-pointer" (click)="toggleDataProtection()">Datenschutzbestimmungen
+          </mark> und
+          <mark class="curser-pointer" (click)="toggleTermsAndConditions()">AGBs
+          </mark>.</p>
+    </div>
+    <div class="flex justify-content-center m-2">
+      <button
+             type="submit" [disabled]="!createAccountForm.valid"
+             pButton
+             label="Konto erstellen"
+             class="p-button-raised">
+      </button>
+    </div>
+    <!--<pre>{{createAccountForm.value | json}}</pre>-->
+  </div>
+    </form>
+  </div>
+</app-wrapper-full-creen-center>
+
+
+
+
+<p-dialog [(visible)]="displayDataProtection">
+  <ng-template pTemplate="header">
+    Datenschutzbestimmungen
+  </ng-template>
+  <app-data-protection></app-data-protection>
+  <ng-template pTemplate="footer">
+    <button
+      (click)="displayDataProtection=false"
+      pButton
+      label="OK"
+      class="p-button-raised">
+  </button>
+</ng-template>
+</p-dialog>
+
+<p-dialog header="AGBs" [(visible)]="displayTermsAndConditions">
+  Content
+</p-dialog>
+
+<p-dialog [(visible)]="displayTermsAndConditions">
+  <ng-template pTemplate="header">
+    AGBs
+  </ng-template>
+  <app-terms-and-conditions></app-terms-and-conditions>
+  <ng-template pTemplate="footer">
+    <button
+      (click)="displayTermsAndConditions=false"
+      pButton
+      label="OK"
+      class="p-button-raised">
+    </button>
+  </ng-template>
+</p-dialog>

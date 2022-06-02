@@ -1,0 +1,20 @@
+<p-sidebar
+[(visible)]="display"
+position="bottom"
+[showCloseIcon]="false"
+[modal]="false"
+[style]="{background:'#F9FCFF', height:'inherit'}"
+header = "none"
+class="red">
+  <div *ngIf="loggedIn" class="flex justify-content-around">
+    <button routerLink="/profile" pButton type="button" label="Profil" class="flex align-items-center justify-content-center p-button-text p-button-plain"></button>
+    <button routerLink="/login" pButton type="button" label="Logout" class="flex align-items-center justify-content-center p-button-text p-button-plain"></button>
+  </div>
+
+    <div *ngIf="!loggedIn" class="flex justify-content-around">
+      <a routerLink="/register" >test</a>
+      <button routerLink="/register" pButton type="button" label="Registrieren" class="flex align-items-center justify-content-center p-button-text p-button-plain"></button>
+      <button routerLink="/login" pButton type="button" label="Login" class="flex align-items-center justify-content-center p-button-text p-button-plain"></button>
+      <button routerLink="/über" pButton type="button" label="Über" class="flex align-items-center justify-content-center p-button-text p-button-plain"></button>
+    </div>
+</p-sidebar>

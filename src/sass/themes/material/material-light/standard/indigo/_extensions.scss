@@ -1,0 +1,119 @@
+/* Customizations to the designer theme should be defined here */
+
+/* Generall layout settings*/
+html {
+  font-family: 'Inter';
+  font-size: 16px;
+}
+
+body {
+  margin: 0px;
+}
+
+
+/* custom display helpers */
+.full-screen {
+  height: 100vh;
+  width: 100%;
+}
+
+/*background helpers */
+.horizontalGradient {
+  background-image: $horizontalGradient;
+}
+
+.verticalGradient {
+  background-image: $verticalGradient;
+}
+
+.transparent-background {
+  background-color: transparent!important;
+}
+
+.accent-container {
+  background-color: $accentContainer;
+}
+
+/* validate input styling */
+.p-input-filled .p-inputtext.ng-valid.ng-dirty {
+  border-color: transparent;
+  background-image: linear-gradient(to bottom, $successColor, $successColor), linear-gradient(to bottom, $successColor, $successColor);
+}
+
+.p-float-label > .ng-valid.ng-dirty + label {
+  color: $successColor;
+}
+
+.success-color {
+  color: $successColor!important;
+}
+
+.hide {
+  display: none!important;
+}
+
+/* others */
+mark {
+  background-color: transparent!important;
+  color: $accentColor;
+}
+
+.curser-pointer {
+  cursor: pointer;
+}
+
+/* Component css edit::after */
+
+.p-sidebar-header {
+  display: none!important;
+}
+
+.p-sidebar .p-sidebar-content {
+  padding: 1rem!important;
+}
+
+.p-tabview-nav {
+  justify-content: center;
+}
+
+
+/* unused custome theme variables
+
+$background:#F9FCFF;
+$onBackground:#191C1E;
+
+$surface:#F9FCFF;
+$onSurface:#191C1E;
+
+$surfaceVariant: #F9FCFF;
+$onSurfaceVariant:#41484D;
+
+$neutral-0:#000000;
+$neutral-10:#191C1E;
+$neutral-20:#2E3133;
+$neutral-30:#454749;
+$neutral-40:#5C5F61;
+$neutral-50:#757779;
+$neutral-60:#8F9193;
+$neutral-70:#A9ABAD;
+$neutral-80:#C5C7C9;
+$neutral-90:#E1E2E5;
+$neutral-95:#F0F1F3;
+$neutral-99:#F9FCFF;
+$neutral-100:#FFFFFF;
+
+$neutral-variant-0:#000000;
+$neutral-variant-10:#151D21;
+$neutral-variant-20:#2A3135;
+$neutral-variant-30:#41484D;
+$neutral-variant-40:#5b84a2;
+$neutral-variant-50:#71787D;
+$neutral-variant-60:#8B9298;
+$neutral-variant-70:#A5ACB2;
+$neutral-variant-80:#C0C7CD;
+$neutral-variant-90:#DCE3E9;
+$neutral-variant-95:#EBF2F8;
+$neutral-variant-99:#F9FCFF;
+$neutral-variant-100:#FFFFFF;
+
+*/

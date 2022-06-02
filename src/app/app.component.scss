@@ -1,0 +1,15 @@
+app-menu-bar-left {
+  display: none;
+}
+
+@media only screen and (min-width: 1024px) {
+  app-menu-bar-bottom {
+    display: none;
+  }
+}
+
+@media only screen and (min-width: 1024px) {
+  app-menu-bar-left {
+    display: block;
+  }
+}

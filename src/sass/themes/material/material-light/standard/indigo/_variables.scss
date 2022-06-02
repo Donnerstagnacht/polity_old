@@ -1,0 +1,21 @@
+/*most important Material Design variables */
+$primaryColor:#006689 !default;
+$primaryTextColor:#ffffff !default;
+$accentColor:#934170 !default;
+$accentTextColor:#ffffff !default;
+
+$thirdColor: #96480C;
+$thirdColorTextColor: #ffffff;
+
+$primaryContainer:#BFE8FF;
+$accentContainer:#FFD8EA;
+$tertiaryContainer: #FFDBC6;
+
+$outline: #71787D;
+
+$horizontalGradient:linear-gradient(90deg, rgba(191, 232, 255, 0.81) 0%, rgba(255, 174, 216, 0.81) 100%);
+$verticalGradient:linear-gradient(180deg, #FFD8EA 0%, #BFE8FF 100%);
+
+$successColor:#689F38;
+
+@import '../../variables';

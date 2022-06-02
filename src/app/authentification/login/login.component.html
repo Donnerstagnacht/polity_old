@@ -1,0 +1,51 @@
+<app-wrapper-full-creen-center>
+  <div>
+    <h1 class="text-center">Polity.</h1>
+    <form (ngSubmit)="handleLogin()" #loginForm = "ngForm" class="form-group" >
+  <div class="flex flex-column">
+    <div class="flex">
+      <p> Loggen Sie sich in ihr Konto ein</p>
+    </div>
+    <div class="flex justify-content-left m-2 p-input-filled form-group">
+      <span class="p-float-label  w-full p-input-icon-right">
+        <i class="pi pi-check success-color" [class.hide]="email.invalid"></i>
+        <input
+              required pattern="[^ @]*@[^ @]*" #email="ngModel"
+              name="email" [(ngModel)]="loginValues.email"
+              pInputText
+              id="email-input" type="email"
+              class="form-control transparent-background w-full">
+          <label for="email-input">Email</label>
+          <div [hidden]="email.valid || email.pristine">
+            <small id="email-error" class="p-error block">Bitte eine gültige Email eingeben.</small>
+          </div>
+          </span>
+    </div>
+    <div class="flex justify-content-left m-2 p-input-filled form-group">
+      <span class="p-float-label  w-full p-input-icon-right">
+        <i class="pi pi-check success-color" [class.hide]="password.invalid"></i>
+        <input
+              required minlength="8" #password="ngModel"
+              name="password" [(ngModel)]="loginValues.password"
+              id="password-input" type="password"
+              pPassword [feedback]="false"
+              class="form-control transparent-background w-full">
+        <label for="password-input">Passwort</label>
+        <div [hidden]="password.valid || password.pristine">
+          <small id="password-error" class="p-error block">Bitte mindestens 8 Zeichen verwenden.</small>
+        </div>
+      </span>
+    </div>
+    <div class="flex justify-content-center m-2">
+      <button
+             type="submit" [disabled]="!loginForm.valid"
+             pButton
+             label="Konto erstellen"
+             class="p-button-raised">
+      </button>
+    </div>
+    <!-- <pre>{{loginForm.value | json}}</pre> -->
+  </div>
+    </form>
+  </div>
+</app-wrapper-full-creen-center>
