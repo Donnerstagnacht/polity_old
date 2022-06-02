@@ -19,13 +19,14 @@ export class AuthentificationService {
     this.supabase = createClient(environment.supabaseUrl, environment.supabaseKey)
    }
 
-  public createAccount(account: account): void {
+  public createAccount(account: account): Promise<any> {
     console.log(
       "Form submitted",
       account.name,
       account.email,
       account.password
     );
+    return this.signUp(account.email, account.password);
   }
 
   public login(account: account): void {
@@ -59,12 +60,21 @@ export class AuthentificationService {
     return this.supabase.auth.onAuthStateChange(callback);
   }
 
-  signIn(email: string) {
-    return this.supabase.auth.signIn({email});
+
+
+  async signUp(email: string, password: string): Promise<any> {    
+    const response = await this.supabase.auth.signUp({ email, password });
+    if (response.error) throw new Error(response.error.message);
   }
 
-  signOut() {
-    return this.supabase.auth.signOut();
+  async signIn(email: string, password: string) {
+    const response = await this.supabase.auth.signIn({ email, password });
+    if (response.error) throw new Error(response.error.message);
+  }
+
+  async signOut() {
+    const response = await this.supabase.auth.signOut();
+    if (response.error) throw new Error(response.error.message);
   }
 
   updateProfile(profile: Profile) {

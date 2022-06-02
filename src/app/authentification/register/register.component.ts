@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { account } from '../../../types/account';
 import { AuthentificationService } from '../services/authentification.service';
 
@@ -17,14 +18,23 @@ export class RegisterComponent implements OnInit {
   displayDataProtection: boolean = false;
   displayTermsAndConditions: boolean = false;
 
-  constructor(private authentificationService: AuthentificationService) { }
+  constructor(
+    private readonly authentificationService: AuthentificationService,
+    private router: Router,
+  ) { }
 
   ngOnInit(): void {
 
   }
 
-  public createAccount(): void {
-    this.authentificationService.createAccount(this.account);
+  public async createAccount() {
+    try {
+      await this.authentificationService.createAccount(this.account);
+      this.router.navigate(['/profile']);
+    } catch (error: any) {
+      console.error(error);
+      alert(error.error_description || error.message);
+    }
   }
 
   public toggleDataProtection(): void {

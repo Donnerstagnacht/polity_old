@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Session } from '@supabase/supabase-js';
 import { Profile, AuthentificationService } from 'src/app/authentification/services/authentification.service';
 
@@ -12,7 +13,10 @@ export class ProfileComponent implements OnInit {
   profile: Profile | undefined;
   @Input() session: Session | undefined;
 
-  constructor(private readonly supabase: AuthentificationService) { }
+  constructor(
+    private readonly supabase: AuthentificationService,
+    private router: Router,
+  ) { }
 
   ngOnInit(): void {
     this.getProfile();
@@ -31,7 +35,8 @@ export class ProfileComponent implements OnInit {
         this.profile = profile;
       }
     } catch (error: any) {
-      alert(error.message)
+      console.error(error.message);
+      this.router.navigate(['/login']);
     } finally {
       this.loading = false;
     }
