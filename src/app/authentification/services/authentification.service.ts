@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { AuthChangeEvent, createClient, SupabaseClient, Session } from '@supabase/supabase-js';
+import { AuthChangeEvent, createClient, SupabaseClient, Session, User } from '@supabase/supabase-js';
+import { BehaviorSubject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { account } from '../../../types/account';
 
@@ -14,6 +15,8 @@ export interface Profile {
 })
 export class AuthentificationService {
   private supabase: SupabaseClient;
+  public publicUser = new BehaviorSubject<User | null>(null);
+  public loggedInStatus = new BehaviorSubject<boolean>(false);
 
   constructor() {
     this.supabase = createClient(environment.supabaseUrl, environment.supabaseKey)
@@ -40,8 +43,19 @@ export class AuthentificationService {
 
   public logout(): void {}
 
-  get user() {
+  get user(): User | null {
     return this.supabase.auth.user();
+  }
+
+  public isUserLoggedIn(): boolean {
+    let user: User | null;
+    user = this.user;
+    console.log('user' + this.user?.id);
+    if (this.user) {
+     return true;
+    } else {
+      return false;
+    }
   }
 
   get session() {
@@ -60,9 +74,17 @@ export class AuthentificationService {
     return this.supabase.auth.onAuthStateChange(callback);
   }
 
+  authCheckLogin(): void {
+    this.supabase.auth.onAuthStateChange((event: AuthChangeEvent, session: Session | null): void => {
+      if(session?.user) {
+        this.loggedInStatus.next(true);
+      } else {
+        this.loggedInStatus.next(false);
+      }
+    })
+  }
 
-
-  async signUp(email: string, password: string): Promise<any> {    
+  async signUp(email: string, password: string): Promise<any> {
     const response = await this.supabase.auth.signUp({ email, password });
     if (response.error) throw new Error(response.error.message);
   }
@@ -100,3 +122,7 @@ export class AuthentificationService {
   }
 
 }
+function callback(callback: any, arg1: (event: AuthChangeEvent, session: Session | null) => undefined) {
+  throw new Error('Function not implemented.');
+}
+
