@@ -1,83 +1,85 @@
-  <div class="m-4 mb-8">
-    <div class="text-center">
-      <h2 class="m-2">Tobias Hassebrock</h2>
-      <h5 class="text-primary m-0">Rosbach | Wetteraus - Hessen</h5>
-      <img class="my-4" src="../../../assets/images/tobi.jpg">
+  <app-wrapper-grid>
+    <div class="mb-8">
+      <div class="text-center">
+        <h2 class="m-2">Tobias Hassebrock</h2>
+        <h5 class="text-primary m-0">Rosbach | Wetteraus - Hessen</h5>
+        <img class="my-4" src="../../../assets/images/tobi.jpg">
+      </div>
+
+      <div class="flex justify-content-around">
+        <div class="text-center">
+          <h5>12</h5>
+          <p>Anträge</p>
+        </div>
+        <div class="text-center">
+          <h5>154</h5>
+          <p>Follower</p>
+        </div>
+        <div class="text-center">
+          <h5>65</h5>
+          <p>Following</p>
+        </div>
+        <div class="text-center">
+          <h5>18</h5>
+          <p>Netz</p>
+        </div>
+        <div class="text-center">
+          <h5>73</h5>
+          <p>Reputation</p>
+        </div>
+      </div>
+
+      <div class="mb-30">
+        <p-tabView>
+          <p-tabPanel header="Über">
+             Ich bin Tobi. Besonders interessiert an der Entwicklung der Europäischen Union, Finanzmarktregulierung und der städtischen Entwicklung meiner Kommune Rosbach.
+          </p-tabPanel>
+          <p-tabPanel header="Kontakt">
+              Email: tobias.hassebrock@stud.th-deg.de
+          </p-tabPanel>
+      </p-tabView>
+      </div>
+
+      <div class="form-widget">
+        <div>
+          <label for="email">Email</label>
+          <input id="email" type="text" [value]="session?.user?.email" disabled/>
+        </div>
+        <div>
+          <label for="username">Name</label>
+          <input
+            #username
+            id="username"
+            type="text"
+            [value]="profile?.username ?? ''"
+          />
+        </div>
+        <div>
+          <label for="website">Website</label>
+          <input
+            #website
+            id="website"
+            type="url"
+            [value]="profile?.website ?? ''"
+          />
+        </div>
+
+        <div>
+          <button
+            class="button block primary"
+            (click)="updateProfile(username.value, website.value)"
+            [disabled]="loading"
+          >
+            {{loading ? 'Loading ...' : 'Update'}}
+          </button>
+        </div>
+
+        <div>
+          <button class="button block" (click)="signOut()">
+            Sign Out
+          </button>
+        </div>
+      </div>
+
     </div>
-
-    <div class="flex justify-content-around">
-      <div class="text-center">
-        <h5>12</h5>
-        <p>Anträge</p>
-      </div>
-      <div class="text-center">
-        <h5>154</h5>
-        <p>Follower</p>
-      </div>
-      <div class="text-center">
-        <h5>65</h5>
-        <p>Following</p>
-      </div>
-      <div class="text-center">
-        <h5>18</h5>
-        <p>Netz</p>
-      </div>
-      <div class="text-center">
-        <h5>73</h5>
-        <p>Reputation</p>
-      </div>
-    </div>
-
-    <div class="mb-30">
-      <p-tabView>
-        <p-tabPanel header="Über">
-           Ich bin Tobi. Besonders interessiert an der Entwicklung der Europäischen Union, Finanzmarktregulierung und der städtischen Entwicklung meiner Kommune Rosbach.
-        </p-tabPanel>
-        <p-tabPanel header="Kontakt">
-            Email: tobias.hassebrock@stud.th-deg.de
-        </p-tabPanel>
-    </p-tabView>
-    </div>
-
-    <div class="form-widget">
-      <div>
-        <label for="email">Email</label>
-        <input id="email" type="text" [value]="session?.user?.email" disabled/>
-      </div>
-      <div>
-        <label for="username">Name</label>
-        <input
-          #username
-          id="username"
-          type="text"
-          [value]="profile?.username ?? ''"
-        />
-      </div>
-      <div>
-        <label for="website">Website</label>
-        <input
-          #website
-          id="website"
-          type="url"
-          [value]="profile?.website ?? ''"
-        />
-      </div>
-
-      <div>
-        <button
-          class="button block primary"
-          (click)="updateProfile(username.value, website.value)"
-          [disabled]="loading"
-        >
-          {{loading ? 'Loading ...' : 'Update'}}
-        </button>
-      </div>
-
-      <div>
-        <button class="button block" (click)="signOut()">
-          Sign Out
-        </button>
-      </div>
-    </div>
-
-  </div>
+  </app-wrapper-grid>

@@ -6,13 +6,15 @@ import { ButtonModule } from 'primeng/button';
 import { MenuBarBottomComponent } from './menu-bar-bottom/menu-bar-bottom.component';
 import { WrapperFullCreenCenterComponent } from './wrapper-full-creen-center/wrapper-full-creen-center.component';
 import { AppRoutingModule } from '../app-routing.module';
+import { WrapperGridComponent } from './wrapper-grid/wrapper-grid.component';
 
 
 @NgModule({
   declarations: [
     MenuBarLeftComponent,
     MenuBarBottomComponent,
-    WrapperFullCreenCenterComponent
+    WrapperFullCreenCenterComponent,
+    WrapperGridComponent
   ],
   imports: [
     CommonModule,
@@ -23,7 +25,8 @@ import { AppRoutingModule } from '../app-routing.module';
   exports: [
     MenuBarLeftComponent,
     MenuBarBottomComponent,
-    WrapperFullCreenCenterComponent
+    WrapperFullCreenCenterComponent,
+    WrapperGridComponent
   ]
 })
 export class SharedModule { }
