@@ -25,17 +25,12 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  public login(): void {
-    this.authentificationService.login(this.loginValues);
-  }
-
   async handleLogin(email: string = this.loginValues.email, password: string = this.loginValues.password) {
     try {
       this.loading = true;
       await this.authentificationService.signIn(email, password);
       this.router.navigate(['/profile']);
     } catch (error: any) {
-      console.error(error);
       alert(error.error_description || error.message);
     } finally {
       this.loading = false;

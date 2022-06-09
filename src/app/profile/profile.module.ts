@@ -10,7 +10,9 @@ import { EditProfileComponent } from './edit-profile/edit-profile.component';
 import { RouterModule } from '@angular/router';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
-
+import {InputNumberModule} from 'primeng/inputnumber';
+import { FormsModule } from '@angular/forms';
+import {InputTextareaModule} from 'primeng/inputtextarea';
 
 @NgModule({
   declarations: [
@@ -26,7 +28,10 @@ import { ButtonModule } from 'primeng/button';
     MessageModule,
     RouterModule,
     InputTextModule,
-    ButtonModule
+    InputNumberModule,
+    ButtonModule,
+    FormsModule,
+    InputTextareaModule
   ]
 })
 export class ProfileModule { }

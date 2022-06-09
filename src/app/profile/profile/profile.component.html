@@ -33,10 +33,21 @@
         <div class="mb-30">
           <p-tabView>
             <p-tabPanel header="Über">
-               Ich bin Tobi. Besonders interessiert an der Entwicklung der Europäischen Union, Finanzmarktregulierung und der städtischen Entwicklung meiner Kommune Rosbach.
+              {{profile?.about}}
             </p-tabPanel>
             <p-tabPanel header="Kontakt">
-                Email: tobias.hassebrock@stud.th-deg.de
+              <span class="block my-3">
+                <p class="font-medium inline">Email: </p>
+                <p class="inline">{{profile?.contactEmail}}</p>
+              </span>
+              <span  class="block my-3">
+                <p class="font-medium inline">Phone: </p>
+                <p class="inline">{{profile?.contactPhone}}</p>
+              </span>
+              <span class="block my-3">
+                <p class="font-medium inline">Adresse: </p>
+                <p class="inline">{{profile?.street}}, {{profile?.postCode}}, {{profile?.city}}</p>
+              </span>
             </p-tabPanel>
         </p-tabView>
         </div>

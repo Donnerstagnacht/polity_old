@@ -9,8 +9,8 @@
           </a>
         </div>
         <div class="mt-4">
-          <h5>Persönliche Daten</h5>
           <form>
+            <h5>Persönliche Daten</h5>
             <div class="grid">
               <div class="col-12 md:col-6">
                 <span class="p-float-label">
@@ -39,13 +39,121 @@
                 </span>
               </div>
             </div>
-            <div class="flex flex-column">
+            <!-- <div class="flex flex-column">
               <div class="flex align-items-center justify-content-center">
                 <button
                 pButton
                 type="button"
                 label="{{loading ? 'Loading ...' : 'Update'}}"
                 (click)="updateProfile(userName.value, website.value)"
+                [disabled]="loading"
+              >
+              </button>
+              </div>
+            </div> -->
+            <h5>Kontaktmöglichkeiten</h5>
+            <div class="grid">
+              <div class="col-12 md:col-6">
+                <span class="p-float-label">
+                  <input
+                   #contactEmail
+                   class="w-full"
+                   id="float-input"
+                   type="email"
+                   pInputText
+                   [value]="profile?.contactEmail ?? ''"
+                   >
+                  <label for="float-input">Email</label>
+                </span>
+              </div>
+              <div class="col-12 md:col-6">
+                <span class="p-float-label">
+                  <input
+                   #contactPhone
+                   class="w-full"
+                   id="float-input"
+                   type="text"
+                   pInputText
+                   [value]="profile?.contactPhone ?? ''"
+                   >
+                  <label for="float-input">Phone</label>
+                </span>
+              </div>
+            </div>
+            <h5>Adresse</h5>
+            <div class="grid">
+              <div class="col-12 md:col-6">
+                <span class="p-float-label">
+                  <input
+                   #street
+                   class="w-full"
+                   id="float-input"
+                   type="text"
+                   pInputText
+                   [value]="profile?.street ?? ''"
+                   >
+                  <label for="float-input">Street</label>
+                </span>
+              </div>
+              <div class="col-12 md:col-6">
+                <span class="p-float-label">
+                  <input
+                   #postCode
+                   class="w-full"
+                   id="float-input"
+                   type="number"
+                   pInputText
+                   [value]="profile?.postCode ?? ''"
+                   >
+                  <label for="float-input">Post Code</label>
+                </span>
+              </div>
+              <div class="col-12 md:col-6">
+                <span class="p-float-label">
+                  <input
+                   #city
+                   class="w-full"
+                   id="float-input"
+                   type="text"
+                   pInputText
+                   [value]="profile?.city ?? ''"
+                   >
+                  <label for="float-input">City</label>
+                </span>
+              </div>
+            </div>
+            <h5>Über Mich</h5>
+            <div class="grid">
+              <div class="col-12">
+                <span class="p-float-label">
+                <textarea
+                #about
+                pInputTextarea
+                [autoResize]="true"
+                class="w-full"
+                [value]="profile?.about ?? ''"
+                ></textarea>
+                <label for="float-input">Street</label>
+              </span>
+              </div>
+            </div>
+            <div class="flex flex-column">
+              <div class="flex align-items-center justify-content-center">
+                <button
+                pButton
+                type="button"
+                label="{{loading ? 'Loading ...' : 'Update'}}"
+                (click)="updateContactInformation(
+                  userName.value,
+                  website.value ,
+                  '',
+                  contactEmail.value,
+                  contactPhone.value,
+                  street.value,
+                  postCode.value,
+                  city.value,
+                  about.value
+                )"
                 [disabled]="loading"
               >
               </button>

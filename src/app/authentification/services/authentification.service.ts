@@ -7,7 +7,13 @@ import { account } from '../../../types/account';
 export interface Profile {
   username: string;
   website: string;
-  avatar_url: string;
+  avatar_url?: string;
+  contactEmail?: string;
+  contactPhone?: string;
+  street?: string;
+  postCode?: any;
+  city?: string;
+  about?: string;
 }
 
 @Injectable({
@@ -23,25 +29,8 @@ export class AuthentificationService {
    }
 
   public createAccount(account: account): Promise<any> {
-    console.log(
-      "Form submitted",
-      account.name,
-      account.email,
-      account.password
-    );
     return this.signUp(account.email, account.password);
   }
-
-  public login(account: account): void {
-    console.log(
-      "login",
-      account.name,
-      account.email,
-      account.password
-    );
-  }
-
-  public logout(): void {}
 
   get user(): User | null {
     return this.supabase.auth.user();
@@ -50,7 +39,6 @@ export class AuthentificationService {
   public isUserLoggedIn(): boolean {
     let user: User | null;
     user = this.user;
-    console.log('user' + this.user?.id);
     if (this.user) {
      return true;
     } else {
@@ -65,7 +53,16 @@ export class AuthentificationService {
   get profile() {
     return this.supabase
       .from('profiles')
-      .select(`username, website, avatar_url`)
+      .select(
+        `username,
+        website,
+        avatar_url,
+        contactEmail,
+        contactPhone,
+        street,
+        postCode,
+        city,
+        about`)
       .eq('id', this.user?.id)
       .single();
   }
