@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
 import { Session } from '@supabase/supabase-js';
 import { AuthentificationService, Profile } from 'src/app/authentification/services/authentification.service';
@@ -12,6 +12,8 @@ export class EditProfileComponent implements OnInit {
   loading: boolean = true;
   profile: Profile | undefined;
   session: Session | undefined;
+  uploading: boolean = false;
+  @Output() upload = new EventEmitter<string>();
 
   constructor(
     private readonly authentificationService: AuthentificationService,
@@ -44,17 +46,6 @@ export class EditProfileComponent implements OnInit {
     }
   }
 
-  async updateProfile(username: string, website: string, avatar_url: string = '') {
-    try {
-      this.loading = true;
-      await this.authentificationService.updateProfile({username, website, avatar_url});
-    } catch (error: any) {
-      alert(error.message);
-    } finally {
-      this.loading = false;
-    }
-  }
-
   async updateContactInformation(
     username: string,
     website: string,
@@ -65,8 +56,7 @@ export class EditProfileComponent implements OnInit {
     postCode: any,
     city: string,
     about: string
-    ) {
-    console.log()
+    ): Promise<void> {
     try {
       this.loading = true;
       await this.authentificationService.updateProfile({
@@ -84,6 +74,31 @@ export class EditProfileComponent implements OnInit {
       alert(error.message);
     } finally {
       this.loading = false;
+    }
+  }
+
+  async updateProfilePhoto(event: any) {
+    console.log('called');
+    console.log(event.files);
+    console.log(event);
+    try {
+      this.uploading = true;
+      if (!event.files || event.files.length === 0 || event.files === undefined) {
+        throw new Error('You must select an image to upload.');
+      }
+      /*File-Upload - Feature */
+      const file = event.files[0];
+      const fileExt = file.name.split('.').pop();
+      const fileName = `test.${fileExt}`; /*`${Math.random()}.${fileExt}`;*/
+      const filePath = `${fileName}`;
+      console.log('filepath '+ filePath)
+      await this.authentificationService.uploadAvatar(filePath, file);
+      console.log('end');
+      this.upload.emit(filePath);
+    } catch (error: any) {
+      alert('hello' + error.message);
+    } finally {
+      this.uploading = false;
     }
   }
 }

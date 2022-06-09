@@ -115,6 +115,8 @@ export class AuthentificationService {
   }
 
   uploadAvatar(filePath: string, file: File) {
+    console.log('authService: ' + filePath)
+    console.log('authService2: ' + file)
     return this.supabase.storage
       .from('avatars')
       .upload(filePath, file);

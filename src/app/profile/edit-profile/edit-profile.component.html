@@ -39,6 +39,34 @@
                 </span>
               </div>
             </div>
+            <h5>Über Mich</h5>
+            <div class="grid">
+              <div class="col-12">
+                <span class="p-float-label">
+                <textarea
+                #about
+                pInputTextarea
+                [autoResize]="true"
+                class="w-full"
+                [value]="profile?.about ?? ''"
+                ></textarea>
+                <label for="float-input">Street</label>
+              </span>
+              </div>
+            </div>
+            <div>
+              <h5>Profile Foto</h5>
+              <p-fileUpload
+              (uploadHandler)="updateProfilePhoto($event)"
+              name="myfile[]"
+              accept="image/*"
+              [auto]="true"
+              [customUpload]="true"
+              class="full-w"
+              >
+            </p-fileUpload>
+
+            </div>
             <!-- <div class="flex flex-column">
               <div class="flex align-items-center justify-content-center">
                 <button
@@ -120,21 +148,6 @@
                    >
                   <label for="float-input">City</label>
                 </span>
-              </div>
-            </div>
-            <h5>Über Mich</h5>
-            <div class="grid">
-              <div class="col-12">
-                <span class="p-float-label">
-                <textarea
-                #about
-                pInputTextarea
-                [autoResize]="true"
-                class="w-full"
-                [value]="profile?.about ?? ''"
-                ></textarea>
-                <label for="float-input">Street</label>
-              </span>
               </div>
             </div>
             <div class="flex flex-column">

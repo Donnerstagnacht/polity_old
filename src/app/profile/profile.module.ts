@@ -13,6 +13,8 @@ import { ButtonModule } from 'primeng/button';
 import {InputNumberModule} from 'primeng/inputnumber';
 import { FormsModule } from '@angular/forms';
 import {InputTextareaModule} from 'primeng/inputtextarea';
+import {FileUploadModule} from 'primeng/fileupload';
+import {HttpClientModule} from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -31,7 +33,9 @@ import {InputTextareaModule} from 'primeng/inputtextarea';
     InputNumberModule,
     ButtonModule,
     FormsModule,
-    InputTextareaModule
+    InputTextareaModule,
+    FileUploadModule,
+    HttpClientModule
   ]
 })
 export class ProfileModule { }
