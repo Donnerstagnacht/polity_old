@@ -24,8 +24,7 @@ export class MenuBarLeftComponent implements OnInit {
       this.changeDetector.detectChanges();
       if(this.loggedIn) {
         this.items = [
-          {label: 'Profil', routerLink: ['/profile']},
-          {label: 'logout', routerLink: ['/login']}
+          {label: 'Profil', routerLink: ['/profile']}
         ]
       } else {
         this.items = [
