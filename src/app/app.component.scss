@@ -6,10 +6,18 @@ app-menu-bar-left {
   app-menu-bar-bottom {
     display: none;
   }
+
+  app-menu-bar-secondary-top {
+    display: none;
+  }
 }
 
 @media only screen and (min-width: 1024px) {
   app-menu-bar-left {
+    display: block;
+  }
+
+  app-menu-bar-secondary-left {
     display: block;
   }
 }

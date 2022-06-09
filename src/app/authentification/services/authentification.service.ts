@@ -96,7 +96,9 @@ export class AuthentificationService {
 
   async signOut() {
     const response = await this.supabase.auth.signOut();
-    if (response.error) throw new Error(response.error.message);
+    if (response.error) {
+      throw new Error(response.error.message)
+    }
   }
 
   updateProfile(profile: Profile) {

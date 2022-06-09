@@ -1,0 +1,17 @@
+<p-sidebar
+*ngIf="loggedIn"
+[visible]="true"
+position="top"
+[showCloseIcon]="false"
+[modal]="false"
+[style]="{background:'#F9FCFF', height:'inherit'}"
+header = "none"
+class="red">
+  <!-- <div class="flex justify-content-around">
+    <button routerLink="/profile" pButton type="button" label="Übersicht" class="flex align-items-center justify-content-center p-button-text p-button-plain"></button>
+    <button routerLink="/profile/edit" pButton type="button" label="ändern" class="flex align-items-center justify-content-center p-button-text p-button-plain"></button>
+  </div> -->
+  <div class="flex justify-content-around">
+    <p-megaMenu [model]="items"></p-megaMenu>
+  </div>
+</p-sidebar>

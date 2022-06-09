@@ -1,7 +1,12 @@
 <div class="grid">
   <div class="col-12 md:col-12 lg:col-8 lg:col-offset-2">
-    <div class="m-4">
-      <ng-content></ng-content>
+    <div>
+      <div class="mt-9">
+        <ng-content select="[slot=main]"></ng-content>
+      </div>
     </div>
+  </div>
+  <div class="lg:col-2 show-laptop">
+    <ng-content select="[slot=side]"></ng-content>
   </div>
 </div>

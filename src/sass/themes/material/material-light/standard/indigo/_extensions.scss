@@ -8,6 +8,7 @@ html {
 
 body {
   margin: 0px;
+  background-color: $background;
 }
 
 
@@ -62,58 +63,76 @@ mark {
   cursor: pointer;
 }
 
+.mt-9 {
+  margin-top: 6rem;
+}
+
+.mt-10 {
+  margin-top: 7rem;
+}
 /* Component css edit::after */
+.p-sidebar {
+  background: $navigation!important;
+}
 
 .p-sidebar-header {
   display: none!important;
 }
 
 .p-sidebar .p-sidebar-content {
-  padding: 1rem!important;
+  padding: 0rem!important;
 }
 
 .p-tabview-nav {
   justify-content: center;
 }
 
+.p-menu {
+  padding: 0.5rem 0;
+  background: transparent;
+  color: none;
+  border: none;
+  border-radius: 4px;
+  width: 100%;
+}
 
-/* unused custome theme variables
+.p-message.p-message-custom {
+  background: $horizontalGradient;
+  border: solid transparent;
+  border-width: 0 0 0 0;
+}
 
-$background:#F9FCFF;
-$onBackground:#191C1E;
+.p-menuitem-link-active {
+  background-color: $accentContainer!important;
+  border-radius: 1rem!important;
+}
 
-$surface:#F9FCFF;
-$onSurface:#191C1E;
+.p-menu .p-menuitem-link:not(.p-disabled):hover {
+  background: rgba(0, 0, 0, 0.04);
+  border-radius: 1rem!important;
+}
+.p-menu .p-menuitem-link:not(.p-disabled):hover .p-menuitem-text {
+  color: rgba(0, 0, 0, 0.87);
+  border-radius: 1rem!important;
+}
+.p-menu .p-menuitem-link:not(.p-disabled):hover .p-menuitem-icon {
+  color: rgba(0, 0, 0, 0.6);
+  border-radius: 1rem!important;
+}
+.p-menu .p-menuitem-link:not(.p-disabled):hover .p-submenu-icon {
+  color: rgba(0, 0, 0, 0.6);
+}
+.p-menu .p-menuitem-link:focus {
+  outline: 0 none;
+  outline-offset: 0;
+  box-shadow: none;
+}
 
-$surfaceVariant: #F9FCFF;
-$onSurfaceVariant:#41484D;
+.p-megamenu {
+  border: none!important;
+  padding: 0.5rem;
+}
 
-$neutral-0:#000000;
-$neutral-10:#191C1E;
-$neutral-20:#2E3133;
-$neutral-30:#454749;
-$neutral-40:#5C5F61;
-$neutral-50:#757779;
-$neutral-60:#8F9193;
-$neutral-70:#A9ABAD;
-$neutral-80:#C5C7C9;
-$neutral-90:#E1E2E5;
-$neutral-95:#F0F1F3;
-$neutral-99:#F9FCFF;
-$neutral-100:#FFFFFF;
-
-$neutral-variant-0:#000000;
-$neutral-variant-10:#151D21;
-$neutral-variant-20:#2A3135;
-$neutral-variant-30:#41484D;
-$neutral-variant-40:#5b84a2;
-$neutral-variant-50:#71787D;
-$neutral-variant-60:#8B9298;
-$neutral-variant-70:#A5ACB2;
-$neutral-variant-80:#C0C7CD;
-$neutral-variant-90:#DCE3E9;
-$neutral-variant-95:#EBF2F8;
-$neutral-variant-99:#F9FCFF;
-$neutral-variant-100:#FFFFFF;
-
-*/
+/*.p-tabview .p-tabview-panels, .p-tabview .p-tabview-nav {
+  background-color: red!important;
+}*/

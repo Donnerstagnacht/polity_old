@@ -1,4 +1,14 @@
 # Polity
+The goal of polity is to create a - theoretically - global real time decision platform for political parties, individues and puplic bodies.
+
+## Vision
+The visual Polity vison can be checked in this Figma prototype:
+## Techstack
+Polity is using OpenSource technologies and is self hostable.
+
+Backend: Supabase
+Frontend: Angular
+UI-library: Ngx-Prime
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 13.3.6.
 

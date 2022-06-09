@@ -1,0 +1,17 @@
+@media only screen and (max-width: 1024px) {
+  .show-laptop {
+    display: none
+  }
+}
+
+@media only screen and (min-width: 1024px) {
+  .mt-9 {
+    margin-top: 1rem;
+  }
+}
+
+.grid {
+  margin-right: 0rem!important;
+  margin-left: 0rem!important;
+  margin-top: 0rem!important;
+}

@@ -5,18 +5,9 @@ position="left"
 [modal]="false"
 [style]="{background:'#F9FCFF', width:'10em'}"
 class="red">
-  <div *ngIf="loggedIn" class="h-full flex flex-column">
-    <div class="flex h-90vh  flex flex-column justify-content-center">
-      <button routerLink="/profile" pButton type="button" label="Profil" class="test py-5 p-button-text p-button-plain"></button>
-      <button routerLink="/login" pButton type="button" label="Logout" class="py-5 p-button-text p-button-plain"></button>
-    </div>
-  </div>
-
-  <div *ngIf="!loggedIn" class="h-full flex flex-column">
-    <div class="flex h-90vh  flex flex-column justify-content-center">
-      <button routerLink="/register" pButton type="button" label="Registrieren" class="test py-5 p-button-text p-button-plain"></button>
-      <button routerLink="/login" pButton type="button" label="Login" class="py-5 p-button-text p-button-plain"></button>
-      <button routerLink="/über" pButton type="button" label="Über" class="py-5 p-button-text p-button-plain"></button>
+  <div class="h-full flex flex-column">
+    <div class="flex h-screen  flex flex-column justify-content-center">
+      <p-menu [model]="items" routerLinkActive="p-menuitem-link-active"></p-menu>
     </div>
   </div>
 </p-sidebar>
