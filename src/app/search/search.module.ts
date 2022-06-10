@@ -10,7 +10,7 @@ import { ChipModule } from 'primeng/chip';
 import {SliderModule} from 'primeng/slider';
 import {CheckboxModule} from 'primeng/checkbox';
 import {PanelModule} from 'primeng/panel';
-
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -18,6 +18,8 @@ import {PanelModule} from 'primeng/panel';
   ],
   imports: [
     CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
     SharedModule,
     InputTextModule,
     ButtonModule,
@@ -27,6 +29,7 @@ import {PanelModule} from 'primeng/panel';
     SliderModule,
     CheckboxModule,
     PanelModule
+
   ]
 })
 export class SearchModule { }
