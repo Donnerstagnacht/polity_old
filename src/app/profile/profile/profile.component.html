@@ -4,7 +4,7 @@
         <div class="text-center">
           <h2 *ngIf="profile" class="m-2">{{profile.username}}</h2>
           <h5 class="text-primary m-0">Rosbach | Wetteraus - Hessen</h5>
-          <img class="my-4" src="../../../assets/images/tobi.jpg">
+          <img class="my-4" src={{profile?.avatarUrl}}>
         </div>
 
         <div class="flex justify-content-around">
