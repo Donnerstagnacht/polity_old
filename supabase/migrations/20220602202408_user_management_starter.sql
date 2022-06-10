@@ -5,18 +5,24 @@
 
 CREATE TABLE IF NOT EXISTS public.profiles
 (
-    id uuid NOT NULL,
-    updated_at timestamp with time zone,
-    username text COLLATE pg_catalog."default",
-    avatar_url text COLLATE pg_catalog."default",
-    website text COLLATE pg_catalog."default",
+    "id" uuid NOT NULL,
+    "updated_at" timestamp with time zone,
+    "username" text COLLATE pg_catalog."default" DEFAULT ''::text,
+    "avatarUrl" text COLLATE pg_catalog."default" DEFAULT ''::text,
+    "city" text COLLATE pg_catalog."default" DEFAULT ''::text,
+    "contactEmail" text COLLATE pg_catalog."default" DEFAULT ''::text,
+    "contactPhone" text COLLATE pg_catalog."default" DEFAULT ''::text,
+    "postCode" text COLLATE pg_catalog."default" DEFAULT ''::text,
+    "street" text COLLATE pg_catalog."default" DEFAULT ''::text,
+    "about" text COLLATE pg_catalog."default" DEFAULT ''::text,
+    "website" text COLLATE pg_catalog."default" DEFAULT ''::text,
     CONSTRAINT profiles_pkey PRIMARY KEY (id),
     CONSTRAINT profiles_username_key UNIQUE (username),
     CONSTRAINT profiles_id_fkey FOREIGN KEY (id)
         REFERENCES auth.users (id) MATCH SIMPLE
         ON UPDATE NO ACTION
-        ON DELETE NO ACTION,
-    CONSTRAINT username_length CHECK (char_length(username) >= 3)
+        ON DELETE NO ACTION
+    -- CONSTRAINT username_length CHECK (char_length(username) >= 3)
 )
 
 TABLESPACE pg_default;
@@ -52,3 +58,38 @@ CREATE POLICY "Users can update own profile."
     FOR UPDATE
     TO public
     USING ((auth.uid() = id));
+
+-- Copy users to profile
+CREATE OR REPLACE FUNCTION signup_copy_to_users_table()
+RETURNS TRIGGER AS $$
+  BEGIN
+    INSERT INTO public.profiles (id)
+    VALUES(new.id);
+  
+    RETURN NEW;
+  END;
+$$
+LANGUAGE plpgsql SECURITY DEFINER;
+
+DROP TRIGGER IF EXISTS signup_copy on auth.users;
+CREATE TRIGGER signup_copy
+AFTER INSERT ON auth.users
+FOR EACH ROW EXECUTE PROCEDURE signup_copy_to_users_table();
+
+-- Set up Storage!
+insert into storage.buckets (id, name)
+values ('avatars', 'avatars');
+
+create policy "Avatar images are accessible for authenticated users."
+  on storage.objects for select
+  using (
+    bucket_id = 'avatars'
+    and auth.role() = 'authenticated'    
+);
+
+create policy "Anyone can upload an avatar."
+  on storage.objects for insert
+  with check (
+    bucket_id = 'avatars'
+    and auth.role() = 'authenticated' 
+);
