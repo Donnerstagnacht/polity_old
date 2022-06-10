@@ -7,13 +7,13 @@ import { account } from '../../../types/account';
 export interface Profile {
   username: string;
   website: string;
-  avatar_url?: string;
-  contactEmail?: string;
-  contactPhone?: string;
-  street?: string;
-  postCode?: any;
-  city?: string;
-  about?: string;
+  avatarUrl: string;
+  contactEmail: string;
+  contactPhone: string;
+  street: string;
+  postCode: string;
+  city: string;
+  about: string;
 }
 
 @Injectable({
@@ -56,7 +56,7 @@ export class AuthentificationService {
       .select(
         `username,
         website,
-        avatar_url,
+        avatarUrl,
         contactEmail,
         contactPhone,
         street,

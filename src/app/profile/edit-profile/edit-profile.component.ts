@@ -18,7 +18,7 @@ export class EditProfileComponent implements OnInit {
   constructor(
     private readonly authentificationService: AuthentificationService,
     private router: Router
-    ) { }
+  ) { }
 
   ngOnInit(): void {
     this.getProfile();
@@ -35,8 +35,6 @@ export class EditProfileComponent implements OnInit {
 
       if (profile) {
         this.profile = profile;
-        console.log(profile.contactEmail)
-        console.log(profile.username)
       }
     } catch (error: any) {
       console.error(error.message);
@@ -49,20 +47,20 @@ export class EditProfileComponent implements OnInit {
   async updateContactInformation(
     username: string,
     website: string,
-    avatar_url: string,
+    avatarUrl: string,
     contactEmail: string,
     contactPhone: string,
     street: string,
     postCode: any,
     city: string,
     about: string
-    ): Promise<void> {
+  ): Promise<void> {
     try {
       this.loading = true;
       await this.authentificationService.updateProfile({
         username,
         website,
-        avatar_url,
+        avatarUrl,
         contactEmail,
         contactPhone,
         street,
