@@ -5,9 +5,6 @@
 
 ALTER TABLE IF EXISTS public.profiles DROP COLUMN IF EXISTS avatar_url;
 
-ALTER TABLE IF EXISTS public.profiles
-    RENAME id TO about;
-
 ALTER TABLE public.profiles
     ALTER COLUMN about TYPE text COLLATE pg_catalog."default";
 ALTER TABLE IF EXISTS public.profiles
@@ -18,9 +15,6 @@ ALTER TABLE IF EXISTS public.profiles
 
 ALTER TABLE IF EXISTS public.profiles
     ALTER COLUMN about SET STORAGE EXTENDED;
-
-ALTER TABLE IF EXISTS public.profiles
-    RENAME id TO city;
 
 ALTER TABLE public.profiles
     ALTER COLUMN city TYPE text COLLATE pg_catalog."default";
@@ -33,9 +27,6 @@ ALTER TABLE IF EXISTS public.profiles
 ALTER TABLE IF EXISTS public.profiles
     ALTER COLUMN city SET STORAGE EXTENDED;
 
-ALTER TABLE IF EXISTS public.profiles
-    RENAME id TO "contactEmail";
-
 ALTER TABLE public.profiles
     ALTER COLUMN "contactEmail" TYPE text COLLATE pg_catalog."default";
 ALTER TABLE IF EXISTS public.profiles
@@ -46,9 +37,6 @@ ALTER TABLE IF EXISTS public.profiles
 
 ALTER TABLE IF EXISTS public.profiles
     ALTER COLUMN "contactEmail" SET STORAGE EXTENDED;
-
-ALTER TABLE IF EXISTS public.profiles
-    RENAME id TO "contactPhone";
 
 ALTER TABLE public.profiles
     ALTER COLUMN "contactPhone" TYPE text COLLATE pg_catalog."default";
@@ -64,9 +52,6 @@ ALTER TABLE IF EXISTS public.profiles
 COMMENT ON COLUMN public.profiles."contactPhone"
     IS 'phone number can be used to contact person';
 
-ALTER TABLE IF EXISTS public.profiles
-    RENAME id TO "postCode";
-
 ALTER TABLE public.profiles
     ALTER COLUMN "postCode" TYPE text COLLATE pg_catalog."default";
 ALTER TABLE IF EXISTS public.profiles
@@ -77,9 +62,6 @@ ALTER TABLE IF EXISTS public.profiles
 
 ALTER TABLE IF EXISTS public.profiles
     ALTER COLUMN "postCode" SET STORAGE EXTENDED;
-
-ALTER TABLE IF EXISTS public.profiles
-    RENAME id TO street;
 
 ALTER TABLE public.profiles
     ALTER COLUMN street TYPE text COLLATE pg_catalog."default";
@@ -92,9 +74,6 @@ ALTER TABLE IF EXISTS public.profiles
 ALTER TABLE IF EXISTS public.profiles
     ALTER COLUMN street SET STORAGE EXTENDED;
 
-ALTER TABLE IF EXISTS public.profiles
-    RENAME id TO username;
-
 ALTER TABLE public.profiles
     ALTER COLUMN username TYPE text COLLATE pg_catalog."default";
 ALTER TABLE IF EXISTS public.profiles
@@ -105,9 +84,6 @@ ALTER TABLE IF EXISTS public.profiles
 
 ALTER TABLE IF EXISTS public.profiles
     ALTER COLUMN username SET STORAGE EXTENDED;
-
-ALTER TABLE IF EXISTS public.profiles
-    RENAME id TO website;
 
 ALTER TABLE public.profiles
     ALTER COLUMN website TYPE text COLLATE pg_catalog."default";
