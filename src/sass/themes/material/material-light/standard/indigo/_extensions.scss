@@ -35,6 +35,10 @@ body {
   background-color: $accentContainer;
 }
 
+.accent-corlor {
+  color: $accentColor;
+}
+
 /* validate input styling */
 .p-input-filled .p-inputtext.ng-valid.ng-dirty {
   border-color: transparent;

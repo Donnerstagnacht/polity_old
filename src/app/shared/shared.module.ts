@@ -12,6 +12,9 @@ import { MenuBarSecondaryTopComponent } from './menu-bar-secondary-top/menu-bar-
 import {MenuModule} from 'primeng/menu';
 import {MenubarModule} from 'primeng/menubar';
 import {MegaMenuModule} from 'primeng/megamenu';
+import { ProfileCardComponent } from './profile-card/profile-card.component';
+import {AvatarModule} from 'primeng/avatar';
+import {AvatarGroupModule} from 'primeng/avatargroup';
 
 @NgModule({
   declarations: [
@@ -20,7 +23,8 @@ import {MegaMenuModule} from 'primeng/megamenu';
     WrapperFullCreenCenterComponent,
     WrapperGridComponent,
     MenuBarSecondaryRightComponent,
-    MenuBarSecondaryTopComponent
+    MenuBarSecondaryTopComponent,
+    ProfileCardComponent
   ],
   imports: [
     CommonModule,
@@ -29,7 +33,9 @@ import {MegaMenuModule} from 'primeng/megamenu';
     AppRoutingModule,
     MenuModule,
     MenubarModule,
-    MegaMenuModule
+    MegaMenuModule,
+    AvatarModule,
+    AvatarGroupModule
   ],
   exports: [
     MenuBarLeftComponent,
@@ -37,7 +43,8 @@ import {MegaMenuModule} from 'primeng/megamenu';
     WrapperFullCreenCenterComponent,
     WrapperGridComponent,
     MenuBarSecondaryRightComponent,
-    MenuBarSecondaryTopComponent
+    MenuBarSecondaryTopComponent,
+    ProfileCardComponent
   ]
 })
 export class SharedModule { }

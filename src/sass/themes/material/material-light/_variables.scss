@@ -24,7 +24,7 @@ $fontSize:1rem !default;
 $fontWeight:normal !default;
 $textColor:$emphasis-high !default;
 $textSecondaryColor:$emphasis-medium !default;
-$borderRadius:4px !default;
+$borderRadius: 12px !default;
 $transitionDuration:.2s !default;
 $formElementTransition:background-color $transitionDuration, border-color $transitionDuration, color $transitionDuration, box-shadow $transitionDuration, background-size 0.2s cubic-bezier(0.64, 0.09, 0.08, 1) !default;
 $actionIconTransition:background-color $transitionDuration, color $transitionDuration, box-shadow $transitionDuration !default;
