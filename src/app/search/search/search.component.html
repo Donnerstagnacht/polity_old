@@ -1,0 +1,75 @@
+<app-wrapper-grid>
+  <div slot="main">
+    <div class="mb-2">
+      <p-card>
+        <form (submit)="onSearch(searchBar.value)">
+          <div class="grid">
+            <div class="col-12">
+              <span class="p-float-label">
+                <input
+                  #searchBar
+                  class="w-full p-inputtext"
+                  id="float-input"
+                  type="text"
+                  pInputText
+                  [value]=" ''"
+                  >
+                <label for="float-input">Search</label>
+              </span>
+            </div>
+          </div>
+        </form>
+      </p-card>
+    </div>
+    <div class="mb-2">
+      <p-panel header="Filter" [toggleable]="true">
+        <form>
+          <div class="grid">
+            <div class="col-12 md:col-6">
+              <h5>Ebene</h5>
+              <p-chip class="mr-2" label="Lokal"></p-chip>
+              <p-chip class="mr-2" label="Regional"></p-chip>
+              <p-chip class="mr-2" label="Bund"></p-chip>
+            </div>
+            <div class="col-12 md:col-6">
+              <h5>Thema</h5>
+              <p-chip label="Text" class="mr-2" [removable]="true"></p-chip>
+              <p-chip label="Text" [removable]="true"></p-chip>
+            </div>
+          </div>
+          <div class="grid">
+            <div class="col-6">
+              <h5>Erstelldatum</h5>
+              <p-slider [range]="true"></p-slider>
+            </div>
+            <div class="col-6">
+              <h5>Aktueller Status</h5>
+            </div>
+          </div>
+        </form>
+      </p-panel>
+    </div>
+
+    <p-tabView>
+      <p-tabPanel header="PERSONEN">
+         Content 1
+      </p-tabPanel>
+      <p-tabPanel header="ANTRÄGE">
+          Content 2
+      </p-tabPanel>
+      <p-tabPanel header="GRUPPEN">
+          Content 3
+      </p-tabPanel>
+      <p-tabPanel header="TODOS">
+        Content 3
+    </p-tabPanel>
+  </p-tabView>
+
+
+
+  </div>
+  <div slot="side">
+    <!-- <app-menu-bar-secondary-right></app-menu-bar-secondary-right> -->
+  </div>
+
+</app-wrapper-grid>

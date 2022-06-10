@@ -338,7 +338,7 @@ $inputSwitchHandleOnBg:$primaryColor !default;
 //panel
 $panelHeaderBorderColor: #e0e0e0 !default;
 $panelHeaderBorder:1px solid #e0e0e0 !default;
-$panelHeaderBg:#ffffff !default;
+$panelHeaderBg:$surface!default;
 $panelHeaderTextColor:$textColor !default;
 $panelHeaderFontWeight:500 !default;
 $panelHeaderPadding:1rem !default;
@@ -350,13 +350,13 @@ $panelHeaderTextHoverColor:$textColor !default;
 
 $panelContentBorderColor: #e0e0e0 !default;
 $panelContentBorder:1px solid #e0e0e0 !default;
-$panelContentBg:#ffffff !default;
+$panelContentBg:$surface!default;
 $panelContentEvenRowBg:rgba(0,0,0,.02) !default;
 $panelContentTextColor:$textColor !default;
 $panelContentPadding:1rem !default;
 
 $panelFooterBorder:1px solid #e0e0e0 !default;
-$panelFooterBg:#ffffff !default;
+$panelFooterBg:$surface!default;
 $panelFooterTextColor:$textColor !default;
 $panelFooterPadding:1rem 1rem !default;
 

@@ -23,7 +23,8 @@ export class MenuBarBottomComponent implements OnInit {
       this.changeDetector.detectChanges();
       if(this.loggedIn) {
         this.items = [
-          {label: 'Profil', routerLink: ['/profile']}
+          {label: 'Profil', routerLink: ['/profile']},
+          {label: 'Search', routerLink: ['/search']}
         ]
       } else {
         this.items = [
