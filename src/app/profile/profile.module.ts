@@ -15,6 +15,8 @@ import { FormsModule } from '@angular/forms';
 import {InputTextareaModule} from 'primeng/inputtextarea';
 import {FileUploadModule} from 'primeng/fileupload';
 import {HttpClientModule} from '@angular/common/http';
+import {AvatarModule} from 'primeng/avatar';
+import {ToastModule} from 'primeng/toast';
 
 @NgModule({
   declarations: [
@@ -35,7 +37,9 @@ import {HttpClientModule} from '@angular/common/http';
     FormsModule,
     InputTextareaModule,
     FileUploadModule,
-    HttpClientModule
-  ]
+    HttpClientModule,
+    AvatarModule,
+    ToastModule,
+  ],
 })
 export class ProfileModule { }

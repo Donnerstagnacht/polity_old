@@ -1,27 +1,31 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Session } from '@supabase/supabase-js';
+import { MessageService } from 'primeng/api';
 import { AuthentificationService, Profile } from 'src/app/authentification/services/authentification.service';
+import { v4 as uuidv4 } from 'uuid';
 
 @Component({
   selector: 'app-edit-profile',
   templateUrl: './edit-profile.component.html',
-  styleUrls: ['./edit-profile.component.scss']
+  styleUrls: ['./edit-profile.component.scss'],
+  providers: [ MessageService ]
 })
 export class EditProfileComponent implements OnInit {
   loading: boolean = true;
   profile: Profile | undefined;
   session: Session | undefined;
   uploading: boolean = false;
-  @Output() upload = new EventEmitter<string>();
 
   constructor(
     private readonly authentificationService: AuthentificationService,
+    private messageService: MessageService,
     private router: Router
   ) { }
 
   ngOnInit(): void {
     this.getProfile();
+    console.warn(this.messageService)
   }
 
   async getProfile() {
@@ -44,38 +48,21 @@ export class EditProfileComponent implements OnInit {
     }
   }
 
-  async updateContactInformation(
-    username: string,
-    website: string,
-    avatarUrl: string,
-    contactEmail: string,
-    contactPhone: string,
-    street: string,
-    postCode: any,
-    city: string,
-    about: string
-  ): Promise<void> {
+  async updateContactInformation(profile: Partial<Profile>): Promise<void> {
     try {
       this.loading = true;
-      await this.authentificationService.updateProfile({
-        username,
-        website,
-        avatarUrl,
-        contactEmail,
-        contactPhone,
-        street,
-        postCode,
-        city,
-        about
-      });
-    } catch (error: any) {
-      alert(error.message);
+      await this.authentificationService.updateProfile(profile);
+      this.messageService.add({severity:'success', summary: 'Update erfolgreich.'});
+    } catch (error: any) {;
+      this.messageService.add({severity:'error', summary: error});
     } finally {
       this.loading = false;
     }
   }
 
-  async updateProfilePhoto(event: any) {
+  async updateProfilePhoto(event: any, fileUploader: any) {
+    console.log(fileUploader)
+    if (!this.profile) return;
     console.log('called');
     console.log(event.files);
     console.log(event);
@@ -87,14 +74,33 @@ export class EditProfileComponent implements OnInit {
       /*File-Upload - Feature */
       const file = event.files[0];
       const fileExt = file.name.split('.').pop();
-      const fileName = `test.${fileExt}`; /*`${Math.random()}.${fileExt}`;*/
+      const fileName = `${uuidv4()}.${fileExt}`;
       const filePath = `${fileName}`;
       console.log('filepath '+ filePath)
-      await this.authentificationService.uploadAvatar(filePath, file);
-      console.log('end');
-      this.upload.emit(filePath);
+      // const response = await this.authentificationService.uploadAvatar(filePath, file);
+      // console.log('end', response.data?.Key);
+      // if (this.profile && response.data?.Key) {
+      //   this.updateContactInformation({
+      //     avatarUrl:  response.data.Key,
+      //   });
+      // }
+      try {
+        const avatarUrl = await this.authentificationService.uploadAvatar(
+          filePath,
+          file,
+          this.profile.avatarUrl || undefined,
+        );
+        this.profile!.avatarUrl = avatarUrl
+        this.updateContactInformation({
+          avatarUrl:  avatarUrl,
+        });
+        fileUploader.clear();
+        this.messageService.add({severity:'success', summary: 'Upload des Avatars war erfolgreich.'});
+      } catch (error: any) {
+        this.messageService.add({severity:'error', summary: error});
+      }
     } catch (error: any) {
-      alert('hello' + error.message);
+      this.messageService.add({severity:'error', summary: error.message});
     } finally {
       this.uploading = false;
     }

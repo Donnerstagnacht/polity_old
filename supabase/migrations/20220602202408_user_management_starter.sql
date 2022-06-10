@@ -77,8 +77,8 @@ AFTER INSERT ON auth.users
 FOR EACH ROW EXECUTE PROCEDURE signup_copy_to_users_table();
 
 -- Set up Storage!
-insert into storage.buckets (id, name)
-values ('avatars', 'avatars');
+insert into storage.buckets (id, name, public)
+values ('avatars', 'avatars', true);
 
 create policy "Avatar images are accessible for authenticated users."
   on storage.objects for select
@@ -86,6 +86,10 @@ create policy "Avatar images are accessible for authenticated users."
     bucket_id = 'avatars'
     and auth.role() = 'authenticated'    
 );
+
+create policy "Only owner can delete Avatar image."
+  on storage.objects for DELETE
+  using ( auth.uid() = owner );
 
 create policy "Anyone can upload an avatar."
   on storage.objects for insert

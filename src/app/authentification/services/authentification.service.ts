@@ -98,7 +98,7 @@ export class AuthentificationService {
     }
   }
 
-  updateProfile(profile: Profile) {
+  updateProfile(profile: Partial<Profile>) {
     const update = {
       ...profile,
       id: this.user?.id,
@@ -110,16 +110,34 @@ export class AuthentificationService {
     });
   }
 
-  downLoadImage(path: string) {
-    return this.supabase.storage.from('avatars').download(path);
+  async deleteAvatar(path: string) {
+    console.warn('deleteAvatar', path)
+    const response = await this.supabase.storage.from('avatars').remove([path]);
+    if (response.error) throw Error('Removal of old avatar failed.');
+    return true;
   }
 
-  uploadAvatar(filePath: string, file: File) {
+  getPublicUrl(path: string) {
+    console.warn('getPublicUrl', path)
+    const response = this.supabase.storage.from('avatars').getPublicUrl(path);
+    if (response.error) throw Error('Avatar upload failed.');
+    return response.data!.publicURL;
+  }
+
+  async uploadAvatar(
+    filePath: string,
+    file: File,
+    oldFilePath: string | undefined,
+  ) {
     console.log('authService: ' + filePath)
     console.log('authService2: ' + file)
-    return this.supabase.storage
+    const response = await this.supabase.storage
       .from('avatars')
       .upload(filePath, file);
+    if (response.error) throw Error('Avatar upload failed.');
+    const oldAvatar: string = oldFilePath ? oldFilePath.split('public/avatars/')[1] : '';
+    if (oldAvatar) await this.deleteAvatar(oldAvatar);
+    return this.getPublicUrl(filePath);
   }
 
 }

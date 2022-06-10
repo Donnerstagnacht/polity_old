@@ -1,5 +1,6 @@
 <app-wrapper-grid>
   <div slot="main">
+    <p-toast></p-toast>
     <div class="mb-8">
       <div class="mx-4">
         <div >
@@ -48,15 +49,17 @@
           </div>
           <div>
             <h5>Profile Foto</h5>
+            <p-avatar *ngIf="profile.avatarUrl" [image]="profile.avatarUrl"></p-avatar>
             <p-fileUpload
-            (uploadHandler)="updateProfilePhoto($event)"
-            name="myfile[]"
-            accept="image/*"
-            [auto]="true"
-            [customUpload]="true"
-            class="full-w"
+              #fileUploader
+              (uploadHandler)="updateProfilePhoto($event, fileUploader)"
+              name="myfile[]"
+              accept="image/*"
+              [auto]="true"
+              [customUpload]="true"
+              class="full-w"
             >
-          </p-fileUpload>
+            </p-fileUpload>
 
           </div>
           <!-- <div class="flex flex-column">
@@ -138,17 +141,7 @@
               pButton
               type="button"
               label="{{loading ? 'Loading ...' : 'Update'}}"
-              (click)="updateContactInformation(
-                profile.username,
-                profile.website ,
-                profile.avatarUrl,
-                profile.contactEmail,
-                profile.contactPhone,
-                profile.street,
-                profile.postCode,
-                profile.city,
-                profile.about
-              )"
+              (click)="updateContactInformation(profile)"
               [disabled]="loading"
             >
             </button>
