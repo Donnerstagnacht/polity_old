@@ -11,6 +11,7 @@ import {SliderModule} from 'primeng/slider';
 import {CheckboxModule} from 'primeng/checkbox';
 import {PanelModule} from 'primeng/panel';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {ChipsModule} from 'primeng/chips';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     ChipModule,
     SliderModule,
     CheckboxModule,
-    PanelModule
+    PanelModule,
+    ChipsModule
 
   ]
 })

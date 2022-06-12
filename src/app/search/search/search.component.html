@@ -27,23 +27,35 @@
           <div class="grid">
             <div class="col-12 md:col-6">
               <h5>Ebene</h5>
-              <p-chip class="mr-2" label="Lokal"></p-chip>
-              <p-chip class="mr-2" label="Regional"></p-chip>
-              <p-chip class="mr-2" label="Bund"></p-chip>
+                <p-chip *ngIf="!localFilterOn" (click)="setLocalFilter()"  class="mr-2" label="Lokal" styleClass="cursor-pointer"></p-chip>
+                <p-chip *ngIf="localFilterOn" (click)="setLocalFilter()" class="mr-2" label="Lokal" styleClass="cursor-pointer accent-container"></p-chip>
+
+                <p-chip *ngIf="!regionalFilterOn" (click)="setRegionalFilter()"  class="mr-2" label="Regional" styleClass="cursor-pointer"></p-chip>
+                <p-chip *ngIf="regionalFilterOn" (click)="setRegionalFilter()" class="mr-2" label="Regional" styleClass="cursor-pointer accent-container"></p-chip>
+
+                <p-chip *ngIf="!federalFilterOn" (click)="setFederalFilter()"  class="mr-2" label="Bund" styleClass="cursor-pointer"></p-chip>
+                <p-chip *ngIf="federalFilterOn" (click)="setFederalFilter()" class="mr-2" label="Bund" styleClass="cursor-pointer accent-container"></p-chip>
             </div>
             <div class="col-12 md:col-6">
               <h5>Thema</h5>
-              <p-chip label="Text" class="mr-2" [removable]="true"></p-chip>
-              <p-chip label="Text" [removable]="true"></p-chip>
+              <p-chips [(ngModel)]="filteredTopics" name="filteredTopics"></p-chips>
             </div>
           </div>
           <div class="grid">
             <div class="col-6">
-              <h5>Erstelldatum</h5>
-              <p-slider [range]="true"></p-slider>
+              <h5>Erstelldatum: {{createDateRangeValues[0] + ' - ' + createDateRangeValues[1]}}</h5>
+              <p-slider [min]="2000" [max]="2020" [(ngModel)]="createDateRangeValues" [range]="true" name="createDate"></p-slider>
             </div>
             <div class="col-6">
               <h5>Aktueller Status</h5>
+              <div class="flex justify-content-between align-items-center">
+                <p class="flex">Offen</p>
+                <p-checkbox class="" [(ngModel)]="statusOpenOn" [binary]="true" name="statusOpen"></p-checkbox>
+              </div>
+              <div class="flex justify-content-between align-items-center">
+                <p class="">Geschlossen</p>
+                <p-checkbox class="" [(ngModel)]="statusClosedOn" [binary]="true" name="statusClosed"></p-checkbox>
+              </div>
             </div>
           </div>
         </form>
@@ -53,12 +65,12 @@
     <p-tabView>
       <p-tabPanel header="PERSONEN">
         <div class="grid">
-          <div class="col-6 lg:col-3 lg:col-3">
-            <app-profile-card></app-profile-card>
+          <div *ngFor="let result of results" class="col-6 lg:col-3 lg:col-3">
+            <app-profile-card [profile]="result"></app-profile-card>
           </div>
-          <div class="col-6 lg:col-3 lg:col-3">
+          <!-- <div class="col-6 lg:col-3 lg:col-3">
             <app-profile-card></app-profile-card>
-          </div>
+          </div> -->
         </div>
       </p-tabPanel>
       <p-tabPanel header="ANTRÄGE">
