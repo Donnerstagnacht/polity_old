@@ -11,5 +11,4 @@ export class ProfileCardComponent implements OnInit {
 
   ngOnInit(): void {
   }
-
 }

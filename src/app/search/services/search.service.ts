@@ -44,7 +44,8 @@ export class SearchService {
     let searchQuery = this.supabaseClient
       .from('profiles')
       .select(
-        `username,
+        `id,
+        username,
         avatarUrl,
         website`
       )

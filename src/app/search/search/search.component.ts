@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { SearchService } from '../services/search.service';
-
 @Component({
   selector: 'app-search',
   templateUrl: './search.component.html',
@@ -22,7 +21,9 @@ export class SearchComponent implements OnInit {
   statusOpenOn: boolean = false;
   statusClosedOn: boolean = false;
 
-  constructor(private searchService: SearchService) { }
+  constructor(
+    private searchService: SearchService,
+    ) { }
 
   ngOnInit(): void {
 

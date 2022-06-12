@@ -7,6 +7,18 @@
           <img class="my-4" src={{profile?.avatarUrl}}>
         </div>
 
+        <div class="flex flex-column">
+          <div class="flex align-items-center justify-content-center">
+            <button
+            pButton
+            type="button"
+            label="{{isAlreadyFollower ? 'Unfollow' : 'Follow'}}"
+            (click)="followOrUnfollowProfile()"
+          >
+          </button>
+          </div>
+        </div>
+
         <div class="flex justify-content-around">
           <div class="text-center">
             <h5>12</h5>
