@@ -1,0 +1,94 @@
+<app-wrapper-grid>
+  <div slot="main">
+    <div class="mb-2">
+      <p-card>
+        <form (submit)="onSearch(searchBar.value)">
+          <div class="grid">
+            <div class="col-12">
+              <span class="p-float-label">
+                <input
+                  #searchBar
+                  class="w-full p-inputtext"
+                  id="float-input"
+                  type="text"
+                  pInputText
+                  [value]=" ''"
+                  >
+                <label for="float-input">Search</label>
+              </span>
+            </div>
+          </div>
+        </form>
+      </p-card>
+    </div>
+    <div class="mb-2">
+      <p-panel header="Filter" [collapsed]="true" [toggleable]="true">
+        <form>
+          <div class="grid">
+            <div class="col-12 md:col-6">
+              <h5>Ebene</h5>
+                <p-chip *ngIf="!localFilterOn" (click)="setLocalFilter()"  class="mr-2" label="Lokal" styleClass="cursor-pointer"></p-chip>
+                <p-chip *ngIf="localFilterOn" (click)="setLocalFilter()" class="mr-2" label="Lokal" styleClass="cursor-pointer accent-container"></p-chip>
+
+                <p-chip *ngIf="!regionalFilterOn" (click)="setRegionalFilter()"  class="mr-2" label="Regional" styleClass="cursor-pointer"></p-chip>
+                <p-chip *ngIf="regionalFilterOn" (click)="setRegionalFilter()" class="mr-2" label="Regional" styleClass="cursor-pointer accent-container"></p-chip>
+
+                <p-chip *ngIf="!federalFilterOn" (click)="setFederalFilter()"  class="mr-2" label="Bund" styleClass="cursor-pointer"></p-chip>
+                <p-chip *ngIf="federalFilterOn" (click)="setFederalFilter()" class="mr-2" label="Bund" styleClass="cursor-pointer accent-container"></p-chip>
+            </div>
+            <div class="col-12 md:col-6">
+              <h5>Thema</h5>
+              <p-chips [(ngModel)]="filteredTopics" name="filteredTopics"></p-chips>
+            </div>
+          </div>
+          <div class="grid">
+            <div class="col-6">
+              <h5>Erstelldatum: {{createDateRangeValues[0] + ' - ' + createDateRangeValues[1]}}</h5>
+              <p-slider [min]="2000" [max]="2020" [(ngModel)]="createDateRangeValues" [range]="true" name="createDate"></p-slider>
+            </div>
+            <div class="col-6">
+              <h5>Aktueller Status</h5>
+              <div class="flex justify-content-between align-items-center">
+                <p class="flex">Offen</p>
+                <p-checkbox class="" [(ngModel)]="statusOpenOn" [binary]="true" name="statusOpen"></p-checkbox>
+              </div>
+              <div class="flex justify-content-between align-items-center">
+                <p class="">Geschlossen</p>
+                <p-checkbox class="" [(ngModel)]="statusClosedOn" [binary]="true" name="statusClosed"></p-checkbox>
+              </div>
+            </div>
+          </div>
+        </form>
+      </p-panel>
+    </div>
+
+    <p-tabView>
+      <p-tabPanel header="PERSONEN">
+        <div class="grid">
+          <div *ngFor="let result of results" class="col-6 lg:col-3 lg:col-3">
+            <app-profile-card [profile]="result"></app-profile-card>
+          </div>
+          <!-- <div class="col-6 lg:col-3 lg:col-3">
+            <app-profile-card></app-profile-card>
+          </div> -->
+        </div>
+      </p-tabPanel>
+      <p-tabPanel header="ANTRÄGE">
+          Content 2
+      </p-tabPanel>
+      <p-tabPanel header="GRUPPEN">
+          Content 3
+      </p-tabPanel>
+      <p-tabPanel header="TODOS">
+        Content 3
+    </p-tabPanel>
+  </p-tabView>
+
+
+
+  </div>
+  <div slot="side">
+    <!-- <app-menu-bar-secondary-right></app-menu-bar-secondary-right> -->
+  </div>
+
+</app-wrapper-grid>

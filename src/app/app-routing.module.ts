@@ -5,6 +5,7 @@ import { RegisterComponent } from './authentification/register/register.componen
 import { EditProfileComponent } from './profile/edit-profile/edit-profile.component';
 import { EditComponent } from './profile/edit/edit.component';
 import { ProfileComponent } from './profile/profile/profile.component';
+import { SearchComponent } from './search/search/search.component';
 
 const routes: Routes = [
   {path: '', component: RegisterComponent},
@@ -13,6 +14,7 @@ const routes: Routes = [
   {path: 'profile-edit', component: EditComponent},
   {path: 'profile-edit/profile', component: EditProfileComponent},
   {path: 'register', component: RegisterComponent},
+  {path: 'search', component: SearchComponent},
   {path: 'über', component: LoginComponent}
 ];
 

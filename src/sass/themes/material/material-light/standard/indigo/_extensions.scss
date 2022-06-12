@@ -35,6 +35,10 @@ body {
   background-color: $accentContainer;
 }
 
+.accent-corlor {
+  color: $accentColor;
+}
+
 /* validate input styling */
 .p-input-filled .p-inputtext.ng-valid.ng-dirty {
   border-color: transparent;
@@ -131,6 +135,14 @@ mark {
 .p-megamenu {
   border: none!important;
   padding: 0.5rem;
+}
+
+.p-card {
+  background-color: $surface;
+}
+
+.p-panel-header {
+  background-color: $surface;
 }
 
 /*.p-tabview .p-tabview-panels, .p-tabview .p-tabview-nav {

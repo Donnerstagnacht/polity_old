@@ -24,7 +24,7 @@ $fontSize:1rem !default;
 $fontWeight:normal !default;
 $textColor:$emphasis-high !default;
 $textSecondaryColor:$emphasis-medium !default;
-$borderRadius:4px !default;
+$borderRadius: 12px !default;
 $transitionDuration:.2s !default;
 $formElementTransition:background-color $transitionDuration, border-color $transitionDuration, color $transitionDuration, box-shadow $transitionDuration, background-size 0.2s cubic-bezier(0.64, 0.09, 0.08, 1) !default;
 $actionIconTransition:background-color $transitionDuration, color $transitionDuration, box-shadow $transitionDuration !default;
@@ -338,7 +338,7 @@ $inputSwitchHandleOnBg:$primaryColor !default;
 //panel
 $panelHeaderBorderColor: #e0e0e0 !default;
 $panelHeaderBorder:1px solid #e0e0e0 !default;
-$panelHeaderBg:#ffffff !default;
+$panelHeaderBg:$surface!default;
 $panelHeaderTextColor:$textColor !default;
 $panelHeaderFontWeight:500 !default;
 $panelHeaderPadding:1rem !default;
@@ -350,13 +350,13 @@ $panelHeaderTextHoverColor:$textColor !default;
 
 $panelContentBorderColor: #e0e0e0 !default;
 $panelContentBorder:1px solid #e0e0e0 !default;
-$panelContentBg:#ffffff !default;
+$panelContentBg:$surface!default;
 $panelContentEvenRowBg:rgba(0,0,0,.02) !default;
 $panelContentTextColor:$textColor !default;
 $panelContentPadding:1rem !default;
 
 $panelFooterBorder:1px solid #e0e0e0 !default;
-$panelFooterBg:#ffffff !default;
+$panelFooterBg:$surface!default;
 $panelFooterTextColor:$textColor !default;
 $panelFooterPadding:1rem 1rem !default;
 
