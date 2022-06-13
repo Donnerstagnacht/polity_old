@@ -145,6 +145,12 @@ mark {
   background-color: $surface;
 }
 
+@media only screen and (max-width: 425px) {
+  .max-w-90 {
+    max-width: 90%;
+  }
+}
+
 /*.p-tabview .p-tabview-panels, .p-tabview .p-tabview-nav {
   background-color: red!important;
 }*/
