@@ -9,7 +9,6 @@ import { ProfileModule } from './profile/profile.module';
 import { SearchModule } from './search/search.module';
 import { SharedModule } from './shared/shared.module';
 
-
 @NgModule({
   declarations: [
     AppComponent
