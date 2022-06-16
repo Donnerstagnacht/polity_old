@@ -1,3 +1,4 @@
+<p-toast styleClass="max-w-90"	 position="top-right">></p-toast>
   <app-wrapper-grid>
     <div slot="main">
       <div class="mb-8">
@@ -21,20 +22,20 @@
 
         <div class="flex justify-content-around">
           <div class="text-center">
-            <h5>12</h5>
+            <h5>{{profile?.amendmentCounter}}</h5>
             <p>Anträge</p>
           </div>
           <div class="text-center">
-            <h5>154</h5>
+            <h5>{{profile?.followerCounter}}</h5>
             <p>Follower</p>
           </div>
           <div class="text-center">
-            <h5>65</h5>
+            <h5>{{profile?.followingCounter}}</h5>
             <p>Following</p>
           </div>
           <div class="text-center">
-            <h5>18</h5>
-            <p>Netz</p>
+            <h5>{{profile?.groupsCounter}}</h5>
+            <p>Gruppen</p>
           </div>
           <!-- <div class="text-center">
             <h5>73</h5>
@@ -68,5 +69,4 @@
     <div slot="side">
       <app-menu-bar-secondary-right *ngIf="supabase.user?.id === profile?.id"></app-menu-bar-secondary-right>
     </div>
-
-  </app-wrapper-grid>
+</app-wrapper-grid>

@@ -1,14 +1,15 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router, ActivatedRoute  } from '@angular/router';
-import { Session } from '@supabase/supabase-js';
 import { Profile, AuthentificationService } from 'src/app/authentification/services/authentification.service';
 import { ProfileService } from '../services/profile.service';
 import { FollowingService } from 'src/app/following-profiles-system/services/following.service';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.scss']
+  styleUrls: ['./profile.component.scss'],
+  providers: [MessageService]
 })
 export class ProfileComponent implements OnInit {
   loading: boolean = true;
@@ -23,7 +24,8 @@ export class ProfileComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private profileService: ProfileService,
-    private followingservice: FollowingService
+    private followingservice: FollowingService,
+    private messageService: MessageService
   ) {}
 
   ngOnInit(): void {
@@ -35,7 +37,6 @@ export class ProfileComponent implements OnInit {
   getSelectedId(): void {
     this.route.paramMap.subscribe(parameter => {
       this.selectedProfileId = String(parameter.get('id') || this.supabase.user?.id);
-      // console.log('constructor' + this.selectedProfileId)
     })
   }
 
@@ -73,21 +74,23 @@ export class ProfileComponent implements OnInit {
   followOrUnfollowProfile(): void {
     if(this.selectedProfileId) {
       if(this.isAlreadyFollower) {
-        this.followingservice.unFollow(this.selectedProfileId)
-        .then((deletedData) => {
-          if(deletedData.data[0] !== undefined) {
-            this.isAlreadyFollower = false;
-          }
+        this.followingservice.unfollowTransaction(this.selectedProfileId)
+        .then(() => {
+          this.isAlreadyFollower = false;
+          this.messageService.add({severity:'success', summary: 'Du folgst einer neuen Inspirationsquelle.'});
         })
-        .catch();
+        .catch((error) => {
+          this.messageService.add({severity:'error', summary: error});
+        });
       } else {
-        this.followingservice.follow(this.selectedProfileId)
-        .then((insertData) => {
-          if(insertData.data[0] !== undefined) {
-            this.isAlreadyFollower = true;
-          }
+        this.followingservice.followTransaction(this.selectedProfileId)
+        .then(() => {
+          console.log()
+            this.messageService.add({severity:'success', summary: 'Du folgst einer neuen Inspirationsquelle.'});
         })
-        .catch();
+        .catch((error) => {
+          this.messageService.add({severity:'error', summary: error});
+        });
       }
     }
   }
@@ -96,6 +99,7 @@ export class ProfileComponent implements OnInit {
     if(this.selectedProfileId) {
       this.followingservice.isAlreadyFollower(this.selectedProfileId)
       .then((results) => {
+        console.log(results)
         if(results.data[0] !== undefined) {
           this.isAlreadyFollower = true;
         } else {

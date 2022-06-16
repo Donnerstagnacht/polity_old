@@ -25,7 +25,11 @@ export class ProfileService {
         street,
         postCode,
         city,
-        about`
+        about,
+        amendmentCounter,
+        followerCounter,
+        followingCounter,
+        groupsCounter`
       )
       .eq('id', uuid)
       .single()

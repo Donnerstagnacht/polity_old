@@ -13,43 +13,6 @@ export class FollowingService {
     this.supabaseClient = createClient(environment.supabaseUrl, environment.supabaseKey)
    }
 
-  async follow(following: string): Promise<{data: any, error: any}> {
-    const loggedInID = this.authentificationService.user?.id;
-    const insertData: {data: any, error: any} = await this.supabaseClient
-      .from('following-profile-system')
-      .insert([
-        {
-          follower: loggedInID,
-          following: following
-        }
-      ])
-      return insertData;
-  }
-
-  async unFollow(following: string): Promise<{data: any, error: any}> {
-    const loggedInID = this.authentificationService.user?.id;
-    const deletedData: {data: any, error: any} = await this.supabaseClient
-      .from('following-profile-system')
-      .delete()
-      .match({
-        follower: loggedInID,
-        following: following
-      })
-    return deletedData;
-  }
-
-  async deleteFollower(follower: string): Promise<{data: any, error: any}> {
-    const loggedInID = this.authentificationService.user?.id;
-    const deletedData: {data: any, error: any} = await this.supabaseClient
-      .from('following-profile-system')
-      .delete()
-      .match({
-        follower: follower,
-        following: loggedInID
-      })
-    return deletedData;
-  }
-
   async isAlreadyFollower(following: string): Promise<{data: any, error: any}> {
     const loggedInID = this.authentificationService.user?.id;
     const results: {data: any, error: any} = await this.supabaseClient
@@ -63,9 +26,6 @@ export class FollowingService {
       .eq('following', following)
     return results;
 
-  }
-
-  isAlreadyFollowing(follower: string, following: string): void {
   }
 
   async getAllFollower(): Promise<{data: any, error: any}> {
@@ -100,5 +60,26 @@ export class FollowingService {
     )
     .eq('follower', loggedInID)
   return followings;
+  }
+
+  async followTransaction(follower: string): Promise<{data: any, error: any}> {
+    const loggedInID = this.authentificationService.user?.id;
+    const followTransactionResult: { data: any, error: any } = await this.supabaseClient
+      .rpc('followtransaction', {followingid: follower, followerid: loggedInID})
+    return followTransactionResult;
+  }
+
+  async unfollowTransaction(follower: string): Promise<{data: any, error: any}> {
+    const loggedInID = this.authentificationService.user?.id;
+    const unfollowTransactionResult: { data: any, error: any } = await this.supabaseClient
+      .rpc('unfollowtransaction', {followingid: follower, followerid: loggedInID})
+    return unfollowTransactionResult;
+  }
+
+  async removeFollowerTransaction(follower: string): Promise<{data: any, error: any}> {
+    const loggedInID = this.authentificationService.user?.id;
+    const unfollowTransactionResult: { data: any, error: any } = await this.supabaseClient
+      .rpc('unfollowtransaction', {followingid: loggedInID, followerid: follower})
+    return unfollowTransactionResult;
   }
 }

@@ -5,6 +5,10 @@ import { environment } from 'src/environments/environment';
 import { account } from '../../../types/account';
 
 export interface Profile {
+  amendmentCounter: number;
+  followerCounter: number;
+  followingCounter: number;
+  groupsCounter: number;
   id: string;
   username: string;
   website: string;

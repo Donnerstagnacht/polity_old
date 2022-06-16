@@ -65,22 +65,22 @@ export class FollowerManagementComponent implements OnInit {
     });
   }
 
-  onUnfollow(uuid:string): void {
-    this.followingService.unFollow(uuid)
+  onRemoveFollower(uuid:string): void {
+    this.followingService.removeFollowerTransaction(uuid)
     .then(() => {
       this.getAllFollowing();
-      this.messageService.add({severity:'success', summary: 'Unfollowed.'});
+      this.messageService.add({severity:'success', summary: 'Follower entfernt.'});
     })
     .catch((error: any) =>  {
       this.messageService.add({severity:'error', summary: error})
     })
   }
 
-  onDeletefollowing(uuid:string): void {
-    this.followingService.deleteFollower(uuid)
+  onUnFollow(uuid:string): void {
+    this.followingService.unfollowTransaction(uuid)
     .then(() => {
       this.getAllFollower();
-      this.messageService.add({severity:'success', summary: 'Follower entfernt..'});
+      this.messageService.add({severity:'success', summary: 'Du folgst der Person nicht mehr.'});
     })
     .catch((error) => {
       this.messageService.add({severity:'success', summary: error});
