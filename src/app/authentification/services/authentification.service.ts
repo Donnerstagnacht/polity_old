@@ -5,6 +5,7 @@ import { environment } from 'src/environments/environment';
 import { account } from '../../../types/account';
 
 export interface Profile {
+  id: string;
   username: string;
   website: string;
   avatarUrl: string;

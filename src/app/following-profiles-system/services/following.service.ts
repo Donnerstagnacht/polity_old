@@ -38,6 +38,18 @@ export class FollowingService {
     return deletedData;
   }
 
+  async deleteFollower(follower: string): Promise<{data: any, error: any}> {
+    const loggedInID = this.authentificationService.user?.id;
+    const deletedData: {data: any, error: any} = await this.supabaseClient
+      .from('following-profile-system')
+      .delete()
+      .match({
+        follower: follower,
+        following: loggedInID
+      })
+    return deletedData;
+  }
+
   async isAlreadyFollower(following: string): Promise<{data: any, error: any}> {
     const loggedInID = this.authentificationService.user?.id;
     const results: {data: any, error: any} = await this.supabaseClient

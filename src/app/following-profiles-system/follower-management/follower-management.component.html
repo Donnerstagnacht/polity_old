@@ -1,3 +1,4 @@
+<p-toast styleClass="max-w-90"	 position="top-right">></p-toast>
 <app-wrapper-grid>
   <div slot="main">
     <div class="mb-8">
@@ -8,14 +9,102 @@
             <h4 class="flex align-items-center justify-content-center">Zurück</h4>
           </a>
         </div>
-
         <div class="mb-30">
+
           <p-tabView>
             <p-tabPanel header="Follower">
-
+              <p-table
+              [value]="followings"
+              #followingTable
+              [globalFilterFields]="['username']"
+              >
+                <ng-template pTemplate="caption">
+                  <div class="flex justify-content-end">
+                    <span class="p-input-icon-left p-ml-auto">
+                              <i class="pi pi-search"></i>
+                              <input
+                              class="w-full"
+                              pInputText
+                              type="text"
+                              [(ngModel)]="filterString"
+                              (input)="followingTable.filterGlobal(filterString, 'contains')"
+                              placeholder="Search keyword" />
+                          </span>
+                  </div>
+                </ng-template>
+                <ng-template pTemplate="body" let-followings>
+                  <tr>
+                    <td>
+                      <p-avatar size="xlarge" shape="circle" styleClass="border-round" image={{followings.avatarUrl}}></p-avatar>
+                    </td>
+                    <td>
+                      {{followings.username}}
+                    </td>
+                    <td>
+                      <button
+                       pButton
+                       pRipple
+                       type="button"
+                       icon="pi pi-times"
+                       class="p-button-rounded p-button-text p-button-danger"
+                       (click)="onUnfollow(followings.id)"
+                       ></button>
+                    </td>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="emptymessage">
+                  <tr>
+                    <td colspan="7">No customers found.</td>
+                  </tr>
+                </ng-template>
+              </p-table>
             </p-tabPanel>
             <p-tabPanel header="Following">
-
+              <p-table
+              [value]="followers"
+              #followerTable
+              [globalFilterFields]="['username']"
+              >
+                <ng-template pTemplate="caption">
+                  <div class="flex justify-content-end">
+                    <span class="p-input-icon-left p-ml-auto">
+                              <i class="pi pi-search"></i>
+                              <input
+                              class="w-full"
+                              pInputText
+                              type="text"
+                              [(ngModel)]="filterString"
+                              (input)="followerTable.filterGlobal(filterString, 'contains')"
+                              placeholder="Search keyword" />
+                          </span>
+                  </div>
+                </ng-template>
+                <ng-template pTemplate="body" let-followers>
+                  <tr>
+                    <td>
+                      <p-avatar size="xlarge" shape="circle" styleClass="border-round" image={{followers.avatarUrl}}></p-avatar>
+                    </td>
+                    <td>
+                      {{followers.username}}
+                    </td>
+                    <td>
+                      <button
+                       pButton
+                       pRipple
+                       type="button"
+                       icon="pi pi-times"
+                       class="p-button-rounded p-button-text p-button-danger"
+                       (click)="onDeletefollowing(followers.id)"
+                       ></button>
+                    </td>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="emptymessage">
+                  <tr>
+                    <td colspan="7">Du folgst noch niemanden.</td>
+                  </tr>
+                </ng-template>
+              </p-table>
             </p-tabPanel>
           </p-tabView>
         </div>

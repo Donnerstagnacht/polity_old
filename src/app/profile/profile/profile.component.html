@@ -9,7 +9,7 @@
 
         <div class="flex flex-column">
           <div class="flex align-items-center justify-content-center">
-            <button
+            <button *ngIf="supabase.user?.id !== profile?.id"
             pButton
             type="button"
             label="{{isAlreadyFollower ? 'Unfollow' : 'Follow'}}"
@@ -66,7 +66,7 @@
       </div>
     </div>
     <div slot="side">
-      <app-menu-bar-secondary-right></app-menu-bar-secondary-right>
+      <app-menu-bar-secondary-right *ngIf="supabase.user?.id === profile?.id"></app-menu-bar-secondary-right>
     </div>
 
   </app-wrapper-grid>

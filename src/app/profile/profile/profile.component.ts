@@ -13,13 +13,13 @@ import { FollowingService } from 'src/app/following-profiles-system/services/fol
 export class ProfileComponent implements OnInit {
   loading: boolean = true;
   profile: Profile | undefined;
-  @Input() session: Session | undefined;
+  // @Input() session: Session | undefined;
   isAlreadyFollower: boolean = false;
 
   selectedProfileId: string | undefined = undefined;
 
   constructor(
-    private readonly supabase: AuthentificationService,
+    public readonly supabase: AuthentificationService,
     private router: Router,
     private route: ActivatedRoute,
     private profileService: ProfileService,

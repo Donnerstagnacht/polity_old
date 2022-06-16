@@ -16,7 +16,8 @@ export class ProfileService {
     const results: {data: any, error: any} = await this.supabaseClient
       .from('profiles')
       .select(
-        `username,
+        `id,
+        username,
         website,
         avatarUrl,
         contactEmail,
