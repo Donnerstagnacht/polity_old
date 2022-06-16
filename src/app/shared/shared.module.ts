@@ -15,6 +15,8 @@ import {MegaMenuModule} from 'primeng/megamenu';
 import { ProfileCardComponent } from './profile-card/profile-card.component';
 import {AvatarModule} from 'primeng/avatar';
 import {AvatarGroupModule} from 'primeng/avatargroup';
+import { GroupCardComponent } from './group-card/group-card.component';
+import { GroupsModule } from '../groups/groups.module';
 
 @NgModule({
   declarations: [
@@ -24,7 +26,8 @@ import {AvatarGroupModule} from 'primeng/avatargroup';
     WrapperGridComponent,
     MenuBarSecondaryRightComponent,
     MenuBarSecondaryTopComponent,
-    ProfileCardComponent
+    ProfileCardComponent,
+    GroupCardComponent
   ],
   imports: [
     CommonModule,
@@ -44,7 +47,8 @@ import {AvatarGroupModule} from 'primeng/avatargroup';
     WrapperGridComponent,
     MenuBarSecondaryRightComponent,
     MenuBarSecondaryTopComponent,
-    ProfileCardComponent
+    ProfileCardComponent,
+    GroupCardComponent
   ]
 })
 export class SharedModule { }

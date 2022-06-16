@@ -5,6 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AuthentificationModule } from './authentification/authentification.module';
 import { FollowingProfilesSystemModule } from './following-profiles-system/following-profiles-system.module';
+import { GroupsModule } from './groups/groups.module';
 import { ProfileModule } from './profile/profile.module';
 import { SearchModule } from './search/search.module';
 import { SharedModule } from './shared/shared.module';
@@ -21,6 +22,7 @@ import { SharedModule } from './shared/shared.module';
     ProfileModule,
     SearchModule,
     FollowingProfilesSystemModule
+    // GroupsModule
   ],
   bootstrap: [AppComponent]
 })

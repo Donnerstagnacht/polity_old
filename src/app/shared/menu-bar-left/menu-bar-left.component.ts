@@ -25,6 +25,7 @@ export class MenuBarLeftComponent implements OnInit {
       if(this.loggedIn) {
         this.items = [
           {label: 'Profil', routerLink: ['/profile']},
+          {label: 'Gruppen', routerLink: ['/groups']},
           {label: 'Search', routerLink: ['/search']}
         ]
       } else {

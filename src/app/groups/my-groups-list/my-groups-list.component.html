@@ -13,6 +13,10 @@
             </ng-template>
           </p-messages>
         </a>
+        <div class="flex flex-row">
+          <i class="pi pi-angle-down align-items-center flex justify-content-center mr-4"></i>
+          <h4 class="flex align-items-center justify-content-center">LOKAL</h4>
+        </div>
         <a routerLink="/profile-edit/follower">
           <p-messages  severity="custom">
             <ng-template pTemplate>
@@ -27,12 +31,20 @@
             </ng-template>
           </p-messages>
         </a>
+        <div class="flex flex-row">
+          <i class="pi pi-angle-down align-items-center flex justify-content-center mr-4"></i>
+          <h4 class="flex align-items-center justify-content-center">Regional</h4>
+        </div>
+        <div class="flex flex-row">
+          <i class="pi pi-angle-down align-items-center flex justify-content-center mr-4"></i>
+          <h4 class="flex align-items-center justify-content-center">Bund</h4>
+        </div>
 
         <div class="flex flex-row">
           <i class="pi pi-angle-down align-items-center flex justify-content-center mr-4"></i>
-          <h4 class="flex align-items-center justify-content-center">GEFAHRENZONE</h4>
+          <h4 class="flex align-items-center justify-content-center">International</h4>
         </div>
-        <a class="cursor-pointer" (click)="signOut()">
+        <a class="cursor-pointer">
           <p-messages  severity="custom">
             <ng-template pTemplate>
                 <div class="ml-2">Logout</div>
