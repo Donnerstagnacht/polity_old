@@ -117,8 +117,8 @@ export class ProfileComponent implements OnInit {
       } else {
         this.followingservice.followTransaction(this.selectedProfileId)
         .then(() => {
-          console.log()
-            this.messageService.add({severity:'success', summary: 'Du folgst einer neuen Inspirationsquelle.'});
+          this.isAlreadyFollower = true;
+          this.messageService.add({severity:'success', summary: 'Du folgst einer neuen Inspirationsquelle.'});
         })
         .catch((error) => {
           this.messageService.add({severity:'error', summary: error});
@@ -131,7 +131,6 @@ export class ProfileComponent implements OnInit {
     if(this.selectedProfileId) {
       this.followingservice.isAlreadyFollower(this.selectedProfileId)
       .then((results) => {
-        console.log(results)
         if(results.data[0] !== undefined) {
           this.isAlreadyFollower = true;
         } else {

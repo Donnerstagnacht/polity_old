@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MegaMenuItem, MenuItem } from 'primeng/api';
+import { MegaMenuItem, MenuItem, MessageService } from 'primeng/api';
+import { FollowingGroupsService } from 'src/app/following-groups-system/services/following-groups.service';
 import { contactData } from 'src/app/shared/UI/about-and-contact/about-and-contact.component';
 import { KeyFigure } from 'src/app/shared/UI/key-figures/key-figures.component';
 import { WikiHeader } from 'src/app/shared/UI/wiki-header/wiki-header.component';
@@ -11,7 +12,8 @@ import { GroupsService } from '../services/groups.service';
 @Component({
   selector: 'app-wiki',
   templateUrl: './wiki.component.html',
-  styleUrls: ['./wiki.component.scss']
+  styleUrls: ['./wiki.component.scss'],
+  providers: [MessageService]
 })
 export class WikiComponent implements OnInit {
   menuItems: MenuItem[] = [];
@@ -22,12 +24,15 @@ export class WikiComponent implements OnInit {
   selectedGroupId: string | undefined = undefined;
   group: Group | undefined;
   wikiHeader: WikiHeader | undefined;
+  isAlreadyFollower: boolean = false;
 
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private groupsService: GroupsService
+    private groupsService: GroupsService,
+    private messageService: MessageService,
+    private followingGroupsService: FollowingGroupsService
   ) { }
 
   ngOnInit(): void {
@@ -74,12 +79,12 @@ export class WikiComponent implements OnInit {
         if (this.selectedGroupId) {
           this.menuItemsMega = groupsMenuitemsMegaParameter(this.selectedGroupId);
           this.menuItems = groupsMenuitemsParameter(this.selectedGroupId);
-          console.log(this.menuItemsMega)
         }
       })
       .catch((error) => {
         console.log(error.data)
       })
+      this.checkIfAlreadyFollower();
     }
   }
 
@@ -87,6 +92,44 @@ export class WikiComponent implements OnInit {
     this.route.paramMap.subscribe(parameter => {
     this.selectedGroupId = String(parameter.get('id'));
     })
+  }
+
+  followOrUnfollowGroup(): void {
+    if(this.selectedGroupId) {
+      if(this.isAlreadyFollower) {
+        this.followingGroupsService.unfollowTransaction(this.selectedGroupId)
+        .then(() => {
+          this.isAlreadyFollower = false;
+          this.messageService.add({severity:'success', summary: 'Du folgst einer neuen Inspirationsquelle.'});
+        })
+        .catch((error) => {
+          this.messageService.add({severity:'error', summary: error});
+        });
+      } else {
+        this.followingGroupsService.followTransaction(this.selectedGroupId)
+        .then(() => {
+          this.isAlreadyFollower = true;
+          this.messageService.add({severity:'success', summary: 'Du folgst einer neuen Inspirationsquelle.'});
+        })
+        .catch((error) => {
+          this.messageService.add({severity:'error', summary: error});
+        });
+      }
+    }
+  }
+
+  checkIfAlreadyFollower(): void {
+    if(this.selectedGroupId) {
+      this.followingGroupsService.isAlreadyFollower(this.selectedGroupId)
+      .then((results) => {
+        if(results.data[0] !== undefined) {
+          this.isAlreadyFollower = true;
+        } else {
+          this.isAlreadyFollower = false;
+        }
+      })
+      .catch();
+    }
   }
 
 

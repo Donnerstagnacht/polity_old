@@ -6,13 +6,13 @@
       <app-wiki-header [wikiHeader]="wikiHeader"></app-wiki-header>
       <div class="flex flex-column">
         <div class="flex align-items-center justify-content-center">
-          <!-- <button *ngIf="supabase.user?.id !== group?.id"
+          <button
           pButton
           type="button"
           label="{{isAlreadyFollower ? 'Unfollow' : 'Follow'}}"
-          (click)="followOrUnfollowgroup()"
+          (click)="followOrUnfollowGroup()"
         >
-        </button> -->
+        </button>
         </div>
       </div>
       <app-key-figures [keyFigureList]="keyFigureList"></app-key-figures>
