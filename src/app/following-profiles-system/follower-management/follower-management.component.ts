@@ -44,6 +44,7 @@ export class FollowerManagementComponent implements OnInit {
     });
   }
 
+        /**review**/
   getAllFollowing(): void {
     this.followingService.getAllFollowing()
     .then((followings) => {

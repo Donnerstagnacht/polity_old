@@ -35,8 +35,24 @@ body {
   background-color: $accentContainer;
 }
 
+.primary-container {
+  background-color: $primayTagContainer;
+}
+
+.primary-color {
+  color: $primaryColor;
+}
+
+.surface-variant {
+  background-color: #FBFCFE;
+}
+
+
 .accent-corlor {
   color: $accentColor;
+}
+.navigation-background {
+  background: $navigation!important;
 }
 
 /* validate input styling */
@@ -75,13 +91,13 @@ mark {
   margin-top: 7rem;
 }
 /* Component css edit::after */
-.p-sidebar {
+/*.p-sidebar {
   background: $navigation!important;
-}
+}*/
 
-.p-sidebar-header {
+/* .p-sidebar-header {
   display: none!important;
-}
+} */
 
 .p-sidebar .p-sidebar-content {
   padding: 0rem!important;
@@ -154,3 +170,13 @@ mark {
 /*.p-tabview .p-tabview-panels, .p-tabview .p-tabview-nav {
   background-color: red!important;
 }*/
+
+
+.hover-menu:hover {
+  font-size: 1.5rem;
+  color: $primaryColor;
+}
+
+.p-sidebar-header {
+  padding: 0px!important;
+}

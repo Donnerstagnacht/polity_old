@@ -1,1 +1,109 @@
-<p>create-group works!</p>
+<p-sidebar
+[(visible)]="showAddGroupDialog"
+[showCloseIcon]="true"
+[fullScreen]="true"
+[style]="{background:'linear-gradient(180deg, #FFD8EA 0%, #BFE8FF 100%'}"
+>
+<div>
+
+</div>
+<div class="flex justify-content-evenly">
+  <div class="flex align-items-center justify-content-center m-3">
+    <div class="text-center min-width">
+      <p-carousel
+      [value]="carouselPages"
+      [numVisible]="1"
+      [numScroll]="1"
+      [showNavigators]="false"
+      [page]="this.page"
+      class="transparent-background "
+      >
+
+        <ng-template let-carouselPage pTemplate="item">
+          <div *ngIf="carouselPage.pageNumber === 1" class="max-width-carousel">
+              <span class="mt-2 p-input-filled p-float-label w-full  p-input-icon-right">
+                <i class="pi pi-check success-color" [class.hide]="!name.valid || name.pristine"></i>
+                <input
+                      required
+                      #name="ngModel"
+                      name="name"
+                      [(ngModel)]="newGroup.name"
+                      pInputText
+                      id="name-input"
+                      type="text"
+                      class="form-control transparent-background w-full">
+                <label class="transparent-background" for="name-input">Name</label>
+                <div [hidden]="name.valid || name.pristine">
+                  <small id="email-error" class="p-error block">Bitte einen Namen eingeben.</small>
+                </div>
+              </span>
+
+              <span class="mt-2 p-input-filled p-float-label">
+                <textarea
+                  #about
+                  pInputTextarea
+                  [autoResize]="true"
+                  class="w-full transparent-background"
+                  [(ngModel)]="newGroup.description"
+                ></textarea>
+                <label class="transparent-background"  for="float-input">Beschreibung</label>
+              </span>
+
+              <app-chips-picker (choosenOption)="setLevel($event)" [multipeOptionsPossible]="false"></app-chips-picker>
+
+          </div>
+          <div *ngIf="carouselPage.pageNumber === 2 && this.loggedInUser">
+            <div class="surface-variant border-round pb-2 max-width-carousel">
+              <h4 class="pt-4">fhjkjk{{this.newGroup.name}} </h4>
+              <div class="">
+                <div class="flex justify-content-around">
+                  <div class="text-center">
+                    <h5 class="mb-1">ID</h5>
+                    <p-tag value="RO-1" styleClass="primary-container font-normal primary-color"></p-tag>
+                  </div>
+                  <div class="text-center">
+                    <h5 class="mb-1">EINGELADENE</h5>
+                    <p-tag value="69" styleClass="primary-container font-normal primary-color"></p-tag>
+                  </div>
+                  <div class="text-center">
+                    <h5 class="mb-1">EBENE</h5>
+                    <p-tag value="{{newGroup.level}}" styleClass="primary-container font-normal primary-color"></p-tag>
+                  </div>
+                </div>
+                <div class="flex justify-content-around">
+                  <div class="text-center">
+                    <h5 class="mb-1">Ersteller</h5>
+                    <div class="flex">
+                      <p-avatar class="border-round flex align-items-center" shape="circle" styleClass="border-round"  image={{this.loggedInUser.avatarUrl}}></p-avatar>
+                      <p class="mb-0 flex align-items-center text-center mt-0  pl-2">{{this.loggedInUser.username}}</p>
+                    </div>
+                  </div>
+                  <div class="text-center">
+                    <h5 class="mb-1">Beschlüsse</h5>
+                    <p-tag value="69" styleClass="primary-container font-normal primary-color"></p-tag>
+                  </div>
+                </div>
+                <h5>Beschreibung</h5>
+                <div class="px-3">
+                  <p>{{newGroup.description}} + Creator + {{this.loggedInUser.id}} </p>
+                </div>
+              </div>
+            </div>
+
+
+          </div>
+        </ng-template>
+      </p-carousel>
+    </div>
+  </div>
+</div>
+
+<div class=" flex justify-content-evenly">
+  <div class="flex align-items-center justify-content-center m-3">
+      <button class="mr-2 p-button-text" pButton type="button" (click)="this.pageBackward()">Zurück</button>
+      <button *ngIf="this.page !== this.carouselPages.length-1" class= "ml-2" pButton type="button" (click)="this.pageForward()">Vorwärts</button>
+      <button *ngIf="this.page === this.carouselPages.length-1" class= "ml-2" pButton type="button" (click)="this.createGroup()">ERSTELLEN</button>
+
+  </div>
+</div>
+</p-sidebar>

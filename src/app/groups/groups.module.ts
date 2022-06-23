@@ -8,20 +8,33 @@ import { SharedModule } from '../shared/shared.module';
 import { ButtonModule } from 'primeng/button';
 import { ToastModule } from 'primeng/toast';
 import { InputTextModule } from 'primeng/inputtext';
-import { InputTextarea } from 'primeng/inputtextarea';
 import { TabViewModule } from 'primeng/tabview';
 import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {MessagesModule} from 'primeng/messages';
 import {MessageModule} from 'primeng/message';
-
+import {SidebarModule} from 'primeng/sidebar';
+import {CarouselModule} from 'primeng/carousel';
+import { InputTextareaModule } from 'primeng/inputtextarea';
+import { TagModule } from 'primeng/tag';
+import {AvatarModule} from 'primeng/avatar';
+import {AvatarGroupModule} from 'primeng/avatargroup';
+import { EditGroupComponent } from './edit-group/edit-group.component';
+import { EditComponent } from './edit/edit.component';
+import { EditGroupMembersComponent } from './edit-group-members/edit-group-members.component';
+import { EditFollowersComponent } from './edit-followers/edit-followers.component';
+import { FileUploadModule } from 'primeng/fileupload';
 
 @NgModule({
   declarations: [
     WikiComponent,
     CreateGroupComponent,
     MyGroupsListComponent,
-    GroupManagementComponent
+    GroupManagementComponent,
+    EditGroupComponent,
+    EditComponent,
+    EditGroupMembersComponent,
+    EditFollowersComponent
   ],
   imports: [
     CommonModule,
@@ -32,11 +45,16 @@ import {MessageModule} from 'primeng/message';
     ButtonModule,
     ToastModule,
     InputTextModule,
-    // InputTextarea,
     TabViewModule,
     MessagesModule,
-    MessageModule
-
+    MessageModule,
+    SidebarModule,
+    CarouselModule,
+    InputTextareaModule,
+    TagModule,
+    AvatarModule,
+    AvatarGroupModule,
+    FileUploadModule
   ]
 })
 export class GroupsModule { }

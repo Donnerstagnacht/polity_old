@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AuthChangeEvent, createClient, SupabaseClient, Session, User } from '@supabase/supabase-js';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { account } from '../../../types/account';
 
@@ -27,10 +27,14 @@ export interface Profile {
 export class AuthentificationService {
   private supabase: SupabaseClient;
   public publicUser = new BehaviorSubject<User | null>(null);
-  public loggedInStatus = new BehaviorSubject<boolean>(false);
+  private loggedInStatus = new BehaviorSubject<boolean>(false);
 
   constructor() {
     this.supabase = createClient(environment.supabaseUrl, environment.supabaseKey)
+   }
+
+   public getLoggedInStatus(): Observable<boolean> {
+    return this.loggedInStatus;
    }
 
   public createAccount(account: account): Promise<any> {
@@ -59,7 +63,8 @@ export class AuthentificationService {
     return this.supabase
       .from('profiles')
       .select(
-        `username,
+        `id,
+        username,
         website,
         avatarUrl,
         contactEmail,
@@ -93,11 +98,15 @@ export class AuthentificationService {
 
   async signIn(email: string, password: string) {
     const response = await this.supabase.auth.signIn({ email, password });
+    this.loggedInStatus.next(true);
+    console.log(this.loggedInStatus)
+    console.log(this.loggedInStatus)
     if (response.error) throw new Error(response.error.message);
   }
 
   async signOut() {
     const response = await this.supabase.auth.signOut();
+    this.loggedInStatus.next(false);
     if (response.error) {
       throw new Error(response.error.message)
     }

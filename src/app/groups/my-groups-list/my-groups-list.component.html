@@ -1,60 +1,59 @@
+<!-- <app-create-group></app-create-group> -->
 <app-wrapper-grid>
   <div slot="main">
     <div class="mb-8">
       <div class="mx-4">
         <div class="flex flex-row">
           <i class="pi pi-angle-down align-items-center flex justify-content-center mr-4"></i>
-          <h4 class="flex align-items-center justify-content-center">INHALTE</h4>
+          <h4 class="flex align-items-center justify-content-center">LOKALE</h4>
         </div>
-        <a routerLink="/profile-edit/profile">
+        <a *ngFor="let group of localGroupList" [routerLink]="['/groups', group.id]">
           <p-messages  severity="custom">
             <ng-template pTemplate>
-                <div class="ml-2">Profil</div>
+                <div class="ml-2">{{group.name}}</div>
             </ng-template>
           </p-messages>
         </a>
+        <p *ngIf="localGroupList.length === 0">Du bist in noch keinen lokalen Gruppen</p>
         <div class="flex flex-row">
           <i class="pi pi-angle-down align-items-center flex justify-content-center mr-4"></i>
-          <h4 class="flex align-items-center justify-content-center">LOKAL</h4>
+          <h4 class="flex align-items-center justify-content-center">REGIONALE</h4>
         </div>
-        <a routerLink="/profile-edit/follower">
+        <a *ngFor="let group of regionalGroupList" [routerLink]="['/group', group.id]">
           <p-messages  severity="custom">
             <ng-template pTemplate>
-                <div class="ml-2">Follower-Management</div>
+                <div class="ml-2">{{group.name}}</div>
             </ng-template>
           </p-messages>
         </a>
-        <a routerLink="/profile-edit/groups">
+        <p *ngIf="regionalGroupList.length === 0">Du bist in noch keinen regionalen Gruppen</p>
+        <div class="flex flex-row">
+          <i class="pi pi-angle-down align-items-center flex justify-content-center mr-4"></i>
+          <h4 class="flex align-items-center justify-content-center">BUND</h4>
+        </div>
+        <a *ngFor="let group of federalGroupList" [routerLink]="['/group', group.id]">
           <p-messages  severity="custom">
             <ng-template pTemplate>
-                <div class="ml-2">Gruppen-Management</div>
+                <div class="ml-2">{{group.name}}</div>
             </ng-template>
           </p-messages>
         </a>
+        <p *ngIf="federalGroupList.length === 0">Du bist in noch keinen Gruppen des Bundes</p>
         <div class="flex flex-row">
           <i class="pi pi-angle-down align-items-center flex justify-content-center mr-4"></i>
-          <h4 class="flex align-items-center justify-content-center">Regional</h4>
+          <h4 class="flex align-items-center justify-content-center">INTERNATIONAL</h4>
         </div>
-        <div class="flex flex-row">
-          <i class="pi pi-angle-down align-items-center flex justify-content-center mr-4"></i>
-          <h4 class="flex align-items-center justify-content-center">Bund</h4>
-        </div>
-
-        <div class="flex flex-row">
-          <i class="pi pi-angle-down align-items-center flex justify-content-center mr-4"></i>
-          <h4 class="flex align-items-center justify-content-center">International</h4>
-        </div>
-        <a class="cursor-pointer">
+        <a *ngFor="let group of internationalGroupList" [routerLink]="['/group', group.id]">
           <p-messages  severity="custom">
             <ng-template pTemplate>
-                <div class="ml-2">Logout</div>
+                <div class="ml-2">{{group.name}}</div>
             </ng-template>
-        </p-messages>
+          </p-messages>
         </a>
+        <p *ngIf="internationalGroupList.length === 0">Du bist in noch keinen internationalen Gruppen</p>
       </div>
     </div>
   </div>
   <div slot="side">
-    <app-menu-bar-secondary-right></app-menu-bar-secondary-right>
   </div>
 </app-wrapper-grid>

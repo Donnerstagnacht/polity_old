@@ -13,6 +13,9 @@ $tertiaryContainer: #FFDBC6;
 
 $outline: #71787D;
 
+$primayTagContainer: #E0F3FF;
+$primaryTag: $primaryColor;
+
 $horizontalGradient:linear-gradient(90deg, rgba(191, 232, 255, 0.81) 0%, rgba(255, 174, 216, 0.81) 100%);
 $verticalGradient:linear-gradient(180deg, #FFD8EA 0%, #BFE8FF 100%);
 
@@ -24,7 +27,7 @@ $onBackground:#191C1E;
 $surface: #FBFCFF;
 $onSurface:#191C1E;
 
-$surfaceVariant: #F9FCFF;
+$surfaceVariant: #FBFCFE;
 $onSurfaceVariant:#41484D;
 
 $navigation: linear-gradient(0deg, rgba(0, 102, 137, 0.08), rgba(0, 102, 137, 0.08)), #FBFCFE;

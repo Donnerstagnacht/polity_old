@@ -3,7 +3,10 @@ import { Router, ActivatedRoute  } from '@angular/router';
 import { Profile, AuthentificationService } from 'src/app/authentification/services/authentification.service';
 import { ProfileService } from '../services/profile.service';
 import { FollowingService } from 'src/app/following-profiles-system/services/following.service';
-import { MessageService } from 'primeng/api';
+import { MegaMenuItem, MenuItem, MessageService } from 'primeng/api';
+import { KeyFigure } from 'src/app/shared/UI/key-figures/key-figures.component';
+import { profileMenuitems, profileMenuitemsMega } from '../services/profileMenuItems';
+import { WikiHeader } from 'src/app/shared/UI/wiki-header/wiki-header.component';
 
 @Component({
   selector: 'app-profile',
@@ -12,12 +15,17 @@ import { MessageService } from 'primeng/api';
   providers: [MessageService]
 })
 export class ProfileComponent implements OnInit {
+  menuItems: MenuItem[] = profileMenuitems;
+  menuItemsMega: MegaMenuItem[] = profileMenuitemsMega;
+
   loading: boolean = true;
   profile: Profile | undefined;
   // @Input() session: Session | undefined;
   isAlreadyFollower: boolean = false;
 
   selectedProfileId: string | undefined = undefined;
+  keyFigureList: KeyFigure[] = [];
+  wikiHeader: WikiHeader | undefined;
 
   constructor(
     public readonly supabase: AuthentificationService,
@@ -44,7 +52,31 @@ export class ProfileComponent implements OnInit {
     if (this.selectedProfileId) {
       this.profileService.findProfil(this.selectedProfileId)
       .then((profile) => {
-        this.profile = profile.data
+        this.profile = profile.data;
+        this.keyFigureList = [
+          {
+            name: 'Anträge',
+            number: profile.data.amendmentCounter
+          },
+          {
+            name: 'Follower',
+            number: profile.data.followerCounter
+          },
+          {
+            name: 'Following',
+            number: profile.data.followingCounter
+          },
+          {
+            name: 'Gruppen',
+            number: profile.data.groupsCounter
+          },
+
+        ];
+        this.wikiHeader = {
+          title: profile.data.username,
+          subtitle: 'Rosbach | Wetteraus - Hessen (statisch)',
+          imgUrl: profile.data.avatarUrl,
+        }
       }
       )
       .catch((error) => {console.log(error)})

@@ -1,0 +1,131 @@
+<app-menu-bar-secondary-top [menuItems]="menuItemsMega"></app-menu-bar-secondary-top>
+<p-toast styleClass="max-w-90"	 position="top-right">></p-toast>
+<app-wrapper-grid>
+  <div slot="main">
+    <div class="mb-8">
+      <div class="mx-4">
+        <app-back-button [title]="'Zurück'" [link]="backLink"></app-back-button>
+        <div class="mt-4" *ngIf="group">
+          <h5>Persönliche Daten</h5>
+          <div class="grid">
+            <div class="col-12">
+              <span class="p-float-label">
+                <textarea
+                  #about
+                  pInputTextarea
+                  [autoResize]="true"
+                  class="w-full"
+                  [(ngModel)]="group.description"
+                ></textarea>
+                <label for="float-input">Über mich</label>
+              </span>
+            </div>
+          <div>
+            <h5>group Foto</h5>
+            <p-avatar *ngIf="group.avatarUrl" [image]="group.avatarUrl"></p-avatar>
+            <p-fileUpload
+              #fileUploader
+              (uploadHandler)="updateGroupPhoto($event, fileUploader)"
+              name="myfile[]"
+              accept="image/*"
+              [auto]="true"
+              [customUpload]="true"
+              class="full-w"
+            >
+            </p-fileUpload>
+
+          </div>
+          <!-- <div class="flex flex-column">
+            <div class="flex align-items-center justify-content-center">
+              <button
+              pButton
+              type="button"
+              label="{{loading ? 'Loading ...' : 'Update'}}"
+              (click)="updategroup(userName.value, website.value)"
+              [disabled]="loading"
+            >
+            </button>
+            </div>
+          </div> -->
+          </div>
+          <h5>Kontaktmöglichkeiten</h5>
+          <div class="grid">
+            <div class="col-12 md:col-6">
+              <span class="p-float-label">
+                <input
+                  class="w-full"
+                  type="email"
+                  pInputText
+                  [(ngModel)]="group.contactEmail"
+                >
+                <label for="float-input">Email</label>
+              </span>
+            </div>
+            <div class="col-12 md:col-6">
+              <span class="p-float-label">
+                <input
+                  class="w-full"
+                  type="text"
+                  pInputText
+                  [(ngModel)]="group.contactPhone"
+                  >
+                <label for="float-input">Phone</label>
+              </span>
+            </div>
+          </div>
+          <h5>Adresse</h5>
+          <div class="grid">
+            <div class="col-12 md:col-6">
+              <span class="p-float-label">
+                <input
+                  class="w-full"
+                  type="text"
+                  pInputText
+                  [(ngModel)]="group.street"
+                  >
+                <label for="float-input">Street</label>
+              </span>
+            </div>
+            <div class="col-12 md:col-6">
+              <span class="p-float-label">
+                <input
+                  class="w-full"
+                  type="text"
+                  pInputText
+                  [(ngModel)]="group.postCode"
+                >
+                <label for="float-input">Post Code</label>
+              </span>
+            </div>
+            <div class="col-12 md:col-6">
+              <span class="p-float-label">
+                <input
+                  class="w-full"
+                  type="text"
+                  pInputText
+                  [(ngModel)]="group.city"
+                >
+                <label for="float-input">City</label>
+              </span>
+            </div>
+          </div>
+          <div class="flex flex-column">
+            <div class="flex align-items-center justify-content-center">
+              <button
+                pButton
+                type="button"
+                label="{{loading ? 'Loading ...' : 'Update'}}"
+                (click)="updateGroup(group)"
+                [disabled]="loading"
+              >
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div slot="side">
+    <!-- <app-menu-bar-secondary-right [menuItems]="menuItems"></app-menu-bar-secondary-right> -->
+  </div>
+</app-wrapper-grid>

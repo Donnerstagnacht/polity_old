@@ -1,13 +1,9 @@
+<app-menu-bar-secondary-top [menuItems]="menuItemsMega"></app-menu-bar-secondary-top>
 <p-toast styleClass="max-w-90"	 position="top-right">></p-toast>
   <app-wrapper-grid>
     <div slot="main">
       <div class="mb-8">
-        <div class="text-center">
-          <h2 *ngIf="profile" class="m-2">{{profile.username}}</h2>
-          <h5 class="text-primary m-0">Rosbach | Wetteraus - Hessen</h5>
-          <img class="my-4" src={{profile?.avatarUrl}}>
-        </div>
-
+        <app-wiki-header [wikiHeader]="wikiHeader"></app-wiki-header>
         <div class="flex flex-column">
           <div class="flex align-items-center justify-content-center">
             <button *ngIf="supabase.user?.id !== profile?.id"
@@ -19,29 +15,7 @@
           </button>
           </div>
         </div>
-
-        <div class="flex justify-content-around">
-          <div class="text-center">
-            <h5>{{profile?.amendmentCounter}}</h5>
-            <p>Anträge</p>
-          </div>
-          <div class="text-center">
-            <h5>{{profile?.followerCounter}}</h5>
-            <p>Follower</p>
-          </div>
-          <div class="text-center">
-            <h5>{{profile?.followingCounter}}</h5>
-            <p>Following</p>
-          </div>
-          <div class="text-center">
-            <h5>{{profile?.groupsCounter}}</h5>
-            <p>Gruppen</p>
-          </div>
-          <!-- <div class="text-center">
-            <h5>73</h5>
-            <p>Reputation</p>
-          </div> -->
-        </div>
+        <app-key-figures [keyFigureList]="keyFigureList"></app-key-figures>
 
         <div class="mb-30">
           <p-tabView>
@@ -67,6 +41,6 @@
       </div>
     </div>
     <div slot="side">
-      <app-menu-bar-secondary-right *ngIf="supabase.user?.id === profile?.id"></app-menu-bar-secondary-right>
+      <app-menu-bar-secondary-right *ngIf="supabase.user?.id === profile?.id"[menuItems]="menuItems"></app-menu-bar-secondary-right>
     </div>
 </app-wrapper-grid>

@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Session } from '@supabase/supabase-js';
-import { MessageService } from 'primeng/api';
+import { MegaMenuItem, MenuItem, MessageService } from 'primeng/api';
+import { MegaMenu } from 'primeng/megamenu';
 import { AuthentificationService, Profile } from 'src/app/authentification/services/authentification.service';
 import { v4 as uuidv4 } from 'uuid';
+import { profileMenuitems, profileMenuitemsMega } from '../services/profileMenuItems';
 
 @Component({
   selector: 'app-edit-profile',
@@ -12,6 +14,8 @@ import { v4 as uuidv4 } from 'uuid';
   providers: [ MessageService ]
 })
 export class EditProfileComponent implements OnInit {
+  menuItems: MenuItem[] = profileMenuitems;
+  menuItemsMega: MegaMenuItem[] = profileMenuitemsMega;
   loading: boolean = true;
   profile: Profile | undefined;
   session: Session | undefined;

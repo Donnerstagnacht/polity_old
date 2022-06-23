@@ -1,5 +1,6 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MenuItem } from 'primeng/api';
+import { Observable } from 'rxjs';
 import { AuthentificationService } from 'src/app/authentification/services/authentification.service';
 
 @Component({
@@ -9,23 +10,23 @@ import { AuthentificationService } from 'src/app/authentification/services/authe
 })
 export class MenuBarLeftComponent implements OnInit {
   display: boolean = true;
-  loggedIn: boolean = false;
   items: MenuItem[] = [];
+  showAddMenu:boolean = false;
+
+  public $loggedInStatus!: Observable<boolean>;
 
   constructor(
     private readonly authentificationService: AuthentificationService,
-    private changeDetector: ChangeDetectorRef
     ) { }
 
   ngOnInit(): void {
-    this.authentificationService.loggedInStatus.subscribe((loggedInStatus: boolean) => {
-      this.loggedIn = loggedInStatus;
-      console.log('changed')
-      this.changeDetector.detectChanges();
-      if(this.loggedIn) {
+    this.$loggedInStatus = this.authentificationService.getLoggedInStatus();
+    this.$loggedInStatus.subscribe((loggedInId) => {
+      if(loggedInId) {
         this.items = [
           {label: 'Profil', routerLink: ['/profile']},
           {label: 'Gruppen', routerLink: ['/groups']},
+          {label: 'Erstellen', command: () => this.toggleFullScreen()},
           {label: 'Search', routerLink: ['/search']}
         ]
       } else {
@@ -36,6 +37,12 @@ export class MenuBarLeftComponent implements OnInit {
       ];
       }
     })
+
   }
+
+  toggleFullScreen(): void {
+    this.showAddMenu = !this.showAddMenu;
+  }
+
 
 }

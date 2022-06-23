@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 
 @Component({
@@ -7,15 +7,11 @@ import { MenuItem } from 'primeng/api';
   styleUrls: ['./menu-bar-secondary-right.component.scss']
 })
 export class MenuBarSecondaryRightComponent implements OnInit {
-  items: MenuItem[] = [];
+  @Input() menuItems: MenuItem[] = [];
 
   constructor() { }
 
   ngOnInit(): void {
-    this.items = [
-      {label: 'Übersicht', routerLink: ['/profile']},
-      {label: 'ändern', routerLink: ['/profile-edit']}
-  ];
   }
 
 }

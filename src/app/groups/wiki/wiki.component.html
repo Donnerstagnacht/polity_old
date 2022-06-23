@@ -1,1 +1,27 @@
-<p>wiki works!</p>
+<app-menu-bar-secondary-top [menuItems]="menuItemsMega"></app-menu-bar-secondary-top>
+<!-- <p-toast styleClass="max-w-90"	 position="top-right">></p-toast> -->
+<app-wrapper-grid>
+  <div slot="main">
+    <div class="mb-8">
+      <app-wiki-header [wikiHeader]="wikiHeader"></app-wiki-header>
+      <div class="flex flex-column">
+        <div class="flex align-items-center justify-content-center">
+          <!-- <button *ngIf="supabase.user?.id !== group?.id"
+          pButton
+          type="button"
+          label="{{isAlreadyFollower ? 'Unfollow' : 'Follow'}}"
+          (click)="followOrUnfollowgroup()"
+        >
+        </button> -->
+        </div>
+      </div>
+      <app-key-figures [keyFigureList]="keyFigureList"></app-key-figures>
+      <div class="mb-30">
+        <app-about-and-contact [contactData]="contactData"></app-about-and-contact>
+      </div>
+    </div>
+  </div>
+  <div slot="side">
+    <app-menu-bar-secondary-right [menuItems]="menuItems"></app-menu-bar-secondary-right>
+  </div>
+</app-wrapper-grid>

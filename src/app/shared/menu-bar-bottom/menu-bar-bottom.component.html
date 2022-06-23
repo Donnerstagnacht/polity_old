@@ -3,10 +3,12 @@
 position="bottom"
 [showCloseIcon]="false"
 [modal]="false"
-[style]="{background:'#F9FCFF', height:'inherit'}"
+[style]="{background: 'linear-gradient(0deg, rgba(0, 102, 137, 0.08), rgba(0, 102, 137, 0.08)), #FBFCFE', height:'inherit'}"
 header = "none"
 class="red">
     <div class="flex justify-content-around">
       <p-megaMenu  [model]="items"></p-megaMenu >
     </div>
 </p-sidebar>
+<app-actions-overlay [(showAddMenu)]="showAddMenu"></app-actions-overlay>
+

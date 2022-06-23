@@ -1,37 +1,15 @@
+<app-menu-bar-secondary-top [menuItems]="menuItemsMega"></app-menu-bar-secondary-top>
+
 <app-wrapper-grid>
   <div slot="main">
     <div class="mb-8">
       <div class="mx-4">
-        <div class="flex flex-row">
-          <i class="pi pi-angle-down align-items-center flex justify-content-center mr-4"></i>
-          <h4 class="flex align-items-center justify-content-center">INHALTE</h4>
-        </div>
-        <a routerLink="/profile-edit/profile">
-          <p-messages  severity="custom">
-            <ng-template pTemplate>
-                <div class="ml-2">Profil</div>
-            </ng-template>
-          </p-messages>
-        </a>
-        <a routerLink="/profile-edit/follower">
-          <p-messages  severity="custom">
-            <ng-template pTemplate>
-                <div class="ml-2">Follower-Management</div>
-            </ng-template>
-          </p-messages>
-        </a>
-        <a routerLink="/profile-edit/groups">
-          <p-messages  severity="custom">
-            <ng-template pTemplate>
-                <div class="ml-2">Gruppen-Management</div>
-            </ng-template>
-          </p-messages>
-        </a>
+        <app-headline-of-list [headline]="'INHALTE'"></app-headline-of-list>
+        <app-list-element [title]="'Profil'" [link]="'/profile-edit/profile'"></app-list-element>
+        <app-list-element [title]="'Follower-Management'" [link]="'/profile-edit/follower'"></app-list-element>
+        <app-list-element [title]="'Gruppen-Management'" [link]="'/profile-edit/groups'"></app-list-element>
 
-        <div class="flex flex-row">
-          <i class="pi pi-angle-down align-items-center flex justify-content-center mr-4"></i>
-          <h4 class="flex align-items-center justify-content-center">GEFAHRENZONE</h4>
-        </div>
+        <app-headline-of-list [headline]="'INHALTE'"></app-headline-of-list>
         <a class="cursor-pointer" (click)="signOut()">
           <p-messages  severity="custom">
             <ng-template pTemplate>
@@ -43,6 +21,6 @@
     </div>
   </div>
   <div slot="side">
-    <app-menu-bar-secondary-right></app-menu-bar-secondary-right>
+    <app-menu-bar-secondary-right [menuItems]="menuItems"></app-menu-bar-secondary-right>
   </div>
 </app-wrapper-grid>

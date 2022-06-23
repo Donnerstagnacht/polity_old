@@ -1,0 +1,19 @@
+<p-tabView>
+  <p-tabPanel header="Über">
+    {{contactData?.about}}
+  </p-tabPanel>
+  <p-tabPanel header="Kontakt">
+    <span class="block my-3">
+      <p class="font-medium inline">Email: </p>
+      <p class="inline">{{contactData?.contactEmail}}</p>
+    </span>
+    <span  class="block my-3">
+      <p class="font-medium inline">Phone: </p>
+      <p class="inline">{{contactData?.contactPhone}}</p>
+    </span>
+    <span class="block my-3">
+      <p class="font-medium inline">Adresse: </p>
+      <p class="inline">{{contactData?.street}}, {{contactData?.postCode}}, {{contactData?.city}}</p>
+    </span>
+  </p-tabPanel>
+</p-tabView>

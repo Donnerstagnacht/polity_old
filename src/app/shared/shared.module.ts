@@ -17,6 +17,20 @@ import {AvatarModule} from 'primeng/avatar';
 import {AvatarGroupModule} from 'primeng/avatargroup';
 import { GroupCardComponent } from './group-card/group-card.component';
 import { GroupsModule } from '../groups/groups.module';
+import { ActionsOverlayComponent } from './actions-overlay/actions-overlay.component';
+import {DividerModule} from 'primeng/divider';
+import { ChipsModule } from 'primeng/chips';
+import { ChipsPickerComponent } from './UI/chips-picker/chips-picker.component';
+import { ChipModule } from 'primeng/chip';
+import { KeyFiguresComponent } from './UI/key-figures/key-figures.component';
+import { AboutAndContactComponent } from './UI/about-and-contact/about-and-contact.component';
+import { TabViewModule } from 'primeng/tabview';
+import { HeadlineOfListComponent } from './UI/headline-of-list/headline-of-list.component';
+import { ListElementComponent } from './UI/list-element/list-element.component';
+import {MessagesModule} from 'primeng/messages';
+import {MessageModule} from 'primeng/message';
+import { BackButtonComponent } from './UI/back-button/back-button.component';
+import { WikiHeaderComponent } from './UI/wiki-header/wiki-header.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +41,15 @@ import { GroupsModule } from '../groups/groups.module';
     MenuBarSecondaryRightComponent,
     MenuBarSecondaryTopComponent,
     ProfileCardComponent,
-    GroupCardComponent
+    GroupCardComponent,
+    ActionsOverlayComponent,
+    ChipsPickerComponent,
+    KeyFiguresComponent,
+    AboutAndContactComponent,
+    HeadlineOfListComponent,
+    ListElementComponent,
+    BackButtonComponent,
+    WikiHeaderComponent
   ],
   imports: [
     CommonModule,
@@ -38,7 +60,13 @@ import { GroupsModule } from '../groups/groups.module';
     MenubarModule,
     MegaMenuModule,
     AvatarModule,
-    AvatarGroupModule
+    AvatarGroupModule,
+    DividerModule,
+    ChipsModule,
+    ChipModule,
+    TabViewModule,
+    MessagesModule,
+    MessageModule
   ],
   exports: [
     MenuBarLeftComponent,
@@ -48,7 +76,14 @@ import { GroupsModule } from '../groups/groups.module';
     MenuBarSecondaryRightComponent,
     MenuBarSecondaryTopComponent,
     ProfileCardComponent,
-    GroupCardComponent
+    GroupCardComponent,
+    ChipsPickerComponent,
+    KeyFiguresComponent,
+    AboutAndContactComponent,
+    HeadlineOfListComponent,
+    ListElementComponent,
+    BackButtonComponent,
+    WikiHeaderComponent
   ]
 })
 export class SharedModule { }

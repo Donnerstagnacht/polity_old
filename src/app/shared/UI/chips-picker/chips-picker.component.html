@@ -1,0 +1,10 @@
+<h5>Ebene</h5>
+<p-chip *ngIf="!localFilterOn" (click)="setLocalFilter()"  class="mr-2" label="Lokal" styleClass="cursor-pointer"></p-chip>
+<p-chip *ngIf="localFilterOn" (click)="setLocalFilter()" class="mr-2" label="Lokal" styleClass="cursor-pointer accent-container"></p-chip>
+
+<p-chip *ngIf="!regionalFilterOn" (click)="setRegionalFilter()"  class="mr-2" label="Regional" styleClass="cursor-pointer"></p-chip>
+<p-chip *ngIf="regionalFilterOn" (click)="setRegionalFilter()" class="mr-2" label="Regional" styleClass="cursor-pointer accent-container"></p-chip>
+
+<p-chip *ngIf="!federalFilterOn" (click)="setFederalFilter()"  class="mr-2" label="Bund" styleClass="cursor-pointer"></p-chip>
+<p-chip *ngIf="federalFilterOn" (click)="setFederalFilter()" class="mr-2" label="Bund" styleClass="cursor-pointer accent-container"></p-chip>
+

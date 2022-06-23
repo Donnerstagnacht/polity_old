@@ -1,0 +1,20 @@
+<p-sidebar
+[(visible)]="showAddMenu"
+[showCloseIcon]="true"
+[fullScreen]="true"
+[style]="{background:'linear-gradient(180deg, #FFD8EA 0%, #BFE8FF 100%'}"
+(onHide)="this.showAddMenuChange.emit(false)"
+>
+<div  class="flex justify-content-evenly">
+  <div class="flex align-items-center justify-content-center m-3">
+    <div class="text-center min-width">
+      <h1 class="mb-8">Action</h1>
+      <p class="hover-menu cursor-pointer" (click)="openAddGroupPanel()">Gruppe</p>
+      <p-divider></p-divider>
+      <p class="hover-menu cursor-pointer">Antrag</p>
+      <p-divider></p-divider>
+      <p class="hover-menu cursor-pointer">Veranstaltung</p>
+    </div>
+  </div>
+</div>
+</p-sidebar>

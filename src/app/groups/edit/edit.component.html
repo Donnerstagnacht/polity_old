@@ -1,0 +1,17 @@
+<app-menu-bar-secondary-top [menuItems]="menuItemsMega"></app-menu-bar-secondary-top>
+
+<app-wrapper-grid>
+  <div slot="main">
+    <div class="mb-8">
+      <div class="mx-4">
+        <app-headline-of-list [headline]="'INHALTE'"></app-headline-of-list>
+        <app-list-element [title]="'Übersicht bearbeiten'" [link]="editOverviewLink"></app-list-element>
+        <app-list-element [title]="'Follower-Management'" [link]="editFollowerLink"></app-list-element>
+        <app-list-element [title]="'Mitglieder-Management'" [link]="editMembersLink"></app-list-element>
+      </div>
+    </div>
+  </div>
+  <div slot="side">
+    <app-menu-bar-secondary-right [menuItems]="menuItems"></app-menu-bar-secondary-right>
+  </div>
+</app-wrapper-grid>

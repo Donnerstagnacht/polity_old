@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { MessageService } from 'primeng/api';
+import { MegaMenuItem, MenuItem, MessageService } from 'primeng/api';
+import { profileMenuitems, profileMenuitemsMega } from 'src/app/profile/services/profileMenuItems';
 
 @Component({
   selector: 'app-group-management',
@@ -8,6 +9,8 @@ import { MessageService } from 'primeng/api';
   providers: [MessageService]
 })
 export class GroupManagementComponent implements OnInit {
+  menuItems: MenuItem[] = profileMenuitems;
+  menuItemsMega: MegaMenuItem[] = profileMenuitemsMega;
 
   constructor() { }
 

@@ -3,7 +3,7 @@
 position="left"
 [showCloseIcon]="false"
 [modal]="false"
-[style]="{background:'#F9FCFF', width:'10em'}"
+[style]="{background: 'linear-gradient(0deg, rgba(0, 102, 137, 0.08), rgba(0, 102, 137, 0.08)), #FBFCFE', width:'10em'}"
 class="red">
   <div class="h-full flex flex-column">
     <div class="flex h-screen  flex flex-column justify-content-center">
@@ -11,3 +11,4 @@ class="red">
     </div>
   </div>
 </p-sidebar>
+<app-actions-overlay [(showAddMenu)]="showAddMenu"></app-actions-overlay>
