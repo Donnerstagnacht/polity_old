@@ -4,6 +4,7 @@ import { Session } from '@supabase/supabase-js';
 import { MegaMenuItem, MenuItem, MessageService } from 'primeng/api';
 import { MegaMenu } from 'primeng/megamenu';
 import { AuthentificationService, Profile } from 'src/app/authentification/services/authentification.service';
+import { ImgUploadObject, StorageService } from 'src/storage/services/storage.service';
 import { v4 as uuidv4 } from 'uuid';
 import { profileMenuitems, profileMenuitemsMega } from '../services/profileMenuItems';
 
@@ -24,7 +25,8 @@ export class EditProfileComponent implements OnInit {
   constructor(
     private readonly authentificationService: AuthentificationService,
     private messageService: MessageService,
-    private router: Router
+    private router: Router,
+    private storageService: StorageService
   ) { }
 
   ngOnInit(): void {
@@ -65,39 +67,19 @@ export class EditProfileComponent implements OnInit {
   }
 
   async updateProfilePhoto(event: any, fileUploader: any) {
-    console.log(fileUploader)
     if (!this.profile) return;
-    console.log('called');
-    console.log(event.files);
-    console.log(event);
     try {
       this.uploading = true;
-      if (!event.files || event.files.length === 0 || event.files === undefined) {
-        throw new Error('You must select an image to upload.');
-      }
-      /*File-Upload - Feature */
-      const file = event.files[0];
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${uuidv4()}.${fileExt}`;
-      const filePath = `${fileName}`;
-      console.log('filepath '+ filePath)
-      // const response = await this.authentificationService.uploadAvatar(filePath, file);
-      // console.log('end', response.data?.Key);
-      // if (this.profile && response.data?.Key) {
-      //   this.updateContactInformation({
-      //     avatarUrl:  response.data.Key,
-      //   });
-      // }
+      const imgUploadObject: ImgUploadObject = this.storageService.createFilePath(event)
       try {
-        const avatarUrl = await this.authentificationService.uploadAvatar(
-          filePath,
-          file,
+        const avatarUrl = await this.storageService.uploadImg(
+          imgUploadObject,
           this.profile.avatarUrl || undefined,
+          'avatars'
         );
         this.profile!.avatarUrl = avatarUrl
-        this.updateContactInformation({
-          avatarUrl:  avatarUrl,
-        });
+        this.updateContactInformation(
+          {avatarUrl:  avatarUrl});
         fileUploader.clear();
         this.messageService.add({severity:'success', summary: 'Upload des Avatars war erfolgreich.'});
       } catch (error: any) {

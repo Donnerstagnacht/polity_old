@@ -124,36 +124,6 @@ export class AuthentificationService {
     });
   }
 
-  async deleteAvatar(path: string) {
-    console.warn('deleteAvatar', path)
-    const response = await this.supabase.storage.from('avatars').remove([path]);
-    if (response.error) throw Error('Removal of old avatar failed.');
-    return true;
-  }
-
-  getPublicUrl(path: string) {
-    console.warn('getPublicUrl', path)
-    const response = this.supabase.storage.from('avatars').getPublicUrl(path);
-    if (response.error) throw Error('Avatar upload failed.');
-    return response.data!.publicURL;
-  }
-
-  async uploadAvatar(
-    filePath: string,
-    file: File,
-    oldFilePath: string | undefined,
-  ) {
-    console.log('authService: ' + filePath)
-    console.log('authService2: ' + file)
-    const response = await this.supabase.storage
-      .from('avatars')
-      .upload(filePath, file);
-    if (response.error) throw Error('Avatar upload failed.');
-    const oldAvatar: string = oldFilePath ? oldFilePath.split('public/avatars/')[1] : '';
-    if (oldAvatar) await this.deleteAvatar(oldAvatar);
-    return this.getPublicUrl(filePath);
-  }
-
 }
 function callback(callback: any, arg1: (event: AuthChangeEvent, session: Session | null) => undefined) {
   throw new Error('Function not implemented.');

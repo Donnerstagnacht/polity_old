@@ -4,7 +4,7 @@ import { MegaMenuItem, MenuItem, MessageService } from 'primeng/api';
 import { Group } from '../create-group/create-group.component';
 import { groupsMenuitemsParameter, groupsMenuitemsMegaParameter} from '../services/groupMenuItems';
 import { GroupsService } from '../services/groups.service';
-import { v4 as uuidv4 } from 'uuid';
+import { ImgUploadObject, StorageService } from 'src/storage/services/storage.service';
 
 @Component({
   selector: 'app-edit-group',
@@ -24,7 +24,8 @@ export class EditGroupComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private groupsService: GroupsService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private storageService: StorageService
     ) { }
 
   ngOnInit(): void {
@@ -70,30 +71,18 @@ export class EditGroupComponent implements OnInit {
     if (!this.group) return;
     try {
       this.uploading = true;
-      if (!event.files || event.files.length === 0 || event.files === undefined) {
-        throw new Error('You must select an image to upload.');
-      }
-      /*File-Upload - Feature */
-      const file = event.files[0];
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${uuidv4()}.${fileExt}`;
-      const filePath = `${fileName}`;
+      const imgUploadObject: ImgUploadObject = this.storageService.createFilePath(event)
       try {
-        const avatarUrl = await this.groupsService.uploadAvatar(
-          filePath,
-          file,
+        const avatarUrl = await this.storageService.uploadImg(
+          imgUploadObject,
           this.group.avatarUrl || undefined,
+          'avatars'
         );
         this.group!.avatarUrl = avatarUrl
-        console.log(avatarUrl);
-
         this.updateGroup(
-          {
-          avatarUrl:  avatarUrl,
-          },
+          {avatarUrl:  avatarUrl},
           this.selectedGroupId
         );
-
         fileUploader.clear();
         this.messageService.add({severity:'success', summary: 'Upload des Avatars war erfolgreich.'});
       } catch (error: any) {
