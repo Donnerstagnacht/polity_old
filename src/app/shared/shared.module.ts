@@ -31,6 +31,9 @@ import {MessagesModule} from 'primeng/messages';
 import {MessageModule} from 'primeng/message';
 import { BackButtonComponent } from './UI/back-button/back-button.component';
 import { WikiHeaderComponent } from './UI/wiki-header/wiki-header.component';
+import { TabViewTableListsComponent } from './UI/tab-view-table-lists/tab-view-table-lists.component';
+import { TableModule } from 'primeng/table';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -49,7 +52,8 @@ import { WikiHeaderComponent } from './UI/wiki-header/wiki-header.component';
     HeadlineOfListComponent,
     ListElementComponent,
     BackButtonComponent,
-    WikiHeaderComponent
+    WikiHeaderComponent,
+    TabViewTableListsComponent
   ],
   imports: [
     CommonModule,
@@ -66,7 +70,9 @@ import { WikiHeaderComponent } from './UI/wiki-header/wiki-header.component';
     ChipModule,
     TabViewModule,
     MessagesModule,
-    MessageModule
+    MessageModule,
+    TableModule,
+    FormsModule
   ],
   exports: [
     MenuBarLeftComponent,
@@ -83,7 +89,8 @@ import { WikiHeaderComponent } from './UI/wiki-header/wiki-header.component';
     HeadlineOfListComponent,
     ListElementComponent,
     BackButtonComponent,
-    WikiHeaderComponent
+    WikiHeaderComponent,
+    TabViewTableListsComponent
   ]
 })
 export class SharedModule { }

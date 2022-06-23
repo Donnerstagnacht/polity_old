@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS public.profiles
     "about" text COLLATE pg_catalog."default" DEFAULT ''::text,
     "website" text COLLATE pg_catalog."default" DEFAULT ''::text,
     CONSTRAINT profiles_pkey PRIMARY KEY (id),
-    CONSTRAINT profiles_username_key UNIQUE (username),
+    --CONSTRAINT profiles_username_key UNIQUE (username),
     CONSTRAINT profiles_id_fkey FOREIGN KEY (id)
         REFERENCES auth.users (id) MATCH SIMPLE
         ON UPDATE NO ACTION
@@ -59,13 +59,14 @@ CREATE POLICY "Users can update own profile."
     TO public
     USING ((auth.uid() = id));
 
+-- review error here - probably because the table profile is not setup corectly?
 -- Copy users to profile
 CREATE OR REPLACE FUNCTION signup_copy_to_users_table()
 RETURNS TRIGGER AS $$
   BEGIN
     INSERT INTO public.profiles (id)
     VALUES(new.id);
-  
+
     RETURN NEW;
   END;
 $$
@@ -84,7 +85,7 @@ create policy "Avatar images are accessible for authenticated users."
   on storage.objects for select
   using (
     bucket_id = 'avatars'
-    and auth.role() = 'authenticated'    
+    and auth.role() = 'authenticated'
 );
 
 create policy "Only owner can delete Avatar image."
@@ -95,5 +96,5 @@ create policy "Anyone can upload an avatar."
   on storage.objects for insert
   with check (
     bucket_id = 'avatars'
-    and auth.role() = 'authenticated' 
+    and auth.role() = 'authenticated'
 );

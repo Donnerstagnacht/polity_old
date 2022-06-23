@@ -5,7 +5,12 @@
       <div class="mx-4">
         <app-back-button [title]="'Zurück'" [link]="'/profile-edit'"></app-back-button>
         <div class="mb-30">
-          <p-tabView>
+          <app-tab-view-table-lists
+          [dataFirstTab]="followers"
+          [dataSecondTab]="followings"
+          (removeItemFromFirstTab)="onRemoveFollower($event)"
+          ></app-tab-view-table-lists>
+          <!-- <p-tabView>
             <p-tabPanel header="Follower">
               <p-table
               [value]="followers"
@@ -100,7 +105,7 @@
                 </ng-template>
               </p-table>
             </p-tabPanel>
-          </p-tabView>
+          </p-tabView> -->
         </div>
 
       </div>

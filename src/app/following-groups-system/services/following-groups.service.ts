@@ -63,23 +63,25 @@ export class FollowingGroupsService {
   }
 
   async followTransaction(follower: string): Promise<{data: any, error: any}> {
+    console.log(follower)
     const loggedInID = this.authentificationService.user?.id;
+    console.log(loggedInID)
     const followTransactionResult: { data: any, error: any } = await this.supabaseClient
-      .rpc('followtransaction', {followingid: follower, followerid: loggedInID})
+      .rpc('followgrouptransaction', {followingid: follower, followerid: loggedInID})
     return followTransactionResult;
   }
 
   async unfollowTransaction(follower: string): Promise<{data: any, error: any}> {
     const loggedInID = this.authentificationService.user?.id;
     const unfollowTransactionResult: { data: any, error: any } = await this.supabaseClient
-      .rpc('unfollowtransaction', {followingid: follower, followerid: loggedInID})
+      .rpc('unfollowgrouptransaction', {followingid: follower, followerid: loggedInID})
     return unfollowTransactionResult;
   }
 
   async removeFollowerTransaction(follower: string): Promise<{data: any, error: any}> {
     const loggedInID = this.authentificationService.user?.id;
     const unfollowTransactionResult: { data: any, error: any } = await this.supabaseClient
-      .rpc('unfollowtransaction', {followingid: loggedInID, followerid: follower})
+      .rpc('unfollowgrouptransaction', {followingid: loggedInID, followerid: follower})
     return unfollowTransactionResult;
   }
 

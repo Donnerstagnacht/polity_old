@@ -41,8 +41,8 @@ COMMENT ON TABLE public."following-group-system"
 
 
 --1.Insert
-DROP function if exists insertFollowingFollowerRelationship(follower uuid, following uuid);
-create or replace function insertFollowingFollowerRelationship(follower uuid, following uuid)
+DROP function if exists insertGroupFollowerRelationship(follower uuid, following uuid);
+create or replace function insertGroupFollowerRelationship(follower uuid, following uuid)
 returns void
 language plpgsql
 security definer
@@ -57,8 +57,8 @@ $$;
 
 
 --2. Increment Follower
-DROP function if exists incrementFollowerCounter(groupId uuid);
-create or replace function incrementFollowerCounter(groupId uuid)
+DROP function if exists incrementGroupFollowerCounter(groupId uuid);
+create or replace function incrementGroupFollowerCounter(groupId uuid)
 returns void
 language plpgsql
 security definer
@@ -73,8 +73,8 @@ $$;
 
 
 --3. Increment Following
-DROP function if exists incrementFollowingCounter(userId uuid);
-create or replace function incrementFollowingCounter(userId uuid)
+DROP function if exists incrementGroupFollowingCounter(userId uuid);
+create or replace function incrementGroupFollowingCounter(userId uuid)
 returns void
 language plpgsql
 security definer
@@ -89,17 +89,17 @@ $$;
 
 
 --4. Transaction
-DROP function if exists followTransaction(followerId uuid, followingId uuid);
-create or replace function followTransaction(followerId uuid, followingId uuid)
+DROP function if exists followGroupTransaction(followerId uuid, followingId uuid);
+create or replace function followGroupTransaction(followerId uuid, followingId uuid)
 returns void
 language plpgsql
 security definer
 as
 $$
 BEGIN
-  PERFORM insertFollowingFollowerRelationship(followerId, followingId);
-  PERFORM incrementFollowerCounter(followingId);
-  PERFORM incrementfollowingcounter(followerId);
+  PERFORM insertGroupFollowerRelationship(followerId, followingId);
+  PERFORM incrementGroupFollowerCounter(followingId);
+  PERFORM incrementGroupFollowingCounter(followerId);
 END;
 $$;
 
@@ -110,8 +110,8 @@ $$;
 --****************************
 
 -- 1. delete
-DROP function if exists deleteFollowingFollowerRelationship(followerId uuid, followingId uuid);
-create or replace function deleteFollowingFollowerRelationship(followerId uuid, followingId uuid)
+DROP function if exists deleteGroupFollowerRelationship(followerId uuid, followingId uuid);
+create or replace function deleteGroupFollowerRelationship(followerId uuid, followingId uuid)
 returns void
 language plpgsql
 security definer
@@ -128,8 +128,8 @@ $$;
 
 
 --2. decrement follower
-DROP function if exists decrementFollowerCounter(groupId uuid);
-create or replace function decrementFollowerCounter(groupId uuid)
+DROP function if exists decrementGroupFollowerCounter(groupId uuid);
+create or replace function decrementGroupFollowerCounter(groupId uuid)
 returns void
 language plpgsql
 security definer
@@ -144,8 +144,8 @@ $$;
 
 
 --3. decrement following
-DROP function if exists decrementFollowingCounter(userId uuid);
-create or replace function decrementFollowingCounter(userId uuid)
+DROP function if exists decrementGroupFollowingCounter(userId uuid);
+create or replace function decrementGroupFollowingCounter(userId uuid)
 returns void
 language plpgsql
 security definer
@@ -160,16 +160,16 @@ $$;
 
 
 --4. transaction
-DROP function if exists unfollowTransaction(followerId uuid, followingId uuid);
-create or replace function unfollowTransaction(followerId uuid, followingId uuid)
+DROP function if exists unfollowGroupTransaction(followerId uuid, followingId uuid);
+create or replace function unfollowGroupTransaction(followerId uuid, followingId uuid)
 returns void
 language plpgsql
 security definer
 as
 $$
 BEGIN
-  PERFORM deleteFollowingFollowerRelationship(followerId, followingId);
-  PERFORM decrementFollowerCounter(followingId);
-  PERFORM decrementfollowingcounter(followerId);
+  PERFORM deleteGroupFollowerRelationship(followerId, followingId);
+  PERFORM decrementGroupFollowerCounter(followingId);
+  PERFORM decrementGroupFollowingCounter(followerId);
 END;
 $$;

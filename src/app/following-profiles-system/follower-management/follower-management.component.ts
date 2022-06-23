@@ -66,7 +66,7 @@ export class FollowerManagementComponent implements OnInit {
     });
   }
 
-  onRemoveFollower(uuid:string): void {
+  onRemoveFollower(uuid: string): void {
     this.followingService.removeFollowerTransaction(uuid)
     .then(() => {
       this.getAllFollowing();
@@ -77,7 +77,7 @@ export class FollowerManagementComponent implements OnInit {
     })
   }
 
-  onUnFollow(uuid:string): void {
+  onUnFollow(uuid: string): void {
     this.followingService.unfollowTransaction(uuid)
     .then(() => {
       this.getAllFollower();
