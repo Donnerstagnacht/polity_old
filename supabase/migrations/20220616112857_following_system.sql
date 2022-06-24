@@ -5,32 +5,32 @@
 
 
 ALTER TABLE IF EXISTS public.profiles
-    ADD COLUMN "amendmentCounter" bigint NOT NULL DEFAULT '0'::bigint;
+    ADD COLUMN "amendment_counter" bigint NOT NULL DEFAULT '0'::bigint;
 
 ALTER TABLE IF EXISTS public.profiles
-    ADD COLUMN "followerCounter" bigint NOT NULL DEFAULT '0'::bigint;
+    ADD COLUMN "follower_counter" bigint NOT NULL DEFAULT '0'::bigint;
 
 ALTER TABLE IF EXISTS public.profiles
-    ADD COLUMN "followingCounter" bigint NOT NULL DEFAULT '0'::bigint;
+    ADD COLUMN "following_counter" bigint NOT NULL DEFAULT '0'::bigint;
 
 ALTER TABLE IF EXISTS public.profiles
-    ADD COLUMN "groupsCounter" bigint NOT NULL DEFAULT '0'::bigint;
+    ADD COLUMN "groups_counter" bigint NOT NULL DEFAULT '0'::bigint;
 
 
 -- **********************
 -- ******New Table*******
 -- **********************
-CREATE TABLE IF NOT EXISTS public."following-profile-system"
+CREATE TABLE IF NOT EXISTS public."following_profile_system"
 (
     id uuid NOT NULL DEFAULT uuid_generate_v4(),
     follower uuid NOT NULL,
     following uuid NOT NULL,
-    CONSTRAINT "following-profile-system_pkey" PRIMARY KEY (id),
-    CONSTRAINT "following-profile-system_follower_fkey" FOREIGN KEY (follower)
+    CONSTRAINT "following_profile_system_pkey" PRIMARY KEY (id),
+    CONSTRAINT "following_profile_system_follower_fkey" FOREIGN KEY (follower)
         REFERENCES public.profiles (id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION,
-    CONSTRAINT "following-profile-system_following_fkey" FOREIGN KEY (following)
+    CONSTRAINT "following_profile_system_following_fkey" FOREIGN KEY (following)
         REFERENCES public.profiles (id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
@@ -38,16 +38,16 @@ CREATE TABLE IF NOT EXISTS public."following-profile-system"
 
 TABLESPACE pg_default;
 
-ALTER TABLE IF EXISTS public."following-profile-system"
+ALTER TABLE IF EXISTS public."following_profile_system"
     OWNER to postgres;
 
-GRANT ALL ON TABLE public."following-profile-system" TO anon;
+GRANT ALL ON TABLE public."following_profile_system" TO anon;
 
-GRANT ALL ON TABLE public."following-profile-system" TO authenticated;
+GRANT ALL ON TABLE public."following_profile_system" TO authenticated;
 
-GRANT ALL ON TABLE public."following-profile-system" TO postgres;
+GRANT ALL ON TABLE public."following_profile_system" TO postgres;
 
-GRANT ALL ON TABLE public."following-profile-system" TO service_role;
+GRANT ALL ON TABLE public."following_profile_system" TO service_role;
 
-COMMENT ON TABLE public."following-profile-system"
+COMMENT ON TABLE public."following_profile_system"
     IS 'Stores the following-follower relationship';

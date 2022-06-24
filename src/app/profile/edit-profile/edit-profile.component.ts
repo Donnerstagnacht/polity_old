@@ -72,14 +72,14 @@ export class EditProfileComponent implements OnInit {
       this.uploading = true;
       const imgUploadObject: ImgUploadObject = this.storageService.createFilePath(event)
       try {
-        const avatarUrl = await this.storageService.uploadImg(
+        const avatar_Url = await this.storageService.uploadImg(
           imgUploadObject,
-          this.profile.avatarUrl || undefined,
+          this.profile.avatar_Url || undefined,
           'avatars'
         );
-        this.profile!.avatarUrl = avatarUrl
+        this.profile!.avatar_Url = avatar_Url
         this.updateContactInformation(
-          {avatarUrl:  avatarUrl});
+          {avatar_Url:  avatar_Url});
         fileUploader.clear();
         this.messageService.add({severity:'success', summary: 'Upload des Avatars war erfolgreich.'});
       } catch (error: any) {

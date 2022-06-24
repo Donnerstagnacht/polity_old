@@ -16,7 +16,7 @@ export class FollowingGroupsService {
   async isAlreadyFollower(following: string): Promise<{data: any, error: any}> {
     const loggedInID = this.authentificationService.user?.id;
     const results: {data: any, error: any} = await this.supabaseClient
-      .from('following-group-system')
+      .from('following_group_system')
       .select(
         `id,
         follower,
@@ -30,14 +30,14 @@ export class FollowingGroupsService {
 
   async getAllFollower(groupId: string): Promise<{data: any, error: any}> {
     const followers: {data: any, error: any} = await this.supabaseClient
-    .from('following-group-system')
+    .from('following_group_system')
     .select(
       `id,
       follower,
-      profiles!following-group-system_follower_fkey (
+      profiles!following_group_system_follower_fkey (
         id,
         username,
-        avatarUrl
+        avatar_Url
       )`
     )
     .eq('following', groupId)
@@ -47,14 +47,14 @@ export class FollowingGroupsService {
 /*   async getAllFollowing(): Promise<{data: any, error: any}> {
     const loggedInID = this.authentificationService.user?.id;
     const followings: {data: any, error: any} = await this.supabaseClient
-    .from('following-group-system')
+    .from('following_group_system')
     .select(
       `id,
       following,
-      profiles!following-group-system_following_fkey (
+      profiles!following_group_system_following_fkey (
         id,
         username,
-        avatarUrl
+        avatar_Url
       )`
     )
     .eq('follower', loggedInID)

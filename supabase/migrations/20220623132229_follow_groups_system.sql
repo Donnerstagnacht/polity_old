@@ -1,17 +1,17 @@
 -- **********************
 -- ******New Table*******
 -- **********************
-CREATE TABLE IF NOT EXISTS public."following-group-system"
+CREATE TABLE IF NOT EXISTS public."following_group_system"
 (
     id uuid NOT NULL DEFAULT uuid_generate_v4(),
     follower uuid NOT NULL,
     following uuid NOT NULL,
-    CONSTRAINT "following-group-system_pkey" PRIMARY KEY (id),
-    CONSTRAINT "following-group-system_follower_fkey" FOREIGN KEY (follower)
+    CONSTRAINT "following_group_system_pkey" PRIMARY KEY (id),
+    CONSTRAINT "following_group_system_follower_fkey" FOREIGN KEY (follower)
         REFERENCES public.profiles (id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION,
-    CONSTRAINT "following-group-system_following_fkey" FOREIGN KEY (following)
+    CONSTRAINT "following_group_system_following_fkey" FOREIGN KEY (following)
         REFERENCES public.groups (id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
@@ -19,18 +19,18 @@ CREATE TABLE IF NOT EXISTS public."following-group-system"
 
 TABLESPACE pg_default;
 
-ALTER TABLE IF EXISTS public."following-group-system"
+ALTER TABLE IF EXISTS public."following_group_system"
     OWNER to postgres;
 
-GRANT ALL ON TABLE public."following-group-system" TO anon;
+GRANT ALL ON TABLE public."following_group_system" TO anon;
 
-GRANT ALL ON TABLE public."following-group-system" TO authenticated;
+GRANT ALL ON TABLE public."following_group_system" TO authenticated;
 
-GRANT ALL ON TABLE public."following-group-system" TO postgres;
+GRANT ALL ON TABLE public."following_group_system" TO postgres;
 
-GRANT ALL ON TABLE public."following-group-system" TO service_role;
+GRANT ALL ON TABLE public."following_group_system" TO service_role;
 
-COMMENT ON TABLE public."following-group-system"
+COMMENT ON TABLE public."following_group_system"
     IS 'Stores the following-follower relationship';
 
 
@@ -49,7 +49,7 @@ security definer
 as
 $$
 BEGIN
-  INSERT INTO "following-group-system" (follower, following)
+  INSERT INTO "following_group_system" (follower, following)
   VALUES (follower, following);
 END;
 $$;
@@ -57,8 +57,8 @@ $$;
 
 
 --2. Increment Follower
-DROP function if exists incrementGroupFollowerCounter(groupId uuid);
-create or replace function incrementGroupFollowerCounter(groupId uuid)
+DROP function if exists incrementGroupfollower_counter(groupId uuid);
+create or replace function incrementGroupfollower_counter(groupId uuid)
 returns void
 language plpgsql
 security definer
@@ -66,15 +66,15 @@ as
 $$
 BEGIN
   update groups
-  set "followerCounter" = "followerCounter" + 1
+  set "follower_counter" = "follower_counter" + 1
   where id = groupId;
 END;
 $$;
 
 
 --3. Increment Following
-DROP function if exists incrementGroupFollowingCounter(userId uuid);
-create or replace function incrementGroupFollowingCounter(userId uuid)
+DROP function if exists incrementGroupfollowing_counter(userId uuid);
+create or replace function incrementGroupfollowing_counter(userId uuid)
 returns void
 language plpgsql
 security definer
@@ -82,7 +82,7 @@ as
 $$
 BEGIN
   update profiles
-  set "followingCounter" = "followingCounter" + 1
+  set "following_counter" = "following_counter" + 1
   where id = userId;
 END
 $$;
@@ -98,8 +98,8 @@ as
 $$
 BEGIN
   PERFORM insertGroupFollowerRelationship(followerId, followingId);
-  PERFORM incrementGroupFollowerCounter(followingId);
-  PERFORM incrementGroupFollowingCounter(followerId);
+  PERFORM incrementGroupfollower_counter(followingId);
+  PERFORM incrementGroupfollowing_counter(followerId);
 END;
 $$;
 
@@ -118,7 +118,7 @@ security definer
 as
 $$
 BEGIN
-  DELETE FROM "following-group-system"
+  DELETE FROM "following_group_system"
   WHERE
   "follower" = followerId
   AND
@@ -128,8 +128,8 @@ $$;
 
 
 --2. decrement follower
-DROP function if exists decrementGroupFollowerCounter(groupId uuid);
-create or replace function decrementGroupFollowerCounter(groupId uuid)
+DROP function if exists decrementGroupfollower_counter(groupId uuid);
+create or replace function decrementGroupfollower_counter(groupId uuid)
 returns void
 language plpgsql
 security definer
@@ -137,15 +137,15 @@ as
 $$
 BEGIN
   update groups
-  set "followerCounter" = "followerCounter" - 1
+  set "follower_counter" = "follower_counter" - 1
   where id = groupId;
 END;
 $$;
 
 
 --3. decrement following
-DROP function if exists decrementGroupFollowingCounter(userId uuid);
-create or replace function decrementGroupFollowingCounter(userId uuid)
+DROP function if exists decrementGroupfollowing_counter(userId uuid);
+create or replace function decrementGroupfollowing_counter(userId uuid)
 returns void
 language plpgsql
 security definer
@@ -153,7 +153,7 @@ as
 $$
 BEGIN
   update profiles
-  set "followingCounter" = "followingCounter" - 1
+  set "following_counter" = "following_counter" - 1
   where id = userId;
 END;
 $$;
@@ -169,7 +169,7 @@ as
 $$
 BEGIN
   PERFORM deleteGroupFollowerRelationship(followerId, followingId);
-  PERFORM decrementGroupFollowerCounter(followingId);
-  PERFORM decrementGroupFollowingCounter(followerId);
+  PERFORM decrementGroupfollower_counter(followingId);
+  PERFORM decrementGroupfollowing_counter(followerId);
 END;
 $$;

@@ -12,17 +12,17 @@ export interface Group {
   name: string,
   description: string,
   creator: string,
-  memberCounter?: string
-  eventsCounter?: string
+  member_Counter?: string
+  events_Counter?: string
   level: string,
   street?: string,
-  postCode?: string,
+  post_Code?: string,
   city?: string,
-  contactPhone?: string,
-  avatarUrl?: string,
-  followerCounter?: string,
-  amendmentCounter?: string,
-  contactEmail?: string,
+  contact_Phone?: string,
+  avatar_Url?: string,
+  follower_counter?: string,
+  amendment_counter?: string,
+  contact_Email?: string,
   updated_at?: Date
 }
 

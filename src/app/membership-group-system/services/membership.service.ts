@@ -54,7 +54,7 @@ export class MembershipService {
       profiles!membership_requests_user_requests_fkey (
         id,
         username,
-        avatarUrl
+        avatar_Url
       )`
     )
     .eq('group_requested', groupId)
@@ -98,7 +98,7 @@ export class MembershipService {
       profiles!group_members_user_id_fkey (
         id,
         username,
-        avatarUrl
+        avatar_Url
       )`
     )
     .eq('group_id', groupId)

@@ -48,33 +48,33 @@ export class WikiComponent implements OnInit {
         this.keyFigureList = [
           {
             name: 'Mitglieder',
-            number: results.data.memberCounter
+            number: results.data.member_Counter
           },
           {
             name: 'Anräge',
-            number: results.data.amendmentCounter
+            number: results.data.amendment_counter
           },
           {
             name: 'Follower',
-            number: results.data.followerCounter
+            number: results.data.follower_counter
           },
           {
             name: 'Veranstaltungen',
-            number: results.data.eventsCounter
+            number: results.data.events_Counter
           }
         ];
         this.contactData = {
           about: results.data.description,
-          contactEmail: results.data.contactEmail,
-          contactPhone: results.data.contactPhone,
+          contact_Email: results.data.contact_Email,
+          contact_Phone: results.data.contact_Phone,
           street: results.data.street,
-          postCode: results.data.postCode,
+          post_Code: results.data.post_Code,
           city: results.data.city
         };
         this.wikiHeader = {
           title: results.data.name,
           subtitle: results.data.level,
-          imgUrl: results.data.avatarUrl,
+          imgUrl: results.data.avatar_Url,
         }
         if (this.selectedGroupId) {
           this.menuItemsMega = groupsMenuitemsMegaParameter(this.selectedGroupId);

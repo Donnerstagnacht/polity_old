@@ -56,26 +56,26 @@ export class ProfileComponent implements OnInit {
         this.keyFigureList = [
           {
             name: 'Anträge',
-            number: profile.data.amendmentCounter
+            number: profile.data.amendment_counter
           },
           {
             name: 'Follower',
-            number: profile.data.followerCounter
+            number: profile.data.follower_counter
           },
           {
             name: 'Following',
-            number: profile.data.followingCounter
+            number: profile.data.following_counter
           },
           {
             name: 'Gruppen',
-            number: profile.data.groupsCounter
+            number: profile.data.groups_counter
           },
 
         ];
         this.wikiHeader = {
           title: profile.data.username,
           subtitle: 'Rosbach | Wetteraus - Hessen (statisch)',
-          imgUrl: profile.data.avatarUrl,
+          imgUrl: profile.data.avatar_Url,
         }
       }
       )

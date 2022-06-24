@@ -102,7 +102,7 @@ CREATE OR REPLACE FUNCTION public.increment_groups_counter(
 AS $BODY$
 BEGIN
   update profiles
-  set "groupsCounter" = "groupsCounter" + 1
+  set "groups_counter" = "groups_counter" + 1
   where id = userId;
 END
 $BODY$;
@@ -226,17 +226,17 @@ CREATE TABLE IF NOT EXISTS public.groups
     name text COLLATE pg_catalog."default" NOT NULL,
     description text COLLATE pg_catalog."default" NOT NULL DEFAULT ''::text,
     creator uuid NOT NULL,
-    "memberCounter" bigint NOT NULL DEFAULT '1'::bigint,
-    "followerCounter" bigint NOT NULL DEFAULT '0'::bigint,
-    "amendmentCounter" bigint NOT NULL DEFAULT '0'::bigint,
-    "eventsCounter" bigint NOT NULL DEFAULT '0'::bigint,
+    "member_Counter" bigint NOT NULL DEFAULT '1'::bigint,
+    "follower_counter" bigint NOT NULL DEFAULT '0'::bigint,
+    "amendment_counter" bigint NOT NULL DEFAULT '0'::bigint,
+    "events_Counter" bigint NOT NULL DEFAULT '0'::bigint,
     level text COLLATE pg_catalog."default" NOT NULL DEFAULT ''::text,
     street text COLLATE pg_catalog."default" NOT NULL DEFAULT ''::text,
-    "postCode" text COLLATE pg_catalog."default" NOT NULL DEFAULT ''::text,
+    "post_Code" text COLLATE pg_catalog."default" NOT NULL DEFAULT ''::text,
     city text COLLATE pg_catalog."default" NOT NULL DEFAULT ''::text,
-    "contactEmail" text COLLATE pg_catalog."default" NOT NULL DEFAULT ''::text,
-    "contactPhone" text COLLATE pg_catalog."default" NOT NULL DEFAULT ''::text,
-    "avatarUrl" text COLLATE pg_catalog."default" NOT NULL DEFAULT ''::text,
+    "contact_Email" text COLLATE pg_catalog."default" NOT NULL DEFAULT ''::text,
+    "contact_Phone" text COLLATE pg_catalog."default" NOT NULL DEFAULT ''::text,
+    "avatar_Url" text COLLATE pg_catalog."default" NOT NULL DEFAULT ''::text,
     " updated_at" timestamp with time zone NOT NULL DEFAULT now(),
     CONSTRAINT groups_pkey PRIMARY KEY (id),
     CONSTRAINT groups_creator_fkey FOREIGN KEY (creator)

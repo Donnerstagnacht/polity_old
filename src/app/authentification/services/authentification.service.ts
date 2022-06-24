@@ -5,18 +5,18 @@ import { environment } from 'src/environments/environment';
 import { account } from '../../../types/account';
 
 export interface Profile {
-  amendmentCounter: number;
-  followerCounter: number;
-  followingCounter: number;
-  groupsCounter: number;
+  amendment_counter: number;
+  follower_counter: number;
+  following_counter: number;
+  groups_counter: number;
   id: string;
   username: string;
   website: string;
-  avatarUrl: string;
-  contactEmail: string;
-  contactPhone: string;
+  avatar_Url: string;
+  contact_Email: string;
+  contact_Phone: string;
   street: string;
-  postCode: string;
+  post_Code: string;
   city: string;
   about: string;
 }
@@ -66,11 +66,11 @@ export class AuthentificationService {
         `id,
         username,
         website,
-        avatarUrl,
-        contactEmail,
-        contactPhone,
+        avatar_Url,
+        contact_Email,
+        contact_Phone,
         street,
-        postCode,
+        post_Code,
         city,
         about`)
       .eq('id', this.user?.id)

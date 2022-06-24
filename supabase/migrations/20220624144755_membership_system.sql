@@ -117,7 +117,7 @@ CREATE OR REPLACE FUNCTION public.increment_group_member_counter(
 AS $BODY$
 BEGIN
   update groups
-  set "memberCounter" = "memberCounter" + 1
+  set "member_Counter" = "member_Counter" + 1
   where id = group_id;
 END
 $BODY$;
@@ -201,7 +201,7 @@ CREATE OR REPLACE FUNCTION public.decrement_groups_counter(
 AS $BODY$
 BEGIN
   update profiles
-  set "groupsCounter" = "groupsCounter" - 1
+  set "groups_counter" = "groups_counter" - 1
   where id = user_id;
 END
 $BODY$;
@@ -225,7 +225,7 @@ CREATE OR REPLACE FUNCTION public.decrement_group_member_counter(
 AS $BODY$
 BEGIN
   update groups
-  set "memberCounter" = "memberCounter" - 1
+  set "member_Counter" = "member_Counter" - 1
   where id = group_id;
 END
 $BODY$;

@@ -44,7 +44,7 @@ as
 $$
 BEGIN
   update profiles
-  set "groupsCounter" = "groupsCounter" + 1
+  set "groups_counter" = "groups_counter" + 1
   where id = userId;
 END
 $$;

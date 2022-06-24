@@ -19,17 +19,17 @@ export class ProfileService {
         `id,
         username,
         website,
-        avatarUrl,
-        contactEmail,
-        contactPhone,
+        avatar_Url,
+        contact_Email,
+        contact_Phone,
         street,
-        postCode,
+        post_Code,
         city,
         about,
-        amendmentCounter,
-        followerCounter,
-        followingCounter,
-        groupsCounter`
+        amendment_counter,
+        follower_counter,
+        following_counter,
+        groups_counter`
       )
       .eq('id', uuid)
       .single()

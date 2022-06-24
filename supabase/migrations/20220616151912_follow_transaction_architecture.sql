@@ -12,7 +12,7 @@ security definer
 as
 $$
 BEGIN
-  INSERT INTO "following-profile-system" (follower, following)
+  INSERT INTO "following_profile_system" (follower, following)
   VALUES (follower, following);
 END;
 $$;
@@ -20,8 +20,8 @@ $$;
 
 
 --2. Increment Follower
-DROP function if exists incrementFollowerCounter(userId uuid);
-create or replace function incrementFollowerCounter(userId uuid)
+DROP function if exists incrementfollower_counter(userId uuid);
+create or replace function incrementfollower_counter(userId uuid)
 returns void
 language plpgsql
 security definer
@@ -29,15 +29,15 @@ as
 $$
 BEGIN
   update profiles
-  set "followerCounter" = "followerCounter" + 1
+  set "follower_counter" = "follower_counter" + 1
   where id = userId;
 END;
 $$;
 
 
 --3. Increment Following
-DROP function if exists incrementFollowingCounter(userId uuid);
-create or replace function incrementFollowingCounter(userId uuid)
+DROP function if exists incrementfollowing_counter(userId uuid);
+create or replace function incrementfollowing_counter(userId uuid)
 returns void
 language plpgsql
 security definer
@@ -45,7 +45,7 @@ as
 $$
 BEGIN
   update profiles
-  set "followingCounter" = "followingCounter" + 1
+  set "following_counter" = "following_counter" + 1
   where id = userId;
 END
 $$;
@@ -61,8 +61,8 @@ as
 $$
 BEGIN
   PERFORM insertFollowingFollowerRelationship(followerId, followingId);
-  PERFORM incrementFollowerCounter(followingId);
-  PERFORM incrementfollowingcounter(followerId);
+  PERFORM incrementfollower_counter(followingId);
+  PERFORM incrementfollowing_counter(followerId);
 END;
 $$;
 
@@ -81,7 +81,7 @@ security definer
 as
 $$
 BEGIN
-  DELETE FROM "following-profile-system"
+  DELETE FROM "following_profile_system"
   WHERE
   "follower" = followerId
   AND
@@ -91,8 +91,8 @@ $$;
 
 
 --2. decrement follower
-DROP function if exists decrementFollowerCounter(userId uuid);
-create or replace function decrementFollowerCounter(userId uuid)
+DROP function if exists decrementfollower_counter(userId uuid);
+create or replace function decrementfollower_counter(userId uuid)
 returns void
 language plpgsql
 security definer
@@ -100,15 +100,15 @@ as
 $$
 BEGIN
   update profiles
-  set "followerCounter" = "followerCounter" - 1
+  set "follower_counter" = "follower_counter" - 1
   where id = userId;
 END;
 $$;
 
 
 --3. decrement following
-DROP function if exists decrementFollowingCounter(userId uuid);
-create or replace function decrementFollowingCounter(userId uuid)
+DROP function if exists decrementfollowing_counter(userId uuid);
+create or replace function decrementfollowing_counter(userId uuid)
 returns void
 language plpgsql
 security definer
@@ -116,7 +116,7 @@ as
 $$
 BEGIN
   update profiles
-  set "followingCounter" = "followingCounter" - 1
+  set "following_counter" = "following_counter" - 1
   where id = userId;
 END;
 $$;
@@ -132,7 +132,7 @@ as
 $$
 BEGIN
   PERFORM deleteFollowingFollowerRelationship(followerId, followingId);
-  PERFORM decrementFollowerCounter(followingId);
-  PERFORM decrementfollowingcounter(followerId);
+  PERFORM decrementfollower_counter(followingId);
+  PERFORM decrementfollowing_counter(followerId);
 END;
 $$;

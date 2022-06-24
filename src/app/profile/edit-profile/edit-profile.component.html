@@ -46,7 +46,7 @@
           </div>
           <div>
             <h5>Profile Foto</h5>
-            <p-avatar *ngIf="profile.avatarUrl" [image]="profile.avatarUrl"></p-avatar>
+            <p-avatar *ngIf="profile.avatar_Url" [image]="profile.avatar_Url"></p-avatar>
             <p-fileUpload
               #fileUploader
               (uploadHandler)="updateProfilePhoto($event, fileUploader)"
@@ -79,7 +79,7 @@
                   class="w-full"
                   type="email"
                   pInputText
-                  [(ngModel)]="profile.contactEmail"
+                  [(ngModel)]="profile.contact_Email"
                 >
                 <label for="float-input">Email</label>
               </span>
@@ -90,7 +90,7 @@
                   class="w-full"
                   type="text"
                   pInputText
-                  [(ngModel)]="profile.contactPhone"
+                  [(ngModel)]="profile.contact_Phone"
                   >
                 <label for="float-input">Phone</label>
               </span>
@@ -115,7 +115,7 @@
                   class="w-full"
                   type="text"
                   pInputText
-                  [(ngModel)]="profile.postCode"
+                  [(ngModel)]="profile.post_Code"
                 >
                 <label for="float-input">Post Code</label>
               </span>
