@@ -29,7 +29,7 @@ security definer
 as
 $$
 BEGIN
-  INSERT INTO "groupMembers" (user_id, group_id, is_admin, is_board_member, is_president)
+  INSERT INTO "group_members" (user_id, group_id, is_admin, is_board_member, is_president)
   VALUES (user_id, group_id, is_admin, is_board_member, is_president);
 END;
 $$;

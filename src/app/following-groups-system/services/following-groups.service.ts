@@ -62,9 +62,7 @@ export class FollowingGroupsService {
   } */
 
   async followTransaction(follower: string): Promise<{data: any, error: any}> {
-    console.log(follower)
     const loggedInID = this.authentificationService.user?.id;
-    console.log(loggedInID)
     const followTransactionResult: { data: any, error: any } = await this.supabaseClient
       .rpc('followgrouptransaction', {followingid: follower, followerid: loggedInID})
     return followTransactionResult;

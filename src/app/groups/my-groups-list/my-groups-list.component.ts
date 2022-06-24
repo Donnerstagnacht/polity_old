@@ -23,16 +23,15 @@ export class MyGroupsListComponent implements OnInit {
     this.groupsService.getAllGroupsOfId()
     .then((groupList) => {
       /**review**/
-      this.localGroupList = [];
       groupList.data.forEach((results: any) => {
         let group: Group = {
           'id': results.group_id,
           'name': results.groups.name,
-          'level': results.groups.name,
+          'level': results.groups.level,
           'creator': results.groups.creator,
           'description': results.groups.description
         }
-        switch(group.description) {
+        switch(group.level) {
           case 'local': {
             this.localGroupList.push(group);
             break;
@@ -50,7 +49,6 @@ export class MyGroupsListComponent implements OnInit {
             break;
           }
         }
-        this.localGroupList.push(group);
       })
     })
     .catch((error: any) => {

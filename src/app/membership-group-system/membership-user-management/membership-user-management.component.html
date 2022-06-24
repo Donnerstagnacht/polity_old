@@ -1,0 +1,21 @@
+<p-toast styleClass="max-w-90"	 position="top-right">></p-toast> -->
+<app-wrapper-grid>
+  <div slot="main">
+    <div class="mb-8">
+      <div class="mx-4">
+        <app-back-button [title]="'Zurück'" [link]="link"></app-back-button>
+        <div class="mb-30">
+          <app-tab-view-table-lists
+          [dataFirstTab]="groups"
+          [titleFirstTab]="titleYourGroups"
+          [noDataFirstTab]="noGroups"
+          [secondTabNeeded]="false"
+          [acceptButtonNeededFirstTab]="false"
+          (removeItemFromFirstTab)="leaveGroup($event)"
+
+          ></app-tab-view-table-lists>
+        </div>
+      </div>
+    </div>
+  </div>
+</app-wrapper-grid>

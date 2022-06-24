@@ -34,7 +34,7 @@ export class GroupsService {
   async getAllGroupsOfId(): Promise<{data: any, error: any}> {
     const loggedInID = this.authentificationService.user?.id;
     const groups: {data: any, error: any} = await this.supabaseClient
-    .from('groupMembers')
+    .from('group_members')
     .select(
       `
       group_id,
@@ -42,7 +42,8 @@ export class GroupsService {
         name,
         level,
         description,
-        creator
+        creator,
+        avatarUrl
       )
       `
     )

@@ -13,6 +13,7 @@
           (click)="followOrUnfollowGroup()"
         >
         </button>
+        <app-request-membership *ngIf="selectedGroupId" [selectedGroupId]="selectedGroupId"></app-request-membership>
         </div>
       </div>
       <app-key-figures [keyFigureList]="keyFigureList"></app-key-figures>

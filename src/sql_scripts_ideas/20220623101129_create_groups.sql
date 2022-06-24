@@ -42,7 +42,7 @@ CREATE OR REPLACE FUNCTION public.addmember(
     VOLATILE SECURITY DEFINER PARALLEL UNSAFE
 AS $BODY$
 BEGIN
-  INSERT INTO "groupMembers" (user_id, group_id, is_admin, is_board_member, is_president)
+  INSERT INTO "group_members" (user_id, group_id, is_admin, is_board_member, is_president)
   VALUES (user_id, group_id, is_admin, is_board_member, is_president);
 END;
 $BODY$;
@@ -166,7 +166,7 @@ CREATE OR REPLACE FUNCTION public.add_member(
     VOLATILE SECURITY DEFINER PARALLEL UNSAFE
 AS $BODY$
 BEGIN
-  INSERT INTO "groupMembers" (user_id, group_id, is_admin, is_board_member, is_president)
+  INSERT INTO "group_members" (user_id, group_id, is_admin, is_board_member, is_president)
   VALUES (user_id, group_id, is_admin, is_board_member, is_president);
 END;
 $BODY$;
@@ -184,7 +184,7 @@ GRANT EXECUTE ON FUNCTION public.add_member(uuid, uuid, boolean, boolean, boolea
 
 GRANT EXECUTE ON FUNCTION public.add_member(uuid, uuid, boolean, boolean, boolean) TO service_role;
 
-CREATE TABLE IF NOT EXISTS public."groupMembers"
+CREATE TABLE IF NOT EXISTS public."group_members"
 (
     id uuid NOT NULL DEFAULT uuid_generate_v4(),
     user_id uuid NOT NULL,
@@ -195,12 +195,12 @@ CREATE TABLE IF NOT EXISTS public."groupMembers"
     as_board_member_added timestamp with time zone NOT NULL DEFAULT now(),
     is_president boolean NOT NULL DEFAULT false,
     as_president_added timestamp with time zone NOT NULL DEFAULT now(),
-    CONSTRAINT "groupMembers_pkey" PRIMARY KEY (id),
-    CONSTRAINT "groupMembers_group_id_fkey" FOREIGN KEY (group_id)
+    CONSTRAINT "group_members_pkey" PRIMARY KEY (id),
+    CONSTRAINT "group_members_group_id_fkey" FOREIGN KEY (group_id)
         REFERENCES public.groups (id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION,
-    CONSTRAINT "groupMembers_user_id_fkey" FOREIGN KEY (user_id)
+    CONSTRAINT "group_members_user_id_fkey" FOREIGN KEY (user_id)
         REFERENCES public.profiles (id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
@@ -208,16 +208,16 @@ CREATE TABLE IF NOT EXISTS public."groupMembers"
 
 TABLESPACE pg_default;
 
-ALTER TABLE IF EXISTS public."groupMembers"
+ALTER TABLE IF EXISTS public."group_members"
     OWNER to postgres;
 
-GRANT ALL ON TABLE public."groupMembers" TO anon;
+GRANT ALL ON TABLE public."group_members" TO anon;
 
-GRANT ALL ON TABLE public."groupMembers" TO authenticated;
+GRANT ALL ON TABLE public."group_members" TO authenticated;
 
-GRANT ALL ON TABLE public."groupMembers" TO postgres;
+GRANT ALL ON TABLE public."group_members" TO postgres;
 
-GRANT ALL ON TABLE public."groupMembers" TO service_role;
+GRANT ALL ON TABLE public."group_members" TO service_role;
 
 CREATE TABLE IF NOT EXISTS public.groups
 (

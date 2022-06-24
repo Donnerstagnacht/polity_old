@@ -15,6 +15,8 @@ import { SearchComponent } from './search/search/search.component';
 import { EditGroupMembersComponent } from './groups/edit-group-members/edit-group-members.component';
 import { EditFollowersComponent } from './groups/edit-followers/edit-followers.component';
 import { FollowerGroupManagementComponent } from './following-groups-system/follower-group-management/follower-group-management.component';
+import { MembershipGroupManagementComponent } from './membership-group-system/membership-group-management/membership-group-management.component';
+import { MembershipUserManagementComponent } from './membership-group-system/membership-user-management/membership-user-management.component';
 
 const routes: Routes = [
   {path: '', component: RegisterComponent},
@@ -24,13 +26,13 @@ const routes: Routes = [
   {path: 'profile-edit', component: EditComponent},
   {path: 'profile-edit/profile', component: EditProfileComponent},
   {path: 'profile-edit/follower', component: FollowerManagementComponent},
-  {path: 'profile-edit/groups', component: GroupManagementComponent},
+  {path: 'profile-edit/groups', component: MembershipUserManagementComponent},
   {path: 'groups', component: MyGroupsListComponent},
   {path: 'groups/:id', component: WikiComponent},
   {path: 'groups/:id/edit', component: EditGComponent},
   {path: 'groups/:id/edit-overview', component: EditGroupComponent},
   {path: 'groups/:id/edit-follower', component: FollowerGroupManagementComponent},
-  {path: 'groups/:id/edit-members', component: EditGroupMembersComponent},
+  {path: 'groups/:id/edit-members', component: MembershipGroupManagementComponent},
   {path: 'register', component: RegisterComponent},
   {path: 'search', component: SearchComponent},
   {path: 'über', component: LoginComponent}

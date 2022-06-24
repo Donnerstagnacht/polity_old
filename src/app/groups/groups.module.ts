@@ -24,6 +24,7 @@ import { EditComponent } from './edit/edit.component';
 import { EditGroupMembersComponent } from './edit-group-members/edit-group-members.component';
 import { EditFollowersComponent } from './edit-followers/edit-followers.component';
 import { FileUploadModule } from 'primeng/fileupload';
+import { MembershipGroupSystemModule } from '../membership-group-system/membership-group-system.module';
 
 @NgModule({
   declarations: [
@@ -54,7 +55,8 @@ import { FileUploadModule } from 'primeng/fileupload';
     TagModule,
     AvatarModule,
     AvatarGroupModule,
-    FileUploadModule
+    FileUploadModule,
+    MembershipGroupSystemModule
   ]
 })
 export class GroupsModule { }

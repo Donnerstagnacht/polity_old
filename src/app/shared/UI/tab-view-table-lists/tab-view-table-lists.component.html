@@ -24,8 +24,22 @@
           <td>
             <p-avatar size="xlarge" shape="circle" styleClass="border-round" image={{dataFirstTab.avatarUrl}}></p-avatar>
           </td>
-          <td>
+          <td *ngIf="dataFirstTab.username">
             {{dataFirstTab.username}}
+          </td>
+          <td *ngIf="dataFirstTab.name">
+            {{dataFirstTab.name}}
+          </td>
+          <td>
+            <button
+            *ngIf="acceptButtonNeededFirstTab"
+              pButton
+              pRipple
+              type="button"
+              icon="pi pi-check"
+              class="p-button-rounded p-button-text p-button-success"
+              (click)="acceptFromFirstTab(dataFirstTab.id)"
+              ></button>
           </td>
           <td>
             <button
@@ -71,8 +85,22 @@
           <td>
             <p-avatar size="xlarge" shape="circle" styleClass="border-round" image={{dataSecondTab.avatarUrl}}></p-avatar>
           </td>
-          <td>
+          <td *ngIf="dataSecondTab.username">
             {{dataSecondTab.username}}
+          </td>
+          <td *ngIf="dataSecondTab.name">
+            {{dataSecondTab.name}}
+          </td>
+          <td>
+            <button
+            *ngIf="acceptButtonNeededSecondTab"
+              pButton
+              pRipple
+              type="button"
+              icon="pi pi-check"
+              class="p-button-rounded p-button-text p-button-success"
+              (click)="acceptFromSecondTab(dataSecondTab.id)"
+              ></button>
           </td>
           <td>
             <button

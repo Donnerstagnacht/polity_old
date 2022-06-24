@@ -1,0 +1,8 @@
+<p-toast styleClass="max-w-90"	 position="top-right"></p-toast>
+<button
+pButton
+type="button"
+label="{{isAlreadyMember ? 'Austreten' : membershipAlreadyRequested  ? 'Anfrage zurückziehen' : 'Mitgliedschaft anfragen'}}"
+(click)="requestMembershipOrLeaveGroup()"
+>
+</button>

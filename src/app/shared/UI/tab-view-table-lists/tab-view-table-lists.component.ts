@@ -14,11 +14,18 @@ export class TabViewTableListsComponent implements OnInit {
   @Input() noDataFirstTab: string = '';
   @Input() noDataSecondTab: string = '';
   @Input() secondTabNeeded: boolean = true;
+  @Input() acceptButtonNeededFirstTab: boolean = false;
+  @Input() acceptButtonNeededSecondTab: boolean = false;
+
 
   filterString: string = '';
 
   @Output() removeItemFromFirstTab: EventEmitter<string> = new EventEmitter<string>();
   @Output() removeItemFromSecontTab: EventEmitter<string> = new EventEmitter<string>();
+
+  @Output() acceptItemFromFirstTab: EventEmitter<string> = new EventEmitter<string>();
+  @Output() acceptItemFromSecontTab: EventEmitter<string> = new EventEmitter<string>();
+
   // @Output() newFilterTerm: EventEmitter<string> = new EventEmitter<string>();
 
 
@@ -33,6 +40,14 @@ export class TabViewTableListsComponent implements OnInit {
 
   removeFromSecondDataTab(id: string) {
     this.removeItemFromSecontTab.emit(id);
+  }
+
+  acceptFromFirstTab(id: string) {
+    this.acceptItemFromFirstTab.emit(id);
+  }
+
+  acceptFromSecondTab(id: string) {
+    this.acceptItemFromSecontTab.emit(id);
   }
 
 /*   newFilter(filterTerm: string) {

@@ -45,7 +45,7 @@ export class FollowerGroupManagementComponent implements OnInit {
       });
     })
     .catch((error) => {
-      this.messageService.add({severity:'success', summary: 'Fehler beim laden. ' + error});
+      this.messageService.add({severity:'error', summary: 'Fehler beim laden. ' + error});
     });
   }
 
