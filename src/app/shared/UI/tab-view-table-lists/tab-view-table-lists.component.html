@@ -1,5 +1,5 @@
 <p-tabView>
-  <p-tabPanel header="Follower">
+  <p-tabPanel header={{titleFirstTab}}>
     <p-table
     [value]="dataFirstTab"
     #followerTable
@@ -41,12 +41,12 @@
       </ng-template>
       <ng-template pTemplate="emptymessage">
         <tr>
-          <td colspan="7">Du hast noch keine Follower.</td>
+          <td colspan="7">{{noDataFirstTab}}</td>
         </tr>
       </ng-template>
     </p-table>
   </p-tabPanel>
-  <p-tabPanel header="Following">
+  <p-tabPanel *ngIf="secondTabNeeded" header={{titleSecondTab}}>
     <p-table
     [value]="dataSecondTab"
     #followingTable
@@ -88,7 +88,7 @@
       </ng-template>
       <ng-template pTemplate="emptymessage">
         <tr>
-          <td colspan="7">Du folgst noch niemanden.</td>
+          <td colspan="7">{{noDataFirstTab}}</td>
         </tr>
       </ng-template>
     </p-table>

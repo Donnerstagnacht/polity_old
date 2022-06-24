@@ -12,6 +12,10 @@ export class FollowerManagementComponent implements OnInit {
   columns: any[] = [];
   followers: any[] = [];
   followings: any[] = [];
+  titleFollower: string = 'Follower';
+  titleFollowings: string = 'Followings';
+  noDataFollower: string = 'Du hast noch keine Follower.';
+  noDataFollowings: string = 'Du folgst noch niemanden.';
 
   filterString: string = '';
   constructor(

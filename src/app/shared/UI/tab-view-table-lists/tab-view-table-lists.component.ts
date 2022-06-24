@@ -9,6 +9,12 @@ export class TabViewTableListsComponent implements OnInit {
   @Input() columns: any[] = [];
   @Input() dataFirstTab: any[] = [];
   @Input() dataSecondTab: any[] = [];
+  @Input() titleFirstTab: string = '';
+  @Input() titleSecondTab: string = '';
+  @Input() noDataFirstTab: string = '';
+  @Input() noDataSecondTab: string = '';
+  @Input() secondTabNeeded: boolean = true;
+
   filterString: string = '';
 
   @Output() removeItemFromFirstTab: EventEmitter<string> = new EventEmitter<string>();

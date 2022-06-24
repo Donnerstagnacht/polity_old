@@ -28,24 +28,23 @@ export class FollowingGroupsService {
 
   }
 
-  async getAllFollower(): Promise<{data: any, error: any}> {
-    const loggedInID = this.authentificationService.user?.id;
+  async getAllFollower(groupId: string): Promise<{data: any, error: any}> {
     const followers: {data: any, error: any} = await this.supabaseClient
     .from('following-group-system')
     .select(
       `id,
       follower,
-      groups!following-group-system_follower_fkey (
+      profiles!following-group-system_follower_fkey (
         id,
-        name,
+        username,
         avatarUrl
       )`
     )
-    .eq('following', loggedInID)
+    .eq('following', groupId)
   return followers;
   }
 
-  async getAllFollowing(): Promise<{data: any, error: any}> {
+/*   async getAllFollowing(): Promise<{data: any, error: any}> {
     const loggedInID = this.authentificationService.user?.id;
     const followings: {data: any, error: any} = await this.supabaseClient
     .from('following-group-system')
@@ -60,7 +59,7 @@ export class FollowingGroupsService {
     )
     .eq('follower', loggedInID)
   return followings;
-  }
+  } */
 
   async followTransaction(follower: string): Promise<{data: any, error: any}> {
     console.log(follower)
@@ -78,10 +77,9 @@ export class FollowingGroupsService {
     return unfollowTransactionResult;
   }
 
-  async removeFollowerTransaction(follower: string): Promise<{data: any, error: any}> {
-    const loggedInID = this.authentificationService.user?.id;
+  async removeFollowerTransaction(follower: string, groupId: string): Promise<{data: any, error: any}> {
     const unfollowTransactionResult: { data: any, error: any } = await this.supabaseClient
-      .rpc('unfollowgrouptransaction', {followingid: loggedInID, followerid: follower})
+      .rpc('unfollowgrouptransaction', {followingid: groupId, followerid: follower})
     return unfollowTransactionResult;
   }
 

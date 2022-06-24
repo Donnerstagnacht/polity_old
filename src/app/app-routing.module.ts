@@ -14,6 +14,7 @@ import { ProfileComponent } from './profile/profile/profile.component';
 import { SearchComponent } from './search/search/search.component';
 import { EditGroupMembersComponent } from './groups/edit-group-members/edit-group-members.component';
 import { EditFollowersComponent } from './groups/edit-followers/edit-followers.component';
+import { FollowerGroupManagementComponent } from './following-groups-system/follower-group-management/follower-group-management.component';
 
 const routes: Routes = [
   {path: '', component: RegisterComponent},
@@ -28,7 +29,7 @@ const routes: Routes = [
   {path: 'groups/:id', component: WikiComponent},
   {path: 'groups/:id/edit', component: EditGComponent},
   {path: 'groups/:id/edit-overview', component: EditGroupComponent},
-  {path: 'groups/:id/edit-follower', component: EditFollowersComponent},
+  {path: 'groups/:id/edit-follower', component: FollowerGroupManagementComponent},
   {path: 'groups/:id/edit-members', component: EditGroupMembersComponent},
   {path: 'register', component: RegisterComponent},
   {path: 'search', component: SearchComponent},

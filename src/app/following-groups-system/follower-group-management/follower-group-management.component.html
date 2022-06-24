@@ -1,23 +1,21 @@
-<p-toast styleClass="max-w-90"	 position="top-right">></p-toast>
-
+<p-toast styleClass="max-w-90"	 position="top-right">></p-toast> -->
 <app-wrapper-grid>
   <div slot="main">
     <div class="mb-8">
       <div class="mx-4">
-        <app-back-button [title]="'Zurück'" [link]="'/profile-edit'"></app-back-button>
+        <app-back-button [title]="'Zurück'" [link]="link"></app-back-button>
         <div class="mb-30">
           <app-tab-view-table-lists
           [dataFirstTab]="followers"
           [dataSecondTab]="followings"
           [titleFirstTab]="titleFollower"
-          [titleSecondTab]="titleFollowings"
           [noDataFirstTab]="noDataFollower"
-          [noDataFirstTab]="noDataFollowings"
+          [secondTabNeeded]="false"
           (removeItemFromFirstTab)="onRemoveFollower($event)"
           ></app-tab-view-table-lists>
         </div>
-
       </div>
     </div>
   </div>
 </app-wrapper-grid>
+
