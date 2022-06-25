@@ -2,10 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Session } from '@supabase/supabase-js';
 import { MegaMenuItem, MenuItem, MessageService } from 'primeng/api';
-import { MegaMenu } from 'primeng/megamenu';
 import { AuthentificationService, Profile } from 'src/app/authentification/services/authentification.service';
-import { ImgUploadObject, StorageService } from 'src/app/storage/services/storage.service';
-import { v4 as uuidv4 } from 'uuid';
+import { ImgUploadObject, StorageService } from 'src/app/utilities/storage/services/storage.service';
 import { profileMenuitems, profileMenuitemsMega } from '../services/profileMenuItems';
 
 @Component({

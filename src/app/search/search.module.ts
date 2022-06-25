@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SearchComponent } from './search/search.component';
-import { SharedModule } from '../shared/shared.module';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { TabViewModule } from 'primeng/tabview';
@@ -12,6 +11,8 @@ import {CheckboxModule} from 'primeng/checkbox';
 import {PanelModule} from 'primeng/panel';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {ChipsModule} from 'primeng/chips';
+import { UIStructureModule } from '../UI-structure/ui-structure.module';
+import { UIElementsModule } from '../UI-elements/ui-elements.module';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,6 @@ import {ChipsModule} from 'primeng/chips';
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    SharedModule,
     InputTextModule,
     ButtonModule,
     TabViewModule,
@@ -30,7 +30,9 @@ import {ChipsModule} from 'primeng/chips';
     SliderModule,
     CheckboxModule,
     PanelModule,
-    ChipsModule
+    ChipsModule,
+    UIStructureModule,
+    UIElementsModule
 
   ]
 })

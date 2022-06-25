@@ -5,8 +5,8 @@ import { MembershipUserManagementComponent } from './membership-user-management/
 import { RequestMembershipComponent } from './request-membership/request-membership.component';
 import { ButtonModule } from 'primeng/button';
 import { ToastModule } from 'primeng/toast';
-import { SharedModule } from '../shared/shared.module';
-import { FormsModule } from '@angular/forms';
+import { UIStructureModule } from '../UI-structure/ui-structure.module';
+import { UIElementsModule } from '../UI-elements/ui-elements.module';
 
 
 
@@ -18,9 +18,10 @@ import { FormsModule } from '@angular/forms';
   ],
   imports: [
     CommonModule,
-    SharedModule,
     ButtonModule,
-    ToastModule
+    ToastModule,
+    UIStructureModule,
+    UIElementsModule
   ],
   exports: [
     RequestMembershipComponent

@@ -13,7 +13,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TermsAndConditionsComponent } from './terms-and-conditions/terms-and-conditions.component';
 import { DataProtectionComponent } from './data-protection/data-protection.component';
 import { LoginComponent } from './login/login.component';
-import { SharedModule } from '../shared/shared.module';
+import { UIStructureModule } from '../UI-structure/ui-structure.module';
 
 @NgModule({
   declarations: [
@@ -32,7 +32,7 @@ import { SharedModule } from '../shared/shared.module';
     KeyFilterModule,
     PasswordModule,
     DialogModule,
-    SharedModule
+    UIStructureModule
   ],
   exports: [
     RegisterComponent,

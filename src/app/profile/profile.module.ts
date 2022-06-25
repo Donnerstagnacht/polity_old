@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProfileComponent } from './profile/profile.component';
-import { SharedModule } from '../shared/shared.module';
 import {TabViewModule} from 'primeng/tabview';
 import { EditComponent } from './edit/edit.component';
 import {MessagesModule} from 'primeng/messages';
@@ -17,6 +16,10 @@ import {FileUploadModule} from 'primeng/fileupload';
 import {HttpClientModule} from '@angular/common/http';
 import {AvatarModule} from 'primeng/avatar';
 import {ToastModule} from 'primeng/toast';
+import { UIStructureModule } from '../UI-structure/ui-structure.module';
+import { UINavigationModule } from '../UI-navigation/ui-navigation.module';
+import { UIElementsModule } from '../UI-elements/ui-elements.module';
+import { FollowingProfilesSystemModule } from '../following-profiles-system/following-profiles-system.module';
 
 @NgModule({
   declarations: [
@@ -26,7 +29,6 @@ import {ToastModule} from 'primeng/toast';
   ],
   imports: [
     CommonModule,
-    SharedModule,
     TabViewModule,
     MessagesModule,
     MessageModule,
@@ -40,6 +42,10 @@ import {ToastModule} from 'primeng/toast';
     HttpClientModule,
     AvatarModule,
     ToastModule,
+    UIStructureModule,
+    UINavigationModule,
+    UIElementsModule,
+    FollowingProfilesSystemModule
   ],
 })
 export class ProfileModule { }

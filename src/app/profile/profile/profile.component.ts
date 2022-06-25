@@ -4,9 +4,9 @@ import { Profile, AuthentificationService } from 'src/app/authentification/servi
 import { ProfileService } from '../services/profile.service';
 import { FollowingService } from 'src/app/following-profiles-system/services/following.service';
 import { MegaMenuItem, MenuItem, MessageService } from 'primeng/api';
-import { KeyFigure } from 'src/app/shared/UI/key-figures/key-figures.component';
+import { KeyFigure } from 'src/app/UI-elements/key-figures/key-figures.component';
 import { profileMenuitems, profileMenuitemsMega } from '../services/profileMenuItems';
-import { WikiHeader } from 'src/app/shared/UI/wiki-header/wiki-header.component';
+import { WikiHeader } from 'src/app/UI-elements/wiki-header/wiki-header.component';
 
 @Component({
   selector: 'app-profile',

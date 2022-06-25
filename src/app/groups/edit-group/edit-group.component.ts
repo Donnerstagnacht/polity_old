@@ -4,7 +4,7 @@ import { MegaMenuItem, MenuItem, MessageService } from 'primeng/api';
 import { Group } from '../create-group/create-group.component';
 import { groupsMenuitemsParameter, groupsMenuitemsMegaParameter} from '../services/groupMenuItems';
 import { GroupsService } from '../services/groups.service';
-import { ImgUploadObject, StorageService } from 'src/app/storage/services/storage.service';
+import { ImgUploadObject, StorageService } from 'src/app/utilities/storage/services/storage.service';
 
 @Component({
   selector: 'app-edit-group',

@@ -3,43 +3,39 @@ import { CommonModule } from '@angular/common';
 import { WikiComponent } from './wiki/wiki.component';
 import { CreateGroupComponent } from './create-group/create-group.component';
 import { MyGroupsListComponent } from './my-groups-list/my-groups-list.component';
-import { GroupManagementComponent } from './group-management/group-management.component';
-import { SharedModule } from '../shared/shared.module';
 import { ButtonModule } from 'primeng/button';
 import { ToastModule } from 'primeng/toast';
 import { InputTextModule } from 'primeng/inputtext';
 import { TabViewModule } from 'primeng/tabview';
 import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import {MessagesModule} from 'primeng/messages';
-import {MessageModule} from 'primeng/message';
-import {SidebarModule} from 'primeng/sidebar';
-import {CarouselModule} from 'primeng/carousel';
+import { MessagesModule } from 'primeng/messages';
+import { MessageModule } from 'primeng/message';
+import { SidebarModule } from 'primeng/sidebar';
+import { CarouselModule } from 'primeng/carousel';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { TagModule } from 'primeng/tag';
-import {AvatarModule} from 'primeng/avatar';
-import {AvatarGroupModule} from 'primeng/avatargroup';
+import { AvatarModule} from 'primeng/avatar';
+import { AvatarGroupModule} from 'primeng/avatargroup';
 import { EditGroupComponent } from './edit-group/edit-group.component';
 import { EditComponent } from './edit/edit.component';
-import { EditGroupMembersComponent } from './edit-group-members/edit-group-members.component';
-import { EditFollowersComponent } from './edit-followers/edit-followers.component';
 import { FileUploadModule } from 'primeng/fileupload';
 import { MembershipGroupSystemModule } from '../membership-group-system/membership-group-system.module';
+import { UIElementsModule } from '../UI-elements/ui-elements.module';
+import { UIStructureModule } from '../UI-structure/ui-structure.module';
+import { UINavigationModule } from '../UI-navigation/ui-navigation.module';
+import { FollowingGroupsSystemModule } from '../following-groups-system/following-groups-system.module';
 
 @NgModule({
   declarations: [
     WikiComponent,
     CreateGroupComponent,
     MyGroupsListComponent,
-    GroupManagementComponent,
     EditGroupComponent,
-    EditComponent,
-    EditGroupMembersComponent,
-    EditFollowersComponent
+    EditComponent
   ],
   imports: [
     CommonModule,
-    SharedModule,
     FormsModule,
     ReactiveFormsModule,
     RouterModule,
@@ -56,7 +52,12 @@ import { MembershipGroupSystemModule } from '../membership-group-system/membersh
     AvatarModule,
     AvatarGroupModule,
     FileUploadModule,
-    MembershipGroupSystemModule
+    MembershipGroupSystemModule,
+    TagModule,
+    UIElementsModule,
+    UIStructureModule,
+    UINavigationModule,
+    FollowingGroupsSystemModule
   ]
 })
 export class GroupsModule { }

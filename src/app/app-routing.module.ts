@@ -4,7 +4,6 @@ import { LoginComponent } from './authentification/login/login.component';
 import { RegisterComponent } from './authentification/register/register.component';
 import { FollowerManagementComponent } from './following-profiles-system/follower-management/follower-management.component';
 import { EditGroupComponent } from './groups/edit-group/edit-group.component';
-import { GroupManagementComponent } from './groups/group-management/group-management.component';
 import { MyGroupsListComponent } from './groups/my-groups-list/my-groups-list.component';
 import { WikiComponent } from './groups/wiki/wiki.component';
 import { EditProfileComponent } from './profile/edit-profile/edit-profile.component';
@@ -12,15 +11,16 @@ import { EditComponent } from './profile/edit/edit.component';
 import { EditComponent as EditGComponent } from './groups/edit/edit.component';
 import { ProfileComponent } from './profile/profile/profile.component';
 import { SearchComponent } from './search/search/search.component';
-import { EditGroupMembersComponent } from './groups/edit-group-members/edit-group-members.component';
-import { EditFollowersComponent } from './groups/edit-followers/edit-followers.component';
 import { FollowerGroupManagementComponent } from './following-groups-system/follower-group-management/follower-group-management.component';
 import { MembershipGroupManagementComponent } from './membership-group-system/membership-group-management/membership-group-management.component';
 import { MembershipUserManagementComponent } from './membership-group-system/membership-user-management/membership-user-management.component';
-import { IsGroupAdminGuard } from './guards/isGroupAdmin/is-group-admin.guard';
-import { IsLoggedInGuard } from './guards/isLoggedIn/is-logged-in.guard';
+import { IsGroupAdminGuard } from './utilities-guards/isGroupAdmin/is-group-admin.guard';
+import { IsLoggedInGuard } from './utilities-guards/isLoggedIn/is-logged-in.guard';
+import { CreateGroupComponent } from './groups/create-group/create-group.component';
 
 const routes: Routes = [
+  {path: 'test', component: CreateGroupComponent},
+
   {path: '', component: RegisterComponent},
   {path: 'login', component: LoginComponent},
   {path: 'register', component: RegisterComponent},
