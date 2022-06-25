@@ -1,20 +1,18 @@
+import { HttpClient, HttpHandler } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Session } from '@supabase/supabase-js';
-import { MegaMenuItem, MenuItem, MessageService } from 'primeng/api';
+import { MessageService } from 'primeng/api';
 import { AuthentificationService, Profile } from 'src/app/authentification/services/authentification.service';
 import { ImgUploadObject, StorageService } from 'src/app/utilities/storage/services/storage.service';
-import { profileMenuitems, profileMenuitemsMega } from '../services/profileMenuItems';
 
 @Component({
   selector: 'app-edit-profile',
   templateUrl: './edit-profile.component.html',
   styleUrls: ['./edit-profile.component.scss'],
-  providers: [ MessageService ]
+  providers: [ MessageService, HttpClient ]
 })
 export class EditProfileComponent implements OnInit {
-  menuItems: MenuItem[] = profileMenuitems;
-  menuItemsMega: MegaMenuItem[] = profileMenuitemsMega;
   loading: boolean = true;
   profile: Profile | undefined;
   session: Session | undefined;

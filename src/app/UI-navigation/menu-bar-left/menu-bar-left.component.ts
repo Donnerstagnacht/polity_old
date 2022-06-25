@@ -24,10 +24,11 @@ export class MenuBarLeftComponent implements OnInit {
     this.$loggedInStatus.subscribe((loggedInId) => {
       if(loggedInId) {
         this.items = [
-          {label: 'Profil', routerLink: ['/profile']},
-          {label: 'Gruppen', routerLink: ['/groups']},
-          {label: 'Erstellen', command: () => this.toggleFullScreen()},
-          {label: 'Search', routerLink: ['/search']}
+          {label: 'PROFIL', routerLink: ['/profile']},
+          {label: 'GRUPPEN', routerLink: ['/groups']},
+          {label: 'ERSTLLEN', command: () => this.toggleFullScreen()},
+          {label: 'SUCHE', routerLink: ['/search']},
+          {label: 'ORGA', routerLink: ['/orga']}
         ]
       } else {
         this.items = [

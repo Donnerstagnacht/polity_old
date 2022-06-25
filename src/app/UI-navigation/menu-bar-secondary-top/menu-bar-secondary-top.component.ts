@@ -10,8 +10,7 @@ import { AuthentificationService } from 'src/app/authentification/services/authe
 export class MenuBarSecondaryTopComponent implements OnInit {
   @Input() menuItems: MegaMenuItem[] = [];
   loggedIn: boolean = false;
-/*   items: MegaMenuItem[] = [];
- */
+
   constructor(
     private readonly authentificationService: AuthentificationService,
   ) { }

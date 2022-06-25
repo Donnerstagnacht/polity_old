@@ -24,6 +24,10 @@ const routes: Routes = [
     path: 'search',
     loadChildren: () => import('./search/search.module').then(m => m.SearchModule)
   },
+  {
+    path: 'orga',
+    loadChildren: () => import('./orga/orga.module').then(m => m.OrgaModule)
+  },
 ];
 
 @NgModule({

@@ -26,6 +26,7 @@ import { UIStructureModule } from '../UI-structure/ui-structure.module';
 import { UINavigationModule } from '../UI-navigation/ui-navigation.module';
 import { FollowingGroupsSystemModule } from '../following-groups-system/following-groups-system.module';
 import { GroupsRoutingModule } from './groups-routing.module';
+import {HttpClientModule} from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -57,7 +58,8 @@ import { GroupsRoutingModule } from './groups-routing.module';
     UIStructureModule,
     UINavigationModule,
     FollowingGroupsSystemModule,
-    GroupsRoutingModule
+    GroupsRoutingModule,
+    HttpClientModule
   ]
 })
 export class GroupsModule { }

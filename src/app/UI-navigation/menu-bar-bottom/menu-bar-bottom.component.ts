@@ -26,7 +26,8 @@ export class MenuBarBottomComponent implements OnInit {
             {icon: 'pi pi-fw pi-user', /* label: 'Profil', */ routerLink: ['/profile']},
             {icon: 'pi pi-fw pi-users',/* label: 'Gruppen', */ routerLink: ['/groups']},
             {icon: 'pi pi-fw pi-plus-circle',/* label: 'Erstellen', */ command: () => this.toggleFullScreen()},
-            {icon: 'pi pi-fw pi-search',/* label: 'Search', */ routerLink: ['/search']}
+            {icon: 'pi pi-fw pi-search',/* label: 'Search', */ routerLink: ['/search']},
+            {icon: 'pi pi-fw pi-calendar',/* label: 'Search', */ routerLink: ['/orga']}
           ]
         } else {
           this.items = [

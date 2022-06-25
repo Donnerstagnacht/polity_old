@@ -13,7 +13,6 @@ import {InputNumberModule} from 'primeng/inputnumber';
 import { FormsModule } from '@angular/forms';
 import {InputTextareaModule} from 'primeng/inputtextarea';
 import {FileUploadModule} from 'primeng/fileupload';
-import {HttpClientModule} from '@angular/common/http';
 import {AvatarModule} from 'primeng/avatar';
 import {ToastModule} from 'primeng/toast';
 import { UIStructureModule } from '../UI-structure/ui-structure.module';
@@ -21,6 +20,7 @@ import { UINavigationModule } from '../UI-navigation/ui-navigation.module';
 import { UIElementsModule } from '../UI-elements/ui-elements.module';
 import { FollowingProfilesSystemModule } from '../following-profiles-system/following-profiles-system.module';
 import { ProfilesRoutingModule } from './profile-routing.module';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -40,14 +40,14 @@ import { ProfilesRoutingModule } from './profile-routing.module';
     FormsModule,
     InputTextareaModule,
     FileUploadModule,
-    HttpClientModule,
     AvatarModule,
     ToastModule,
     UIStructureModule,
     UINavigationModule,
     UIElementsModule,
     FollowingProfilesSystemModule,
-    ProfilesRoutingModule
+    ProfilesRoutingModule,
+    HttpClientModule
   ],
 })
 export class ProfileModule { }
