@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MegaMenuItem, MenuItem } from 'primeng/api';
-import { groupsMenuitemsMegaParameter, groupsMenuitemsParameter } from '../services/groupMenuItems';
+import { groupsMenuitemsMegaParameter, groupsMenuitemsMegaParameterLoggedIn, groupsMenuitemsParameter, groupsMenuitemsParameterLoggedIn } from '../services/groupMenuItems';
 
 @Component({
   selector: 'app-edit',
@@ -23,8 +23,8 @@ export class EditComponent implements OnInit {
     console.log('reached')
     this.getSelectedId();
     if (this.selectedGroupId) {
-      this.menuItemsMega = groupsMenuitemsMegaParameter(this.selectedGroupId);
-      this.menuItems = groupsMenuitemsParameter(this.selectedGroupId);
+      this.menuItemsMega = groupsMenuitemsMegaParameterLoggedIn(this.selectedGroupId);
+      this.menuItems = groupsMenuitemsParameterLoggedIn(this.selectedGroupId);
       this.editOverviewLink = `/groups/${this.selectedGroupId}/edit-overview`;
       this.editFollowerLink = `/groups/${this.selectedGroupId}/edit-follower`;
       this.editMembersLink = `/groups/${this.selectedGroupId}/edit-members`;

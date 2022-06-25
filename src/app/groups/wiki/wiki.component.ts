@@ -6,7 +6,7 @@ import { contactData } from 'src/app/shared/UI/about-and-contact/about-and-conta
 import { KeyFigure } from 'src/app/shared/UI/key-figures/key-figures.component';
 import { WikiHeader } from 'src/app/shared/UI/wiki-header/wiki-header.component';
 import { Group } from '../create-group/create-group.component';
-import { groupsMenuitemsParameter, groupsMenuitemsMegaParameter } from '../services/groupMenuItems';
+import { groupsMenuitemsParameter, groupsMenuitemsMegaParameter, groupsMenuitemsMegaParameterLoggedIn, groupsMenuitemsParameterLoggedIn } from '../services/groupMenuItems';
 import { GroupsService } from '../services/groups.service';
 
 @Component({
@@ -25,6 +25,7 @@ export class WikiComponent implements OnInit {
   group: Group | undefined;
   wikiHeader: WikiHeader | undefined;
   isAlreadyFollower: boolean = false;
+  isAdmin: boolean = false;
 
 
   constructor(
@@ -37,6 +38,7 @@ export class WikiComponent implements OnInit {
 
   ngOnInit(): void {
     this.getSelectedId();
+    this.checkIfLoggedInUserIsAdmin();
     this.getGroupById();
   }
 
@@ -77,8 +79,14 @@ export class WikiComponent implements OnInit {
           imgUrl: results.data.avatar_url,
         }
         if (this.selectedGroupId) {
-          this.menuItemsMega = groupsMenuitemsMegaParameter(this.selectedGroupId);
-          this.menuItems = groupsMenuitemsParameter(this.selectedGroupId);
+          if(this.isAdmin) {
+            this.menuItemsMega = groupsMenuitemsMegaParameterLoggedIn(this.selectedGroupId);
+            this.menuItems = groupsMenuitemsParameterLoggedIn(this.selectedGroupId);
+          } else {
+            this.menuItemsMega = groupsMenuitemsMegaParameter(this.selectedGroupId);
+            this.menuItems = groupsMenuitemsParameter(this.selectedGroupId);
+          }
+
         }
       })
       .catch((error) => {
@@ -129,6 +137,20 @@ export class WikiComponent implements OnInit {
         }
       })
       .catch();
+    }
+  }
+
+  checkIfLoggedInUserIsAdmin(): void {
+    if (this.selectedGroupId) {
+      this.groupsService.isLoggedInUserAdmin(this.selectedGroupId)
+      .then((results) => {
+        this.isAdmin = results.data.is_admin;
+        console.log(this.selectedGroupId);
+      })
+      .catch((error) => {
+        this.isAdmin = false;
+        console.log(error);
+      })
     }
   }
 
