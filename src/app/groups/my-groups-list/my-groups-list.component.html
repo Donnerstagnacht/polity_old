@@ -19,7 +19,7 @@
           <i class="pi pi-angle-down align-items-center flex justify-content-center mr-4"></i>
           <h4 class="flex align-items-center justify-content-center">REGIONALE</h4>
         </div>
-        <a *ngFor="let group of regionalGroupList" [routerLink]="['/group', group.id]">
+        <a *ngFor="let group of regionalGroupList" [routerLink]="['/groups', group.id]">
           <p-messages  severity="custom">
             <ng-template pTemplate>
                 <div class="ml-2">{{group.name}}</div>
@@ -31,7 +31,7 @@
           <i class="pi pi-angle-down align-items-center flex justify-content-center mr-4"></i>
           <h4 class="flex align-items-center justify-content-center">BUND</h4>
         </div>
-        <a *ngFor="let group of federalGroupList" [routerLink]="['/group', group.id]">
+        <a *ngFor="let group of federalGroupList" [routerLink]="['/groups', group.id]">
           <p-messages  severity="custom">
             <ng-template pTemplate>
                 <div class="ml-2">{{group.name}}</div>
@@ -43,7 +43,7 @@
           <i class="pi pi-angle-down align-items-center flex justify-content-center mr-4"></i>
           <h4 class="flex align-items-center justify-content-center">INTERNATIONAL</h4>
         </div>
-        <a *ngFor="let group of internationalGroupList" [routerLink]="['/group', group.id]">
+        <a *ngFor="let group of internationalGroupList" [routerLink]="['/groups', group.id]">
           <p-messages  severity="custom">
             <ng-template pTemplate>
                 <div class="ml-2">{{group.name}}</div>
