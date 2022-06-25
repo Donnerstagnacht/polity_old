@@ -17,25 +17,27 @@ import { EditFollowersComponent } from './groups/edit-followers/edit-followers.c
 import { FollowerGroupManagementComponent } from './following-groups-system/follower-group-management/follower-group-management.component';
 import { MembershipGroupManagementComponent } from './membership-group-system/membership-group-management/membership-group-management.component';
 import { MembershipUserManagementComponent } from './membership-group-system/membership-user-management/membership-user-management.component';
+import { IsGroupAdminGuard } from './guards/isGroupAdmin/is-group-admin.guard';
+import { IsLoggedInGuard } from './guards/isLoggedIn/is-logged-in.guard';
 
 const routes: Routes = [
   {path: '', component: RegisterComponent},
   {path: 'login', component: LoginComponent},
-  {path: 'profile', component: ProfileComponent},
-  {path: 'profile/:id', component: ProfileComponent},
-  {path: 'profile-edit', component: EditComponent},
-  {path: 'profile-edit/profile', component: EditProfileComponent},
-  {path: 'profile-edit/follower', component: FollowerManagementComponent},
-  {path: 'profile-edit/groups', component: MembershipUserManagementComponent},
-  {path: 'groups', component: MyGroupsListComponent},
-  {path: 'groups/:id', component: WikiComponent},
-  {path: 'groups/:id/edit', component: EditGComponent},
-  {path: 'groups/:id/edit-overview', component: EditGroupComponent},
-  {path: 'groups/:id/edit-follower', component: FollowerGroupManagementComponent},
-  {path: 'groups/:id/edit-members', component: MembershipGroupManagementComponent},
   {path: 'register', component: RegisterComponent},
-  {path: 'search', component: SearchComponent},
-  {path: 'über', component: LoginComponent}
+  {path: 'über', component: LoginComponent},
+  {path: 'profile', component: ProfileComponent, canActivate: [IsLoggedInGuard]},
+  {path: 'profile/:id', component: ProfileComponent, canActivate: [IsLoggedInGuard]},
+  {path: 'profile-edit', component: EditComponent, canActivate: [IsLoggedInGuard]},
+  {path: 'profile-edit/profile', component: EditProfileComponent, canActivate: [IsLoggedInGuard]},
+  {path: 'profile-edit/follower', component: FollowerManagementComponent, canActivate: [IsLoggedInGuard]},
+  {path: 'profile-edit/groups', component: MembershipUserManagementComponent, canActivate: [IsLoggedInGuard]},
+  {path: 'groups', component: MyGroupsListComponent, canActivate: [IsLoggedInGuard]},
+  {path: 'groups/:id', component: WikiComponent, canActivate: [IsLoggedInGuard]},
+  {path: 'groups/:id/edit', component: EditGComponent, canActivate: [IsLoggedInGuard, IsGroupAdminGuard]},
+  {path: 'groups/:id/edit-overview', component: EditGroupComponent, canActivate: [IsLoggedInGuard, IsGroupAdminGuard]},
+  {path: 'groups/:id/edit-follower', component: FollowerGroupManagementComponent, canActivate: [IsLoggedInGuard, IsGroupAdminGuard]},
+  {path: 'groups/:id/edit-members', component: MembershipGroupManagementComponent, canActivate: [IsLoggedInGuard, IsGroupAdminGuard]},
+  {path: 'search', component: SearchComponent, canActivate: [IsLoggedInGuard]}
 ];
 
 @NgModule({

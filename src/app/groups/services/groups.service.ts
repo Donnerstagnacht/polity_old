@@ -95,4 +95,18 @@ export class GroupsService {
       .match({id: updateId});
   }
 
+  async isLoggedInUserAdmin(groupId: string):  Promise<{data: any, error: any}> {
+    const loggedInID = this.authentificationService.user?.id;
+    const results: {data: any, error: any} = await this.supabaseClient
+    .from('group_members')
+    .select(
+      `id,
+      is_admin`
+    )
+    .eq('user_id', loggedInID)
+    .eq('group_id', groupId)
+    .single()
+    return results;
+  }
+
 }
