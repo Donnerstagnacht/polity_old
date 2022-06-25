@@ -22,7 +22,7 @@
             </div>
           <div>
             <h5>group Foto</h5>
-            <p-avatar *ngIf="group.avatar_Url" [image]="group.avatar_Url"></p-avatar>
+            <p-avatar *ngIf="group.avatar_url" [image]="group.avatar_url"></p-avatar>
             <p-fileUpload
               #fileUploader
               (uploadHandler)="updateGroupPhoto($event, fileUploader)"
@@ -56,7 +56,7 @@
                   class="w-full"
                   type="email"
                   pInputText
-                  [(ngModel)]="group.contact_Email"
+                  [(ngModel)]="group.contact_email"
                 >
                 <label for="float-input">Email</label>
               </span>
@@ -67,7 +67,7 @@
                   class="w-full"
                   type="text"
                   pInputText
-                  [(ngModel)]="group.contact_Phone"
+                  [(ngModel)]="group.contact_phone"
                   >
                 <label for="float-input">Phone</label>
               </span>
@@ -92,7 +92,7 @@
                   class="w-full"
                   type="text"
                   pInputText
-                  [(ngModel)]="group.post_Code"
+                  [(ngModel)]="group.post_code"
                 >
                 <label for="float-input">Post Code</label>
               </span>

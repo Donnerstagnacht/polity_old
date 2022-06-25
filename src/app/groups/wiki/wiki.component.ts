@@ -48,7 +48,7 @@ export class WikiComponent implements OnInit {
         this.keyFigureList = [
           {
             name: 'Mitglieder',
-            number: results.data.member_Counter
+            number: results.data.member_counter
           },
           {
             name: 'Anräge',
@@ -60,21 +60,21 @@ export class WikiComponent implements OnInit {
           },
           {
             name: 'Veranstaltungen',
-            number: results.data.events_Counter
+            number: results.data.events_counter
           }
         ];
         this.contactData = {
           about: results.data.description,
-          contact_Email: results.data.contact_Email,
-          contact_Phone: results.data.contact_Phone,
+          contact_email: results.data.contact_email,
+          contact_phone: results.data.contact_phone,
           street: results.data.street,
-          post_Code: results.data.post_Code,
+          post_code: results.data.post_code,
           city: results.data.city
         };
         this.wikiHeader = {
           title: results.data.name,
           subtitle: results.data.level,
-          imgUrl: results.data.avatar_Url,
+          imgUrl: results.data.avatar_url,
         }
         if (this.selectedGroupId) {
           this.menuItemsMega = groupsMenuitemsMegaParameter(this.selectedGroupId);

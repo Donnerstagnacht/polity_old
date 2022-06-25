@@ -38,7 +38,7 @@ as
 $$
 BEGIN
   update groups
-  set "member_Counter" = "member_Counter" + 1
+  set "member_counter" = "member_counter" + 1
   where id = group_id;
 END
 $$;
@@ -110,7 +110,7 @@ as
 $$
 BEGIN
   update groups
-  set "member_Counter" = "member_Counter" - 1
+  set "member_counter" = "member_counter" - 1
   where id = group_id;
 END
 $$;

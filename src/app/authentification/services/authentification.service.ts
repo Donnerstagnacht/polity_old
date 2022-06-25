@@ -12,11 +12,11 @@ export interface Profile {
   id: string;
   username: string;
   website: string;
-  avatar_Url: string;
-  contact_Email: string;
-  contact_Phone: string;
+  avatar_url: string;
+  contact_email: string;
+  contact_phone: string;
   street: string;
-  post_Code: string;
+  post_code: string;
   city: string;
   about: string;
 }
@@ -66,11 +66,11 @@ export class AuthentificationService {
         `id,
         username,
         website,
-        avatar_Url,
-        contact_Email,
-        contact_Phone,
+        avatar_url,
+        contact_email,
+        contact_phone,
         street,
-        post_Code,
+        post_code,
         city,
         about`)
       .eq('id', this.user?.id)

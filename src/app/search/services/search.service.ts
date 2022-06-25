@@ -18,7 +18,7 @@ export class SearchService {
       .from('profiles')
       .select(
         `username,
-        avatar_Url,
+        avatar_url,
         website`
       )
       .eq('city', searchTerm)
@@ -46,7 +46,7 @@ export class SearchService {
       .select(
         `id,
         username,
-        avatar_Url,
+        avatar_url,
         website`
       )
       .textSearch(

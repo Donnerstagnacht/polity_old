@@ -35,11 +35,11 @@ export class FollowerManagementComponent implements OnInit {
       followers.data.forEach((profile: any) => {
         let id: any = profile.profiles.id;
         let username: any = profile.profiles.username;
-        let avatar_Url: any = profile.profiles.avatar_Url;
+        let avatar_url: any = profile.profiles.avatar_url;
         this.followers.push({
           'id': id,
           'username': username,
-          'avatar_Url': avatar_Url
+          'avatar_url': avatar_url
         });
       });
     })
@@ -56,11 +56,11 @@ export class FollowerManagementComponent implements OnInit {
       followings.data.forEach((profile: any) => {
         let id: any = profile.profiles.id;
         let username: any = profile.profiles.username;
-        let avatar_Url: any = profile.profiles.avatar_Url;
+        let avatar_url: any = profile.profiles.avatar_url;
         this.followings.push({
           'id': id,
           'username': username,
-          'avatar_Url': avatar_Url
+          'avatar_url': avatar_url
         });
 
       });

@@ -38,7 +38,7 @@ export class FollowingService {
       profiles!following_profile_system_follower_fkey (
         id,
         username,
-        avatar_Url
+        avatar_url
       )`
     )
     .eq('following', loggedInID)
@@ -55,7 +55,7 @@ export class FollowingService {
       profiles!following_profile_system_following_fkey (
         id,
         username,
-        avatar_Url
+        avatar_url
       )`
     )
     .eq('follower', loggedInID)

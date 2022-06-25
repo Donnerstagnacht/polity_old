@@ -4,7 +4,7 @@
 -- Please report an issue for any failure with the reproduction steps.
 
 
-ALTER TABLE IF EXISTS public.profiles
+/* ALTER TABLE IF EXISTS public.profiles
     ADD COLUMN "amendment_counter" bigint NOT NULL DEFAULT '0'::bigint;
 
 ALTER TABLE IF EXISTS public.profiles
@@ -15,7 +15,7 @@ ALTER TABLE IF EXISTS public.profiles
 
 ALTER TABLE IF EXISTS public.profiles
     ADD COLUMN "groups_counter" bigint NOT NULL DEFAULT '0'::bigint;
-
+ */
 
 -- **********************
 -- ******New Table*******

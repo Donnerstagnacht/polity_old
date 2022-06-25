@@ -2,10 +2,10 @@ import { Component, Input, OnInit } from '@angular/core';
 
 export interface contactData {
   about: string;
-  contact_Email: string;
-  contact_Phone: string;
+  contact_email: string;
+  contact_phone: string;
   street: string;
-  post_Code: string;
+  post_code: string;
   city: string;
 }
 

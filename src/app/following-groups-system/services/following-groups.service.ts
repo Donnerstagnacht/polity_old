@@ -37,7 +37,7 @@ export class FollowingGroupsService {
       profiles!following_group_system_follower_fkey (
         id,
         username,
-        avatar_Url
+        avatar_url
       )`
     )
     .eq('following', groupId)
@@ -54,7 +54,7 @@ export class FollowingGroupsService {
       profiles!following_group_system_following_fkey (
         id,
         username,
-        avatar_Url
+        avatar_url
       )`
     )
     .eq('follower', loggedInID)

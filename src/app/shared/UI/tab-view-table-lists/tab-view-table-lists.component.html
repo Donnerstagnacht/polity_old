@@ -22,7 +22,7 @@
       <ng-template pTemplate="body" let-dataFirstTab>
         <tr>
           <td>
-            <p-avatar size="xlarge" shape="circle" styleClass="border-round" image={{dataFirstTab.avatar_Url}}></p-avatar>
+            <p-avatar size="xlarge" shape="circle" styleClass="border-round" image={{dataFirstTab.avatar_url}}></p-avatar>
           </td>
           <td *ngIf="dataFirstTab.username">
             {{dataFirstTab.username}}
@@ -83,7 +83,7 @@
       <ng-template pTemplate="body" let-dataSecondTab>
         <tr>
           <td>
-            <p-avatar size="xlarge" shape="circle" styleClass="border-round" image={{dataSecondTab.avatar_Url}}></p-avatar>
+            <p-avatar size="xlarge" shape="circle" styleClass="border-round" image={{dataSecondTab.avatar_url}}></p-avatar>
           </td>
           <td *ngIf="dataSecondTab.username">
             {{dataSecondTab.username}}

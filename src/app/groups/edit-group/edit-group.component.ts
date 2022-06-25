@@ -73,14 +73,14 @@ export class EditGroupComponent implements OnInit {
       this.uploading = true;
       const imgUploadObject: ImgUploadObject = this.storageService.createFilePath(event)
       try {
-        const avatar_Url = await this.storageService.uploadImg(
+        const avatar_url = await this.storageService.uploadImg(
           imgUploadObject,
-          this.group.avatar_Url || undefined,
+          this.group.avatar_url || undefined,
           'avatars'
         );
-        this.group!.avatar_Url = avatar_Url
+        this.group!.avatar_url = avatar_url
         this.updateGroup(
-          {avatar_Url:  avatar_Url},
+          {avatar_url:  avatar_url},
           this.selectedGroupId
         );
         fileUploader.clear();

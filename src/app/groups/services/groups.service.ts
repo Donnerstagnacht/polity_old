@@ -43,7 +43,7 @@ export class GroupsService {
         level,
         description,
         creator,
-        avatar_Url
+        avatar_url
       )
       `
     )
@@ -58,17 +58,17 @@ export class GroupsService {
         `id,
         name,
         description,
-        avatar_Url,
-        contact_Email,
-        contact_Phone,
+        avatar_url,
+        contact_email,
+        contact_phone,
         street,
-        post_Code,
+        post_code,
         city,
         level,
         amendment_counter,
         follower_counter,
-        events_Counter,
-        member_Counter`
+        events_counter,
+        member_counter`
       )
       .eq('id', uuid)
       .single()
