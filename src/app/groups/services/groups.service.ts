@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { AuthentificationService } from 'src/app/authentification/services/authentification.service';
 import { environment } from 'src/environments/environment';
-import { Group } from '../create-group/create-group.component';
+import { Group } from '../../UI-dialogs/create-group/create-group.component';
 
 @Injectable({
   providedIn: 'root'

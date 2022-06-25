@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { WikiComponent } from './wiki/wiki.component';
-import { CreateGroupComponent } from './create-group/create-group.component';
+import { CreateGroupComponent } from '../UI-dialogs/create-group/create-group.component';
 import { MyGroupsListComponent } from './my-groups-list/my-groups-list.component';
 import { ButtonModule } from 'primeng/button';
 import { ToastModule } from 'primeng/toast';
@@ -30,7 +30,7 @@ import { GroupsRoutingModule } from './groups-routing.module';
 @NgModule({
   declarations: [
     WikiComponent,
-    CreateGroupComponent,
+    // CreateGroupComponent,
     MyGroupsListComponent,
     EditGroupComponent,
     EditComponent
@@ -47,9 +47,7 @@ import { GroupsRoutingModule } from './groups-routing.module';
     MessagesModule,
     MessageModule,
     SidebarModule,
-    CarouselModule,
     InputTextareaModule,
-    TagModule,
     AvatarModule,
     AvatarGroupModule,
     FileUploadModule,

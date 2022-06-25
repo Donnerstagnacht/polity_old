@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { AuthentificationService } from 'src/app/authentification/services/authentification.service';
-import { Group } from 'src/app/groups/create-group/create-group.component';
+import { Group } from 'src/app/UI-dialogs/create-group/create-group.component';
 import { GroupsService } from 'src/app/groups/services/groups.service';
 import { MembershipService } from '../services/membership.service';
 

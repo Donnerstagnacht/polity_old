@@ -10,12 +10,17 @@ export class ActionsOverlayComponent implements OnInit {
   @Input() showAddMenu!: boolean;
   @Output() showAddMenuChange: EventEmitter<boolean> = new EventEmitter<boolean>();
 
+  showCreateGroupMenu: boolean = false;
+
   constructor() { }
 
   ngOnInit(): void {
 
   }
 
-  openAddGroupPanel(): void {}
+  openAddGroupPanel(): void {
+    this.showCreateGroupMenu = true;
+    this.showAddMenu = false;
+  }
 
 }

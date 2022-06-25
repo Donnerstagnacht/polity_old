@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { AuthentificationService, Profile } from 'src/app/authentification/services/authentification.service';
-import { GroupsService } from '../services/groups.service';
+import { GroupsService } from '../../groups/services/groups.service';
 
 export interface carouselPages {
   pageNumber: number

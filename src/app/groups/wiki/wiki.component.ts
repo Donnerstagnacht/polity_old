@@ -5,7 +5,7 @@ import { FollowingGroupsService } from 'src/app/following-groups-system/services
 import { contactData } from 'src/app/UI-elements/about-and-contact/about-and-contact.component';
 import { KeyFigure } from 'src/app/UI-elements/key-figures/key-figures.component';
 import { WikiHeader } from 'src/app/UI-elements/wiki-header/wiki-header.component';
-import { Group } from '../create-group/create-group.component';
+import { Group } from '../../UI-dialogs/create-group/create-group.component';
 import { groupsMenuitemsParameter, groupsMenuitemsMegaParameter, groupsMenuitemsMegaParameterLoggedIn, groupsMenuitemsParameterLoggedIn } from '../services/groupMenuItems';
 import { GroupsService } from '../services/groups.service';
 
