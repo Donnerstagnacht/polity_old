@@ -28,7 +28,7 @@ export class MembershipUserManagementComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.link = `/profile-edit`;
+    this.link = `/profile/edit`;
     this.getAllGroups();
 
   }

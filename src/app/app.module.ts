@@ -4,7 +4,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AuthentificationModule } from './authentification/authentification.module';
-import { GroupsModule } from './groups/groups.module';
+// import { GroupsModule } from './groups/groups.module';
 import { ProfileModule } from './profile/profile.module';
 import { SearchModule } from './search/search.module';
 import { UINavigationModule } from './UI-navigation/ui-navigation.module';
@@ -22,7 +22,7 @@ import { UINavigationModule } from './UI-navigation/ui-navigation.module';
     AuthentificationModule,
     ProfileModule,
     SearchModule,
-    GroupsModule
+    // GroupsModule
   ],
   bootstrap: [AppComponent]
 })

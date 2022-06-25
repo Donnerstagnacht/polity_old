@@ -20,6 +20,7 @@ import { UIStructureModule } from '../UI-structure/ui-structure.module';
 import { UINavigationModule } from '../UI-navigation/ui-navigation.module';
 import { UIElementsModule } from '../UI-elements/ui-elements.module';
 import { FollowingProfilesSystemModule } from '../following-profiles-system/following-profiles-system.module';
+import { ProfilesRoutingModule } from './profile-routing.module';
 
 @NgModule({
   declarations: [
@@ -45,7 +46,8 @@ import { FollowingProfilesSystemModule } from '../following-profiles-system/foll
     UIStructureModule,
     UINavigationModule,
     UIElementsModule,
-    FollowingProfilesSystemModule
+    FollowingProfilesSystemModule,
+    ProfilesRoutingModule
   ],
 })
 export class ProfileModule { }

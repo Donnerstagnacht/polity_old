@@ -25,6 +25,7 @@ import { UIElementsModule } from '../UI-elements/ui-elements.module';
 import { UIStructureModule } from '../UI-structure/ui-structure.module';
 import { UINavigationModule } from '../UI-navigation/ui-navigation.module';
 import { FollowingGroupsSystemModule } from '../following-groups-system/following-groups-system.module';
+import { GroupsRoutingModule } from './groups-routing.module';
 
 @NgModule({
   declarations: [
@@ -57,7 +58,8 @@ import { FollowingGroupsSystemModule } from '../following-groups-system/followin
     UIElementsModule,
     UIStructureModule,
     UINavigationModule,
-    FollowingGroupsSystemModule
+    FollowingGroupsSystemModule,
+    GroupsRoutingModule
   ]
 })
 export class GroupsModule { }

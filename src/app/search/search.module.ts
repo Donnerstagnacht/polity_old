@@ -13,6 +13,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {ChipsModule} from 'primeng/chips';
 import { UIStructureModule } from '../UI-structure/ui-structure.module';
 import { UIElementsModule } from '../UI-elements/ui-elements.module';
+import { SearchRoutingModule } from './search-routing.module';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,8 @@ import { UIElementsModule } from '../UI-elements/ui-elements.module';
     PanelModule,
     ChipsModule,
     UIStructureModule,
-    UIElementsModule
+    UIElementsModule,
+    SearchRoutingModule
 
   ]
 })
