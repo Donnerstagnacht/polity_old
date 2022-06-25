@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-wrapper-grid',
@@ -6,6 +6,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./wrapper-grid.component.scss']
 })
 export class WrapperGridComponent implements OnInit {
+  @Input() noTopBar: boolean = false;
 
   constructor() { }
 

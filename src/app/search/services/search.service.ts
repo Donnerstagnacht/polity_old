@@ -17,7 +17,7 @@ export class SearchService {
     const results: {data: any, error: any} = await this.supabaseClient
       .from('profiles')
       .select(
-        `username,
+        `name,
         avatar_url,
         website`
       )
@@ -27,6 +27,7 @@ export class SearchService {
   }*/
 
   async searchForResults(
+    searchTable: string,
     searchTerm: string,
     localFilterOn?: boolean,
     regionalFilterOn?: boolean,
@@ -42,12 +43,12 @@ export class SearchService {
   ): Promise<{data: any, error: any}> {
     // Builds the search Query
     let searchQuery = this.supabaseClient
-      .from('profiles')
+      .from(searchTable)
       .select(
         `id,
-        username,
+        name,
         avatar_url,
-        website`
+        city`
       )
       .textSearch(
         'fts',

@@ -31,7 +31,7 @@ ON CONFLICT (id, provider) DO NOTHING;
 update public.profiles
 set
   updated_at = '2022-06-24T17:23:18.656Z',
-  username = 'Tobias',
+  name = 'Tobias',
   avatar_url = '',
   city = 'Rosbach',
   contact_email = '5@test.com',
@@ -50,7 +50,7 @@ where id = '42e58ca1-2eb8-4651-93c2-cefba2e32f42';
 update public.profiles
 set
   updated_at = '2022-04-24T17:23:18.656Z',
-  username = 'Fabian',
+  name = 'Fabian',
   avatar_url = '',
   city = 'Gießen',
   contact_email = '4@test.com',

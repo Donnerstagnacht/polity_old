@@ -41,11 +41,11 @@ export class MembershipGroupManagementComponent implements OnInit {
       this.membershipRequests = [];
       membershipRequests.data.forEach((profile: any) => {
         let id: any = profile.profiles.id;
-        let username: any = profile.profiles.username;
+        let name: any = profile.profiles.name;
         let avatar_url: any = profile.profiles.avatar_url;
         this.membershipRequests.push({
           'id': id,
-          'username': username,
+          'name': name,
           'avatar_url': avatar_url
         });
       });
@@ -90,11 +90,11 @@ export class MembershipGroupManagementComponent implements OnInit {
       this.members = [];
       members.data.forEach((profile: any) => {
         let id: any = profile.profiles.id;
-        let username: any = profile.profiles.username;
+        let name: any = profile.profiles.name;
         let avatar_url: any = profile.profiles.avatar_url;
         this.members.push({
           'id': id,
-          'username': username,
+          'name': name,
           'avatar_url': avatar_url
         });
       });

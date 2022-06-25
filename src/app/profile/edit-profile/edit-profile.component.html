@@ -15,7 +15,7 @@
                   class="w-full"
                   type="text"
                   pInputText
-                  [(ngModel)]="profile.username"
+                  [(ngModel)]="profile.name"
                 >
                 <label for="float-input">Name</label>
               </span>
@@ -65,7 +65,7 @@
               pButton
               type="button"
               label="{{loading ? 'Loading ...' : 'Update'}}"
-              (click)="updateProfile(userName.value, website.value)"
+              (click)="updateProfile(name.value, website.value)"
               [disabled]="loading"
             >
             </button>

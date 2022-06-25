@@ -3,7 +3,7 @@
     <p-table
     [value]="dataFirstTab"
     #followerTable
-    [globalFilterFields]="['username']"
+    [globalFilterFields]="['name']"
     >
       <ng-template pTemplate="caption">
         <div class="flex justify-content-end">
@@ -24,8 +24,8 @@
           <td>
             <p-avatar size="xlarge" shape="circle" styleClass="border-round" image={{dataFirstTab.avatar_url}}></p-avatar>
           </td>
-          <td *ngIf="dataFirstTab.username">
-            {{dataFirstTab.username}}
+          <td *ngIf="dataFirstTab.name">
+            {{dataFirstTab.name}}
           </td>
           <td *ngIf="dataFirstTab.name">
             {{dataFirstTab.name}}
@@ -64,7 +64,7 @@
     <p-table
     [value]="dataSecondTab"
     #followingTable
-    [globalFilterFields]="['username']"
+    [globalFilterFields]="['name']"
     >
       <ng-template pTemplate="caption">
         <div class="flex justify-content-end">
@@ -85,8 +85,8 @@
           <td>
             <p-avatar size="xlarge" shape="circle" styleClass="border-round" image={{dataSecondTab.avatar_url}}></p-avatar>
           </td>
-          <td *ngIf="dataSecondTab.username">
-            {{dataSecondTab.username}}
+          <td *ngIf="dataSecondTab.name">
+            {{dataSecondTab.name}}
           </td>
           <td *ngIf="dataSecondTab.name">
             {{dataSecondTab.name}}

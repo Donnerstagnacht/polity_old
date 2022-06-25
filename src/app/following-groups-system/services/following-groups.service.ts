@@ -36,7 +36,7 @@ export class FollowingGroupsService {
       follower,
       profiles!following_group_system_follower_fkey (
         id,
-        username,
+        name,
         avatar_url
       )`
     )
@@ -53,7 +53,7 @@ export class FollowingGroupsService {
       following,
       profiles!following_group_system_following_fkey (
         id,
-        username,
+        name,
         avatar_url
       )`
     )

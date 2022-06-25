@@ -10,7 +10,7 @@ export interface Profile {
   following_counter: number;
   groups_counter: number;
   id: string;
-  username: string;
+  name: string;
   website: string;
   avatar_url: string;
   contact_email: string;
@@ -64,7 +64,7 @@ export class AuthentificationService {
       .from('profiles')
       .select(
         `id,
-        username,
+        name,
         website,
         avatar_url,
         contact_email,

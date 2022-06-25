@@ -35,11 +35,11 @@ export class FollowerGroupManagementComponent implements OnInit {
       this.followers = [];
       followers.data.forEach((profile: any) => {
         let id: any = profile.profiles.id;
-        let username: any = profile.profiles.username;
+        let name: any = profile.profiles.name;
         let avatar_url: any = profile.profiles.avatar_url;
         this.followers.push({
           'id': id,
-          'username': username,
+          'name': name,
           'avatar_url': avatar_url
         });
       });

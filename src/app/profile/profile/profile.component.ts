@@ -73,7 +73,7 @@ export class ProfileComponent implements OnInit {
 
         ];
         this.wikiHeader = {
-          title: profile.data.username,
+          title: profile.data.name,
           subtitle: 'Rosbach | Wetteraus - Hessen (statisch)',
           imgUrl: profile.data.avatar_url,
         }

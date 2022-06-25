@@ -7,7 +7,8 @@ import { SearchService } from '../services/search.service';
 })
 export class SearchComponent implements OnInit {
   showFilterOptions: boolean = true;
-  results: any[] = [];
+  profileResults: any[] = [];
+  groupsResults: any[] = [];
 
   localFilterOn: boolean = false;
   regionalFilterOn: boolean = false;
@@ -21,6 +22,8 @@ export class SearchComponent implements OnInit {
   statusOpenOn: boolean = false;
   statusClosedOn: boolean = false;
 
+  searchTable: string = 'profiles'
+
   constructor(
     private searchService: SearchService,
     ) { }
@@ -33,6 +36,7 @@ export class SearchComponent implements OnInit {
     searchTerm: string,
   ): void {
     this.searchService.searchForResults(
+      this.searchTable,
       searchTerm,
       this.localFilterOn,
       this.regionalFilterOn,
@@ -48,8 +52,27 @@ export class SearchComponent implements OnInit {
     )
     .then((results) => {
       console.log(results.data[0]);
-      this.results = results.data;
-    } )
+      console.log(this.searchTable)
+      switch(this.searchTable) {
+        case 'profiles': {
+          this.profileResults = results.data;
+          console.log(this.profileResults)
+          break;
+        }
+        case 'profiles': {
+          this.profileResults = results.data;
+          break;
+        }
+        case 'groups': {
+          this.groupsResults = results.data;
+          break;
+        }
+        case 'groups': {
+          this.groupsResults = results.data;
+          break;
+        }
+      }
+    })
     .catch((error) => console.log(error));
   }
 
@@ -63,6 +86,30 @@ export class SearchComponent implements OnInit {
 
   setFederalFilter(): void {
     this.federalFilterOn = !this.federalFilterOn;
+  }
+
+  test(event: any): void {
+    event.index
+    console.log(event.index)
+
+    switch(event.index) {
+      case 0: {
+        this.searchTable = 'profiles'
+        break;
+      }
+      case 1: {
+        this.searchTable = 'profiles'
+        break;
+      }
+      case 2: {
+        this.searchTable = 'groups'
+        break;
+      }
+      case 3: {
+        this.searchTable = 'groups'
+        break;
+      }
+    }
   }
 
 

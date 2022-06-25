@@ -1,4 +1,4 @@
-<app-wrapper-grid>
+<app-wrapper-grid [noTopBar]="true">
   <div slot="main">
     <div class="mb-2">
       <p-card>
@@ -62,26 +62,23 @@
       </p-panel>
     </div>
 
-    <p-tabView>
+    <p-tabView (onChange)="test($event)">
       <p-tabPanel header="PERSONEN">
         <div class="grid">
-          <div *ngFor="let result of results" class="col-6 lg:col-3 lg:col-3">
+          <div *ngFor="let result of profileResults" class="col-6 lg:col-3 lg:col-3">
             <app-profile-card [profile]="result"></app-profile-card>
-          </div>
-          <!-- <div class="col-6 lg:col-3 lg:col-3">
-            <app-profile-card></app-profile-card>
-          </div> -->
+          </div>>
         </div>
       </p-tabPanel>
       <p-tabPanel header="ANTRÄGE">
           Content 2
       </p-tabPanel>
       <p-tabPanel header="GRUPPEN">
-        <!-- <div class="grid">
-          <app-group-card class="col-12 lg:col-6"></app-group-card>
-          <app-group-card class="col-12 lg:col-6"></app-group-card>
-        </div> -->
-          Content 3
+        <div>
+          <div *ngFor="let result of groupsResults" class="col-12 lg:col-6">
+            <app-group-card [group]="result"></app-group-card>
+          </div>>
+        </div>
       </p-tabPanel>
       <p-tabPanel header="TODOS">
         Content 3

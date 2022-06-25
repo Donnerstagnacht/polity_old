@@ -17,7 +17,7 @@ export class ProfileService {
       .from('profiles')
       .select(
         `id,
-        username,
+        name,
         website,
         avatar_url,
         contact_email,
