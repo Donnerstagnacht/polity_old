@@ -48,3 +48,7 @@ src/environments/environment.prod.ts
 # Supabase
 **/supabase/.branches
 **/supabase/.temp
+
+# Supabase
+**/supabase/.branches
+**/supabase/.temp

@@ -6,18 +6,26 @@ import { ChatComponent } from './chat/chat.component';
 import { NotificationsComponent } from './notifications/notifications.component';
 import { UINavigationModule } from '../UI-navigation/ui-navigation.module';
 import { UIStructureModule } from '../UI-structure/ui-structure.module';
+import { UIElementsModule } from '../UI-elements/ui-elements.module';
+import { FormsModule } from '@angular/forms';
+import { ChipModule } from 'primeng/chip';
+import { ChatRoomComponent } from './chat-room/chat-room.component';
 
 
 @NgModule({
   declarations: [
     ChatComponent,
-    NotificationsComponent
+    NotificationsComponent,
+    ChatRoomComponent
   ],
   imports: [
     CommonModule,
     OrgaRoutingModule,
     UINavigationModule,
-    UIStructureModule
+    UIStructureModule,
+    UIElementsModule,
+    FormsModule,
+    ChipModule
   ]
 })
 export class OrgaModule { }

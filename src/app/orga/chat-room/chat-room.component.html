@@ -1,0 +1,35 @@
+<app-wrapper-grid [noTopBar]="true">
+  <div slot="main">
+    <div class="mb-8">
+      <div class="mx-4">
+        <app-back-button [title]="'Zurück'" [link]="'/orga'"></app-back-button>
+      </div>
+      <div>
+        <app-message [messageOfLoggedInUser]="false"></app-message>
+        <app-message [messageOfLoggedInUser]="true"></app-message>
+
+      </div>
+    </div>
+  </div>
+  <div slot="side">
+  </div>
+</app-wrapper-grid>
+
+<div class="fixed w-full p-3 bottom-fixed left-0">
+  <form (ngSubmit)="onSendMessage()" #messageForm="ngForm">
+    <span class="p-float-label">
+      <input
+      [(ngModel)]="message"
+      name="message"
+
+      id="message"
+
+      type="text"
+      pInputText
+      class="w-full p-inputtext"
+      >
+      <label for="message">Neue Nachricht</label>
+    </span>
+  </form>
+
+</div>

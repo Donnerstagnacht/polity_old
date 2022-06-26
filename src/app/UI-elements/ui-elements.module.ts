@@ -20,6 +20,10 @@ import { TableModule } from 'primeng/table';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { ChipModule } from 'primeng/chip';
+import { ChatListItemComponent } from './chat-list-item/chat-list-item.component';
+import { TagModule } from 'primeng/tag';
+import {BadgeModule} from 'primeng/badge';
+import { MessageComponent } from './message/message.component';
 
 
 
@@ -34,7 +38,9 @@ import { ChipModule } from 'primeng/chip';
     ListElementComponent,
     ProfileCardComponent,
     TabViewTableListsComponent,
-    WikiHeaderComponent
+    WikiHeaderComponent,
+    ChatListItemComponent,
+    MessageComponent
   ],
   imports: [
     CommonModule,
@@ -47,7 +53,9 @@ import { ChipModule } from 'primeng/chip';
     AvatarModule,
     TableModule,
     FormsModule,
-    RouterModule
+    RouterModule,
+    TagModule,
+    BadgeModule
 
 
   ], exports: [
@@ -60,7 +68,9 @@ import { ChipModule } from 'primeng/chip';
     ListElementComponent,
     ProfileCardComponent,
     TabViewTableListsComponent,
-    WikiHeaderComponent
+    WikiHeaderComponent,
+    ChatListItemComponent,
+    MessageComponent
   ]
 })
 export class UIElementsModule { }

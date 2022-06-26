@@ -1,0 +1,7 @@
+<div [ngClass]="{'flex flex-row-reverse' : messageOfLoggedInUser}">
+  <div class="w-9 p-4 border-round mb-2" [ngClass]="{'primary-container' : messageOfLoggedInUser, ' neutral-90' : !messageOfLoggedInUser }">
+    <h4 *ngIf="showSender" class="my-0">{{message.sender}}</h4>
+    <p class="mt-1">{{message.content}}</p>
+    <p class="w-full mb-0 text-right">{{message.send_time}}</p>
+  </div>
+</div>
