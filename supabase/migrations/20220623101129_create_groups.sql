@@ -188,34 +188,6 @@ GRANT EXECUTE ON FUNCTION public.increment_groups_counter(uuid) TO service_role;
 
 
 -- 4. Create Groups Transaction
-CREATE OR REPLACE FUNCTION public.create_group_transaction(
-	name text,
-	description text,
-	creator uuid,
-	level text)
-    RETURNS uuid
-    LANGUAGE 'plpgsql'
-    COST 100
-    VOLATILE SECURITY DEFINER PARALLEL UNSAFE
-AS $BODY$
-declare
-new_group_id uuid;
-BEGIN
-  Select create_group(name, description, creator, level)
-  into new_group_id;
-  perform add_member(creator, new_group_id, true, true , true);
-  perform increment_groups_counter(creator);
-  return new_group_id;
-END;
-$BODY$;
-
-ALTER FUNCTION public.create_group_transaction(text, text, uuid, text)
-    OWNER TO postgres;
-
-GRANT EXECUTE ON FUNCTION public.create_group_transaction(text, text, uuid, text) TO PUBLIC;
-GRANT EXECUTE ON FUNCTION public.create_group_transaction(text, text, uuid, text) TO anon;
-GRANT EXECUTE ON FUNCTION public.create_group_transaction(text, text, uuid, text) TO authenticated;
-GRANT EXECUTE ON FUNCTION public.create_group_transaction(text, text, uuid, text) TO postgres;
-GRANT EXECUTE ON FUNCTION public.create_group_transaction(text, text, uuid, text) TO service_role;
+-- code moved to "20220627112230_create_group_transaction.sql" file
 
 

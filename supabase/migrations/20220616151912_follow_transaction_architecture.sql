@@ -52,20 +52,7 @@ $$;
 
 
 --4. Transaction
-DROP function if exists followTransaction(followerId uuid, followingId uuid);
-create or replace function followTransaction(followerId uuid, followingId uuid)
-returns void
-language plpgsql
-security definer
-as
-$$
-BEGIN
-  PERFORM insertFollowingFollowerRelationship(followerId, followingId);
-  PERFORM incrementfollower_counter(followingId);
-  PERFORM incrementfollowing_counter(followerId);
-END;
-$$;
-
+--Transaction moved to follow_unfollow_profile_transaction.sql
 
 
 --****************************
@@ -123,16 +110,4 @@ $$;
 
 
 --4. transaction
-DROP function if exists unfollowTransaction(followerId uuid, followingId uuid);
-create or replace function unfollowTransaction(followerId uuid, followingId uuid)
-returns void
-language plpgsql
-security definer
-as
-$$
-BEGIN
-  PERFORM deleteFollowingFollowerRelationship(followerId, followingId);
-  PERFORM decrementfollower_counter(followingId);
-  PERFORM decrementfollowing_counter(followerId);
-END;
-$$;
+--Transaction moved to follow_unfollow_profile_transaction.sql
