@@ -10,6 +10,9 @@ import { UIElementsModule } from '../UI-elements/ui-elements.module';
 import { FormsModule } from '@angular/forms';
 import { ChipModule } from 'primeng/chip';
 import { ChatRoomComponent } from './chat-room/chat-room.component';
+import { AvatarModule } from 'primeng/avatar';
+import { InputTextModule } from 'primeng/inputtext';
+import { ButtonModule } from 'primeng/button';
 
 
 @NgModule({
@@ -25,7 +28,10 @@ import { ChatRoomComponent } from './chat-room/chat-room.component';
     UIStructureModule,
     UIElementsModule,
     FormsModule,
-    ChipModule
+    ChipModule,
+    AvatarModule,
+    InputTextModule,
+    ButtonModule
   ]
 })
 export class OrgaModule { }

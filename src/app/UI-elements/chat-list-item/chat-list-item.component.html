@@ -2,20 +2,21 @@
   <div class="flex-space-arround p-2 w-full">
     <div class="flex align-items-center w-full">
       <a (click)="openProfile('id')"  class="flex-none mr-5 cursor-pointer">
-        <p-avatar image="{{chat.avatar_url}}"></p-avatar>
+        <p-avatar shape="circle" styleClass="border-round" image="{{chat.avatar_url}}"></p-avatar>
       </a>
       <a (click)="openChat()"  class="flex-grow-1 mr-5 cursor-pointer">
-        <h4 class="my-0">{{chat.room_name}}</h4>
+        <h4 class="my-0">{{chat.name}}</h4>
         <p class="mt-1 mb-0">{{chat.last_message}}</p>
       </a>
       <a (click)="openChat()" class="flex-none p-2 cursor-pointer">
         <div class="flex-space-between">
           <div class="text-center">
             <div>
-              <p-badge [value]="chat.number_of_new_messages"></p-badge>
+              <p-badge *ngIf="chat.number_of_unread_messages > 0" [value]="unreadMessagesAsString "></p-badge>
             </div>
           <div>
-            <p class="mb-0">{{chat.last_message_time}}</p>
+            <p *ngIf="!showTime" class="mb-0">{{chat.last_message_time | date}}</p>
+            <p *ngIf="showTime" class="mb-0">{{chat.last_message_time | date: 'HH:mm:ss'}}</p>
           </div>
         </div>
       </div>

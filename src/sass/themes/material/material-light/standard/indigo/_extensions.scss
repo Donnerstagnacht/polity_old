@@ -52,6 +52,10 @@ body {
 
 }
 
+.background-color {
+  background-color: $background;
+}
+
 
 .accent-corlor {
   color: $accentColor;
@@ -184,4 +188,8 @@ mark {
 
 .p-sidebar-header {
   padding: 0px!important;
+}
+
+.fit-content {
+  width: fit-content;
 }

@@ -4,6 +4,7 @@ import { IsLoggedInGuard } from '../utilities-guards/isLoggedIn/is-logged-in.gua
 import { ChatRoomComponent } from './chat-room/chat-room.component';
 import { ChatComponent } from './chat/chat.component';
 import { NotificationsComponent } from './notifications/notifications.component';
+import { Chat } from 'src/app/UI-elements/chat-list-item/chat-list-item.component';
 
 const routes: Routes = [
   {

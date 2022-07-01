@@ -140,6 +140,8 @@ BEGIN
 
   if number_of_participants_in_room.count = 2 then
     -- room already exists and room invitation is set to accepted
+    PERFORM delete_all_messages_of_room(number_of_participants_in_room.room_id);
+
     perform delete_room_participants(number_of_participants_in_room.room_id, followerId, followingId);
     perform delete_room(number_of_participants_in_room.room_id);
     return true;
@@ -164,7 +166,38 @@ BEGIN
   PERFORM decrementfollower_counter(followingId);
   PERFORM decrementfollowing_counter(followerId);
 
+
   -- delete room if exists
   perform check_if_room_already_exists_and_delete(followerId, followingId);
+END;
+$$;
+
+--delete all messages of room
+DROP function if exists delete_all_messages_of_room(room_id_in uuid);
+create or replace function delete_all_messages_of_room(room_id_in uuid)
+returns void
+language plpgsql
+security definer
+as
+$$
+BEGIN
+  DELETE FROM "rooms_messages"
+  WHERE
+  "room_id" = room_id_in;
+END;
+$$;
+
+--reject chatRequest
+DROP function if exists reject_chat_request_transaction(room_id_in uuid, follower_id uuid, following_id uuid);
+create or replace function reject_chat_request_transaction(room_id_in uuid, follower_id uuid, following_id uuid)
+returns void
+language plpgsql
+security definer
+as
+$$
+BEGIN
+  PERFORM delete_room_participants(room_id_in, follower_id, following_id);
+  PERFORM delete_all_messages_of_room(room_id_in);
+  PERFORM delete_room(room_id_in);
 END;
 $$;

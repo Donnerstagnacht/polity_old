@@ -1,9 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
 
 export interface Message {
-  sender: string,
-  content: string,
-  send_time: string
+  message_id: string,
+  created_at_in: string
+  sender_id: string,
+  content_in: string
 }
 
 @Component({
@@ -13,16 +14,21 @@ export interface Message {
 })
 export class MessageComponent implements OnInit {
   @Input() message!: Message;
-  @Input() messageOfLoggedInUser: boolean = true;
   @Input() showSender: boolean = false;
+  @Input() loggedInUserId: string | undefined = '';
+  messageOfLoggedInUser: boolean = false;
+
 
   constructor() { }
 
   ngOnInit(): void {
-    this. message = {
-      sender: 'Tobias Hassebrock',
-      content: 'Wie geht es dir so?',
-      send_time: '12:26'
+    this.checkIfMessageFromLoggedInUser();
+  }
+
+  checkIfMessageFromLoggedInUser(): void {
+    console.log(this.loggedInUserId)
+    if(this.loggedInUserId === this.message.sender_id) {
+      this.messageOfLoggedInUser = true;
     }
   }
 

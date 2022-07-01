@@ -8,6 +8,8 @@ CREATE TABLE IF NOT EXISTS public.rooms
 (
     id uuid NOT NULL DEFAULT uuid_generate_v4(),
     created_at timestamp with time zone NOT NULL DEFAULT now(),
+    last_message text NOT NULL DEFAULT ''::text,
+    last_message_time timestamp with time zone NOT NULL DEFAULT now(),
     CONSTRAINT rooms_pkey PRIMARY KEY (id)
 )
 TABLESPACE pg_default;
@@ -75,6 +77,7 @@ CREATE TABLE IF NOT EXISTS public.rooms_participants
     user_id uuid,
     group_id uuid,
     accepted boolean NOT NULL DEFAULT false,
+    number_of_unread_messages int4 NOT NULL  DEFAULT 0::int4,
     CONSTRAINT rooms_participants_pkey PRIMARY KEY (id),
     CONSTRAINT rooms_user_id_participant_id_fkey FOREIGN KEY (user_id)
         REFERENCES public.profiles (id) MATCH SIMPLE
@@ -181,5 +184,210 @@ BEGIN
 END;
 $$;
 
+-- 5. Select all rooms of user
+DROP function if exists select_all_rooms_of_user(user_id_in uuid);
+DROP TYPE if exists all_rooms_of_user;
+CREATE TYPE all_rooms_of_user AS (
+    room_id uuid,
+    id uuid,
+    name text,
+    avatar_url text,
+    last_message text,
+    last_message_time text
+);
+create or replace function select_all_rooms_of_user(user_id_in uuid)
+--returns all_rooms_of_user
+returns table (
+    room_id uuid,
+    participant_id uuid,
+    name text,
+    avatar_url text,
+    last_message text,
+    last_message_time timestamp with time zone,
+    number_of_unread_messages int4
+)
+language plpgsql
+security definer
+as
+$$
+declare
+  rooms_of_user all_rooms_of_user;
+BEGIN
+  return query
+  Select
+    r1.room_id,
+    p.id,
+    p.name,
+    p.avatar_url,
+    r.last_message,
+    r.last_message_time,
+    rp.number_of_unread_messages
+  from
+  (
+  select * from rooms_participants where user_id = user_id_in
+  ) r2
+  join rooms_participants r1
+  on r2.room_id = r1.room_id and not r1.user_id = user_id_in
+  join profiles p
+  on r1.user_id = p.id
+  join rooms r
+  on (r1.room_id = r.id)
+  join rooms_participants rp
+  on rp.room_id = r.id and not rp.user_id = user_id_in
+  ;
+  --into rooms_of_user;
+  --return rooms_of_user;
+END;
+$$;
+
+-- insert_message
+DROP function if exists insert_message(room_id_in uuid, user_id_in uuid, content_in text);
+create or replace function insert_message(room_id_in uuid, user_id_in uuid, content_in text)
+returns void
+language plpgsql
+security definer
+as
+$$
+BEGIN
+  INSERT INTO "rooms_messages" (room_id, user_id, content)
+  VALUES (room_id_in, user_id_in, content_in);
+END;
+$$;
+
+-- update_room for last message
+DROP function if exists update_room_after_message(room_id_in uuid, content_in text);
+create or replace function update_room_after_message(room_id_in uuid, content_in text)
+returns void
+language plpgsql
+security definer
+as
+$$
+BEGIN
+  update rooms
+  set
+  "last_message" = content_in,
+  "last_message_time" = now()
+  where id = room_id_in;
+END;
+$$;
+
+-- update participants for number of unread messages
+DROP function if exists update_participants_after_message(room_id_in uuid, user_id_in uuid);
+create or replace function update_participants_after_message(room_id_in uuid, user_id_in uuid)
+returns void
+language plpgsql
+security definer
+as
+$$
+BEGIN
+  update rooms_participants
+  set
+  "number_of_unread_messages" = "number_of_unread_messages" + 1
+  where room_id = room_id_in and not user_id = user_id_in;
+END;
+$$;
 
 
+-- send_message_transaction
+DROP function if exists send_message_transaction(room_id_in uuid, message_sender uuid, message_receiver uuid, content_in text);
+create or replace function send_message_transaction(room_id_in uuid, message_sender uuid, message_receiver uuid, content_in text)
+returns void
+language plpgsql
+security definer
+as
+$$
+declare
+BEGIN
+  PERFORM insert_message(room_id_in, message_sender, content_in);
+  PERFORM update_room_after_message(room_id_in, content_in);
+  PERFORM update_participants_after_message(room_id_in, message_receiver);
+END;
+$$;
+
+
+--select Chat Partner
+DROP function if exists select_chat_partner(message_sender uuid, room_id_in uuid);
+create or replace function select_chat_partner(message_sender uuid, room_id_in uuid)
+returns uuid
+language plpgsql
+security definer
+as
+$$
+declare
+message_receiver uuid;
+BEGIN
+  Select
+    user_id
+  from
+    rooms_participants
+  where
+    room_id = room_id_in and not user_id = message_sender
+  into
+  message_receiver;
+  return message_receiver;
+END;
+$$;
+
+
+-- get all messages of chat
+DROP function if exists select_all_messages_of_room(room_id_in uuid);
+create or replace function select_all_messages_of_room(room_id_in uuid)
+returns table (
+    message_id uuid,
+    created_at_in timestamptz,
+    sender_id uuid,
+    content_in text
+)
+language plpgsql
+security definer
+as
+$$
+BEGIN
+  return query
+  Select
+    id,
+    created_at,
+    user_id,
+    content
+  from
+    rooms_messages
+  where
+    room_id = room_id_in
+  order by
+    created_at asc
+  ;
+END;
+$$;
+
+-- reset unread messages counter
+DROP function if exists reset_number_of_unread_messages(room_id_in uuid, user_id_of_reader uuid);
+create or replace function reset_number_of_unread_messages(room_id_in uuid, user_id_of_reader uuid)
+returns void
+language plpgsql
+security definer
+as
+$$
+BEGIN
+  update rooms_participants
+  set
+  "number_of_unread_messages" = 0
+  where room_id = room_id_in and user_id = user_id_of_reader;
+END;
+$$;
+
+
+-- reset unread messages counter
+DROP function if exists accept_chat_request(room_id_in uuid, user_id_of_reader uuid);
+create or replace function accept_chat_request(room_id_in uuid, user_id_of_reader uuid)
+returns void
+language plpgsql
+security definer
+as
+$$
+BEGIN
+  update rooms_participants
+  set
+  "accepted" = true
+  where room_id = room_id_in and user_id = user_id_of_reader;
+END;
+$$;

@@ -26,7 +26,7 @@ export class MenuBarLeftComponent implements OnInit {
         this.items = [
           {label: 'PROFIL', routerLink: ['/profile']},
           {label: 'GRUPPEN', routerLink: ['/groups']},
-          {label: 'ERSTLLEN', command: () => this.toggleFullScreen()},
+          {label: 'ERSTELLEN', command: () => this.toggleFullScreen()},
           {label: 'SUCHE', routerLink: ['/search']},
           {label: 'ORGA', routerLink: ['/orga']}
         ]

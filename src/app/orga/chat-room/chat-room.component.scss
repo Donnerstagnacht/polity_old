@@ -2,10 +2,40 @@
   bottom: 4rem;
 }
 
+.top-fixed {
+  left: 0rem;
+  top: 0rem;
+  padding-left: 2rem;
+}
+
+.chat-scroll-container {
+  overflow-y: scroll;
+  overflow-x: hidden;
+  height: calc(100vh - 10rem)!important;
+  margin-bottom: 8rem!important;
+  margin-top: 4rem;
+}
+
+.margin-mid {
+  margin-top: 40vh;
+}
+
+
+
 @media only screen and (min-width: 1024px) {
   .bottom-fixed {
     padding-left: 15rem!important;
     padding-right: 5rem!important;
     bottom: 0rem!important;
+  }
+
+  .top-fixed {
+    padding-left: 16rem;
+    padding-right: 16rem;
+  }
+
+  .chat-scroll-container {
+    margin-bottom: 0rem;
+    height: calc(100vh - 10rem)!important;
   }
 }
