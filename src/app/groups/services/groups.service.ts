@@ -20,7 +20,6 @@ export class GroupsService {
     newGroup: Group
 
   ): Promise<{data: any, error: any}> {
-    console.log('clicked');
     const createGroupResult: {data: any, error: any} = await this.supabaseClient
       .rpc('create_group_transaction', {
         name: newGroup.name,
@@ -72,12 +71,10 @@ export class GroupsService {
       )
       .eq('id', uuid)
       .single()
-    console.log(results);
     return results;
   }
 
   updateGroup(group: Partial<Group>, id: string | undefined) {
-    console.log(group)
     const update = {
       ...group
       // updated_at: new Date()

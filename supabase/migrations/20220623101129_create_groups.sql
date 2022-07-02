@@ -78,6 +78,7 @@ CREATE TABLE IF NOT EXISTS public."group_members"
     as_board_member_added timestamp with time zone NOT NULL DEFAULT now(),
     is_president boolean NOT NULL DEFAULT false,
     as_president_added timestamp with time zone NOT NULL DEFAULT now(),
+    number_of_unread_messages int4 NOT NULL  DEFAULT 0::int4,
     CONSTRAINT "group_members_pkey" PRIMARY KEY (id),
     CONSTRAINT "group_members_group_id_fkey" FOREIGN KEY (group_id)
         REFERENCES public.groups (id) MATCH SIMPLE

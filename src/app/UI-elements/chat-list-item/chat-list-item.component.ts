@@ -8,7 +8,8 @@ export interface Chat {
   last_message_time: Date,
   last_message: string,
   avatar_url: string,
-  number_of_unread_messages: number
+  number_of_unread_messages: number,
+  is_group: boolean
 }
 
 @Component({
@@ -24,18 +25,15 @@ export class ChatListItemComponent implements OnInit {
   constructor(private router: Router) { }
 
   ngOnInit(): void {
-    console.log(this.chat)
     this.checkIfMessageReceivedToday();
     this.convertNumberToString();
   }
 
   openProfile(id: string) {
-    console.log('profile')
     this.router.navigate([`profile/${this.chat.participant_id}`]);
   }
 
   openChat() {
-    console.log('chat' + this.chat.room_id);
     this.router.navigate([`orga/${this.chat.room_id}`]);
   }
 

@@ -18,10 +18,8 @@ export class IsLoggedInGuard implements CanActivate {
   ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
     const loggedInStatus: boolean = this.authentificationService.isUserLoggedIn();
     if (loggedInStatus) {
-      console.log(loggedInStatus);
       return true;
     } else {
-      console.log(loggedInStatus);
       this.router.navigate(['/login'])
       return false;
     }

@@ -12,6 +12,7 @@
         <div class="flex-space-between">
           <div class="text-center">
             <div>
+              <i *ngIf="chat.is_group" class="pi pi-users mr-2"></i>
               <p-badge *ngIf="chat.number_of_unread_messages > 0" [value]="unreadMessagesAsString "></p-badge>
             </div>
           <div>

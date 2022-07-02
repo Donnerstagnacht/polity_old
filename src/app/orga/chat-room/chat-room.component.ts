@@ -2,7 +2,9 @@ import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthentificationService, Profile } from 'src/app/authentification/services/authentification.service';
 import { FollowingService } from 'src/app/following-profiles-system/services/following.service';
+import { GroupsService } from 'src/app/groups/services/groups.service';
 import { ProfileService } from 'src/app/profile/services/profile.service';
+import { Group } from 'src/app/UI-dialogs/create-group/create-group.component';
 import { Message } from 'src/app/UI-elements/message/message.component';
 import { ChatService } from '../services/chat.service';
 
@@ -20,6 +22,8 @@ export class ChatRoomComponent implements OnInit {
   loggedInUserId: string | undefined = '';
   @ViewChild('messages') content!: ElementRef;
   profile!: Profile;
+  group!: Group;
+  isGroup: boolean = false;
   chatPartner: string = '';
 
   chatPartnerAcceptedRequest: boolean = true;
@@ -32,6 +36,7 @@ export class ChatRoomComponent implements OnInit {
     private route: ActivatedRoute,
     private profileService: ProfileService,
     private followingService: FollowingService,
+    private groupsService: GroupsService,
     private router: Router
     ) { }
 
@@ -54,8 +59,20 @@ export class ChatRoomComponent implements OnInit {
   }
 
   onSendMessage(): void {
-    console.log(this.message);
-    this.chatService.sendMessage(this.selectedRoomId, this.chatPartner, this.message)
+    let groupIdParameter;
+    if (this.group) {
+      groupIdParameter = this.group.id
+    } else {
+      groupIdParameter = undefined
+
+    }
+    this.chatService.sendMessage(
+      this.selectedRoomId,
+      this.chatPartner,
+      this.message,
+      this.isGroup,
+      groupIdParameter
+      )
     .then(() => {
       this.message = '';
       this.chatService.getAllMessagesOfChat(this.selectedRoomId)
@@ -69,9 +86,17 @@ export class ChatRoomComponent implements OnInit {
     this.chatService.getAllMessagesOfChat(this.selectedRoomId)
     .then((messages) => {
       this.allMessages = messages.data;
-      console.log('all messages')
-      console.log(this.allMessages)
-      this.chatService.resetNumberOfUnreadMessages(this.selectedRoomId, this.chatPartner);
+      console.log(this.group)
+      console.log(this.profile)
+      console.log(this.loggedInUserId)
+      console.log(this.chatPartner)
+      console.log(this.isGroup)
+
+      if(this.isGroup && this.loggedInUserId) {
+        this.chatService.resetNumberOfUnreadMessagesOfGroup(this.chatPartner, this.loggedInUserId);
+      } else {
+        this.chatService.resetNumberOfUnreadMessages(this.selectedRoomId, this.chatPartner);
+      }
     })
     .catch((error) => {
       console.log(error)
@@ -80,7 +105,6 @@ export class ChatRoomComponent implements OnInit {
 
   getLoggedInUserId(): void {
     this.loggedInUserId = this.authentificationService.user?.id;
-    console.log(this.loggedInUserId)
   }
 
   scrollDown(): void {
@@ -93,6 +117,18 @@ export class ChatRoomComponent implements OnInit {
     this.profileService.findProfil(this.chatPartner)
     .then((profile) => {
       this.profile = profile.data;
+      // this.isGroup = false;
+    })
+    .catch((error) => {
+      console.log(error);
+    })
+  }
+
+  getGroup(): void {
+    this.groupsService.findGroup(this.chatPartner)
+    .then((group) => {
+      this.group = group.data;
+      // this.isGroup = true;
     })
     .catch((error) => {
       console.log(error);
@@ -103,15 +139,26 @@ export class ChatRoomComponent implements OnInit {
     this.chatService.getChatPartner(this.selectedRoomId)
     .then((chatPartner) => {
       this.chatPartner = chatPartner.data;
-      console.log('chatpartner')
-      console.log(this.chatPartner)
-      console.log(this.selectedRoomId)
-      this.getProfile();
+      if(this.chatPartner) {
+        this.isGroup = false;
+        this.getProfile();
+      } else {
+        this.isGroup = true;
+        this.chatService.getGroupAsChatPartner(this.selectedRoomId)
+        .then((results) => {
+          this.chatPartner = results.data;
+          this.getGroup();
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+      }
       this.checkIfChatPartnerAcceptedRequest();
       this.checkIfChatLoggedInUserAcceptedRequest();
       if(this.chatPartnerAcceptedRequest && this.loggedInUserAcceptedRequest) {
         this.getAllMessages();
       }
+
     })
     .catch((error) => {
       console.log(error);
@@ -123,7 +170,6 @@ export class ChatRoomComponent implements OnInit {
       this.chatService.checkIfChatPartnerAcceptedRequest(this.selectedRoomId, this.chatPartner)
       .then((results) => {
         this.chatPartnerAcceptedRequest = results.data.accepted;
-        console.log(this.chatPartnerAcceptedRequest)
       })
       .catch((error) => {
         console.log(error)
@@ -136,7 +182,6 @@ export class ChatRoomComponent implements OnInit {
       this.chatService.checkIfChatPartnerAcceptedRequest(this.selectedRoomId, this.loggedInUserId)
       .then((results) => {
         this.loggedInUserAcceptedRequest = results.data.accepted;
-        console.log(this.loggedInUserAcceptedRequest)
       })
       .catch((error) => {
         console.log(error)
@@ -152,11 +197,9 @@ export class ChatRoomComponent implements OnInit {
     .catch((error) => {
       console.log(error)
     });
-    console.log('accept and follow')
   }
 
   acceptRequest(): void {
-    console.log('accept')
     if(this.loggedInUserId) {
       this.chatService.acceptChatRequest(this.selectedRoomId, this.loggedInUserId)
       .then((results) => {
@@ -169,7 +212,6 @@ export class ChatRoomComponent implements OnInit {
   }
 
   rejectRequest(): void {
-    console.log('reject')
     if(this.loggedInUserId) {
       this.chatService.rejectChatRequest(this.selectedRoomId, this.chatPartner, this.loggedInUserId)
       .then((results) => {

@@ -184,18 +184,74 @@ BEGIN
 END;
 $$;
 
--- 5. Select all rooms of user
+-- 5. Select all individual chat rooms of user
 DROP function if exists select_all_rooms_of_user(user_id_in uuid);
-DROP TYPE if exists all_rooms_of_user;
-CREATE TYPE all_rooms_of_user AS (
+create or replace function select_all_rooms_of_user(user_id_in uuid)
+returns table (
     room_id uuid,
-    id uuid,
+    participant_id uuid,
     name text,
     avatar_url text,
     last_message text,
-    last_message_time text
-);
-create or replace function select_all_rooms_of_user(user_id_in uuid)
+    last_message_time timestamp with time zone,
+    number_of_unread_messages int4,
+    is_group boolean
+)
+language plpgsql
+security definer
+as
+$$
+BEGIN
+  return query
+  Select
+    r1.room_id,
+    p.id,
+    p.name,
+    p.avatar_url,
+    r.last_message,
+    r.last_message_time,
+    rp.number_of_unread_messages,
+    false
+  from
+  (
+  select * from rooms_participants where user_id = user_id_in
+  ) r2
+  join rooms_participants r1
+  on r2.room_id = r1.room_id and not r1.user_id = user_id_in
+  join profiles p
+  on r1.user_id = p.id
+  join rooms r
+  on (r1.room_id = r.id)
+  join rooms_participants rp
+  on rp.room_id = r.id and not rp.user_id = user_id_in
+  union
+  SELECT
+    r.id,
+    gm.group_id,
+    g.name,
+    g.avatar_url,
+    r.last_message,
+    r.last_message_time,
+    gm.number_of_unread_messages,
+    true
+  from
+    group_members gm
+  join groups g
+  on g.id = gm.group_id
+  join rooms_participants rp
+  on rp.group_id = gm.group_id
+  join rooms r
+  on rp.room_id = r.id
+  where
+  gm.user_id = user_id_in
+  order by last_message_time desc
+  ;
+END;
+$$;
+
+-- 5. Select all group chat rooms of user
+DROP function if exists select_all_group_rooms_of_user(user_id_in uuid);
+create or replace function select_all_group_rooms_of_user(user_id_in uuid)
 --returns all_rooms_of_user
 returns table (
     room_id uuid,
@@ -210,33 +266,26 @@ language plpgsql
 security definer
 as
 $$
-declare
-  rooms_of_user all_rooms_of_user;
 BEGIN
   return query
   Select
-    r1.room_id,
-    p.id,
-    p.name,
-    p.avatar_url,
+    r.id,
+    gm.group_id,
+    g.name,
+    g.avatar_url,
     r.last_message,
     r.last_message_time,
     rp.number_of_unread_messages
   from
-  (
-  select * from rooms_participants where user_id = user_id_in
-  ) r2
-  join rooms_participants r1
-  on r2.room_id = r1.room_id and not r1.user_id = user_id_in
-  join profiles p
-  on r1.user_id = p.id
-  join rooms r
-  on (r1.room_id = r.id)
+    group_members gm
+  join groups g
+  on g.id = gm.group_id
   join rooms_participants rp
-  on rp.room_id = r.id and not rp.user_id = user_id_in
-  ;
-  --into rooms_of_user;
-  --return rooms_of_user;
+  on rp.group_id = gm.group_id
+  join rooms r
+  on rp.room_id = r.id
+  where
+  gm.user_id = user_id_in;
 END;
 $$;
 
@@ -287,10 +336,72 @@ BEGIN
 END;
 $$;
 
+DROP function if exists update_groups_participants_after_message(group_id_in uuid, user_id_in uuid);
+create or replace function update_groups_participants_after_message(group_id_in uuid, user_id_in uuid)
+returns void
+language plpgsql
+security definer
+as
+$$
+BEGIN
+  update group_members
+  set
+  "number_of_unread_messages" = "number_of_unread_messages" + 1
+  where group_id = group_id_in and not user_id = user_id_in;
+END;
+$$;
+
+
+
+-- update participants for number of unread messages
+DROP function if exists update_participants_after_message(room_id_in uuid, user_id_in uuid);
+create or replace function update_participants_after_message(room_id_in uuid, user_id_in uuid)
+returns void
+language plpgsql
+security definer
+as
+$$
+BEGIN
+  update rooms_participants
+  set
+  "number_of_unread_messages" = "number_of_unread_messages" + 1
+  where room_id = room_id_in and not user_id = user_id_in;
+END;
+$$;
+
+DROP function if exists update_groups_participants_after_message(group_id_in uuid, user_id_in uuid);
+create or replace function update_groups_participants_after_message(group_id_in uuid, user_id_in uuid)
+returns void
+language plpgsql
+security definer
+as
+$$
+BEGIN
+  update group_members
+  set
+  "number_of_unread_messages" = "number_of_unread_messages" + 1
+  where group_id = group_id_in and not user_id = user_id_in;
+END;
+$$;
+
 
 -- send_message_transaction
-DROP function if exists send_message_transaction(room_id_in uuid, message_sender uuid, message_receiver uuid, content_in text);
-create or replace function send_message_transaction(room_id_in uuid, message_sender uuid, message_receiver uuid, content_in text)
+DROP function if exists send_message_transaction(
+  room_id_in uuid,
+  message_sender uuid,
+  message_receiver uuid,
+  content_in text,
+  is_group boolean,
+  group_id_in uuid
+);
+create or replace function send_message_transaction(
+  room_id_in uuid,
+  message_sender uuid,
+  message_receiver uuid,
+  content_in text,
+  is_group boolean default null,
+  group_id_in uuid default null
+)
 returns void
 language plpgsql
 security definer
@@ -300,9 +411,15 @@ declare
 BEGIN
   PERFORM insert_message(room_id_in, message_sender, content_in);
   PERFORM update_room_after_message(room_id_in, content_in);
-  PERFORM update_participants_after_message(room_id_in, message_receiver);
+
+  if is_group = true then
+    PERFORM update_groups_participants_after_message(group_id_in, message_sender);
+  else
+    PERFORM update_participants_after_message(room_id_in, message_receiver);
+  END IF;
 END;
 $$;
+
 
 
 --select Chat Partner
@@ -327,6 +444,30 @@ BEGIN
   return message_receiver;
 END;
 $$;
+
+--select Chat Partner as Group
+DROP function if exists select_group_as_chat_partner(room_id_in uuid);
+create or replace function select_group_as_chat_partner(room_id_in uuid)
+returns uuid
+language plpgsql
+security definer
+as
+$$
+declare
+group_id_out uuid;
+BEGIN
+  Select
+    group_id
+  from
+    rooms_participants
+  where
+    room_id = room_id_in
+  into
+  group_id_out;
+  return group_id_out;
+END;
+$$;
+
 
 
 -- get all messages of chat
@@ -375,8 +516,23 @@ BEGIN
 END;
 $$;
 
+DROP function if exists reset_number_of_unread_messages_in_group(group_id_in uuid, user_id_of_reader uuid);
+create or replace function reset_number_of_unread_messages_in_group(group_id_in uuid, user_id_of_reader uuid)
+returns void
+language plpgsql
+security definer
+as
+$$
+BEGIN
+  update group_members
+  set
+  "number_of_unread_messages" = 0
+  where group_id = group_id_in and user_id = user_id_of_reader;
+END;
+$$;
 
--- reset unread messages counter
+
+-- accept chat request
 DROP function if exists accept_chat_request(room_id_in uuid, user_id_of_reader uuid);
 create or replace function accept_chat_request(room_id_in uuid, user_id_of_reader uuid)
 returns void

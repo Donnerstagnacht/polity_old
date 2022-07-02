@@ -26,7 +26,6 @@ export class MessageComponent implements OnInit {
   }
 
   checkIfMessageFromLoggedInUser(): void {
-    console.log(this.loggedInUserId)
     if(this.loggedInUserId === this.message.sender_id) {
       this.messageOfLoggedInUser = true;
     }

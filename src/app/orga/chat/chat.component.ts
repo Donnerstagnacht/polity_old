@@ -32,9 +32,7 @@ export class ChatComponent implements OnInit {
     ]
     this.chatService.selectAllRoomsOfUser()
     .then((chats) => {
-      console.log('chats: ')
       this.chatList = chats.data
-      console.log(this.chatList)
     })
     .catch((error) => {
       console.log(error)

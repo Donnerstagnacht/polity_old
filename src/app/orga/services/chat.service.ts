@@ -32,6 +32,14 @@ export class ChatService {
     return chatResults;
   }
 
+  async resetNumberOfUnreadMessagesOfGroup(group_id: string, message_reader: string): Promise<{data: any, error: any}> {
+    const chatResults: {data: any, error: any} = await this.supabaseClient
+      .rpc('reset_number_of_unread_messages_in_group', {
+        group_id_in: group_id,
+        user_id_of_reader: message_reader
+      })
+    return chatResults;
+  }
 
   async getAllMessagesOfChat(room_id: string): Promise<{data: any, error: any}> {
     const messages: {data: any, error: any} = await this.supabaseClient
@@ -52,14 +60,22 @@ export class ChatService {
     .order('created_at', { ascending: true }) */
   }
 
-  async sendMessage(room_id: string, message_receiver: string, content_in: string): Promise<{data: any, error: any}> {
+  async sendMessage(
+    room_id: string,
+    message_receiver: string,
+    content_in: string,
+    is_group_in: boolean,
+    group_id_in: string | undefined | null
+    ): Promise<{data: any, error: any}> {
     const message_sender = this.authentificationService.user?.id;
     const messageFeedback: {data: any, error: any} = await this.supabaseClient
       .rpc('send_message_transaction', {
         room_id_in: room_id,
         message_sender: message_sender,
         message_receiver: message_receiver,
-        content_in: content_in
+        content_in: content_in,
+        is_group: is_group_in,
+        group_id_in: group_id_in
       })
     return messageFeedback;
   }
@@ -73,7 +89,6 @@ export class ChatService {
       .eq('room_id', room_id)
       .eq('user_id', loggedInUserId)
       .single()
-    console.log(results);
     return results;
   }
 
@@ -88,12 +103,12 @@ export class ChatService {
 
   async getChatPartner(room_id: string): Promise<{data: any, error: any}> {
     const message_sender = this.authentificationService.user?.id;
-    const messageFeedback: {data: any, error: any} = await this.supabaseClient
+    const groupFeedback: {data: any, error: any} = await this.supabaseClient
       .rpc('select_chat_partner', {
         message_sender: message_sender,
         room_id_in: room_id
       })
-    return messageFeedback;
+    return groupFeedback;
   }
 
   async rejectChatRequest(room_id: string, chatPartner: string, loggedInID: string): Promise<{data: any, error: any}> {
@@ -106,5 +121,13 @@ export class ChatService {
     return deleteFeedback;
   }
 
+
+  async getGroupAsChatPartner(room_id: string): Promise<{data: any, error: any}> {
+    const groupFeedback: {data: any, error: any} = await this.supabaseClient
+      .rpc('select_group_as_chat_partner', {
+        room_id_in: room_id
+      })
+    return groupFeedback;
+  }
 
 }
