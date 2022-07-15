@@ -28,33 +28,52 @@
             <div class="col-12 md:col-6">
               <h5>Ebene</h5>
                 <p-chip *ngIf="!localFilterOn" (click)="setLocalFilter()"  class="mr-2" label="Lokal" styleClass="cursor-pointer"></p-chip>
-                <p-chip *ngIf="localFilterOn" (click)="setLocalFilter()" class="mr-2" label="Lokal" styleClass="cursor-pointer accent-container"></p-chip>
+                <p-chip *ngIf="localFilterOn" (click)="setLocalFilter()" class="mr-2" label="Lokal" styleClass="cursor-pointer accent-container on-light-surface-in-dark-theme"></p-chip>
 
                 <p-chip *ngIf="!regionalFilterOn" (click)="setRegionalFilter()"  class="mr-2" label="Regional" styleClass="cursor-pointer"></p-chip>
-                <p-chip *ngIf="regionalFilterOn" (click)="setRegionalFilter()" class="mr-2" label="Regional" styleClass="cursor-pointer accent-container"></p-chip>
+                <p-chip *ngIf="regionalFilterOn" (click)="setRegionalFilter()" class="mr-2" label="Regional" styleClass="cursor-pointer accent-container on-light-surface-in-dark-theme"></p-chip>
 
                 <p-chip *ngIf="!federalFilterOn" (click)="setFederalFilter()"  class="mr-2" label="Bund" styleClass="cursor-pointer"></p-chip>
-                <p-chip *ngIf="federalFilterOn" (click)="setFederalFilter()" class="mr-2" label="Bund" styleClass="cursor-pointer accent-container"></p-chip>
+                <p-chip *ngIf="federalFilterOn" (click)="setFederalFilter()" class="mr-2" label="Bund" styleClass="cursor-pointer accent-container on-light-surface-in-dark-theme"></p-chip>
             </div>
             <div class="col-12 md:col-6">
               <h5>Thema</h5>
-              <p-chips [(ngModel)]="filteredTopics" name="filteredTopics"></p-chips>
+              <p-chips
+                [(ngModel)]="filteredTopics"
+                name="filteredTopics">
+              </p-chips>
             </div>
           </div>
           <div class="grid">
             <div class="col-6">
               <h5>Erstelldatum: {{createDateRangeValues[0] + ' - ' + createDateRangeValues[1]}}</h5>
-              <p-slider [min]="2000" [max]="2020" [(ngModel)]="createDateRangeValues" [range]="true" name="createDate"></p-slider>
+              <p-slider
+                [min]="2000"
+                [max]="2020"
+                [(ngModel)]="createDateRangeValues"
+                [range]="true"
+                name="createDateRangeValues">
+              </p-slider>
             </div>
             <div class="col-6">
               <h5>Aktueller Status</h5>
               <div class="flex justify-content-between align-items-center">
                 <p class="flex">Offen</p>
-                <p-checkbox class="" [(ngModel)]="statusOpenOn" [binary]="true" name="statusOpen"></p-checkbox>
+                <p-checkbox
+                  class=""
+                  [(ngModel)]="statusOpenOn"
+                  [binary]="true"
+                  name="statusOpenOn">
+                </p-checkbox>
               </div>
               <div class="flex justify-content-between align-items-center">
                 <p class="">Geschlossen</p>
-                <p-checkbox class="" [(ngModel)]="statusClosedOn" [binary]="true" name="statusClosed"></p-checkbox>
+                <p-checkbox
+                  class=""
+                  [(ngModel)]="statusClosedOn"
+                  [binary]="true"
+                  name="statusClosedOn">
+                </p-checkbox>
               </div>
             </div>
           </div>

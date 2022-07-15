@@ -1,7 +1,7 @@
 <div [ngClass]="{'flex flex-row-reverse' : messageOfLoggedInUser}">
   <div class="w-9 p-4 border-round mb-2" [ngClass]="{'primary-container' : messageOfLoggedInUser, ' neutral-90' : !messageOfLoggedInUser }">
-    <h4 *ngIf="showSender" class="my-0">{{message.sender_id}}</h4>
-    <p class="mt-1">{{message.content_in}}</p>
-    <p class="w-full mb-0 text-right">{{message.created_at_in | date: 'HH:mm:ss'}}</p>
+    <h4 *ngIf="showSender" class="my-0 on-light-surface-in-dark-theme">{{message.sender_id}}</h4>
+    <p class="mt-1 on-light-surface-in-dark-theme">{{message.content_in}}</p>
+    <p class="w-full mb-0 text-right on-light-surface-in-dark-theme">{{message.created_at_in | date: 'HH:mm:ss'}}</p>
   </div>
 </div>

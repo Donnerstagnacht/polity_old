@@ -1,4 +1,4 @@
-<app-wrapper-full-creen-center>
+<app-wrapper-full-screen-center>
   <div>
     <h1 class="text-center">Polity.</h1>
     <form (ngSubmit)="handleLogin()" #loginForm = "ngForm" class="form-group" >
@@ -11,7 +11,8 @@
         <i class="pi pi-check success-color" [class.hide]="email.invalid"></i>
         <input
               required pattern="[^ @]*@[^ @]*" #email="ngModel"
-              name="email" [(ngModel)]="loginValues.email"
+              name="email"
+              [(ngModel)]="loginValues.email"
               pInputText
               id="email-input" type="email"
               class="form-control transparent-background w-full">
@@ -26,7 +27,8 @@
         <i class="pi pi-check success-color" [class.hide]="password.invalid"></i>
         <input
               required minlength="8" #password="ngModel"
-              name="password" [(ngModel)]="loginValues.password"
+              name="password"
+              [(ngModel)]="loginValues.password"
               id="password-input" type="password"
               pPassword [feedback]="false"
               class="form-control transparent-background w-full">
@@ -48,4 +50,4 @@
   </div>
     </form>
   </div>
-</app-wrapper-full-creen-center>
+</app-wrapper-full-screen-center>

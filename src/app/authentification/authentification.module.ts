@@ -11,9 +11,8 @@ import {DialogModule} from 'primeng/dialog';
 import { TermsAndConditionsComponent } from './terms-and-conditions/terms-and-conditions.component';
 import { DataProtectionComponent } from './data-protection/data-protection.component';
 import { LoginComponent } from './login/login.component';
-import { UIStructureModule } from '../UI-structure/ui-structure.module';
 import { AuthentificationRoutingModule } from './authentification-routing.module';
-
+import { WrapperFullScreenCenterModule } from '../UI-structure/wrapper-full-screen-center/wrapper-full-screen-center.module';
 @NgModule({
   declarations: [
     RegisterComponent,
@@ -29,8 +28,8 @@ import { AuthentificationRoutingModule } from './authentification-routing.module
     KeyFilterModule,
     PasswordModule,
     DialogModule,
-    UIStructureModule,
-    AuthentificationRoutingModule
+    AuthentificationRoutingModule,
+    WrapperFullScreenCenterModule
   ],
   exports: [
     RegisterComponent,

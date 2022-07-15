@@ -1,10 +1,11 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NewsComponent } from './news/news.component';
-import { UINavigationModule } from '../UI-navigation/ui-navigation.module';
-import { UIStructureModule } from '../UI-structure/ui-structure.module';
-import { UIElementsModule } from '../UI-elements/ui-elements.module';
 import { ChipModule } from 'primeng/chip';
+import { WrapperGridModule } from '../UI-structure/wrapper-grid/wrapper-grid.module';
+import { MenuBarSecondaryTopModule } from '../UI-navigation/menu-bar-secondary-top/menu-bar-secondary-top.module';
+import { MenuBarSecondaryRightModule } from '../UI-navigation/menu-bar-secondary-right/menu-bar-secondary-right.module';
+import { NewsListItemModule } from '../UI-elements/news-list-item/news-list-item.module';
 
 
 
@@ -14,10 +15,13 @@ import { ChipModule } from 'primeng/chip';
   ],
   imports: [
     CommonModule,
-    UINavigationModule,
-    UIStructureModule,
-    UIElementsModule,
-    ChipModule
+    ChipModule,
+    WrapperGridModule,
+    MenuBarSecondaryTopModule,
+    MenuBarSecondaryRightModule,
+    MenuBarSecondaryTopModule,
+    NewsListItemModule,
+
   ],
   exports: [
     NewsComponent

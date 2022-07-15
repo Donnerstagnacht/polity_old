@@ -1,3 +1,4 @@
+@import '../../../sass/themes/material-polity-customized/abstracts/breakpoints';
 .bottom-fixed {
   bottom: 4rem;
 }
@@ -22,7 +23,7 @@
 
 
 
-@media only screen and (min-width: 1024px) {
+@media only screen and (min-width: $largeBreakPoint) {
   .bottom-fixed {
     padding-left: 15rem!important;
     padding-right: 5rem!important;

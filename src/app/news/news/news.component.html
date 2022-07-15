@@ -27,6 +27,9 @@
         <p-chip *ngIf="accountFilterOn" (click)="setAccountFilter()" label="ACCOUNT" styleClass="cursor-pointer accent-container"></p-chip>
       </div>
       <div *ngFor="let news of newsList">
+        <div>
+          <p class="test" [ngStyle]="{backgroundColor:'var(--primary-color	)'}">Test</p>
+        </div>
         <app-news-list-item [news]="news"></app-news-list-item>
       </div>
     </div>

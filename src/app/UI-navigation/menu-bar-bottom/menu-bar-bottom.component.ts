@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { MegaMenuItem, MenuItem } from 'primeng/api';
 import { Observable } from 'rxjs';
-import { AuthentificationService } from 'src/app/authentification/services/authentification.service';
+import { AuthentificationService } from '../../authentification/services/authentification.service';
 @Component({
   selector: 'app-menu-bar-bottom',
   templateUrl: './menu-bar-bottom.component.html',

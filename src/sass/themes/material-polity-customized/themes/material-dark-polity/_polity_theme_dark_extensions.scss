@@ -1,0 +1,26 @@
+/* Customizations to the designer theme should be defined here */
+
+.p-menu .p-menuitem-link:not(.p-disabled):hover .p-menuitem-text {
+  color: $accentColor;
+}
+
+.p-megamenu .p-megamenu-root-list > .p-menuitem > .p-menuitem-link:not(.p-disabled):hover .p-menuitem-icon {
+  // color: red;
+}
+
+.p-menuitem-link-active {
+  color: $accentColor!important;
+}
+
+.on-light-surface-in-dark-theme {
+  color: $onLightBackground;
+}
+
+.on-dark-surface-in-dark-theme {
+  color: #ffffff;
+}
+
+/* .p-menu .p-menuitem-link .p-menuitem-text {
+  color: rgba(255, 255, 255, 0.87);
+} */
+

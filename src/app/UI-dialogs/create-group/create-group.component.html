@@ -1,9 +1,9 @@
 <p-sidebar
 [(visible)]="showAddGroupDialog"
+(onHide)="onHide()"
 [showCloseIcon]="true"
-[fullScreen]="true"
-[style]="{background:'linear-gradient(180deg, #FFD8EA 0%, #BFE8FF 100%'}"
->
+[modal]="false"
+[fullScreen]="true">
 <div>
 
 </div>
@@ -16,40 +16,42 @@
       [numScroll]="1"
       [showNavigators]="false"
       [page]="this.page"
-      class="transparent-background "
       >
-
         <ng-template let-carouselPage pTemplate="item">
           <div *ngIf="carouselPage.pageNumber === 1" class="max-width-carousel">
-              <span class="mt-2 p-input-filled p-float-label w-full  p-input-icon-right">
-                <i class="pi pi-check success-color" [class.hide]="!name.valid || name.pristine"></i>
-                <input
-                      required
-                      #name="ngModel"
-                      name="name"
-                      [(ngModel)]="newGroup.name"
-                      pInputText
-                      id="name-input"
-                      type="text"
-                      class="form-control transparent-background w-full">
-                <label class="transparent-background" for="name-input">Name</label>
-                <div [hidden]="name.valid || name.pristine">
-                  <small id="email-error" class="p-error block">Bitte einen Namen eingeben.</small>
-                </div>
-              </span>
+              <form>
+                <span class="mt-2 p-input-filled p-float-label w-full  p-input-icon-right">
+                  <i class="pi pi-check success-color" [class.hide]="!name.valid || name.pristine"></i>
+                  <input
+                        required
+                        #name="ngModel"
+                        name="name"
+                        [(ngModel)]="newGroup.name"
+                        pInputText
+                        id="name-input"
+                        type="text"
+                        class="form-control transparent-background w-full">
+                  <label class="transparent-background" for="name-input">Name</label>
+                  <div [hidden]="name.valid || name.pristine">
+                    <small id="email-error" class="p-error block">Bitte einen Namen eingeben.</small>
+                  </div>
+                </span>
 
-              <span class="mt-2 p-input-filled p-float-label">
-                <textarea
-                  #about
-                  pInputTextarea
-                  [autoResize]="true"
-                  class="w-full transparent-background"
-                  [(ngModel)]="newGroup.description"
-                ></textarea>
-                <label class="transparent-background"  for="float-input">Beschreibung</label>
-              </span>
+                <span class="mt-2 p-input-filled p-float-label">
+                  <textarea
+                    #about
+                    pInputTextarea
+                    [autoResize]="true"
+                    class="w-full transparent-background"
+                    name="description"
+                    [(ngModel)]="newGroup.description"
+                  ></textarea>
+                  <label class="transparent-background"  for="float-input">Beschreibung</label>
+                </span>
 
-              <app-chips-picker (choosenOption)="setLevel($event)" [multipeOptionsPossible]="false"></app-chips-picker>
+                <app-chips-picker (choosenOption)="setLevel($event)" [multipeOptionsPossible]="false"></app-chips-picker>
+
+              </form>
 
           </div>
           <div *ngIf="carouselPage.pageNumber === 2 && this.loggedInUser">

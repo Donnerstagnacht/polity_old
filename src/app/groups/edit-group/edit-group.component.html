@@ -11,6 +11,7 @@
               <span class="p-float-label">
                 <textarea
                   #about
+                  name="description"
                   pInputTextarea
                   [autoResize]="true"
                   class="w-full"
@@ -54,6 +55,7 @@
                 <input
                   class="w-full"
                   type="email"
+                  name="contact_email"
                   pInputText
                   [(ngModel)]="group.contact_email"
                 >
@@ -66,6 +68,7 @@
                   class="w-full"
                   type="text"
                   pInputText
+                  name="contact_phone"
                   [(ngModel)]="group.contact_phone"
                   >
                 <label for="float-input">Phone</label>
@@ -80,6 +83,7 @@
                   class="w-full"
                   type="text"
                   pInputText
+                  name="street"
                   [(ngModel)]="group.street"
                   >
                 <label for="float-input">Street</label>
@@ -91,6 +95,7 @@
                   class="w-full"
                   type="text"
                   pInputText
+                  name="post_code"
                   [(ngModel)]="group.post_code"
                 >
                 <label for="float-input">Post Code</label>
@@ -102,6 +107,7 @@
                   class="w-full"
                   type="text"
                   pInputText
+                  name="city"
                   [(ngModel)]="group.city"
                 >
                 <label for="float-input">City</label>

@@ -1,10 +1,12 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { AuthentificationService, Profile } from 'src/app/authentification/services/authentification.service';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { AuthentificationService, Profile } from '../../authentification/services/authentification.service';
 import { GroupsService } from '../../groups/services/groups.service';
+import { MenuService } from '../menu.service';
 
 export interface carouselPages {
   pageNumber: number
 }
+
 
 export interface Group {
   id?: string,
@@ -47,7 +49,8 @@ export class CreateGroupComponent implements OnInit {
 
   constructor(
     private readonly authentificationService: AuthentificationService,
-    private groupsService: GroupsService
+    private groupsService: GroupsService,
+    private menuService: MenuService
     ) { }
 
   ngOnInit(): void {
@@ -61,6 +64,11 @@ export class CreateGroupComponent implements OnInit {
         pageNumber: 2,
       }
     ]
+
+    this.menuService.getMenuStatus().subscribe((menuStatus) => {
+      this.showAddGroupDialog = menuStatus;
+    })
+
   }
 
   getLoggedInUser(): void {
@@ -104,11 +112,22 @@ export class CreateGroupComponent implements OnInit {
     ).then((result) => {
       console.log('success');
       this.showAddGroupDialog = false;
+      this.newGroup = {
+        name: '',
+        description: '',
+        level: '',
+        creator: '',
+      }
+      this.page = 0;
     })
     .catch((error) => {
       console.log(error);
     })
     ;
+  }
+
+  onHide(): void {
+    this.page = 0;
   }
 
 }

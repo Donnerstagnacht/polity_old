@@ -1,0 +1,10 @@
+.full-screen {
+  height: 100vh;
+  width: 100%;
+}
+
+@media only screen and (max-width: $largeBreakPoint) {
+  .margin-top {
+    margin-top: 500px!important;
+  }
+}

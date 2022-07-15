@@ -1,8 +1,8 @@
 import { MegaMenuItem, MenuItem } from "primeng/api";
 
 export const profileMenuitems: MenuItem[] = [
-  {label: 'Übersicht', routerLink: ['/profile'], routerLinkActiveOptions: {exact: true}},
-  {label: 'ändern', routerLink: ['/profile/edit'], routerLinkActiveOptions: {exact: true}}
+  {label: 'ÜBERSICHT', routerLink: ['/profile'], routerLinkActiveOptions: {exact: true}},
+  {label: 'ÄNDERN', routerLink: ['/profile/edit'], routerLinkActiveOptions: {exact: true}}
 ];
 
 export const profileMenuitemsMega: MegaMenuItem[] = [

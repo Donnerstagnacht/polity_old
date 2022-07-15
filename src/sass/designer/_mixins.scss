@@ -39,11 +39,11 @@
     user-select: none;
 
 	.p-menuitem-text {
-        color: $menuitemTextColor;
+        // color: $menuitemTextColor;
 	}
 
 	.p-menuitem-icon {
-		color: $menuitemIconColor;
+		// color: $menuitemIconColor;
 		margin-right: $inlineSpacing;
     }
 
@@ -59,7 +59,7 @@
 		}
 
 		.p-menuitem-icon {
-			color: $menuitemIconHoverColor;
+			// color: $menuitemIconHoverColor;
         }
 
         .p-submenu-icon {
@@ -84,7 +84,7 @@
 	}
 
 	.p-menuitem-icon {
-		color: $horizontalMenuRootMenuitemIconColor;
+		// color: $horizontalMenuRootMenuitemIconColor;
 		margin-right: $inlineSpacing;
     }
 
@@ -101,7 +101,7 @@
 		}
 
 		.p-menuitem-icon {
-			color: $horizontalMenuRootMenuitemIconHoverColor;
+			// color: $horizontalMenuRootMenuitemIconHoverColor;
         }
 
         .p-submenu-icon {

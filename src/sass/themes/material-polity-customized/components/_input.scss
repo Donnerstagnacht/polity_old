@@ -1,0 +1,8 @@
+.p-input-filled .p-inputtext.ng-valid.ng-dirty {
+  border-color: transparent;
+  background-image: linear-gradient(to bottom, $successColor, $successColor), linear-gradient(to bottom, $successColor, $successColor);
+}
+
+.p-float-label > .ng-valid.ng-dirty + label {
+  color: $successColor;
+}

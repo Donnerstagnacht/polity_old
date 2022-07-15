@@ -11,9 +11,12 @@ import {CheckboxModule} from 'primeng/checkbox';
 import {PanelModule} from 'primeng/panel';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {ChipsModule} from 'primeng/chips';
-import { UIStructureModule } from '../UI-structure/ui-structure.module';
-import { UIElementsModule } from '../UI-elements/ui-elements.module';
 import { SearchRoutingModule } from './search-routing.module';
+import { WrapperGridModule } from '../UI-structure/wrapper-grid/wrapper-grid.module';
+import { MenuBarSecondaryRightModule } from '../UI-navigation/menu-bar-secondary-right/menu-bar-secondary-right.module';
+import { MenuBarSecondaryTopModule } from '../UI-navigation/menu-bar-secondary-top/menu-bar-secondary-top.module';
+import { ProfileCardModule } from '../UI-elements/profile-card/profile-card.module';
+import { GroupCardModule } from '../UI-elements/group-card/group-card.module';
 
 @NgModule({
   declarations: [
@@ -32,10 +35,12 @@ import { SearchRoutingModule } from './search-routing.module';
     CheckboxModule,
     PanelModule,
     ChipsModule,
-    UIStructureModule,
-    UIElementsModule,
-    SearchRoutingModule
-
+    SearchRoutingModule,
+    WrapperGridModule,
+    MenuBarSecondaryRightModule,
+    MenuBarSecondaryTopModule,
+    ProfileCardModule,
+    GroupCardModule
   ]
 })
 export class SearchModule { }

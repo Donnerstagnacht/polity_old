@@ -1,0 +1,17 @@
+/* Import basic and theme variables */
+@import '../../abstracts/main_abstracts';
+@import './polity_theme_dark_variables';
+@import './variables';
+
+/* Import Basic structure */
+@import '../../../../designer/components';
+@import '../../../extensions/vendor_extensions';
+
+@import '../../base/main_base.scss';
+@import '../../components/main_components.scss';
+@import '../../layout/main_layout.scss';
+@import '../../pages/main_pages.scss';
+@import '../../vendors/main_vendors.scss';
+
+/* Theme styles */
+@import './polity_theme_dark_extensions';

@@ -1,4 +1,4 @@
-<div class="fixed w-full top-fixed background-color"><!--mx-4-->
+<div class="fixed w-full top-fixed"><!--mx-4-->
   <div class="flex">
     <app-back-button class="" [title]="'Zurück'" [link]="'/orga'"></app-back-button>
     <div *ngIf="profile"  class="flex align-items-center w-full">
@@ -64,9 +64,7 @@
       <input
       [(ngModel)]="message"
       name="message"
-
       id="message"
-
       type="text"
       pInputText
       class="w-full p-inputtext"

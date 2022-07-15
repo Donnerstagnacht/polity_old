@@ -3,11 +3,13 @@
 position="left"
 [showCloseIcon]="false"
 [modal]="false"
-[style]="{background: 'linear-gradient(0deg, rgba(0, 102, 137, 0.08), rgba(0, 102, 137, 0.08)), #FBFCFE', width:'10em'}"
-class="red">
+[style]="{width:'10em'}">
   <div class="h-full flex flex-column">
     <div class="flex h-screen  flex flex-column justify-content-center">
       <p-menu class="px-3" [model]="items" routerLinkActive="p-menuitem-link-active"></p-menu>
+      <div class="px-5">
+        <app-switch-theme></app-switch-theme>
+      </div>
     </div>
   </div>
 </p-sidebar>

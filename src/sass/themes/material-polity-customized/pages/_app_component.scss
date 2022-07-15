@@ -1,0 +1,23 @@
+app-menu-bar-left {
+  display: none;
+}
+
+@media only screen and (min-width: $largeBreakPoint) {
+  app-menu-bar-bottom {
+    display: none;
+  }
+
+  app-menu-bar-secondary-top {
+    display: none;
+  }
+}
+
+@media only screen and (min-width: $largeBreakPoint) {
+  app-menu-bar-left {
+    display: block;
+  }
+
+  app-menu-bar-secondary-left {
+    display: block;
+  }
+}

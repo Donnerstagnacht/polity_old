@@ -15,12 +15,18 @@ import {InputTextareaModule} from 'primeng/inputtextarea';
 import {FileUploadModule} from 'primeng/fileupload';
 import {AvatarModule} from 'primeng/avatar';
 import {ToastModule} from 'primeng/toast';
-import { UIStructureModule } from '../UI-structure/ui-structure.module';
-import { UINavigationModule } from '../UI-navigation/ui-navigation.module';
-import { UIElementsModule } from '../UI-elements/ui-elements.module';
 import { FollowingProfilesSystemModule } from '../following-profiles-system/following-profiles-system.module';
 import { ProfilesRoutingModule } from './profile-routing.module';
 import { HttpClientModule } from '@angular/common/http';
+import { WrapperGridModule } from '../UI-structure/wrapper-grid/wrapper-grid.module';
+import { MenuBarSecondaryRightModule } from '../UI-navigation/menu-bar-secondary-right/menu-bar-secondary-right.module';
+import { MenuBarSecondaryTopModule } from '../UI-navigation/menu-bar-secondary-top/menu-bar-secondary-top.module';
+import { BackButtonModule } from '../UI-elements/back-button/back-button.module';
+import { ListElementModule } from '../UI-elements/list-element/list-element.module';
+import { WikiHeaderModule } from '../UI-elements/wiki-header/wiki-header.module';
+import { KeyFiguresModule } from '../UI-elements/key-figures/key-figures.module';
+import { HeadlineOfListModule } from '../UI-elements/headline-of-list/headline-of-list.module';
+import { SwitchThemeModule } from '../UI-structure/switch-theme/switch-theme.module';
 
 @NgModule({
   declarations: [
@@ -42,12 +48,23 @@ import { HttpClientModule } from '@angular/common/http';
     FileUploadModule,
     AvatarModule,
     ToastModule,
-    UIStructureModule,
-    UINavigationModule,
-    UIElementsModule,
     FollowingProfilesSystemModule,
     ProfilesRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    WrapperGridModule,
+    MenuBarSecondaryRightModule,
+    MenuBarSecondaryTopModule,
+    ToastModule,
+    WrapperGridModule,
+    BackButtonModule,
+    AvatarModule,
+    FileUploadModule,
+    ListElementModule,
+    MessageModule,
+    WikiHeaderModule,
+    KeyFiguresModule,
+    HeadlineOfListModule,
+    SwitchThemeModule
   ],
 })
 export class ProfileModule { }

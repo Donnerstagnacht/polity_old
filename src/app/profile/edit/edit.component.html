@@ -8,14 +8,16 @@
         <app-list-element [title]="'Profil'" [link]="'/profile/edit/profile'"></app-list-element>
         <app-list-element [title]="'Follower-Management'" [link]="'/profile/edit/follower'"></app-list-element>
         <app-list-element [title]="'Gruppen-Management'" [link]="'/profile/edit/groups'"></app-list-element>
-
+        <div class="text-center on-dark-surface-in-dark-theme">
+          <app-switch-theme></app-switch-theme>
+        </div>
         <app-headline-of-list [headline]="'INHALTE'"></app-headline-of-list>
         <a class="cursor-pointer" (click)="signOut()">
-          <p-messages  severity="custom">
+          <p-messages severity="custom">
             <ng-template pTemplate>
                 <div class="ml-2">Logout</div>
             </ng-template>
-        </p-messages>
+          </p-messages>
         </a>
       </div>
     </div>

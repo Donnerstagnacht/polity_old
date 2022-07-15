@@ -35,7 +35,16 @@
               "src/assets"
             ],
             "styles": [
-              "src/sass/themes/material/material-light/standard/indigo/theme.scss",
+              {
+                "input": "src/sass/themes/material-polity-customized/themes/material-light-polity/theme.scss",
+                "bundleName": "material-light-standard-indigo",
+                "inject": false
+              },
+              {
+                "input": "src/sass/themes/material-polity-customized//themes/material-dark-polity/theme.scss",
+                "bundleName": "material-light-dark-indigo",
+                "inject": false
+              },
               "node_modules/primeflex/primeflex.css",
               "node_modules/primeng/resources/primeng.min.css",
               "node_modules/primeicons/primeicons.css"

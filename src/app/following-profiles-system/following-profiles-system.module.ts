@@ -9,8 +9,9 @@ import {AvatarModule} from 'primeng/avatar';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
-import { UIStructureModule } from '../UI-structure/ui-structure.module';
-import { UIElementsModule } from '../UI-elements/ui-elements.module';
+import { WrapperGridModule } from '../UI-structure/wrapper-grid/wrapper-grid.module';
+import { BackButtonModule } from '../UI-elements/back-button/back-button.module';
+import { TabViewTableListsModule } from '../UI-elements/tab-view-table-lists/tab-view-table-lists.module';
 
 
 @NgModule({
@@ -28,8 +29,9 @@ import { UIElementsModule } from '../UI-elements/ui-elements.module';
     ReactiveFormsModule,
     InputTextModule,
     ButtonModule,
-    UIStructureModule,
-    UIElementsModule
+    WrapperGridModule,
+    BackButtonModule,
+    TabViewTableListsModule
   ]
 })
 export class FollowingProfilesSystemModule { }

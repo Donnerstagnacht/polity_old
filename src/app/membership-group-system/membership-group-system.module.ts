@@ -5,8 +5,9 @@ import { MembershipUserManagementComponent } from './membership-user-management/
 import { RequestMembershipComponent } from './request-membership/request-membership.component';
 import { ButtonModule } from 'primeng/button';
 import { ToastModule } from 'primeng/toast';
-import { UIStructureModule } from '../UI-structure/ui-structure.module';
-import { UIElementsModule } from '../UI-elements/ui-elements.module';
+import { WrapperGridModule } from '../UI-structure/wrapper-grid/wrapper-grid.module';
+import { BackButtonModule } from '../UI-elements/back-button/back-button.module';
+import { TabViewTableListsModule } from '../UI-elements/tab-view-table-lists/tab-view-table-lists.module';
 
 
 
@@ -20,8 +21,10 @@ import { UIElementsModule } from '../UI-elements/ui-elements.module';
     CommonModule,
     ButtonModule,
     ToastModule,
-    UIStructureModule,
-    UIElementsModule
+    WrapperGridModule,
+    ToastModule,
+    BackButtonModule,
+    TabViewTableListsModule
   ],
   exports: [
     RequestMembershipComponent

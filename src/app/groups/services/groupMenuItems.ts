@@ -2,15 +2,15 @@ import { MegaMenuItem, MenuItem } from "primeng/api";
 
 export function groupsMenuitemsParameter(id: string): MenuItem[] {
   const groupsMenuitems: MenuItem[] = [
-    {label: 'Übersicht', routerLink: [`/groups/${id}`], routerLinkActiveOptions: {exact: true}},
+    {label: 'ÜBERSICHT', routerLink: [`/groups/${id}`], routerLinkActiveOptions: {exact: true}},
   ];
   return groupsMenuitems;
 }
 
 export function groupsMenuitemsParameterLoggedIn(id: string): MenuItem[] {
   const groupsMenuitems: MenuItem[] = [
-    {label: 'Übersicht', routerLink: [`/groups/${id}`], routerLinkActiveOptions: {exact: true}},
-    {label: 'ändern', routerLink: [`/groups/${id}/edit`], routerLinkActiveOptions: {exact: true}}
+    {label: 'ÜBERSICHT', routerLink: [`/groups/${id}`], routerLinkActiveOptions: {exact: true}},
+    {label: 'ÄNDERN', routerLink: [`/groups/${id}/edit`], routerLinkActiveOptions: {exact: true}}
   ];
   return groupsMenuitems;
 }

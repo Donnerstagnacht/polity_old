@@ -3,8 +3,8 @@
     <div class="mb-8">
       <div class="mx-4">
         <div class="flex flex-row">
-          <i class="pi pi-angle-down align-items-center flex justify-content-center mr-4"></i>
-          <h4 class="flex align-items-center justify-content-center">LOKALE</h4>
+          <i class="pi pi-angle-down align-items-center flex justify-content-center mr-4 on-dark-surface-in-dark-theme"></i>
+          <h4 class="onSurface flex align-items-center justify-content-center">LOKALE</h4>
         </div>
         <a *ngFor="let group of localGroupList" [routerLink]="['/groups', group.id]">
           <p-messages  severity="custom">
@@ -15,7 +15,7 @@
         </a>
         <p *ngIf="localGroupList.length === 0">Du bist in noch keinen lokalen Gruppen</p>
         <div class="flex flex-row">
-          <i class="pi pi-angle-down align-items-center flex justify-content-center mr-4"></i>
+          <i class="pi pi-angle-down align-items-center flex justify-content-center mr-4 on-dark-surface-in-dark-theme"></i>
           <h4 class="flex align-items-center justify-content-center">REGIONALE</h4>
         </div>
         <a *ngFor="let group of regionalGroupList" [routerLink]="['/groups', group.id]">
@@ -27,7 +27,7 @@
         </a>
         <p *ngIf="regionalGroupList.length === 0">Du bist in noch keinen regionalen Gruppen</p>
         <div class="flex flex-row">
-          <i class="pi pi-angle-down align-items-center flex justify-content-center mr-4"></i>
+          <i class="pi pi-angle-down align-items-center flex justify-content-center mr-4 on-dark-surface-in-dark-theme"></i>
           <h4 class="flex align-items-center justify-content-center">BUND</h4>
         </div>
         <a *ngFor="let group of federalGroupList" [routerLink]="['/groups', group.id]">
@@ -39,7 +39,7 @@
         </a>
         <p *ngIf="federalGroupList.length === 0">Du bist in noch keinen Gruppen des Bundes</p>
         <div class="flex flex-row">
-          <i class="pi pi-angle-down align-items-center flex justify-content-center mr-4"></i>
+          <i class="pi pi-angle-down align-items-center flex justify-content-center mr-4 on-dark-surface-in-dark-theme"></i>
           <h4 class="flex align-items-center justify-content-center">INTERNATIONAL</h4>
         </div>
         <a *ngFor="let group of internationalGroupList" [routerLink]="['/groups', group.id]">

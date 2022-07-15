@@ -1,0 +1,21 @@
+
+.p-menu {
+  padding: 0.5rem 0;
+  background: transparent;
+  color: none;
+  border: none;
+  border-radius: 4px;
+  width: 100%;
+}
+
+.p-menuitem-link-active {
+  background-color: $accentContainer!important;
+  border-radius: 1rem!important;
+  // color: rgba(0, 0, 0, 0.87)!important;
+}
+
+
+
+.p-menu .p-menuitem-link:not(.p-disabled):hover {
+  border-radius: 1rem!important;
+}

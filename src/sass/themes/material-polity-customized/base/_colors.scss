@@ -1,0 +1,63 @@
+h1, h2, h3, h4, h5, h6, p {
+  color: $onSurface
+}
+.success-color {
+  color: $successColor!important;
+}
+
+.surface {
+  background: $surface
+}
+
+.onSurface {
+  color: $onSurface
+}
+
+.surface-variant {
+  background-color: $surfaceVariant;
+}
+
+.primary-color {
+  color: $primaryColor;
+}
+
+.primary-container {
+  background-color: $primaryContainer;
+}
+
+.accent-container {
+  background-color: $accentContainer;
+}
+
+.accent-container-2 {
+  background-color: $accentContainer;
+  color: $accentColor;
+}
+
+.tertiary-color {
+  color: $thirdColor;
+}
+
+.tertiary-container {
+  background-color: $tertiaryContainer;
+}
+
+.transparent-background {
+  background-color: transparent!important;
+}
+
+.horizontal-gradient {
+  background-image: $horizontal-gradient;
+}
+
+.vertical-gradient {
+  background-image: $vertical-gradient;
+}
+
+.home-background {
+  background: $home-background;
+}
+
+.neutral-90 {
+  background-color: $neutral-90;
+}

@@ -1,0 +1,19 @@
+.mt-9 {
+  margin-top: 6rem;
+}
+
+.show-large {
+  display: none;
+}
+
+@media only screen and (min-width: $largeBreakPoint) {
+  .show-large {
+    display: block
+  }
+}
+
+@media only screen and (min-width: $largeBreakPoint) {
+  .mt-9 {
+    margin-top: 1rem;
+  }
+}

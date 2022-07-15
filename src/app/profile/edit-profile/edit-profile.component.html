@@ -13,6 +13,7 @@
                   class="w-full"
                   type="text"
                   pInputText
+                  name="name"
                   [(ngModel)]="profile.name"
                 >
                 <label for="float-input">Name</label>
@@ -24,6 +25,7 @@
                   class="w-full"
                   type="url"
                   pInputText
+                  name="website"
                   [(ngModel)]="profile.website"
                 >
                 <label for="float-input">Website</label>
@@ -36,6 +38,7 @@
                 pInputTextarea
                 [autoResize]="true"
                 class="w-full"
+                name="about"
                 [(ngModel)]="profile.about"
               ></textarea>
               <label for="float-input">Über mich</label>
@@ -77,6 +80,7 @@
                   class="w-full"
                   type="email"
                   pInputText
+                  name="contact_email"
                   [(ngModel)]="profile.contact_email"
                 >
                 <label for="float-input">Email</label>
@@ -88,6 +92,7 @@
                   class="w-full"
                   type="text"
                   pInputText
+                  name="contact_phone"
                   [(ngModel)]="profile.contact_phone"
                   >
                 <label for="float-input">Phone</label>
@@ -102,6 +107,7 @@
                   class="w-full"
                   type="text"
                   pInputText
+                  name="street"
                   [(ngModel)]="profile.street"
                   >
                 <label for="float-input">Street</label>
@@ -113,6 +119,7 @@
                   class="w-full"
                   type="text"
                   pInputText
+                  name="post_code"
                   [(ngModel)]="profile.post_code"
                 >
                 <label for="float-input">Post Code</label>
@@ -124,6 +131,7 @@
                   class="w-full"
                   type="text"
                   pInputText
+                  name="city"
                   [(ngModel)]="profile.city"
                 >
                 <label for="float-input">City</label>
