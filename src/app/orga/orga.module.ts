@@ -13,6 +13,7 @@ import { ChatRoomComponent } from './chat-room/chat-room.component';
 import { AvatarModule } from 'primeng/avatar';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
+import { NewsModule } from '../news/news.module';
 
 
 @NgModule({
@@ -31,7 +32,8 @@ import { ButtonModule } from 'primeng/button';
     ChipModule,
     AvatarModule,
     InputTextModule,
-    ButtonModule
+    ButtonModule,
+    NewsModule
   ]
 })
 export class OrgaModule { }

@@ -1,0 +1,37 @@
+<app-menu-bar-secondary-top [menuItems]="menuItemsMega"></app-menu-bar-secondary-top>
+<app-wrapper-grid>
+  <div slot="main">
+    <div class="mb-8">
+      <form (submit)="onSearch(searchBar.value)">
+        <div class="grid">
+          <div class="col-12">
+            <span class="p-float-label">
+              <input
+                #searchBar
+                class="w-full p-inputtext"
+                id="float-input"
+                type="text"
+                pInputText
+                [value]=" ''"
+                >
+              <label for="float-input">Search</label>
+            </span>
+          </div>
+        </div>
+      </form>
+      <div class="w-full text-center">
+        <p-chip *ngIf="taskFilterOn" (click)="setTaskFilter()"  label="TASKS" styleClass="cursor-pointer"></p-chip>
+        <p-chip *ngIf="amendmentFilterOn" (click)="setAmendmentFilter()" label="AMENDMENTS" styleClass="cursor-pointer accent-container"></p-chip>
+        <p-chip *ngIf="eventFilterOn" (click)="setEventFilter()" label="EVENT" styleClass="cursor-pointer accent-container"></p-chip>
+        <p-chip *ngIf="voteFilterOn" (click)="setVoteFilter()" label="VOTE" styleClass="cursor-pointer accent-container"></p-chip>
+        <p-chip *ngIf="accountFilterOn" (click)="setAccountFilter()" label="ACCOUNT" styleClass="cursor-pointer accent-container"></p-chip>
+      </div>
+      <div *ngFor="let news of newsList">
+        <app-news-list-item [news]="news"></app-news-list-item>
+      </div>
+    </div>
+  </div>
+  <div slot="side">
+    <app-menu-bar-secondary-right [menuItems]="menuItems"></app-menu-bar-secondary-right>
+  </div>
+</app-wrapper-grid>

@@ -31,8 +31,25 @@ body {
   background-color: transparent!important;
 }
 
+.accent-corlor-2 {
+  color: $accentColor!important;
+}
+
 .accent-container {
   background-color: $accentContainer;
+}
+
+.accent-container-2 {
+  background-color: $accentContainer;
+  color: $accentColor;
+}
+
+.tertiary-color {
+  color: $thirdColor;
+}
+
+.tertiary-container {
+  background-color: $tertiaryContainer;
 }
 
 .primary-container {
@@ -56,10 +73,6 @@ body {
   background-color: $background;
 }
 
-
-.accent-corlor {
-  color: $accentColor;
-}
 .navigation-background {
   background: $navigation!important;
 }

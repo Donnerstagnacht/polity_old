@@ -24,6 +24,7 @@ import { ChatListItemComponent } from './chat-list-item/chat-list-item.component
 import { TagModule } from 'primeng/tag';
 import {BadgeModule} from 'primeng/badge';
 import { MessageComponent } from './message/message.component';
+import { NewsListItemComponent } from './news-list-item/news-list-item.component';
 
 
 
@@ -40,7 +41,8 @@ import { MessageComponent } from './message/message.component';
     TabViewTableListsComponent,
     WikiHeaderComponent,
     ChatListItemComponent,
-    MessageComponent
+    MessageComponent,
+    NewsListItemComponent
   ],
   imports: [
     CommonModule,
@@ -70,7 +72,8 @@ import { MessageComponent } from './message/message.component';
     TabViewTableListsComponent,
     WikiHeaderComponent,
     ChatListItemComponent,
-    MessageComponent
+    MessageComponent,
+    NewsListItemComponent
   ]
 })
 export class UIElementsModule { }
