@@ -20,6 +20,6 @@ export interface Group {
 
 export function createGroup(params: Partial<Group>) {
   return {
-
+    ...params
   } as Group;
 }
