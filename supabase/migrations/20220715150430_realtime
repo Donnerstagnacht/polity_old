@@ -1,0 +1,18 @@
+begin;
+  -- remove the realtime publication
+  drop publication if exists supabase_realtime;
+
+  -- re-create the publication but don't enable it for any tables
+  create publication supabase_realtime;
+commit;
+
+-- add a table to the publication
+alter publication supabase_realtime add table following_group_system;
+alter publication supabase_realtime add table following_profile_system;
+alter publication supabase_realtime add table group_members;
+alter publication supabase_realtime add table groups;
+alter publication supabase_realtime add table membership_requests;
+alter publication supabase_realtime add table profiles;
+alter publication supabase_realtime add table rooms;
+alter publication supabase_realtime add table rooms_messages;
+alter publication supabase_realtime add table rooms_participants;

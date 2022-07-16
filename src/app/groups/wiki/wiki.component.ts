@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MegaMenuItem, MenuItem, MessageService } from 'primeng/api';
+import { Observable } from 'rxjs';
 import { FollowingGroupsService } from 'src/app/following-groups-system/services/following-groups.service';
 import { contactData } from 'src/app/UI-elements/about-and-contact/about-and-contact.component';
 import { KeyFigure } from 'src/app/UI-elements/key-figures/key-figures.component';
@@ -27,6 +28,7 @@ export class WikiComponent implements OnInit {
   isAlreadyFollower: boolean = false;
   isAdmin: boolean = false;
 
+  $group = new Observable<Group | null>();
 
   constructor(
     private router: Router,
@@ -37,6 +39,15 @@ export class WikiComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.groupsService.getRealTimeChanges().subscribe((payload: any ) => {
+      console.log('subscribed')
+      console.log('payload ' + payload)
+    }
+    );
+    this.$group = this.groupsService.getGroup()
+    this.$group.subscribe((payload)=> {
+      console.log(payload);
+    });
     this.getSelectedId();
     this.checkIfLoggedInUserIsAdmin();
     this.getGroupById();
@@ -154,5 +165,11 @@ export class WikiComponent implements OnInit {
     }
   }
 
+  getRealTimeSubscriptions(): void {
+    this.groupsService.getRealTimeChanges().subscribe((data: any) => {
+      console.log(data)
+    }
+    )
+  }
 
 }

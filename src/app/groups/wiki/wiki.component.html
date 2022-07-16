@@ -3,7 +3,10 @@
 <app-wrapper-grid>
   <div slot="main">
     <div class="mb-8">
+
       <app-wiki-header [wikiHeader]="wikiHeader"></app-wiki-header>
+      <h1>Test</h1>
+      <h1 *ngIf="$group | async as group">{{group.description}} Test</h1>
       <div class="flex flex-column">
         <div class="flex align-items-center justify-content-center">
           <button
