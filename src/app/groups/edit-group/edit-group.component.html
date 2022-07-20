@@ -4,7 +4,10 @@
     <div class="mb-8">
       <div class="mx-4">
         <app-back-button [title]="'Zurück'" [link]="backLink"></app-back-button>
-        <div class="mt-4" *ngIf="group">
+        <form
+        class="mt-4"
+        #editGroupForm = "ngForm"
+        *ngIf="group && group !== undefined">
           <h5>Persönliche Daten</h5>
           <div class="grid">
             <div class="col-12">
@@ -126,7 +129,7 @@
               </button>
             </div>
           </div>
-        </div>
+        </form>
       </div>
     </div>
   </div>

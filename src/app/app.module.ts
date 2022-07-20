@@ -9,6 +9,7 @@ import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
 import { environment } from '../environments/environment';
 import { MenuBarBottomModule} from './UI-navigation/menu-bar-bottom/menu-bar-bottom.module';
 import { MenuBarLeftModule } from './UI-navigation/menu-bar-left/menu-bar-left.module';
+import { HttpClientModule } from '@angular/common/http';
 
 
 @NgModule({
@@ -18,6 +19,7 @@ import { MenuBarLeftModule } from './UI-navigation/menu-bar-left/menu-bar-left.m
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
+    HttpClientModule,
     AppRoutingModule,
 
     MenuBarBottomModule,

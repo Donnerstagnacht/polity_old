@@ -61,14 +61,14 @@ import { KeyFiguresModule } from '../UI-elements/key-figures/key-figures.module'
     MenuBarSecondaryTopModule,
     FollowingGroupsSystemModule,
     GroupsRoutingModule,
-    HttpClientModule,
     WrapperGridModule,
     BackButtonModule,
     ListElementModule,
     HeadlineOfListModule,
     AboutAndContactModule,
     WikiHeaderModule,
-    KeyFiguresModule
+    KeyFiguresModule,
+    HttpClientModule
   ]
 })
 export class GroupsModule { }

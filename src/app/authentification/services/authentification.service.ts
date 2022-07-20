@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AuthChangeEvent, createClient, SupabaseClient, Session, User } from '@supabase/supabase-js';
+import { AuthChangeEvent, createClient, SupabaseClient, Session, User, Provider, ApiError } from '@supabase/supabase-js';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { account } from '../../../types/account';
@@ -19,6 +19,14 @@ export interface Profile {
   post_code: string;
   city: string;
   about: string;
+}
+
+export interface SessionResponse {
+    session: Session | null,
+    user: User | null,
+    provider?: Provider | undefined,
+    url?: string | null | undefined,
+    error: ApiError | null;
 }
 
 @Injectable({
@@ -55,9 +63,6 @@ export class AuthentificationService {
     }
   }
 
-  get session() {
-    return this.supabase.auth.session();
-  }
 
   get profile() {
     return this.supabase
@@ -81,35 +86,9 @@ export class AuthentificationService {
     return this.supabase.auth.onAuthStateChange(callback);
   }
 
-  authCheckLogin(): void {
-    this.supabase.auth.onAuthStateChange((event: AuthChangeEvent, session: Session | null): void => {
-      if(session?.user) {
-        this.loggedInStatus.next(true);
-      } else {
-        this.loggedInStatus.next(false);
-      }
-    })
-  }
-
   async signUp(email: string, password: string): Promise<any> {
     const response = await this.supabase.auth.signUp({ email, password });
     if (response.error) throw new Error(response.error.message);
-  }
-
-  async signIn(email: string, password: string) {
-    const response = await this.supabase.auth.signIn({ email, password });
-    this.loggedInStatus.next(true);
-    console.log(this.loggedInStatus)
-    console.log(this.loggedInStatus)
-    if (response.error) throw new Error(response.error.message);
-  }
-
-  async signOut() {
-    const response = await this.supabase.auth.signOut();
-    this.loggedInStatus.next(false);
-    if (response.error) {
-      throw new Error(response.error.message)
-    }
   }
 
   updateProfile(profile: Partial<Profile>) {
@@ -124,8 +103,5 @@ export class AuthentificationService {
     });
   }
 
-}
-function callback(callback: any, arg1: (event: AuthChangeEvent, session: Session | null) => undefined) {
-  throw new Error('Function not implemented.');
 }
 

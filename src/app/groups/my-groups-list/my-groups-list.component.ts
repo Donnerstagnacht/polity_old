@@ -29,7 +29,13 @@ export class MyGroupsListComponent implements OnInit {
           'name': results.groups.name,
           'level': results.groups.level,
           'creator': results.groups.creator,
-          'description': results.groups.description
+          'description': results.groups.description,
+          street: '',
+          post_code: '',
+          city: '',
+          contact_phone: '',
+          contact_email: '',
+          avatar_url: ''
         }
         switch(group.level) {
           case 'local': {

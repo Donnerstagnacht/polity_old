@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 
 export interface KeyFigure {
   name: string,
-  number: number
+  number?: number
 }
 
 @Component({

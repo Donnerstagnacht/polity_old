@@ -62,7 +62,12 @@ export class MembershipUserManagementComponent implements OnInit {
           'level': results.groups.level,
           'creator': results.groups.creator,
           'description': results.groups.description,
-          'avatar_url': results.groups.avatar_url
+          'avatar_url': results.groups.avatar_url,
+          street: '',
+          post_code: '',
+          city: '',
+          contact_phone: '',
+          contact_email: ''
         }
         this.groups.push(group);
       },

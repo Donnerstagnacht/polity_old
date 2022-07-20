@@ -3,10 +3,19 @@
 <app-wrapper-grid>
   <div slot="main">
     <div class="mb-8">
+      <app-wiki-header
+        *ngIf="group$ | async as group"
+        [wikiHeader]="{
+          title: group.name,
+          subtitle: group.level,
+          imgUrl: group.avatar_url
+        }">
+      </app-wiki-header>
+      <h1>test 2</h1>
+      <h1 *ngIf="group$ | async as group">{{group.description}} Test</h1>
+      <h1>test 3</h1>
+      <h1 *ngIf="group$ | async as group">{{group.description}} Test</h1>
 
-      <app-wiki-header [wikiHeader]="wikiHeader"></app-wiki-header>
-      <h1>Test</h1>
-      <h1 *ngIf="$group | async as group">{{group.description}} Test</h1>
       <div class="flex flex-column">
         <div class="flex align-items-center justify-content-center">
           <button
@@ -16,16 +25,51 @@
           (click)="followOrUnfollowGroup()"
         >
         </button>
-        <app-request-membership *ngIf="selectedGroupId" [selectedGroupId]="selectedGroupId"></app-request-membership>
+        <app-request-membership
+          *ngIf="selectedGroupId"
+          [selectedGroupId]="selectedGroupId">
+        </app-request-membership>
         </div>
       </div>
-      <app-key-figures [keyFigureList]="keyFigureList"></app-key-figures>
+      <app-key-figures
+        *ngIf="group$ | async as group"
+        [keyFigureList]="[
+          {
+            name: 'Mitglieder',
+            number: group.member_counter
+          },
+          {
+            name: 'Anräge',
+            number: group.amendment_counter
+          },
+          {
+            name: 'Follower',
+            number: group.follower_counter
+          },
+          {
+            name: 'Veranstaltungen',
+            number: group.events_counter
+          }
+        ]">
+      </app-key-figures>
       <div class="mb-30">
-        <app-about-and-contact [contactData]="contactData"></app-about-and-contact>
+        <app-about-and-contact
+          *ngIf="group$ | async as group"
+          [contactData]="{
+            about: group.description,
+            contact_email: group.contact_email,
+            contact_phone: group.contact_phone,
+            street: group.street,
+            post_code: group.post_code,
+            city: group.city
+          }">
+        </app-about-and-contact>
       </div>
     </div>
   </div>
   <div slot="side">
-    <app-menu-bar-secondary-right [menuItems]="menuItems"></app-menu-bar-secondary-right>
+    <app-menu-bar-secondary-right
+      [menuItems]="menuItems">
+    </app-menu-bar-secondary-right>
   </div>
 </app-wrapper-grid>

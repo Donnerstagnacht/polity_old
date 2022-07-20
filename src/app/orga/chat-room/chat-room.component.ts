@@ -2,7 +2,7 @@ import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthentificationService, Profile } from 'src/app/authentification/services/authentification.service';
 import { FollowingService } from 'src/app/following-profiles-system/services/following.service';
-import { GroupsService } from 'src/app/groups/services/groups.service';
+import { GroupsService } from 'src/app/groups/state/groups.service';
 import { ProfileService } from 'src/app/profile/services/profile.service';
 import { Group } from 'src/app/UI-dialogs/create-group/create-group.component';
 import { Message } from 'src/app/UI-elements/message/message.component';
@@ -125,7 +125,7 @@ export class ChatRoomComponent implements OnInit {
   }
 
   getGroup(): void {
-    this.groupsService.findGroup(this.chatPartner)
+    this.groupsService.selectGroup(this.chatPartner)
     .then((group) => {
       this.group = group.data;
       // this.isGroup = true;

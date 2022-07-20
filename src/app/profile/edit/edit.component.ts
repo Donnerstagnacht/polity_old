@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MegaMenuItem, MenuItem } from 'primeng/api';
-import { AuthentificationService } from 'src/app/authentification/services/authentification.service';
+import { AuthentificationService } from 'src/app/authentification/state/authentification.service';
 import { profileMenuitems, profileMenuitemsMega } from '../services/profileMenuItems';
 
 @Component({
@@ -12,7 +12,6 @@ import { profileMenuitems, profileMenuitemsMega } from '../services/profileMenuI
 export class EditComponent implements OnInit {
   menuItems: MenuItem[] = profileMenuitems;
   menuItemsMega: MegaMenuItem[] = profileMenuitemsMega;
-
 
   constructor(
     private readonly authentificationService: AuthentificationService,
@@ -26,6 +25,5 @@ export class EditComponent implements OnInit {
     await this.authentificationService.signOut();
     this.router.navigate(['/login']);
   }
-
 
 }

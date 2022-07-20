@@ -1,10 +1,12 @@
-import { Component, OnInit, ValueProvider } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MegaMenuItem, MenuItem, MessageService } from 'primeng/api';
-import { Group } from '../../UI-dialogs/create-group/create-group.component';
+import { Group } from '../../groups/state/group.model';
 import { groupsMenuitemsParameter, groupsMenuitemsMegaParameter} from '../services/groupMenuItems';
-import { GroupsService } from '../services/groups.service';
+import { GroupsService  } from '../state/groups.service';
 import { ImgUploadObject, StorageService } from 'src/app/utilities/storage/services/storage.service';
+import { Observable } from 'rxjs';
+import { GroupsQuery } from '../state/groups.query';
 
 @Component({
   selector: 'app-edit-group',
@@ -16,14 +18,16 @@ export class EditGroupComponent implements OnInit {
   menuItems: MenuItem[] = [];
   menuItemsMega: MegaMenuItem[] = [];
   selectedGroupId: string = '';
-  group: Group | undefined;
+  group!: Group;
   backLink: string = '';
   loading: boolean = false;
   uploading: boolean = false;
+  group$ = new Observable<Group | undefined>();
 
   constructor(
     private route: ActivatedRoute,
     private groupsService: GroupsService,
+    private groupQuery: GroupsQuery,
     private messageService: MessageService,
     private storageService: StorageService
     ) { }
@@ -31,11 +35,12 @@ export class EditGroupComponent implements OnInit {
   ngOnInit(): void {
     this.getSelectedId();
     if(this.selectedGroupId) {
+      this.getGroupById(this.selectedGroupId);
       this.menuItemsMega = groupsMenuitemsMegaParameter(this.selectedGroupId);
       this.menuItems = groupsMenuitemsParameter(this.selectedGroupId);
       this.backLink = `/groups/${this.selectedGroupId}/edit`;
     }
-    this.getGroupById();
+    this.group = {...this.group}
   }
 
   getSelectedId(): void {
@@ -44,17 +49,28 @@ export class EditGroupComponent implements OnInit {
     })
   }
 
-  getGroupById(): void {
-    this.groupsService.findGroup(this.selectedGroupId)
+  getGroupById(selectedGroupId: string): void {
+    console.log('called')
+    this.group$ = this.groupQuery.selectEntity(selectedGroupId);
+    this.group$.subscribe((group: Group | undefined) => {
+      console.log('inner')
+      if(group) {
+        this.group = group;
+        console.log(this.group)
+      }
+    })
+
+/*     this.groupsService.findGroup(this.selectedGroupId)
     .then((results) => {
       this.group = results.data;
     })
     .catch((error) => {
       console.log(error);
-    });
+    }); */
   }
 
   async updateGroup(group: Partial<Group>, id?: string): Promise<void> {
+    console.log()
     try {
       this.loading = true;
       await this.groupsService.updateGroup(group, id);

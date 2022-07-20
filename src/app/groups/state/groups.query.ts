@@ -5,7 +5,7 @@ import { GroupsStore, GroupsState } from './groups.store';
 @Injectable({ providedIn: 'root' })
 export class GroupsQuery extends QueryEntity<GroupsState> {
 
-  constructor(protected store: GroupsStore) {
+  constructor(protected override store: GroupsStore) {
     super(store);
   }
 

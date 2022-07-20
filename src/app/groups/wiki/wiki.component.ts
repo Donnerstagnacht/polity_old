@@ -1,15 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { MegaMenuItem, MenuItem, MessageService } from 'primeng/api';
 import { Observable } from 'rxjs';
 import { FollowingGroupsService } from 'src/app/following-groups-system/services/following-groups.service';
-import { contactData } from 'src/app/UI-elements/about-and-contact/about-and-contact.component';
-import { KeyFigure } from 'src/app/UI-elements/key-figures/key-figures.component';
-import { WikiHeader } from 'src/app/UI-elements/wiki-header/wiki-header.component';
 import { Group } from '../../UI-dialogs/create-group/create-group.component';
 import { groupsMenuitemsParameter, groupsMenuitemsMegaParameter, groupsMenuitemsMegaParameterLoggedIn, groupsMenuitemsParameterLoggedIn } from '../services/groupMenuItems';
 import { GroupsService } from '../services/groups.service';
-
+import { GroupsQuery } from '../state/groups.query';
+import { GroupsService as GroupsServiceState } from '../state/groups.service';
 @Component({
   selector: 'app-wiki',
   templateUrl: './wiki.component.html',
@@ -20,98 +18,81 @@ export class WikiComponent implements OnInit {
   menuItems: MenuItem[] = [];
   menuItemsMega: MegaMenuItem[] = [];
 
-  keyFigureList: KeyFigure[] = [];
-  contactData: contactData | undefined;
   selectedGroupId: string | undefined = undefined;
-  group: Group | undefined;
-  wikiHeader: WikiHeader | undefined;
-  isAlreadyFollower: boolean = false;
-  isAdmin: boolean = false;
+  group$ = new Observable<Group | undefined>();
 
-  $group = new Observable<Group | null>();
+  isAlreadyFollower: boolean = false;
 
   constructor(
-    private router: Router,
     private route: ActivatedRoute,
     private groupsService: GroupsService,
+    private groupsServiceState: GroupsServiceState,
     private messageService: MessageService,
-    private followingGroupsService: FollowingGroupsService
+    private followingGroupsService: FollowingGroupsService,
+    private groupsQuery: GroupsQuery
   ) { }
 
   ngOnInit(): void {
-    this.groupsService.getRealTimeChanges().subscribe((payload: any ) => {
-      console.log('subscribed')
-      console.log('payload ' + payload)
-    }
-    );
-    this.$group = this.groupsService.getGroup()
-    this.$group.subscribe((payload)=> {
-      console.log(payload);
-    });
     this.getSelectedId();
-    this.checkIfLoggedInUserIsAdmin();
-    this.getGroupById();
-  }
-
-  getGroupById(): void {
     if(this.selectedGroupId) {
-      this.groupsService.findGroup(this.selectedGroupId)
-      .then((results) => {
-        this.group = results.data;
-        this.keyFigureList = [
-          {
-            name: 'Mitglieder',
-            number: results.data.member_counter
-          },
-          {
-            name: 'Anräge',
-            number: results.data.amendment_counter
-          },
-          {
-            name: 'Follower',
-            number: results.data.follower_counter
-          },
-          {
-            name: 'Veranstaltungen',
-            number: results.data.events_counter
-          }
-        ];
-        this.contactData = {
-          about: results.data.description,
-          contact_email: results.data.contact_email,
-          contact_phone: results.data.contact_phone,
-          street: results.data.street,
-          post_code: results.data.post_code,
-          city: results.data.city
-        };
-        this.wikiHeader = {
-          title: results.data.name,
-          subtitle: results.data.level,
-          imgUrl: results.data.avatar_url,
-        }
-        if (this.selectedGroupId) {
-          if(this.isAdmin) {
-            this.menuItemsMega = groupsMenuitemsMegaParameterLoggedIn(this.selectedGroupId);
-            this.menuItems = groupsMenuitemsParameterLoggedIn(this.selectedGroupId);
-          } else {
-            this.menuItemsMega = groupsMenuitemsMegaParameter(this.selectedGroupId);
-            this.menuItems = groupsMenuitemsParameter(this.selectedGroupId);
-          }
-
-        }
-      })
-      .catch((error) => {
-        console.log(error.data)
-      })
-      this.checkIfAlreadyFollower();
+      this.checkIfLoggedInUserIsAdmin(this.selectedGroupId);
+      this.getGroupById(this.selectedGroupId);
+      this.checkIfAlreadyFollower(this.selectedGroupId);
+      this.groupsServiceState.getRealTimeChanges(this.selectedGroupId);
     }
   }
 
   getSelectedId(): void {
     this.route.paramMap.subscribe(parameter => {
-    this.selectedGroupId = String(parameter.get('id'));
-    })
+      this.selectedGroupId = String(parameter.get('id'));
+    });
   }
+
+      // need to implement profile store
+  checkIfLoggedInUserIsAdmin(selectedGroupId: string): void {
+/*     this.group$.subscribe((group: Group | undefined ) => {
+      if (group !== undefined && group.id === selectedGroupId) {
+        this.displayAdminMenu(selectedGroupId!, true);
+      } else {
+        this.displayAdminMenu(selectedGroupId!, false);
+      }
+    }); */
+    this.groupsService.isLoggedInUserAdmin(selectedGroupId)
+    .then((results) => {
+      this.displayAdminMenu(selectedGroupId!, results.data.is_admin);
+    })
+    .catch((error) => {
+      this.displayAdminMenu(selectedGroupId!, false);
+    });
+  }
+
+  getGroupById(selectedGroupId: string): void {
+    this.groupsServiceState.findGroup(selectedGroupId);
+    this.group$ = this.groupsQuery.selectEntity(selectedGroupId);
+  }
+
+  checkIfAlreadyFollower(selectedGroupId: string): void {
+    this.followingGroupsService.isAlreadyFollower(selectedGroupId)
+    .then((results) => {
+      if(results.data[0] !== undefined) {
+        this.isAlreadyFollower = true;
+      } else {
+        this.isAlreadyFollower = false;
+      }
+    })
+    .catch();
+  }
+
+  displayAdminMenu(selectedGroupId: string, isAdmin: boolean): void {
+    if(isAdmin) {
+      this.menuItemsMega = groupsMenuitemsMegaParameterLoggedIn(selectedGroupId);
+      this.menuItems = groupsMenuitemsParameterLoggedIn(selectedGroupId);
+    } else {
+      this.menuItemsMega = groupsMenuitemsMegaParameter(selectedGroupId);
+      this.menuItems = groupsMenuitemsParameter(selectedGroupId);
+    }
+  }
+
 
   followOrUnfollowGroup(): void {
     if(this.selectedGroupId) {
@@ -135,41 +116,6 @@ export class WikiComponent implements OnInit {
         });
       }
     }
-  }
-
-  checkIfAlreadyFollower(): void {
-    if(this.selectedGroupId) {
-      this.followingGroupsService.isAlreadyFollower(this.selectedGroupId)
-      .then((results) => {
-        if(results.data[0] !== undefined) {
-          this.isAlreadyFollower = true;
-        } else {
-          this.isAlreadyFollower = false;
-        }
-      })
-      .catch();
-    }
-  }
-
-  checkIfLoggedInUserIsAdmin(): void {
-    if (this.selectedGroupId) {
-      this.groupsService.isLoggedInUserAdmin(this.selectedGroupId)
-      .then((results) => {
-        this.isAdmin = results.data.is_admin;
-        console.log(this.selectedGroupId);
-      })
-      .catch((error) => {
-        this.isAdmin = false;
-        console.log(error);
-      })
-    }
-  }
-
-  getRealTimeSubscriptions(): void {
-    this.groupsService.getRealTimeChanges().subscribe((data: any) => {
-      console.log(data)
-    }
-    )
   }
 
 }
