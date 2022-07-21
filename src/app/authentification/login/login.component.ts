@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { account } from 'src/types/account';
+import { Account } from 'src/types/account';
 import { AuthentificationService } from '../services/authentification.service';
 import { AuthentificationService as AuthentificationServiceState } from '../state/authentification.service';
 
@@ -10,7 +10,7 @@ import { AuthentificationService as AuthentificationServiceState } from '../stat
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
-  loginValues: account = {
+  loginValues: Account = {
     name: '',
     email: '',
     password: ''

@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MenuItem } from 'primeng/api';
-import { Observable } from 'rxjs';
-import { AuthentificationService } from 'src/app/authentification/services/authentification.service';
-
+import { AuthentificationQuery } from 'src/app/authentification/state/authentification.query';
 @Component({
   selector: 'app-menu-bar-left',
   templateUrl: './menu-bar-left.component.html',
@@ -13,37 +11,35 @@ export class MenuBarLeftComponent implements OnInit {
   items: MenuItem[] = [];
   showAddMenu:boolean = false;
 
-  public $loggedInStatus!: Observable<boolean>;
+  loggedInItems: MenuItem[] = [
+    {label: 'PROFIL', routerLink: ['/profile']},
+    {label: 'GRUPPEN', routerLink: ['/groups']},
+    {label: 'ERSTELLEN', command: () => this.toggleFullScreen()},
+    {label: 'SUCHE', routerLink: ['/search']},
+    {label: 'ORGA', routerLink: ['/orga']}
+  ];
+
+  loggedOutItems: MenuItem[] = [
+    {label: 'Login', routerLink: ['/login']},
+    {label: 'Register', routerLink: ['/register']},
+    {label: 'Über', routerLink: ['/über']}
+  ];
 
   constructor(
-    private readonly authentificationService: AuthentificationService,
+    private authentificationQuery: AuthentificationQuery
     ) { }
 
   ngOnInit(): void {
-    this.$loggedInStatus = this.authentificationService.getLoggedInStatus();
-    this.$loggedInStatus.subscribe((loggedInId) => {
-      if(loggedInId) {
-        this.items = [
-          {label: 'PROFIL', routerLink: ['/profile']},
-          {label: 'GRUPPEN', routerLink: ['/groups']},
-          {label: 'ERSTELLEN', command: () => this.toggleFullScreen()},
-          {label: 'SUCHE', routerLink: ['/search']},
-          {label: 'ORGA', routerLink: ['/orga']}
-        ]
+    this.authentificationQuery.uuid$.subscribe(uuid => {
+      if(uuid) {
+        this.items = this.loggedInItems;
       } else {
-        this.items = [
-          {label: 'Login', routerLink: ['/login']},
-          {label: 'Register', routerLink: ['/register']},
-          {label: 'Über', routerLink: ['/über']}
-      ];
+        this.items = this.loggedOutItems;
       }
     })
-
   }
 
   toggleFullScreen(): void {
     this.showAddMenu = !this.showAddMenu;
   }
-
-
 }

@@ -5,7 +5,7 @@ import { AuthentificationStore, AuthentificationState } from './authentification
 
 @Injectable({ providedIn: 'root' })
 export class AuthentificationQuery extends Query<AuthentificationState> {
-  uuid$: Observable<String | null> = this.select(state => state.uuid);
+  uuid$: Observable<string | null> = this.select(state => state.uuid);
 
   constructor(protected override store: AuthentificationStore) {
     super(store);

@@ -1,7 +1,6 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { MegaMenuItem, MenuItem } from 'primeng/api';
-import { Observable } from 'rxjs';
-import { AuthentificationService } from '../../authentification/services/authentification.service';
+import { Component, OnInit } from '@angular/core';
+import { MegaMenuItem } from 'primeng/api';
+import { AuthentificationQuery } from 'src/app/authentification/state/authentification.query';
 @Component({
   selector: 'app-menu-bar-bottom',
   templateUrl: './menu-bar-bottom.component.html',
@@ -9,45 +8,38 @@ import { AuthentificationService } from '../../authentification/services/authent
 })
 export class MenuBarBottomComponent implements OnInit {
   display: boolean = true;
-  loggedIn: boolean = false;
   items: MegaMenuItem[] = [];
   showAddMenu: boolean = false;
-  public $loggedInStatus!: Observable<boolean>;
+
+  loggedInItems: MegaMenuItem[] = [
+    {icon: 'pi pi-fw pi-user', /* label: 'Profil', */ routerLink: ['/profile']},
+    {icon: 'pi pi-fw pi-users',/* label: 'Gruppen', */ routerLink: ['/groups']},
+    {icon: 'pi pi-fw pi-plus-circle',/* label: 'Erstellen', */ command: () => this.toggleFullScreen()},
+    {icon: 'pi pi-fw pi-search',/* label: 'Search', */ routerLink: ['/search']},
+    {icon: 'pi pi-fw pi-calendar',/* label: 'Search', */ routerLink: ['/orga']}
+  ];
+
+  loggedOutItems: MegaMenuItem[] = [
+    {/* icon: 'pi pi-fw pi-video', */label: 'Login', routerLink: ['/login']},
+    {/* icon: 'pi pi-fw pi-video', */label: 'Register', routerLink: ['/register']},
+    {/* icon: 'pi pi-fw pi-video', */label: 'Über', routerLink: ['/über']}
+  ];
 
   constructor(
-    private readonly authentificationService: AuthentificationService,
+    private readonly authentificationQuery: AuthentificationQuery,
     ) { }
 
     ngOnInit(): void {
-      this.$loggedInStatus = this.authentificationService.getLoggedInStatus();
-      this.$loggedInStatus.subscribe((loggedInId) => {
-        if(loggedInId) {
-          this.items = [
-            {icon: 'pi pi-fw pi-user', /* label: 'Profil', */ routerLink: ['/profile']},
-            {icon: 'pi pi-fw pi-users',/* label: 'Gruppen', */ routerLink: ['/groups']},
-            {icon: 'pi pi-fw pi-plus-circle',/* label: 'Erstellen', */ command: () => this.toggleFullScreen()},
-            {icon: 'pi pi-fw pi-search',/* label: 'Search', */ routerLink: ['/search']},
-            {icon: 'pi pi-fw pi-calendar',/* label: 'Search', */ routerLink: ['/orga']}
-          ]
+      this.authentificationQuery.uuid$.subscribe(uuid => {
+        if(uuid) {
+          this.items = this.loggedInItems;
         } else {
-          this.items = [
-            {/* icon: 'pi pi-fw pi-video', */label: 'Login', routerLink: ['/login']},
-            {/* icon: 'pi pi-fw pi-video', */label: 'Register', routerLink: ['/register']},
-            {/* icon: 'pi pi-fw pi-video', */label: 'Über', routerLink: ['/über']}
-        ];
+          this.items = this.loggedOutItems;
         }
       })
-
     }
-
-  showFullScreen(): void {
-    this.showAddMenu = true;
-  }
 
   toggleFullScreen(): void {
     this.showAddMenu = !this.showAddMenu;
   }
-
-
-
 }

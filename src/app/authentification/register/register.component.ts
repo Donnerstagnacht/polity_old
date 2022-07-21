@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { account } from '../../../types/account';
-import { AuthentificationService } from '../services/authentification.service';
+import { Account } from '../../../types/account';
+import { AuthentificationService } from '../state/authentification.service';
 
 @Component({
   selector: 'app-register',
@@ -9,30 +9,26 @@ import { AuthentificationService } from '../services/authentification.service';
   styleUrls: ['./register.component.scss']
 })
 export class RegisterComponent implements OnInit {
-  account: account= {
+  account: Account= {
     name: '',
     email: '',
     password: ''
   };
-
   displayDataProtection: boolean = false;
   displayTermsAndConditions: boolean = false;
 
   constructor(
     private readonly authentificationService: AuthentificationService,
-    private router: Router,
+    private router: Router
   ) { }
 
-  ngOnInit(): void {
-
-  }
+  ngOnInit(): void {}
 
   public async createAccount() {
     try {
-      await this.authentificationService.createAccount(this.account);
+      await this.authentificationService.signUp(this.account);
       this.router.navigate(['/profile']);
     } catch (error: any) {
-      console.error(error);
       alert(error.error_description || error.message);
     }
   }

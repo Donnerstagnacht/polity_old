@@ -1,6 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router, ActivatedRoute  } from '@angular/router';
 import { Profile, AuthentificationService } from 'src/app/authentification/services/authentification.service';
+import { AuthentificationService as Store } from 'src/app/authentification/state/authentification.service';
+import { AuthentificationQuery } from 'src/app/authentification/state/authentification.query';
+
 import { ProfileService } from '../services/profile.service';
 import { FollowingService } from 'src/app/following-profiles-system/services/following.service';
 import { MegaMenuItem, MenuItem, MessageService } from 'primeng/api';
@@ -29,6 +32,7 @@ export class ProfileComponent implements OnInit {
 
   constructor(
     public readonly supabase: AuthentificationService,
+    private authentificationQuery: AuthentificationQuery,
     private router: Router,
     private route: ActivatedRoute,
     private profileService: ProfileService,
@@ -44,7 +48,20 @@ export class ProfileComponent implements OnInit {
 
   getSelectedId(): void {
     this.route.paramMap.subscribe(parameter => {
-      this.selectedProfileId = String(parameter.get('id') || this.supabase.user?.id);
+      this.selectedProfileId = String(parameter.get('id'));
+      console.log(this.selectedProfileId)
+      if(this.selectedProfileId) {
+        this.authentificationQuery.uuid$.subscribe((uuid) => {
+                    console.log('my profile')
+                    console.log(uuid)
+          if(uuid) {
+            this.selectedProfileId = uuid;
+          }
+        })
+      } else {
+        console.log('profile')
+        console.log(this.selectedProfileId)
+      }
     })
   }
 

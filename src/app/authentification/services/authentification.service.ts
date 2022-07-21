@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
-import { AuthChangeEvent, createClient, SupabaseClient, Session, User, Provider, ApiError } from '@supabase/supabase-js';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { createClient, SupabaseClient, Session, User, Provider, ApiError } from '@supabase/supabase-js';
+import { BehaviorSubject } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { account } from '../../../types/account';
 
 export interface Profile {
   amendment_counter: number;
@@ -35,34 +34,16 @@ export interface SessionResponse {
 export class AuthentificationService {
   private supabase: SupabaseClient;
   public publicUser = new BehaviorSubject<User | null>(null);
-  private loggedInStatus = new BehaviorSubject<boolean>(false);
 
   constructor() {
     this.supabase = createClient(environment.supabaseUrl, environment.supabaseKey)
    }
 
-   public getLoggedInStatus(): Observable<boolean> {
-    return this.loggedInStatus;
-   }
 
-  public createAccount(account: account): Promise<any> {
-    return this.signUp(account.email, account.password);
-  }
 
   get user(): User | null {
     return this.supabase.auth.user();
   }
-
-  public isUserLoggedIn(): boolean {
-    let user: User | null;
-    user = this.user;
-    if (this.user) {
-     return true;
-    } else {
-      return false;
-    }
-  }
-
 
   get profile() {
     return this.supabase
@@ -80,15 +61,6 @@ export class AuthentificationService {
         about`)
       .eq('id', this.user?.id)
       .single();
-  }
-
-  authChanges(callback: (event: AuthChangeEvent, session: Session | null) => void) {
-    return this.supabase.auth.onAuthStateChange(callback);
-  }
-
-  async signUp(email: string, password: string): Promise<any> {
-    const response = await this.supabase.auth.signUp({ email, password });
-    if (response.error) throw new Error(response.error.message);
   }
 
   updateProfile(profile: Partial<Profile>) {
