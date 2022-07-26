@@ -1,46 +1,75 @@
-<app-menu-bar-secondary-top [menuItems]="menuItemsMega"></app-menu-bar-secondary-top>
+<app-menu-bar-secondary-top
+  *ngIf="this.selectedProfileId === this.loggedInUserId"
+  [menuItems]="menuItemsMega">
+</app-menu-bar-secondary-top>
 <p-toast styleClass="max-w-90"	 position="top-right">></p-toast>
-  <app-wrapper-grid>
+  <app-wrapper-grid [noTopBar]="!(this.selectedProfileId === this.loggedInUserId)">
     <div slot="main">
-      <div class="mb-8">
-        <app-wiki-header [wikiHeader]="wikiHeader"></app-wiki-header>
+      <div class="mb-8" >
+        <app-wiki-header
+          *ngIf="profile$ | async as profile"
+          [wikiHeader]="{
+            title: profile.name,
+            subtitle: 'TODO',
+            imgUrl: profile.avatar_url
+          }">
+        </app-wiki-header>
         <div class="flex flex-column">
-          <div class="flex align-items-center justify-content-center">
-            <button *ngIf="supabase.user?.id !== profile?.id"
-            pButton
-            type="button"
-            label="{{isAlreadyFollower ? 'Unfollow' : 'Follow'}}"
-            (click)="followOrUnfollowProfile()"
-          >
-          </button>
+          <div
+            class="flex align-items-center justify-content-center">
+            <button
+              *ngIf="!(this.selectedProfileId === this.loggedInUserId)"
+              pButton
+              type="button"
+              label="{{isAlreadyFollower ? 'Unfollow' : 'Follow'}}"
+              (click)="followOrUnfollowProfile()"
+            >
+            </button>
           </div>
         </div>
-        <app-key-figures [keyFigureList]="keyFigureList"></app-key-figures>
+        <app-key-figures
+        *ngIf="profile$ | async as profile"
+        [keyFigureList]="[
+          {
+            name: 'Anträge',
+            number: profile.amendment_counter
+          },
+          {
+            name: 'Follower',
+            number: profile.follower_counter
+          },
+          {
+            name: 'Following',
+            number: profile.following_counter
+          },
+          {
+            name: 'Gruppen',
+            number: profile.groups_counter
+          }
+        ]">
+        </app-key-figures>
 
         <div class="mb-30">
-          <p-tabView>
-            <p-tabPanel header="Über">
-              {{profile?.about}}
-            </p-tabPanel>
-            <p-tabPanel header="Kontakt">
-              <span class="block my-3">
-                <p class="font-medium inline">Email: </p>
-                <p class="inline">{{profile?.contact_email}}</p>
-              </span>
-              <span  class="block my-3">
-                <p class="font-medium inline">Phone: </p>
-                <p class="inline">{{profile?.contact_phone}}</p>
-              </span>
-              <span class="block my-3">
-                <p class="font-medium inline">Adresse: </p>
-                <p class="inline">{{profile?.street}}, {{profile?.post_code}}, {{profile?.city}}</p>
-              </span>
-            </p-tabPanel>
-          </p-tabView>
+          <app-about-and-contact
+            *ngIf="profile$ | async as profile"
+            [contactData]="{
+              about: profile.about,
+              contact_email: profile.contact_email,
+              contact_phone: profile.contact_phone,
+              street: profile.street,
+              post_code: profile.post_code,
+              city: profile.city
+            }">
+          </app-about-and-contact>
         </div>
+        <div>
       </div>
     </div>
-    <div slot="side">
-      <app-menu-bar-secondary-right *ngIf="supabase.user?.id === profile?.id"[menuItems]="menuItems"></app-menu-bar-secondary-right>
-    </div>
+  </div>
+  <div slot="side">
+    <app-menu-bar-secondary-right
+      *ngIf="this.selectedProfileId === this.loggedInUserId"
+      [menuItems]="menuItems">
+    </app-menu-bar-secondary-right>
+  </div>
 </app-wrapper-grid>

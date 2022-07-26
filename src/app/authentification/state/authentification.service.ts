@@ -1,9 +1,11 @@
 import { Inject, Injectable } from '@angular/core';
 import { PersistStateStorage } from '@datorama/akita/src/lib/persistState';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { GroupsStore } from 'src/app/groups/state/groups.store';
+import { ProfileStore } from 'src/app/profile/state/profile.store';
 import { environment } from 'src/environments/environment';
 import { Account } from 'src/types/account';
-import { SessionResponse } from '../services/authentification.service';
+import { SessionResponse } from './authentification.model';
 import { AuthentificationStore } from './authentification.store';
 
 @Injectable({ providedIn: 'root' })
@@ -12,7 +14,9 @@ export class AuthentificationService {
 
   constructor(
     @Inject('persistStorage') private persistStorage: PersistStateStorage,
-    private authentificationStore: AuthentificationStore
+    private authentificationStore: AuthentificationStore,
+    private profileStore: ProfileStore,
+    private groupStore: GroupsStore
   ) {
       this.supabaseClient = createClient(environment.supabaseUrl, environment.supabaseKey)
   }
@@ -32,6 +36,8 @@ export class AuthentificationService {
   async signOut() {
     const response = await this.supabaseClient.auth.signOut();
     this.authentificationStore.reset();
+    this.profileStore.reset();
+    this.groupStore.reset();
     this.persistStorage.clear();
     if (response.error) {
       throw new Error(response.error.message);

@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Store, StoreConfig } from '@datorama/akita';
-import { Session } from '@supabase/supabase-js';
-import { Profile, SessionResponse } from '../services/authentification.service';
+import { Profile } from 'src/app/profile/state/profile.model';
+import { SessionResponse } from '../state/authentification.model';
 
 export interface AuthentificationState {
    uuid: string |null,
-   profile:Profile | null,
+   profile: Profile | null,
    sessionResponse: SessionResponse | null
 }
 

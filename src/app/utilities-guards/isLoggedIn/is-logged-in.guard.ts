@@ -23,10 +23,7 @@ export class IsLoggedInGuard implements CanActivate {
     return this.authentificationQuery.uuid$.pipe(
       take(1),
       map(uuid => {
-
         if (uuid) {
-          console.log('uuid');
-          console.log(uuid);
           test = true;
           return test;
         } else {
@@ -34,28 +31,6 @@ export class IsLoggedInGuard implements CanActivate {
           test = false;
           return test;
         }
-/*
-      if(isAuthenticated){
-        console.log('not a allow')
-        this.router.navigate(['']);
-          return false
-      }
-
-        console.log('allowe to show')
-        return true
-       //return of(true) give me the same resault
-
-       /*
-       if (uuid) {
-          console.log('uuid');
-          console.log(uuid);
-          test = true;
-          return test;
-        } else {
-          this.router.navigate(['/login'])
-          test = false;
-          return test;
-        }*/
       }),
     )
   }

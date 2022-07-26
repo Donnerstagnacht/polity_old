@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MegaMenuItem, MenuItem, MessageService } from 'primeng/api';
 import { Group } from '../../groups/state/group.model';
-import { groupsMenuitemsParameter, groupsMenuitemsMegaParameter} from '../services/groupMenuItems';
+import { groupsMenuitemsParameter, groupsMenuitemsMegaParameter} from '../state/groupMenuItems';
 import { GroupsService  } from '../state/groups.service';
 import { ImgUploadObject, StorageService } from 'src/app/utilities/storage/services/storage.service';
 import { Observable } from 'rxjs';

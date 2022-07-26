@@ -4,7 +4,7 @@ import { MegaMenuItem, MenuItem, MessageService } from 'primeng/api';
 import { Observable } from 'rxjs';
 import { FollowingGroupsService } from 'src/app/following-groups-system/services/following-groups.service';
 import { Group } from '../../UI-dialogs/create-group/create-group.component';
-import { groupsMenuitemsParameter, groupsMenuitemsMegaParameter, groupsMenuitemsMegaParameterLoggedIn, groupsMenuitemsParameterLoggedIn } from '../services/groupMenuItems';
+import { groupsMenuitemsParameter, groupsMenuitemsMegaParameter, groupsMenuitemsMegaParameterLoggedIn, groupsMenuitemsParameterLoggedIn } from '../state/groupMenuItems';
 import { GroupsService } from '../services/groups.service';
 import { GroupsQuery } from '../state/groups.query';
 import { GroupsService as GroupsServiceState } from '../state/groups.service';

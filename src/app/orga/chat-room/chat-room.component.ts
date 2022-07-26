@@ -1,12 +1,15 @@
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AuthentificationService, Profile } from 'src/app/authentification/services/authentification.service';
 import { FollowingService } from 'src/app/following-profiles-system/services/following.service';
 import { GroupsService } from 'src/app/groups/state/groups.service';
-import { ProfileService } from 'src/app/profile/services/profile.service';
+import { ProfileService } from 'src/app/profile/state/profile.service';
+import { Profile } from 'src/app/profile/state/profile.model';
 import { Group } from 'src/app/UI-dialogs/create-group/create-group.component';
 import { Message } from 'src/app/UI-elements/message/message.component';
 import { ChatService } from '../services/chat.service';
+import { Observable } from 'rxjs';
+import { ProfileQuery } from 'src/app/profile/state/profile.query';
+import { AuthentificationQuery } from 'src/app/authentification/state/authentification.query';
 
 @Component({
   selector: 'app-chat-room',
@@ -19,9 +22,10 @@ export class ChatRoomComponent implements OnInit {
   message: string = '';
   selectedRoomId: string = '';
   allMessages: Message[] = [];
-  loggedInUserId: string | undefined = '';
+  loggedInUserId: string | null = '';
   @ViewChild('messages') content!: ElementRef;
   profile!: Profile;
+  profile$ = new Observable<Profile | undefined>();
   group!: Group;
   isGroup: boolean = false;
   chatPartner: string = '';
@@ -32,13 +36,14 @@ export class ChatRoomComponent implements OnInit {
 
   constructor(
     private chatService: ChatService,
-    private readonly authentificationService: AuthentificationService,
+    private readonly authentificationQuery: AuthentificationQuery,
     private route: ActivatedRoute,
     private profileService: ProfileService,
+    private profileQuery: ProfileQuery,
     private followingService: FollowingService,
     private groupsService: GroupsService,
     private router: Router
-    ) { }
+  ) { }
 
   ngOnInit(): void {
     this.getSelectedId();
@@ -49,7 +54,7 @@ export class ChatRoomComponent implements OnInit {
 
   ngAfterViewChecked() {
     this.scrollDown();
-}
+  }
 
 
   getSelectedId(): void {
@@ -86,12 +91,6 @@ export class ChatRoomComponent implements OnInit {
     this.chatService.getAllMessagesOfChat(this.selectedRoomId)
     .then((messages) => {
       this.allMessages = messages.data;
-      console.log(this.group)
-      console.log(this.profile)
-      console.log(this.loggedInUserId)
-      console.log(this.chatPartner)
-      console.log(this.isGroup)
-
       if(this.isGroup && this.loggedInUserId) {
         this.chatService.resetNumberOfUnreadMessagesOfGroup(this.chatPartner, this.loggedInUserId);
       } else {
@@ -104,7 +103,9 @@ export class ChatRoomComponent implements OnInit {
   }
 
   getLoggedInUserId(): void {
-    this.loggedInUserId = this.authentificationService.user?.id;
+    this.authentificationQuery.uuid$.subscribe(uuid => {
+      this.loggedInUserId = uuid;
+    });
   }
 
   scrollDown(): void {
@@ -114,13 +115,13 @@ export class ChatRoomComponent implements OnInit {
   }
 
   getProfile(): void {
-    this.profileService.findProfil(this.chatPartner)
-    .then((profile) => {
-      this.profile = profile.data;
-      // this.isGroup = false;
-    })
-    .catch((error) => {
-      console.log(error);
+    this.profileService.add(this.chatPartner)
+    if(this.loggedInUserId)
+    this.profile$ = this.profileQuery.selectProfileById(this.loggedInUserId);
+    this.profile$.subscribe((profile: Profile | undefined) => {
+      if (profile) {
+        this.profile = profile;
+      }
     })
   }
 

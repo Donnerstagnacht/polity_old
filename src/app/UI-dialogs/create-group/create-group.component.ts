@@ -1,5 +1,7 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
-import { AuthentificationService, Profile } from '../../authentification/services/authentification.service';
+import { Component, Input, OnInit } from '@angular/core';
+import { AuthentificationQuery } from 'src/app/authentification/state/authentification.query';
+import { Profile } from 'src/app/profile/state/profile.model';
+import { ProfileQuery } from 'src/app/profile/state/profile.query';
 import { GroupsService } from '../../groups/services/groups.service';
 import { MenuService } from '../menu.service';
 
@@ -38,7 +40,8 @@ export class CreateGroupComponent implements OnInit {
   showInput: boolean = true;
   carouselPages: carouselPages[] = [];
   page: number = 0;
-  loggedInUser!: Profile;
+  loggedInUser: Profile | undefined;
+  loggedInUserId: string | null = null;
 
   newGroup: Group = {
     name: '',
@@ -54,12 +57,15 @@ export class CreateGroupComponent implements OnInit {
   }
 
   constructor(
-    private readonly authentificationService: AuthentificationService,
+    private authentificationQuery: AuthentificationQuery,
     private groupsService: GroupsService,
-    private menuService: MenuService
+    private menuService: MenuService,
+    private profileQuery: ProfileQuery
     ) { }
 
   ngOnInit(): void {
+    this.getLoggedInUserId$();
+    this.getSelectedProfile();
     this.getLoggedInUser();
 
     this.carouselPages = [
@@ -77,13 +83,32 @@ export class CreateGroupComponent implements OnInit {
 
   }
 
+  getLoggedInUserId$(): void {
+    this.authentificationQuery.uuid$.subscribe((uuid) => {
+      if(uuid) {
+        this.loggedInUserId = uuid;
+        console.log(this.loggedInUserId)
+      }
+    })
+  }
+
+  getSelectedProfile(): void {
+    if (this.loggedInUserId) {
+      this.profileQuery
+        .selectProfileById(this.loggedInUserId)
+        .subscribe((profile: Profile | undefined) => {
+          if(profile) {
+            //Review
+            this.loggedInUser = profile;
+            console.log(this.loggedInUser)
+          }
+        })
+    }
+  }
+
   getLoggedInUser(): void {
-    const loggedInUser = this.authentificationService.profile;
-    if(loggedInUser) {
-      loggedInUser.then((profile: any) => {
-        this.loggedInUser = profile.data;
-        this.newGroup.creator = profile.data.id;
-      });
+    if(this.loggedInUser) {
+      this.newGroup.creator = this.loggedInUser.id;
     }
   }
 

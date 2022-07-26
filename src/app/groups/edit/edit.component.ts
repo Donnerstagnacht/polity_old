@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MegaMenuItem, MenuItem } from 'primeng/api';
-import { groupsMenuitemsMegaParameter, groupsMenuitemsMegaParameterLoggedIn, groupsMenuitemsParameter, groupsMenuitemsParameterLoggedIn } from '../services/groupMenuItems';
+import { groupsMenuitemsMegaParameterLoggedIn, groupsMenuitemsParameterLoggedIn } from '../state/groupMenuItems';
 
 @Component({
   selector: 'app-edit',

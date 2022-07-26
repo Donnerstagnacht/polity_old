@@ -6,6 +6,8 @@
         <app-back-button [title]="'Zurück'" [link]="'/profile/edit'"></app-back-button>
         <div class="mt-4" *ngIf="profile">
           <h5>Persönliche Daten</h5>
+          <p *ngIf="profile">{{profile.name}}</p>
+
           <div class="grid">
             <div class="col-12 md:col-6">
               <span class="p-float-label">

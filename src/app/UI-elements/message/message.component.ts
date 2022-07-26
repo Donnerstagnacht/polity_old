@@ -15,7 +15,7 @@ export interface Message {
 export class MessageComponent implements OnInit {
   @Input() message!: Message;
   @Input() showSender: boolean = false;
-  @Input() loggedInUserId: string | undefined = '';
+  @Input() loggedInUserId: string | null = '';
   messageOfLoggedInUser: boolean = false;
 
 

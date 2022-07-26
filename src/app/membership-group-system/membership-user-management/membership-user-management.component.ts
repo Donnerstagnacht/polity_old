@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { MessageService } from 'primeng/api';
-import { AuthentificationService } from 'src/app/authentification/services/authentification.service';
 import { Group } from 'src/app/UI-dialogs/create-group/create-group.component';
 import { GroupsService } from 'src/app/groups/services/groups.service';
 import { MembershipService } from '../services/membership.service';
+import { AuthentificationQuery } from 'src/app/authentification/state/authentification.query';
 
 @Component({
   selector: 'app-membership-user-management',
@@ -24,7 +24,7 @@ export class MembershipUserManagementComponent implements OnInit {
     private membershipService: MembershipService,
     private messageService: MessageService,
     private groupsService: GroupsService,
-    private authentificationService: AuthentificationService
+    private authentificationQuery: AuthentificationQuery
   ) { }
 
   ngOnInit(): void {
@@ -34,9 +34,12 @@ export class MembershipUserManagementComponent implements OnInit {
   }
 
   leaveGroup(id: string): void {
-    const loggedInId: string | undefined = this.authentificationService.user?.id;
-    if (loggedInId) {
-      this.membershipService.removeMember(loggedInId, id)
+    let loggedInID: string | null = '';
+    this.authentificationQuery.uuid$.subscribe(uuid => {
+      loggedInID = uuid;
+    });
+    if (loggedInID) {
+      this.membershipService.removeMember(loggedInID, id)
       .then(() => {
         this.getAllGroups();
         this.messageService.add({severity:'success', summary: 'Du bist aus einer Gruppe ausgetreten.'});

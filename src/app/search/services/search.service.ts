@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import { Profile } from 'src/app/authentification/services/authentification.service';
 import { environment } from 'src/environments/environment';
 
 @Injectable({

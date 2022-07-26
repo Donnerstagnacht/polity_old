@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MegaMenuItem, MenuItem } from 'primeng/api';
 import { AuthentificationService } from 'src/app/authentification/state/authentification.service';
-import { profileMenuitems, profileMenuitemsMega } from '../services/profileMenuItems';
+import { profileMenuitems, profileMenuitemsMega } from '../state/profileMenuItems';
 
 @Component({
   selector: 'app-edit',

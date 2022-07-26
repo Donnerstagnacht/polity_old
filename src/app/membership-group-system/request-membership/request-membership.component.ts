@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MessageService } from 'primeng/api';
-import { AuthentificationService } from 'src/app/authentification/services/authentification.service';
+import { AuthentificationQuery } from 'src/app/authentification/state/authentification.query';
 import { MembershipService } from '../services/membership.service';
 
 @Component({
@@ -17,7 +17,7 @@ export class RequestMembershipComponent implements OnInit {
   constructor(
     private messageService: MessageService,
     private membershipService: MembershipService,
-    private authentificationService: AuthentificationService
+    private authentificationQuery: AuthentificationQuery
   ) { }
 
   ngOnInit(): void {
@@ -88,7 +88,10 @@ export class RequestMembershipComponent implements OnInit {
   }
 
   leaveGroup(): void{
-    const loggedInID: string |undefined = this.authentificationService.user?.id;
+    let loggedInID: string | null = '';
+    this.authentificationQuery.uuid$.subscribe(uuid => {
+      loggedInID = uuid;
+    });
     if (loggedInID) {
       this.membershipService.removeMember(loggedInID, this.selectedGroupId)
       .then(() => {

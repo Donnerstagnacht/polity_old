@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import { AuthentificationService } from 'src/app/authentification/services/authentification.service';
+import { AuthentificationQuery } from 'src/app/authentification/state/authentification.query';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -9,12 +9,15 @@ import { environment } from 'src/environments/environment';
 export class MembershipService {
   private supabaseClient: SupabaseClient;
 
-  constructor(private authentificationService: AuthentificationService) {
+  constructor(private authentificationQuery: AuthentificationQuery) {
     this.supabaseClient = createClient(environment.supabaseUrl, environment.supabaseKey)
    }
 
    async membershipAlreadyRequested(group_requested: string): Promise<{data: any, error: any}> {
-    const loggedInID = this.authentificationService.user?.id;
+    let loggedInID: string | null = '';
+    this.authentificationQuery.uuid$.subscribe(uuid => {
+      loggedInID = uuid;
+    });
     const results: {data: any, error: any} = await this.supabaseClient
       .from('membership_requests')
       .select(
@@ -28,7 +31,10 @@ export class MembershipService {
   }
 
   async alreadyMember(group_requested: string, user_requests?: string): Promise<{data: any, error: any}> {
-    const loggedInID = this.authentificationService.user?.id;
+    let loggedInID: string | null = '';
+    this.authentificationQuery.uuid$.subscribe(uuid => {
+      loggedInID = uuid;
+    });
     let user_id = loggedInID;
     if (user_requests) {
       user_id = user_requests;
@@ -62,7 +68,10 @@ export class MembershipService {
   }
 
   async confirmMembershipRequest(user_requests: string, group_requested: string): Promise<{data: any, error: any}> {
-    const loggedInID = this.authentificationService.user?.id;
+    let loggedInID: string | null = '';
+    this.authentificationQuery.uuid$.subscribe(uuid => {
+      loggedInID = uuid;
+    });
     const confirmMembershipResult: { data: any, error: any } = await this.supabaseClient
       .rpc('confirm_membership_transaction', {user_id_requests: user_requests, group_id_requested: group_requested})
     return confirmMembershipResult;
@@ -70,14 +79,20 @@ export class MembershipService {
 
 
   async requestMembership(group_requested: string): Promise<{data: any, error: any}> {
-    const loggedInID = this.authentificationService.user?.id;
+    let loggedInID: string | null = '';
+    this.authentificationQuery.uuid$.subscribe(uuid => {
+      loggedInID = uuid;
+    });
     const requestMembershipResult: { data: any, error: any } = await this.supabaseClient
       .rpc('insert_group_membership_request', {user_requests: loggedInID, group_requested: group_requested})
     return requestMembershipResult;
   }
 
   async cancelMembershipRequest(group_requested: string): Promise<{data: any, error: any}> {
-    const loggedInID = this.authentificationService.user?.id;
+    let loggedInID: string | null = '';
+    this.authentificationQuery.uuid$.subscribe(uuid => {
+      loggedInID = uuid;
+    });
     const cancelMembershipResult: { data: any, error: any } = await this.supabaseClient
       .rpc('cancel_group_membership_request', {user_id_requests: loggedInID, group_id_requested: group_requested})
     return cancelMembershipResult;

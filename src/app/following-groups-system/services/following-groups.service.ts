@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import { AuthentificationService } from 'src/app/authentification/services/authentification.service';
+import { AuthentificationQuery } from '../../authentification/state/authentification.query';
+
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -9,12 +10,17 @@ import { environment } from 'src/environments/environment';
 export class FollowingGroupsService {
   private supabaseClient: SupabaseClient;
 
-  constructor(private authentificationService: AuthentificationService) {
+  constructor(
+    private authentificationQuery: AuthentificationQuery) {
     this.supabaseClient = createClient(environment.supabaseUrl, environment.supabaseKey)
    }
 
   async isAlreadyFollower(following: string): Promise<{data: any, error: any}> {
-    const loggedInID = this.authentificationService.user?.id;
+    let loggedInID: string | null = '';
+    this.authentificationQuery.uuid$.subscribe(uuid => {
+      loggedInID = uuid;
+    })
+
     const results: {data: any, error: any} = await this.supabaseClient
       .from('following_group_system')
       .select(
@@ -44,32 +50,21 @@ export class FollowingGroupsService {
   return followers;
   }
 
-/*   async getAllFollowing(): Promise<{data: any, error: any}> {
-    const loggedInID = this.authentificationService.user?.id;
-    const followings: {data: any, error: any} = await this.supabaseClient
-    .from('following_group_system')
-    .select(
-      `id,
-      following,
-      profiles!following_group_system_following_fkey (
-        id,
-        name,
-        avatar_url
-      )`
-    )
-    .eq('follower', loggedInID)
-  return followings;
-  } */
-
   async followTransaction(follower: string): Promise<{data: any, error: any}> {
-    const loggedInID = this.authentificationService.user?.id;
+    let loggedInID: string | null = '';
+    this.authentificationQuery.uuid$.subscribe(uuid => {
+      loggedInID = uuid;
+    })
     const followTransactionResult: { data: any, error: any } = await this.supabaseClient
       .rpc('followgrouptransaction', {followingid: follower, followerid: loggedInID})
     return followTransactionResult;
   }
 
   async unfollowTransaction(follower: string): Promise<{data: any, error: any}> {
-    const loggedInID = this.authentificationService.user?.id;
+    let loggedInID: string | null = '';
+    this.authentificationQuery.uuid$.subscribe(uuid => {
+      loggedInID = uuid;
+    })
     const unfollowTransactionResult: { data: any, error: any } = await this.supabaseClient
       .rpc('unfollowgrouptransaction', {followingid: follower, followerid: loggedInID})
     return unfollowTransactionResult;

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import { AuthentificationService } from 'src/app/authentification/services/authentification.service';
+import { AuthentificationQuery } from 'src/app/authentification/state/authentification.query';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -10,12 +10,15 @@ export class ChatService {
   private supabaseClient: SupabaseClient;
 
 
-  constructor(private readonly authentificationService: AuthentificationService) {
+  constructor(private readonly authentificationQuery: AuthentificationQuery) {
     this.supabaseClient = createClient(environment.supabaseUrl, environment.supabaseKey)
    }
 
    async selectAllRoomsOfUser(): Promise<{data: any, error: any}> {
-    const loggedInID = this.authentificationService.user?.id;
+    let loggedInID: string | null = '';
+    this.authentificationQuery.uuid$.subscribe(uuid => {
+      loggedInID = uuid;
+    });
     const chatResults: {data: any, error: any} = await this.supabaseClient
       .rpc('select_all_rooms_of_user', {
         user_id_in: loggedInID
@@ -67,7 +70,10 @@ export class ChatService {
     is_group_in: boolean,
     group_id_in: string | undefined | null
     ): Promise<{data: any, error: any}> {
-    const message_sender = this.authentificationService.user?.id;
+    let message_sender: string | null = '';
+    this.authentificationQuery.uuid$.subscribe(uuid => {
+      message_sender = uuid;
+    });
     const messageFeedback: {data: any, error: any} = await this.supabaseClient
       .rpc('send_message_transaction', {
         room_id_in: room_id,
@@ -102,7 +108,10 @@ export class ChatService {
   }
 
   async getChatPartner(room_id: string): Promise<{data: any, error: any}> {
-    const message_sender = this.authentificationService.user?.id;
+    let message_sender: string | null = '';
+    this.authentificationQuery.uuid$.subscribe(uuid => {
+      message_sender = uuid;
+    });
     const groupFeedback: {data: any, error: any} = await this.supabaseClient
       .rpc('select_chat_partner', {
         message_sender: message_sender,

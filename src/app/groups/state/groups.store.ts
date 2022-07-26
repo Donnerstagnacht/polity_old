@@ -5,7 +5,7 @@ import { Group } from './group.model';
 export interface GroupsState extends EntityState<Group> {}
 
 @Injectable({ providedIn: 'root' })
-@StoreConfig({ name: 'groups' })
+@StoreConfig({ name: 'groups', resettable: true })
 export class GroupsStore extends EntityStore<GroupsState> {
 
   constructor() {

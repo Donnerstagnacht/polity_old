@@ -1,15 +1,13 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Router, ActivatedRoute  } from '@angular/router';
-import { Profile, AuthentificationService } from 'src/app/authentification/services/authentification.service';
-import { AuthentificationService as Store } from 'src/app/authentification/state/authentification.service';
+import { ActivatedRoute  } from '@angular/router';
 import { AuthentificationQuery } from 'src/app/authentification/state/authentification.query';
-
-import { ProfileService } from '../services/profile.service';
+import { ProfileService } from '../state/profile.service';
 import { FollowingService } from 'src/app/following-profiles-system/services/following.service';
 import { MegaMenuItem, MenuItem, MessageService } from 'primeng/api';
-import { KeyFigure } from 'src/app/UI-elements/key-figures/key-figures.component';
-import { profileMenuitems, profileMenuitemsMega } from '../services/profileMenuItems';
-import { WikiHeader } from 'src/app/UI-elements/wiki-header/wiki-header.component';
+import { profileMenuitems, profileMenuitemsMega } from '../state/profileMenuItems';
+import { Profile } from '../state/profile.model';
+import { ProfileQuery } from '../state/profile.query';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-profile',
@@ -21,102 +19,54 @@ export class ProfileComponent implements OnInit {
   menuItems: MenuItem[] = profileMenuitems;
   menuItemsMega: MegaMenuItem[] = profileMenuitemsMega;
 
-  loading: boolean = true;
-  profile: Profile | undefined;
-  // @Input() session: Session | undefined;
-  isAlreadyFollower: boolean = false;
+  profile$ = new Observable<Profile | undefined>();
 
-  selectedProfileId: string | undefined = undefined;
-  keyFigureList: KeyFigure[] = [];
-  wikiHeader: WikiHeader | undefined;
+  isAlreadyFollower: boolean = false;
+  selectedProfileId: string | null = null;
+  loggedInUserId: string | null = null;
 
   constructor(
-    public readonly supabase: AuthentificationService,
     private authentificationQuery: AuthentificationQuery,
-    private router: Router,
     private route: ActivatedRoute,
-    private profileService: ProfileService,
     private followingservice: FollowingService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private profileService: ProfileService,
+    private profileQuery: ProfileQuery
   ) {}
 
   ngOnInit(): void {
+    this.getLoggedInUserId$();
     this.getSelectedId();
     this.getSelectedProfile();
     this.checkIfAlreadyFollower();
+    if (this.selectedProfileId) {
+      this.profileService.getRealTimeChanges(this.selectedProfileId);
+    }
+  }
+
+  getLoggedInUserId$(): void {
+    this.authentificationQuery.uuid$.subscribe((uuid) => {
+      if(uuid) {
+        this.loggedInUserId = uuid;
+      }
+    })
   }
 
   getSelectedId(): void {
     this.route.paramMap.subscribe(parameter => {
-      this.selectedProfileId = String(parameter.get('id'));
-      console.log(this.selectedProfileId)
-      if(this.selectedProfileId) {
-        this.authentificationQuery.uuid$.subscribe((uuid) => {
-                    console.log('my profile')
-                    console.log(uuid)
-          if(uuid) {
-            this.selectedProfileId = uuid;
-          }
-        })
+      let routeParameter: string = String(parameter.get('id'));
+      if(routeParameter === 'null') {
+        this.selectedProfileId = this.loggedInUserId;
       } else {
-        console.log('profile')
-        console.log(this.selectedProfileId)
+        this.selectedProfileId = routeParameter;
       }
     })
   }
 
   getSelectedProfile(): void {
     if (this.selectedProfileId) {
-      this.profileService.findProfil(this.selectedProfileId)
-      .then((profile) => {
-        this.profile = profile.data;
-        this.keyFigureList = [
-          {
-            name: 'Anträge',
-            number: profile.data.amendment_counter
-          },
-          {
-            name: 'Follower',
-            number: profile.data.follower_counter
-          },
-          {
-            name: 'Following',
-            number: profile.data.following_counter
-          },
-          {
-            name: 'Gruppen',
-            number: profile.data.groups_counter
-          },
-
-        ];
-        this.wikiHeader = {
-          title: profile.data.name,
-          subtitle: 'Rosbach | Wetteraus - Hessen (statisch)',
-          imgUrl: profile.data.avatar_url,
-        }
-      }
-      )
-      .catch((error) => {console.log(error)})
-    }
-  }
-
-  async getProfile() {
-    try {
-      this.loading = true;
-      let {data: profile, error, status} = await this.supabase.profile;
-
-      if (error && status !== 406) {
-        throw error;
-      }
-
-      if (profile) {
-        this.profile = profile;
-      }
-    } catch (error: any) {
-      console.error(error.message);
-      this.router.navigate(['/login']);
-    } finally {
-      this.loading = false;
+      this.profileService.add(this.selectedProfileId);
+      this.profile$ = this.profileQuery.selectProfileById(this.selectedProfileId)
     }
   }
 

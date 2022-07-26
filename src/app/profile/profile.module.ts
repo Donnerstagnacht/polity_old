@@ -27,6 +27,7 @@ import { WikiHeaderModule } from '../UI-elements/wiki-header/wiki-header.module'
 import { KeyFiguresModule } from '../UI-elements/key-figures/key-figures.module';
 import { HeadlineOfListModule } from '../UI-elements/headline-of-list/headline-of-list.module';
 import { SwitchThemeModule } from '../UI-structure/switch-theme/switch-theme.module';
+import { AboutAndContactModule } from '../UI-elements/about-and-contact/about-and-contact.module';
 
 @NgModule({
   declarations: [
@@ -60,6 +61,7 @@ import { SwitchThemeModule } from '../UI-structure/switch-theme/switch-theme.mod
     AvatarModule,
     FileUploadModule,
     ListElementModule,
+    AboutAndContactModule,
     MessageModule,
     WikiHeaderModule,
     KeyFiguresModule,

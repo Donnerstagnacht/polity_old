@@ -1,6 +1,5 @@
-import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
-import { MegaMenuItem, MenuItem } from 'primeng/api';
-import { AuthentificationService } from 'src/app/authentification/services/authentification.service';
+import { Component, Input, OnInit } from '@angular/core';
+import { MegaMenuItem } from 'primeng/api';
 
 @Component({
   selector: 'app-menu-bar-secondary-top',
@@ -12,14 +11,10 @@ export class MenuBarSecondaryTopComponent implements OnInit {
   loggedIn: boolean = false;
 
   constructor(
-    private readonly authentificationService: AuthentificationService,
   ) { }
 
   ngOnInit(): void {
-/*     this.authentificationService.authCheckLogin();
-    this.authentificationService.loggedInStatus.subscribe((loggedInStatus: boolean) => {
-      this.loggedIn = loggedInStatus;
-      this.changeDetector.detectChanges(); */
+
   }
 
 }
