@@ -26,7 +26,7 @@ const routes: Routes = [
   },
   {
     path: 'orga',
-    loadChildren: () => import('./orga/orga.module').then(m => m.OrgaModule)
+    loadChildren: () => import('./chat/chat.module').then(m => m.ChatModule)
   },
 ];
 

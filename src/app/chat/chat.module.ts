@@ -1,8 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { OrgaRoutingModule } from './orga-routing.module';
+import { OrgaRoutingModule } from './chat-routing.module';
 import { ChatComponent } from './chat/chat.component';
-import { NotificationsComponent } from './notifications/notifications.component';
 import { FormsModule } from '@angular/forms';
 import { ChipModule } from 'primeng/chip';
 import { ChatRoomComponent } from './chat-room/chat-room.component';
@@ -20,7 +19,6 @@ import { ChatListItemModule } from '../UI-elements/chat-list-item/chat-list-item
 @NgModule({
   declarations: [
     ChatComponent,
-    NotificationsComponent,
     ChatRoomComponent
   ],
   imports: [
@@ -40,4 +38,4 @@ import { ChatListItemModule } from '../UI-elements/chat-list-item/chat-list-item
     ChatListItemModule
   ]
 })
-export class OrgaModule { }
+export class ChatModule { }
