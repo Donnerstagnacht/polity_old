@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import { AuthentificationQuery } from 'src/app/authentification/state/authentification.query';
+import { AuthentificationQuery } from '../../authentification/state/authentification.query';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -13,18 +13,6 @@ export class ChatService {
   constructor(private readonly authentificationQuery: AuthentificationQuery) {
     this.supabaseClient = createClient(environment.supabaseUrl, environment.supabaseKey)
    }
-
-   async selectAllRoomsOfUser(): Promise<{data: any, error: any}> {
-    let loggedInID: string | null = '';
-    this.authentificationQuery.uuid$.subscribe(uuid => {
-      loggedInID = uuid;
-    });
-    const chatResults: {data: any, error: any} = await this.supabaseClient
-      .rpc('select_all_rooms_of_user', {
-        user_id_in: loggedInID
-      })
-    return chatResults;
-  }
 
   async resetNumberOfUnreadMessages(room_id: string, message_reader: string): Promise<{data: any, error: any}> {
     const chatResults: {data: any, error: any} = await this.supabaseClient
@@ -71,7 +59,7 @@ export class ChatService {
     group_id_in: string | undefined | null
     ): Promise<{data: any, error: any}> {
     let message_sender: string | null = '';
-    this.authentificationQuery.uuid$.subscribe(uuid => {
+    this.authentificationQuery.uuid$.subscribe((uuid: any) => {
       message_sender = uuid;
     });
     const messageFeedback: {data: any, error: any} = await this.supabaseClient
@@ -129,7 +117,6 @@ export class ChatService {
       })
     return deleteFeedback;
   }
-
 
   async getGroupAsChatPartner(room_id: string): Promise<{data: any, error: any}> {
     const groupFeedback: {data: any, error: any} = await this.supabaseClient

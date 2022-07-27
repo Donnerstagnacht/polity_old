@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MegaMenuItem, MenuItem } from 'primeng/api';
 import { News } from 'src/app/UI-elements/news-list-item/news-list-item.component';
-import { orgaeMenuitems, orgaMenuitemsMega } from '../../chat/services/orgaMenuItems';
+import { orgaeMenuitems, orgaMenuitemsMega } from '../../chat/state/orgaMenuItems';
 
 @Component({
   selector: 'app-news',

@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { MegaMenuItem, MenuItem } from 'primeng/api';
-import { Chat } from 'src/app/UI-elements/chat-list-item/chat-list-item.component';
-import { ChatService } from '../services/chat.service';
-import { orgaeMenuitems, orgaMenuitemsMega } from '../services/orgaMenuItems';
+import { ChatService as ChatServiceStore } from '../state/chat.service';
+import { Chat } from '../state/chat.model';
+import { orgaeMenuitems, orgaMenuitemsMega } from '../state/orgaMenuItems';
+import { ChatQuery } from '../state/chat.query';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-chat',
@@ -14,37 +16,27 @@ export class ChatComponent implements OnInit {
   menuItemsMega: MegaMenuItem[] = orgaMenuitemsMega;
 
   groupFilterOn: boolean = false;
+  searchTerm: string = '';
 
-  chatList: Chat[] = []
+  chats$ = new Observable<Chat[]>();
 
-  constructor(private chatService: ChatService) { }
+  constructor(
+    private chatQuery: ChatQuery,
+    private chatServiceStore: ChatServiceStore) { }
 
   ngOnInit(): void {
-    this.chatList = [
-/*       {
-        room_id: 'sdfdfdf',
-        room_name: 'Tobias Hassebrock',
-        last_message: 'Wie geht es voran?',
-        last_message_time:  '12:34',
-        avatar_url: 'sdfdff',
-        number_of_new_messages: '3'
-      } */
-    ]
-    this.chatService.selectAllRoomsOfUser()
-    .then((chats) => {
-      this.chatList = chats.data
-    })
-    .catch((error) => {
-      console.log(error)
-    })
+    this.chatServiceStore.selectAllRoomsOfUser();
+    this.chats$ = this.chatQuery.allChats$;
   }
 
   onSearch(searchTerm: string): void {
-
+    this.searchTerm = searchTerm;
+    this.chats$ = this.chatQuery.filterData(this.searchTerm, this.groupFilterOn);
   }
 
   setGroupFilter(): void {
     this.groupFilterOn = !this.groupFilterOn;
+    this.chats$ = this.chatQuery.filterData(this.searchTerm, this.groupFilterOn);
   }
 
 }

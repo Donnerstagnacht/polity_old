@@ -1,4 +1,4 @@
-<div class="fixed w-full top-fixed"><!--mx-4-->
+<div class="fixed w-full top-fixed surface"><!--mx-4-->
   <div class="flex">
     <app-back-button class="" [title]="'Zurück'" [link]="'/orga'"></app-back-button>
     <div *ngIf="profile"  class="flex align-items-center w-full">
@@ -23,15 +23,19 @@
 <app-wrapper-grid [noTopBar]="true">
   <div slot="main">
     <div class="mb-8">
+
       <div *ngIf="loggedInUserAcceptedRequest && chatPartnerAcceptedRequest">
-        <div *ngIf="allMessages.length === 0">
-          <p class="text-center margin-mid">Ihr habt euch noch keine Nachrichten geschrieben.</p>
-        </div>
-        <div *ngIf="allMessages.length > 0" #messages class="chat-scroll-container">
-          <div *ngFor="let message of allMessages">
-            <app-message [message]="message" [loggedInUserId]="loggedInUserId"></app-message>
+        <div *ngIf="messages$ | async as messages">
+          <div *ngIf="messages.length === 0">
+            <p class="text-center margin-mid">Ihr habt euch noch keine Nachrichten geschrieben.</p>
+          </div>
+          <div *ngIf="messages.length > 0" #messages class="chat-scroll-container">
+            <div *ngFor="let message of messages$ | async">
+              <app-message [message]="message" [loggedInUserId]="loggedInUserId"></app-message>
+            </div>
           </div>
         </div>
+
       </div>
       <div *ngIf="loggedInUserAcceptedRequest && !chatPartnerAcceptedRequest">
         <p class="text-center margin-mid">Deine Anfrage wurde noch nicht akzeptiert.</p>

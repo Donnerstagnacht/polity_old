@@ -188,7 +188,7 @@ $$;
 DROP function if exists select_all_rooms_of_user(user_id_in uuid);
 create or replace function select_all_rooms_of_user(user_id_in uuid)
 returns table (
-    room_id uuid,
+    id uuid,
     participant_id uuid,
     name text,
     avatar_url text,
@@ -204,7 +204,7 @@ $$
 BEGIN
   return query
   Select
-    r1.room_id,
+    r1.room_id as id,
     p.id,
     p.name,
     p.avatar_url,

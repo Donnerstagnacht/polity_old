@@ -9,7 +9,9 @@ import { Message } from 'src/app/UI-elements/message/message.component';
 import { ChatService } from '../services/chat.service';
 import { Observable } from 'rxjs';
 import { ProfileQuery } from 'src/app/profile/state/profile.query';
-import { AuthentificationQuery } from 'src/app/authentification/state/authentification.query';
+import { AuthentificationQuery } from '../../authentification/state/authentification.query';
+import { ChatRoomService } from './state/chat-room.service';
+import { ChatRoomQuery } from './state/chat-room.query';
 
 @Component({
   selector: 'app-chat-room',
@@ -22,6 +24,7 @@ export class ChatRoomComponent implements OnInit {
   message: string = '';
   selectedRoomId: string = '';
   allMessages: Message[] = [];
+  messages$ = new Observable<Message[]>();
   loggedInUserId: string | null = '';
   @ViewChild('messages') content!: ElementRef;
   profile!: Profile;
@@ -34,8 +37,12 @@ export class ChatRoomComponent implements OnInit {
   loggedInUserAcceptedRequest: boolean = true;
   enquirer: boolean = false;
 
+  test: any;
+
   constructor(
     private chatService: ChatService,
+    private chatRoomQuery: ChatRoomQuery,
+    private chatRoomService: ChatRoomService,
     private readonly authentificationQuery: AuthentificationQuery,
     private route: ActivatedRoute,
     private profileService: ProfileService,
@@ -47,9 +54,22 @@ export class ChatRoomComponent implements OnInit {
 
   ngOnInit(): void {
     this.getSelectedId();
+    if (this.selectedRoomId) {
+      console.log('called')
+      this.chatRoomService.getRealTimeChanges('9b3c50c0-ee19-4ed8-a0f0-52e78b175f82');
+    }
+    this.chatRoomService.getAllMessagesOfChat(this.selectedRoomId);
+    this.messages$ = this.chatRoomQuery.messages$
+
     this.getChatPartner();
     this.getLoggedInUserId();
     this.scrollDown();
+    this.test = this.chatRoomService.getRealTimeChanges(this.selectedRoomId);
+    this.test.subscribe((test: any) => {
+      console.log('test');
+      console.log(test)
+    })
+
   }
 
   ngAfterViewChecked() {
@@ -103,7 +123,7 @@ export class ChatRoomComponent implements OnInit {
   }
 
   getLoggedInUserId(): void {
-    this.authentificationQuery.uuid$.subscribe(uuid => {
+    this.authentificationQuery.uuid$.subscribe((uuid: any) => {
       this.loggedInUserId = uuid;
     });
   }

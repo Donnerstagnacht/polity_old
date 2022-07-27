@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute  } from '@angular/router';
-import { AuthentificationQuery } from 'src/app/authentification/state/authentification.query';
+import { AuthentificationQuery } from '../../authentification/state/authentification.query';
 import { ProfileService } from '../state/profile.service';
 import { FollowingService } from 'src/app/following-profiles-system/services/following.service';
 import { MegaMenuItem, MenuItem, MessageService } from 'primeng/api';
@@ -45,7 +45,7 @@ export class ProfileComponent implements OnInit {
   }
 
   getLoggedInUserId$(): void {
-    this.authentificationQuery.uuid$.subscribe((uuid) => {
+    this.authentificationQuery.uuid$.subscribe((uuid: any) => {
       if(uuid) {
         this.loggedInUserId = uuid;
       }

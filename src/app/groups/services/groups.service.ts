@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import { AuthentificationQuery } from 'src/app/authentification/state/authentification.query';
+import { AuthentificationQuery } from '../../authentification/state/authentification.query';
 import { environment } from 'src/environments/environment';
 import { Group } from '../../UI-dialogs/create-group/create-group.component';
 @Injectable({
@@ -31,7 +31,7 @@ export class GroupsService {
   /*TODO*/
   async getAllGroupsOfId(): Promise<{data: any, error: any}> {
     let loggedInID: string | null = '';
-    this.authentificationQuery.uuid$.subscribe(uuid => {
+    this.authentificationQuery.uuid$.subscribe((uuid: any) => {
       loggedInID = uuid;
     });
     const groups: {data: any, error: any} = await this.supabaseClient

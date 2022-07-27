@@ -24,7 +24,7 @@
         <p-chip *ngIf="groupFilterOn" (click)="setGroupFilter()" class="" label="POLITY GRUPPEN" styleClass="cursor-pointer accent-container"></p-chip>
 
       </div>
-      <div *ngFor="let chat of chatList">
+      <div *ngFor="let chat of chats$ | async">
         <app-chat-list-item [chat]="chat"></app-chat-list-item>
       </div>
     </div>

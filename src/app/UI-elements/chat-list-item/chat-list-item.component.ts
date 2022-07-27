@@ -1,16 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-
-export interface Chat {
-  room_id: string,
-  participant_id: string,
-  name: string,
-  last_message_time: Date,
-  last_message: string,
-  avatar_url: string,
-  number_of_unread_messages: number,
-  is_group: boolean
-}
+import { Chat } from 'src/app/chat/state/chat.model';
 
 @Component({
   selector: 'app-chat-list-item',
@@ -34,7 +24,7 @@ export class ChatListItemComponent implements OnInit {
   }
 
   openChat() {
-    this.router.navigate([`orga/${this.chat.room_id}`]);
+    this.router.navigate([`orga/${this.chat.id}`]);
   }
 
   checkIfMessageReceivedToday(): void {
