@@ -23,7 +23,6 @@ export class ChatRoomComponent implements OnInit {
   @Input() avatarUrl: string = '';
   message: string = '';
   selectedRoomId: string = '';
-  allMessages: Message[] = [];
   messages$ = new Observable<Message[]>();
   loggedInUserId: string | null = '';
   @ViewChild('messages') content!: ElementRef;
@@ -37,7 +36,7 @@ export class ChatRoomComponent implements OnInit {
   loggedInUserAcceptedRequest: boolean = true;
   enquirer: boolean = false;
 
-  test: any;
+  test = true;
 
   constructor(
     private chatService: ChatService,
@@ -55,25 +54,20 @@ export class ChatRoomComponent implements OnInit {
   ngOnInit(): void {
     this.getSelectedId();
     if (this.selectedRoomId) {
-      console.log('called')
-      this.chatRoomService.getRealTimeChanges('9b3c50c0-ee19-4ed8-a0f0-52e78b175f82');
+      this.chatRoomService.getRealTimeChanges(this.selectedRoomId);
     }
     this.chatRoomService.getAllMessagesOfChat(this.selectedRoomId);
     this.messages$ = this.chatRoomQuery.messages$
 
     this.getChatPartner();
     this.getLoggedInUserId();
-    this.scrollDown();
-    this.test = this.chatRoomService.getRealTimeChanges(this.selectedRoomId);
-    this.test.subscribe((test: any) => {
-      console.log('test');
-      console.log(test)
-    })
-
+    if(this.selectedRoomId) {
+      this.scrollDown(true)
+    }
   }
 
   ngAfterViewChecked() {
-    this.scrollDown();
+    this.scrollDown(this.test);
   }
 
 
@@ -100,14 +94,14 @@ export class ChatRoomComponent implements OnInit {
       )
     .then(() => {
       this.message = '';
-      this.chatService.getAllMessagesOfChat(this.selectedRoomId)
+/*       this.chatService.getAllMessagesOfChat(this.selectedRoomId)
       .then((messages) => {
         this.allMessages = messages.data;
-      })
+      }) */
     });
   }
 
-  getAllMessages(): void {
+/*   getAllMessages(): void {
     this.chatService.getAllMessagesOfChat(this.selectedRoomId)
     .then((messages) => {
       this.allMessages = messages.data;
@@ -120,7 +114,7 @@ export class ChatRoomComponent implements OnInit {
     .catch((error) => {
       console.log(error)
     })
-  }
+  } */
 
   getLoggedInUserId(): void {
     this.authentificationQuery.uuid$.subscribe((uuid: any) => {
@@ -128,10 +122,16 @@ export class ChatRoomComponent implements OnInit {
     });
   }
 
-  scrollDown(): void {
+  scrollDown(test: boolean): void {
     try {
       this.content.nativeElement.scrollTop = this.content.nativeElement.scrollHeight;
-    } catch(err) { }
+    } catch(err) {
+
+    } finally {
+      if (test) {
+        this.test = false;
+      }
+    }
   }
 
   getProfile(): void {
@@ -149,7 +149,6 @@ export class ChatRoomComponent implements OnInit {
     this.groupsService.selectGroup(this.chatPartner)
     .then((group) => {
       this.group = group.data;
-      // this.isGroup = true;
     })
     .catch((error) => {
       console.log(error);
@@ -163,12 +162,15 @@ export class ChatRoomComponent implements OnInit {
       if(this.chatPartner) {
         this.isGroup = false;
         this.getProfile();
+        this.chatService.resetNumberOfUnreadMessages(this.selectedRoomId, this.chatPartner);
+        this.scrollDown(this.test);
       } else {
         this.isGroup = true;
         this.chatService.getGroupAsChatPartner(this.selectedRoomId)
         .then((results) => {
           this.chatPartner = results.data;
           this.getGroup();
+          this.scrollDown(this.test);
         })
         .catch((error) => {
           console.log(error)
@@ -176,10 +178,6 @@ export class ChatRoomComponent implements OnInit {
       }
       this.checkIfChatPartnerAcceptedRequest();
       this.checkIfChatLoggedInUserAcceptedRequest();
-      if(this.chatPartnerAcceptedRequest && this.loggedInUserAcceptedRequest) {
-        this.getAllMessages();
-      }
-
     })
     .catch((error) => {
       console.log(error);

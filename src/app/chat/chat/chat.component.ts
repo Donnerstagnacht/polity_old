@@ -27,6 +27,7 @@ export class ChatComponent implements OnInit {
   ngOnInit(): void {
     this.chatServiceStore.selectAllRoomsOfUser();
     this.chats$ = this.chatQuery.allChats$;
+    this.chatServiceStore.getRealTimeChanges();
   }
 
   onSearch(searchTerm: string): void {

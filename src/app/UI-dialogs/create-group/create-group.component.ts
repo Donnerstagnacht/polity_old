@@ -87,7 +87,7 @@ export class CreateGroupComponent implements OnInit {
     this.authentificationQuery.uuid$.subscribe((uuid) => {
       if(uuid) {
         this.loggedInUserId = uuid;
-        console.log(this.loggedInUserId)
+        // console.log(this.loggedInUserId)
       }
     })
   }
@@ -100,7 +100,7 @@ export class CreateGroupComponent implements OnInit {
           if(profile) {
             //Review
             this.loggedInUser = profile;
-            console.log(this.loggedInUser)
+            // console.log(this.loggedInUser)
           }
         })
     }
@@ -117,7 +117,7 @@ export class CreateGroupComponent implements OnInit {
   }
 
   pageForward(): void {
-    console.log(this.newGroup)
+    // console.log(this.newGroup)
     if(this.page === this.carouselPages.length-1) {
       this.page = this.carouselPages.length-1;
     } else {
@@ -141,7 +141,7 @@ export class CreateGroupComponent implements OnInit {
     this.groupsService.createGroupTransaction(
       this.newGroup
     ).then((result) => {
-      console.log('success');
+      // console.log('success');
       this.showAddGroupDialog = false;
       this.newGroup = {
         name: '',

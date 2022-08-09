@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { QueryEntity } from '@datorama/akita';
 import { map, Observable } from 'rxjs';
-import { ThemeService } from 'src/app/UI-structure/theme.service';
 import { Chat } from './chat.model';
 import { ChatStore, ChatState } from './chat.store';
 

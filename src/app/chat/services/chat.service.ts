@@ -15,6 +15,9 @@ export class ChatService {
    }
 
   async resetNumberOfUnreadMessages(room_id: string, message_reader: string): Promise<{data: any, error: any}> {
+    console.log('called')
+    console.log('service: room_id' + room_id)
+    console.log('service: chatpartner' + message_reader)
     const chatResults: {data: any, error: any} = await this.supabaseClient
       .rpc('reset_number_of_unread_messages', {
         room_id_in: room_id,

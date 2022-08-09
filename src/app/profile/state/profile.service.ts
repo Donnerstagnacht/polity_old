@@ -18,7 +18,7 @@ export class ProfileService {
     this.selectProfil(uuid)
     .then((results) => {
       const profile: Profile = results.data;
-      console.log(profile);
+      // console.log(profile);
       this.profileStore.add(profile);
     })
     .catch((error) => {
@@ -47,7 +47,7 @@ export class ProfileService {
       returning: 'minimal', // Don't return the value after inserting
     })
     .then(() => {
-      console.log('worked')
+      //console.log('worked')
       // this.profileStore.update(id, profile);
     });
   }
@@ -77,7 +77,7 @@ export class ProfileService {
       )
       .eq('id', uuid)
       .single()
-    console.log(results);
+    // console.log(results);
     return results;
   }
 
