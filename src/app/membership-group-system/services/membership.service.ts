@@ -67,13 +67,15 @@ export class MembershipService {
   return membershipRequests;
   }
 
-  async confirmMembershipRequest(user_requests: string, group_requested: string): Promise<{data: any, error: any}> {
-    let loggedInID: string | null = '';
-    this.authentificationQuery.uuid$.subscribe(uuid => {
-      loggedInID = uuid;
-    });
+  async confirmMembershipRequest(user_requests: string, group_requested: string, requested_id_in: string): Promise<{data: any, error: any}> {
+    console.log('user_id')
+    console.log(user_requests)
+    console.log('group_id')
+    console.log(group_requested)
+    console.log('request_id')
+    console.log(requested_id_in)
     const confirmMembershipResult: { data: any, error: any } = await this.supabaseClient
-      .rpc('confirm_membership_transaction', {user_id_requests: user_requests, group_id_requested: group_requested})
+      .rpc('confirm_membership_transaction', {user_id_requests: user_requests, group_id_requested: group_requested, requested_id: requested_id_in})
     return confirmMembershipResult;
   }
 
@@ -93,18 +95,22 @@ export class MembershipService {
     this.authentificationQuery.uuid$.subscribe(uuid => {
       loggedInID = uuid;
     });
+    console.log('user_id')
+    console.log(loggedInID)
+    console.log('group_id')
+    console.log(group_requested)
     const cancelMembershipResult: { data: any, error: any } = await this.supabaseClient
       .rpc('cancel_group_membership_request', {user_id_requests: loggedInID, group_id_requested: group_requested})
     return cancelMembershipResult;
   }
 
-  async removeMembershipRequest(user_requested: string, group_requested: string): Promise<{data: any, error: any}> {
+  async removeMembershipRequestById(request_id: string): Promise<{data: any, error: any}> {
     const cancelMembershipResult: { data: any, error: any } = await this.supabaseClient
-      .rpc('cancel_group_membership_request', {user_id_requests: user_requested, group_id_requested: group_requested})
+      .rpc('cancel_group_membership_request_by_request', {request_id: request_id})
     return cancelMembershipResult;
   }
 
-  async getAllMembers(groupId: string): Promise<{data: any, error: any}> {
+/*   async getAllMembers(groupId: string): Promise<{data: any, error: any}> {
     const membershipRequests: {data: any, error: any} = await this.supabaseClient
     .from('group_members')
     .select(
@@ -118,11 +124,24 @@ export class MembershipService {
     )
     .eq('group_id', groupId)
   return membershipRequests;
-  }
+  } */
 
   async removeMember(user_requested: string, group_requested: string): Promise<{data: any, error: any}> {
     const cancelMembershipResult: { data: any, error: any } = await this.supabaseClient
       .rpc('remove_membership_transaction', {user_id_requests: user_requested, group_id_requested: group_requested})
+    return cancelMembershipResult;
+  }
+
+  async removeMemberByMembershipId(user_requested: string, group_requested: string, membership_id: string): Promise<{data: any, error: any}> {
+    console.log('user_id')
+    console.log(user_requested)
+    console.log('group_requested')
+    console.log(group_requested)
+    console.log('membership_id')
+    console.log(membership_id)
+
+    const cancelMembershipResult: { data: any, error: any } = await this.supabaseClient
+      .rpc('remove_membership_transaction_by_membership_id', {user_id_requests: user_requested, group_id_requested: group_requested, membership_id: membership_id})
     return cancelMembershipResult;
   }
 }

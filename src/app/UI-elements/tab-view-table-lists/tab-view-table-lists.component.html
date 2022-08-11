@@ -28,9 +28,6 @@
           <td *ngIf="dataFirstTab.name">
             {{dataFirstTab.name}}
           </td>
-          <td *ngIf="dataFirstTab.name">
-            {{dataFirstTab.name}}
-          </td>
           <td>
             <button
             *ngIf="acceptButtonNeededFirstTab"
@@ -39,7 +36,7 @@
               type="button"
               icon="pi pi-check"
               class="p-button-rounded p-button-text p-button-success"
-              (click)="acceptFromFirstTab(dataFirstTab.id)"
+              (click)="acceptFromFirstTab(dataFirstTab.id, dataFirstTab.user_id)"
               ></button>
           </td>
           <td>
@@ -90,9 +87,6 @@
           <td *ngIf="dataSecondTab.name">
             {{dataSecondTab.name}}
           </td>
-          <td *ngIf="dataSecondTab.name">
-            {{dataSecondTab.name}}
-          </td>
           <td>
             <button
             *ngIf="acceptButtonNeededSecondTab"
@@ -101,7 +95,7 @@
               type="button"
               icon="pi pi-check"
               class="p-button-rounded p-button-text p-button-success"
-              (click)="acceptFromSecondTab(dataSecondTab.id)"
+              (click)="acceptFromSecondTab(dataSecondTab.user_id)"
               ></button>
           </td>
           <td>
@@ -111,7 +105,7 @@
               type="button"
               icon="pi pi-times"
               class="p-button-rounded p-button-text p-button-danger"
-              (click)="removeFromSecondDataTab(dataSecondTab.id)"
+              (click)="removeFromSecondDataTab(dataSecondTab.id, dataSecondTab.user_id)"
               ></button>
           </td>
         </tr>

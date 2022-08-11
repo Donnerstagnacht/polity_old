@@ -1,3 +1,5 @@
+import { profile_list_item } from "./profile_list_item.model";
+
 export interface Group {
   id?: string,
   created_at?: string,
@@ -15,11 +17,15 @@ export interface Group {
   follower_counter?: number,
   amendment_counter?: number,
   contact_email: string,
-  updated_at?: Date
+  updated_at?: Date,
+  members?: profile_list_item[],
+  membership_requests?: profile_list_item[]
 }
 
 export function createGroup(params: Partial<Group>) {
   return {
-    ...params
+    ...params,
+    mebers: [],
+    membership_requests: []
   } as Group;
 }

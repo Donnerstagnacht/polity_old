@@ -11,13 +11,28 @@ BEGIN
   VALUES (user_requests, group_requested);
 END;
 $$;
--- 2. cancel membership request
-DROP function if exists cancel_group_membership_request(user_id_requests uuid, group_id_requested uuid);
-create or replace function cancel_group_membership_request(user_id_requests uuid, group_id_requested uuid)
+-- 2. cancel membership request by request
+DROP function if exists cancel_group_membership_request_by_request(request_id uuid);
+create or replace function cancel_group_membership_request_by_request(request_id uuid)
 returns void
 language plpgsql
 security definer
 as
+$$
+BEGIN
+  DELETE FROM "membership_requests"
+  WHERE
+  "id" = request_id;
+END;
+$$;
+
+-- 1a Cancel GroupMembership Request by group and
+DROP function if exists cancel_group_membership_request(user_id_requests uuid, group_id_requested uuid);
+CREATE OR REPLACE FUNCTION cancel_group_membership_request(user_id_requests uuid, group_id_requested uuid)
+RETURNS void
+LANGUAGE plpgsql
+SECURITY DEFINER
+AS
 $$
 BEGIN
   DELETE FROM "membership_requests"
@@ -27,6 +42,7 @@ BEGIN
   "group_requested" = group_id_requested;
 END;
 $$;
+
 
 --3. Increment_member_counter
 DROP function if exists increment_group_member_counter(group_id uuid);
@@ -48,8 +64,8 @@ $$;
 -- 3.2 cancel membership request
 -- 3.3 Increment groups counter on user
 -- 3.4 increment member counter on group
-DROP function if exists confirm_membership_transaction(user_id_requests uuid, group_id_requested uuid);
-create or replace function confirm_membership_transaction(user_id_requests uuid, group_id_requested uuid)
+DROP function if exists confirm_membership_transaction(user_id_requests uuid, group_id_requested uuid, requested_id uuid);
+create or replace function confirm_membership_transaction(user_id_requests uuid, group_id_requested uuid, requested_id uuid)
 returns void
 language plpgsql
 security definer
@@ -57,7 +73,7 @@ as
 $$
 BEGIN
   PERFORM add_member(user_id_requests, group_id_requested, false, false , false);
-  PERFORM cancel_group_membership_request(user_id_requests, group_id_requested);
+  PERFORM cancel_group_membership_request_by_request(requested_id);
   PERFORM increment_groups_counter(user_id_requests);
   PERFORM increment_group_member_counter(group_id_requested);
 END;
@@ -81,6 +97,21 @@ BEGIN
   "user_id" = user_id_requests
   AND
   "group_id" = group_id_requested;
+END;
+$$;
+
+-- 1.a Delete Member by membership_ id
+DROP function if exists delete_member_by_membership_id(membership_id uuid);
+create or replace function delete_member_by_membership_id(membership_id uuid)
+returns void
+language plpgsql
+security definer
+as
+$$
+BEGIN
+  DELETE FROM "group_members"
+  WHERE
+  "id" = membership_id;
 END;
 $$;
 
@@ -125,6 +156,21 @@ as
 $$
 BEGIN
   PERFORM delete_member(user_id_requests, group_id_requested);
+  PERFORM decrement_groups_counter(user_id_requests);
+  PERFORM decrement_group_member_counter(group_id_requested);
+END;
+$$;
+
+-- 4.a Remove member transaction by membership id
+DROP function if exists remove_membership_transaction_by_membership_id(user_id_requests uuid, group_id_requested uuid, membership_id uuid);
+create or replace function remove_membership_transaction_by_membership_id(user_id_requests uuid, group_id_requested uuid, membership_id uuid)
+returns void
+language plpgsql
+security definer
+as
+$$
+BEGIN
+  PERFORM delete_member_by_membership_id(membership_id);
   PERFORM decrement_groups_counter(user_id_requests);
   PERFORM decrement_group_member_counter(group_id_requested);
 END;

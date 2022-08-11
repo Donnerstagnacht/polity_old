@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MessageService } from 'primeng/api';
+import { Observable } from 'rxjs';
+import { Group } from 'src/app/groups/state/group.model';
+import { GroupsQuery } from 'src/app/groups/state/groups.query';
+import { GroupsService } from 'src/app/groups/state/groups.service';
 import { MembershipService } from '../services/membership.service';
 
 @Component({
@@ -14,6 +18,8 @@ export class MembershipGroupManagementComponent implements OnInit {
   membershipRequests: any[] = [];
   members: any[] = [];
 
+  group$ = new Observable<Group | undefined>();
+
   link: string = '';
   titleMembershipRequests: string = 'Beitrittsanfragen';
   noDataMembershiprequests: string = 'Du hast aktuell keine offenen Beitrittsanfragen.';
@@ -23,36 +29,37 @@ export class MembershipGroupManagementComponent implements OnInit {
   constructor(
     private membershipService: MembershipService,
     private messageService: MessageService,
-    private route: ActivatedRoute
-
+    private route: ActivatedRoute,
+    private groupService: GroupsService,
+    private groupQuery: GroupsQuery
   ) { }
 
   ngOnInit(): void {
     this.getSelectedId();
     this.link = `/groups/${this.selectedGroupId}/edit`;
+    this.groupService.getAllMemberShipRequests(this.selectedGroupId);
     this.getAllMembershipRequests();
-    this.getAllMembers();
-
+    // this.getAllMembers();
+    this.groupService.getAllMembers(this.selectedGroupId)
+    this.groupService.getRealTimeChangesMembers(this.selectedGroupId)
+    this.groupService.getRealTimeChangesMembershipRequests(this.selectedGroupId)
   }
 
   getAllMembershipRequests(): void {
-    this.membershipService.getAllMembershipRequests(this.selectedGroupId)
-    .then((membershipRequests) => {
-      this.membershipRequests = [];
-      membershipRequests.data.forEach((profile: any) => {
-        let id: any = profile.profiles.id;
-        let name: any = profile.profiles.name;
-        let avatar_url: any = profile.profiles.avatar_url;
-        this.membershipRequests.push({
-          'id': id,
-          'name': name,
-          'avatar_url': avatar_url
-        });
-      });
+    this.group$ = this.groupQuery.selectEntity(this.selectedGroupId);
+    this.group$.subscribe((group: Group | undefined) => {
+      if(group?.membership_requests) {
+        console.log('called requests');
+        console.log(group.membership_requests)
+        this.membershipRequests = []
+        this.membershipRequests = group.membership_requests;
+      }
+      if(group?.members) {
+        console.log('group mebers exist from observable')
+        this.members = [];
+        this.members = group.members;
+      }
     })
-    .catch((error) => {
-      this.messageService.add({severity:'error', summary: 'Fehler beim laden. ' + error});
-    });
   }
 
   getSelectedId(): void {
@@ -61,10 +68,16 @@ export class MembershipGroupManagementComponent implements OnInit {
     })
   }
 
-  acceptMembershipRequest(id: string): void {
-    this.membershipService.confirmMembershipRequest(id, this.selectedGroupId)
+  acceptMembershipRequest(event: {id: string, user_id: string}): void {
+    console.log('user_id')
+    console.log(event.user_id)
+    console.log('group_id')
+    console.log(this.selectedGroupId)
+    console.log('request_id')
+    console.log(event.id)
+    this.membershipService.confirmMembershipRequest(event.user_id, this.selectedGroupId, event.id)
     .then(() => {
-      this.getAllMembershipRequests();
+      // this.getAllMembershipRequests();
       this.messageService.add({severity:'success', summary: 'Du hast ein neues Mitglied aufgenommen.'});
     })
     .catch((error: any) =>  {
@@ -73,18 +86,20 @@ export class MembershipGroupManagementComponent implements OnInit {
   }
 
   cancelMembershipRequest(id: string): void {
-    this.membershipService.removeMembershipRequest(id, this.selectedGroupId)
+    console.log('canceld called')
+    console.log(id)
+    this.membershipService.removeMembershipRequestById(id)
     .then((results) => {
       console.log(results)
-      this.getAllMembershipRequests();
-      this.messageService.add({severity:'success', summary: 'Follower entfernt.'});
+      /// this.getAllMembershipRequests();
+      this.messageService.add({severity:'success', summary: 'Anfrage entfernt.'});
     })
     .catch((error: any) =>  {
       this.messageService.add({severity:'error', summary: error})
     })
   }
 
-  getAllMembers(): void {
+/*   getAllMembers(): void {
     this.membershipService.getAllMembers(this.selectedGroupId)
     .then((members) => {
       this.members = [];
@@ -102,13 +117,17 @@ export class MembershipGroupManagementComponent implements OnInit {
     .catch((error) => {
       this.messageService.add({severity:'error', summary: 'Fehler beim laden. ' + error});
     });
-  }
+  } */
 
-  removeMember(id: string): void {
-    this.membershipService.removeMember(id, this.selectedGroupId)
+  removeMember(event: {id: string, user_id: string}): void {
+    console.log('user_id')
+    console.log(event.user_id)
+    console.log('membership_id')
+    console.log(event.id)
+    this.membershipService.removeMemberByMembershipId(event.user_id, this.selectedGroupId, event.id)
     .then(() => {
-      this.getAllMembershipRequests();
-      this.messageService.add({severity:'success', summary: 'Follower entfernt.'});
+      // this.getAllMembershipRequests();
+      this.messageService.add({severity:'success', summary: 'Mitglied entfernt.'});
     })
     .catch((error: any) =>  {
       this.messageService.add({severity:'error', summary: error})
