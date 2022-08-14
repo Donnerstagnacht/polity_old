@@ -21,7 +21,7 @@ export class TabViewTableListsComponent implements OnInit {
 
   filterString: string = '';
 
-  @Output() removeItemFromFirstTab: EventEmitter<string> = new EventEmitter<string>();
+  @Output() removeItemFromFirstTab: EventEmitter<{id: string, user_id: string}> = new EventEmitter<{id: string, user_id: string}>();
   @Output() removeItemFromSecontTab: EventEmitter<{id: string, user_id: string}> = new EventEmitter<{id: string, user_id: string}>();
 
   @Output() acceptItemFromFirstTab: EventEmitter<{id: string, user_id: string}> = new EventEmitter<{id: string, user_id: string}>();
@@ -33,13 +33,25 @@ export class TabViewTableListsComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+    console.log('component.firstdata')
+    console.log(this.dataFirstTab)
+    console.log('component.seconddata')
+    console.log(this.dataSecondTab)
   }
 
-  removeFromFirstDataTab(id: string) {
-    this.removeItemFromFirstTab.emit(id);
+  removeFromFirstDataTab(id: string, user_id: string) {
+    console.log('id')
+    console.log(id);
+    console.log('user_id')
+    console.log(user_id)
+    this.removeItemFromFirstTab.emit({id, user_id});
   }
 
   removeFromSecondDataTab(id: string, user_id: string) {
+    console.log('id')
+    console.log(id);
+    console.log('user_id')
+    console.log(user_id)
     this.removeItemFromSecontTab.emit({id, user_id});
   }
 

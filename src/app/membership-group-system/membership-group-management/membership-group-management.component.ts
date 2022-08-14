@@ -85,10 +85,10 @@ export class MembershipGroupManagementComponent implements OnInit {
     })
   }
 
-  cancelMembershipRequest(id: string): void {
+  cancelMembershipRequest(event: {id: string, user_id: string }): void {
     console.log('canceld called')
-    console.log(id)
-    this.membershipService.removeMembershipRequestById(id)
+    console.log(event.id)
+    this.membershipService.removeMembershipRequestById(event.id)
     .then((results) => {
       console.log(results)
       /// this.getAllMembershipRequests();

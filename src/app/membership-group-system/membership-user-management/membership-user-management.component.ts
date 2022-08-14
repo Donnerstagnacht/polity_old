@@ -32,14 +32,14 @@ export class MembershipUserManagementComponent implements OnInit {
     this.getAllGroups();
 
   }
-
-  leaveGroup(id: string): void {
+// id: string
+  leaveGroup(event: {id: string, user_id: string}): void {
     let loggedInID: string | null = '';
     this.authentificationQuery.uuid$.subscribe(uuid => {
       loggedInID = uuid;
     });
     if (loggedInID) {
-      this.membershipService.removeMember(loggedInID, id)
+      this.membershipService.removeMember(loggedInID, event.user_id)
       .then(() => {
         this.getAllGroups();
         this.messageService.add({severity:'success', summary: 'Du bist aus einer Gruppe ausgetreten.'});

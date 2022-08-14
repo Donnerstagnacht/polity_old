@@ -89,6 +89,21 @@ BEGIN
 END;
 $$;
 
+-- 1.1 delete follower by relationship Id
+DROP function if exists delete_following_follower_relationship_by_id(relationship_id uuid);
+create or replace function delete_following_follower_relationship_by_id(relationship_id uuid)
+returns void
+language plpgsql
+security definer
+as
+$$
+BEGIN
+  DELETE FROM "following_profile_system"
+  WHERE
+  "id" = relationship_id;
+END;
+$$;
+
 
 --2. decrement follower
 DROP function if exists decrementfollower_counter(userId uuid);
@@ -132,6 +147,21 @@ as
 $$
 BEGIN
   PERFORM deleteFollowingFollowerRelationship(followerId, followingId);
+  PERFORM decrementfollower_counter(followingId);
+  PERFORM decrementfollowing_counter(followerId);
+END;
+$$;
+
+--4.1 Unfollow transaction by Id
+DROP function if exists unfollow_transaction_by_id(followerId uuid, followingId uuid, relationship_id uuid);
+create or replace function unfollow_transaction_by_id(followerId uuid, followingId uuid, relationship_id uuid)
+returns void
+language plpgsql
+security definer
+as
+$$
+BEGIN
+  PERFORM delete_following_follower_relationship_by_id(relationship_id);
   PERFORM decrementfollower_counter(followingId);
   PERFORM decrementfollowing_counter(followerId);
 END;

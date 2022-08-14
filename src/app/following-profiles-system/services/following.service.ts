@@ -31,11 +31,17 @@ export class FollowingService {
 
   }
 
-  async getAllFollower(): Promise<{data: any, error: any}> {
+  async getAllFollower(user_id?: string): Promise<{data: any, error: any}> {
     let loggedInID: string | null = '';
     this.authentificationQuery.uuid$.subscribe(uuid => {
       loggedInID = uuid;
     });
+    let userToFetch: string;
+    if(user_id) {
+      userToFetch = user_id;
+    } else {
+      userToFetch = loggedInID;
+    }
     const followers: {data: any, error: any} = await this.supabaseClient
     .from('following_profile_system')
     .select(
@@ -47,15 +53,21 @@ export class FollowingService {
         avatar_url
       )`
     )
-    .eq('following', loggedInID)
+    .eq('following', userToFetch)
   return followers;
   }
 
-  async getAllFollowing(): Promise<{data: any, error: any}> {
+  async getAllFollowing(user_id?: string): Promise<{data: any, error: any}> {
     let loggedInID: string | null = '';
     this.authentificationQuery.uuid$.subscribe(uuid => {
       loggedInID = uuid;
     });
+    let userToFetch: string;
+    if(user_id) {
+      userToFetch = user_id;
+    } else {
+      userToFetch = loggedInID;
+    }
     const followings: {data: any, error: any} = await this.supabaseClient
     .from('following_profile_system')
     .select(
@@ -67,7 +79,7 @@ export class FollowingService {
         avatar_url
       )`
     )
-    .eq('follower', loggedInID)
+    .eq('follower', userToFetch)
   return followings;
   }
 
@@ -98,6 +110,17 @@ export class FollowingService {
     });
     const unfollowTransactionResult: { data: any, error: any } = await this.supabaseClient
       .rpc('unfollowtransaction', {followingid: loggedInID, followerid: follower})
+    return unfollowTransactionResult;
+  }
+
+  async removeFollowerTransactionById(event: {id: string, user_id: string}): Promise<{data: any, error: any}> {
+    console.log(event)
+    let loggedInID: string | null = '';
+    this.authentificationQuery.uuid$.subscribe(uuid => {
+      loggedInID = uuid;
+    });
+    const unfollowTransactionResult: { data: any, error: any } = await this.supabaseClient
+      .rpc('unfollow_transaction_by_id', {followingid: loggedInID, followerid: event.user_id, relationship_id: event.id})
     return unfollowTransactionResult;
   }
 }

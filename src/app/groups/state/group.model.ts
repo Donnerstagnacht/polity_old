@@ -19,13 +19,15 @@ export interface Group {
   contact_email: string,
   updated_at?: Date,
   members?: profile_list_item[],
-  membership_requests?: profile_list_item[]
+  membership_requests?: profile_list_item[],
+  followers?: profile_list_item[]
 }
 
 export function createGroup(params: Partial<Group>) {
   return {
     ...params,
     mebers: [],
-    membership_requests: []
+    membership_requests: [],
+    followers: []
   } as Group;
 }

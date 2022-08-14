@@ -8,7 +8,9 @@ commit;
 
 -- add a table to the publication
 alter publication supabase_realtime add table following_group_system;
+alter table "following_group_system" replica identity full;
 alter publication supabase_realtime add table following_profile_system;
+alter table "following_profile_system" replica identity full;
 alter publication supabase_realtime add table group_members;
 alter table "group_members" replica identity full;
 alter publication supabase_realtime add table groups;

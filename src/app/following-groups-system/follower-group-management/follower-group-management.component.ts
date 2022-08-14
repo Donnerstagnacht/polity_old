@@ -1,6 +1,10 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MessageService } from 'primeng/api';
+import { Observable } from 'rxjs';
+import { Group } from 'src/app/groups/state/group.model';
+import { GroupsQuery } from 'src/app/groups/state/groups.query';
+import { GroupsService } from 'src/app/groups/state/groups.service';
 import { FollowingGroupsService } from '../services/following-groups.service';
 
 @Component({
@@ -10,6 +14,7 @@ import { FollowingGroupsService } from '../services/following-groups.service';
   providers: [MessageService]
 })
 export class FollowerGroupManagementComponent implements OnInit {
+  group$ = new Observable<Group | undefined>();
   followers: any[] = [];
   followings: any[] = [];
   selectedGroupId: string = '';
@@ -19,6 +24,8 @@ export class FollowerGroupManagementComponent implements OnInit {
 
   constructor(
     private followingGroupsService: FollowingGroupsService,
+    private groupsService: GroupsService,
+    private groupQuery: GroupsQuery,
     private messageService: MessageService,
     private route: ActivatedRoute
   ) { }
@@ -27,10 +34,22 @@ export class FollowerGroupManagementComponent implements OnInit {
     this.getSelectedId();
     this.link = `/groups/${this.selectedGroupId}/edit`;
     this.getAllFollower();
+    this.groupsService.getAllFollowers(this.selectedGroupId);
+    this.groupsService.getRealTimeChangesFollowers(this.selectedGroupId);
   }
 
   getAllFollower(): void {
-    this.followingGroupsService.getAllFollower(this.selectedGroupId)
+    console.log('called getAllFollower');
+    this.group$ = this.groupQuery.selectEntity(this.selectedGroupId);
+    this.group$.subscribe((group: Group | undefined) => {
+      if(group?.followers) {
+        console.log('called requests');
+        console.log(group.membership_requests)
+        this.followers = []
+        this.followers = group.followers;
+      }
+    })
+/*     this.followingGroupsService.getAllFollower(this.selectedGroupId)
     .then((followers) => {
       this.followers = [];
       followers.data.forEach((profile: any) => {
@@ -46,11 +65,11 @@ export class FollowerGroupManagementComponent implements OnInit {
     })
     .catch((error) => {
       this.messageService.add({severity:'error', summary: 'Fehler beim laden. ' + error});
-    });
+    }); */
   }
 
-  onRemoveFollower(uuid: string): void {
-    this.followingGroupsService.removeFollowerTransaction(uuid, this.selectedGroupId)
+  onRemoveFollower(event: {id: string, user_id: string}): void {
+    this.followingGroupsService.removeFollowerTransaction(event.user_id, this.selectedGroupId)
     .then(() => {
       this.getAllFollower();
       this.messageService.add({severity:'success', summary: 'Follower entfernt.'});
