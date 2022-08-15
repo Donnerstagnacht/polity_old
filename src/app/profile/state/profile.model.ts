@@ -16,7 +16,8 @@ export interface Profile {
   city: string;
   about: string;
   followings: profile_list_item[],
-  followers: profile_list_item[]
+  followers: profile_list_item[],
+  fts?: string // test
 }
 
 export type ProfileUI = {

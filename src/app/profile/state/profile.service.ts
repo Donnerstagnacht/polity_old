@@ -48,12 +48,16 @@ export class ProfileService {
   }
 
   update(id: any, profile: Partial<Profile>) {
+    console.log('called')
+    console.log(profile)
     const update = {
       ...profile,
       id: id,
+      fts: undefined,
       updated_at: new Date()
     }
-
+    console.log('update')
+    console.log(update)
     return this.supabaseClient.from('profiles').upsert(update, {
       returning: 'minimal', // Don't return the value after inserting
     })
@@ -162,7 +166,7 @@ export class ProfileService {
       console.log('Payload')
       console.log(payload)
       if(payload.new.following === profil_id) {
-        this.groupsService.selectProfile(payload.new.following).then((member) => {
+        this.groupsService.selectProfile(payload.new.follower).then((member) => {
           console.log(member)
           console.log(member.data.id)
           console.log(member.data.name)

@@ -59,6 +59,10 @@ export class EditProfileComponent implements OnInit {
   }
 
   updateContactInformation(profile: Partial<Profile>): void {
+    console.log('user id')
+    console.log(this.loggedInUserId)
+    console.log('profile')
+    console.log(profile)
     try {
       this.loading = true;
       this.profileService.update(this.loggedInUserId, profile)
