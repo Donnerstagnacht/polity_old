@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MegaMenuItem } from 'primeng/api';
+import { MegaMenu } from 'primeng/megamenu';
 
 @Component({
   selector: 'app-menu-bar-secondary-top',
@@ -8,6 +9,9 @@ import { MegaMenuItem } from 'primeng/api';
 })
 export class MenuBarSecondaryTopComponent implements OnInit {
   @Input() menuItems: MegaMenuItem[] = [];
+  @Input() megaMenuItemSpecial: MegaMenuItem[] = [];
+  @Input() megaMenuItemStandart: MegaMenuItem[] = [];
+  @Input() specialOrStandart: boolean = false;
   loggedIn: boolean = false;
 
   constructor(

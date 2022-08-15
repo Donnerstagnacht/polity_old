@@ -1,4 +1,8 @@
-<app-menu-bar-secondary-top [menuItems]="menuItemsMega"></app-menu-bar-secondary-top>
+<app-menu-bar-secondary-top
+ [megaMenuItemSpecial]="menuItemsMegaSpecial"
+ [megaMenuItemStandart]="menuItemsMegaStandart"
+[specialOrStandart]="groupUI.isAdmin">
+</app-menu-bar-secondary-top>
 <!-- <p-toast styleClass="max-w-90"	 position="top-right">></p-toast> -->
 <app-wrapper-grid>
   <div slot="main">
@@ -17,11 +21,11 @@
       <h1 *ngIf="group$ | async as group">{{group.description}} Test</h1>
 
       <div class="flex flex-column">
-        <div class="flex align-items-center justify-content-center">
+        <div *ngIf="groupUI" class="flex align-items-center justify-content-center">
           <button
           pButton
           type="button"
-          label="{{isAlreadyFollower ? 'Unfollow' : 'Follow'}}"
+          label="{{groupUI.isFollowing ? 'Unfollow' : 'Follow'}}"
           (click)="followOrUnfollowGroup()"
         >
         </button>
@@ -69,7 +73,9 @@
   </div>
   <div slot="side">
     <app-menu-bar-secondary-right
-      [menuItems]="menuItems">
+      [menuItemsSpecial]="menuItemsSpecial"
+      [menuItemsStandart]="menuItemsStandart"
+      [specialOrStandart]="groupUI.isAdmin">
     </app-menu-bar-secondary-right>
   </div>
 </app-wrapper-grid>

@@ -6,6 +6,7 @@ position="top"
 [style]="{height:'inherit'}"
 header = "none">
   <div class="flex justify-content-around">
-    <p-megaMenu [model]="menuItems"></p-megaMenu>
+    <p-megaMenu *ngIf="specialOrStandart" [model]="megaMenuItemSpecial"></p-megaMenu>
+    <p-megaMenu *ngIf="!specialOrStandart" [model]="megaMenuItemStandart"></p-megaMenu>
   </div>
 </p-sidebar>

@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { createClient, RealtimeSubscription, SupabaseClient } from '@supabase/supabase-js';
 import { AuthentificationQuery } from '../../authentification/state/authentification.query';
 
 import { environment } from 'src/environments/environment';
+import { GroupsService } from 'src/app/groups/state/groups.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,8 @@ export class FollowingGroupsService {
   private supabaseClient: SupabaseClient;
 
   constructor(
-    private authentificationQuery: AuthentificationQuery) {
+    private authentificationQuery: AuthentificationQuery,
+    private groupsService: GroupsService) {
     this.supabaseClient = createClient(environment.supabaseUrl, environment.supabaseKey)
    }
 
@@ -75,5 +77,36 @@ export class FollowingGroupsService {
       .rpc('unfollowgrouptransaction', {followingid: groupId, followerid: follower})
     return unfollowTransactionResult;
   }
+
+  getRealTimeChangesIfStillFollower(group_id: string): RealtimeSubscription {
+    let loggedInID: string | null = '';
+    this.authentificationQuery.uuid$.subscribe(uuid => {
+      loggedInID = uuid;
+    })
+    console.log('Is still follower called?')
+    console.log(loggedInID)
+    const subscription = this.supabaseClient
+    .from<any>(`following_group_system`)
+    .on('INSERT', (payload) => {
+      console.log('Payload')
+      console.log(payload)
+      if(payload.new.following === group_id && payload.new.follower === loggedInID) {
+        this.groupsService.updateIsFollowing(group_id, true);
+      }
+    })
+    .on('DELETE', (payload) => {
+      console.log('Payload')
+      console.log(payload)
+      console.log('group.id_')
+      console.log(payload.old.following)
+      console.log(group_id)
+      if(payload.old.following === group_id && payload.old.follower === loggedInID) {
+        this.groupsService.updateIsFollowing(group_id, false);
+      }
+    })
+    .subscribe()
+    return subscription;
+  }
+
 
 }

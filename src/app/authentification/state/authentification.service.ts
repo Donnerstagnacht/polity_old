@@ -1,4 +1,5 @@
 import { Inject, Injectable } from '@angular/core';
+import { resetStores } from '@datorama/akita';
 import { PersistStateStorage } from '@datorama/akita/src/lib/persistState';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { GroupsStore } from 'src/app/groups/state/groups.store';
@@ -38,6 +39,9 @@ export class AuthentificationService {
     this.authentificationStore.reset();
     this.profileStore.reset();
     this.groupStore.reset();
+    this.groupStore.ui.reset();
+    this.groupStore.resetUIStore();
+    // resetStores();
     this.persistStorage.clear();
     if (response.error) {
       throw new Error(response.error.message);

@@ -6,16 +6,12 @@ import { createClient, RealtimeSubscription, SupabaseClient } from '@supabase/su
 import { environment } from 'src/environments/environment';
 import { profile_list_item } from './profile_list_item.model';
 import { GroupsQuery } from './groups.query';
-import { MembershipService } from 'src/app/membership-group-system/services/membership.service';
-import { FollowingGroupsService } from 'src/app/following-groups-system/services/following-groups.service';
 @Injectable({ providedIn: 'root' })
 export class GroupsService extends NgEntityService<GroupsState> {
   private supabaseClient: SupabaseClient;
 
   constructor(
     private groupsQuery: GroupsQuery,
-    private followingGroupsService: FollowingGroupsService,
-    private membershipService: MembershipService,
     protected override groupsStore: GroupsStore) {
     super(groupsStore);
     this.supabaseClient = createClient(environment.supabaseUrl, environment.supabaseKey)
@@ -118,7 +114,7 @@ export class GroupsService extends NgEntityService<GroupsState> {
   }
 
   getAllFollowers(group_id: string): void {
-    this.followingGroupsService.getAllFollower(group_id)
+    this.getAllFollower(group_id)
     .then((response) => {
       console.log('response')
       console.log(response)
@@ -131,12 +127,12 @@ export class GroupsService extends NgEntityService<GroupsState> {
           id: string,
           name: string,
         },
-        user_requests: string
+        follower: string
       }) => {
         allFollowers.push(
           {
             id: profile.id,
-            user_id: profile.user_requests,
+            user_id: profile.follower,
             avatar_url: profile.profiles.avatar_url,
             name: profile.profiles.name
           }
@@ -149,7 +145,7 @@ export class GroupsService extends NgEntityService<GroupsState> {
   }
 
   getAllMemberShipRequests(group_id: string): void {
-    this.membershipService.getAllMembershipRequests(group_id)
+    this.getAllMembershipRequests(group_id)
     .then((response) => {
       console.log('response')
       console.log(response)
@@ -459,4 +455,55 @@ export class GroupsService extends NgEntityService<GroupsState> {
   return member;
   }
 
+  updateIsMember(id: string, valueIsMember: boolean): void {
+    const update = {isMember: valueIsMember}
+    this.groupsStore.ui.upsert(id, update)
+  }
+
+  updateIsAdmin(id: string, valueIsAdmin: boolean): void {
+    const update = {isAdmin: valueIsAdmin}
+    this.groupsStore.ui.upsert(id, update)
+  }
+
+  updateIsFollowing(id: string, valueIsFollowing: boolean): void {
+    const update = {isFollowing: valueIsFollowing}
+    this.groupsStore.ui.upsert(id, update)
+  }
+
+  updateRequestedMembership(id: string, valueRequestedMembership: boolean): void {
+    const update = {requestedMembership: valueRequestedMembership}
+    this.groupsStore.ui.upsert(id, update)
+  }
+
+  async getAllFollower(groupId: string): Promise<{data: any, error: any}> {
+    const followers: {data: any, error: any} = await this.supabaseClient
+    .from('following_group_system')
+    .select(
+      `id,
+      follower,
+      profiles!following_group_system_follower_fkey (
+        id,
+        name,
+        avatar_url
+      )`
+    )
+    .eq('following', groupId)
+  return followers;
+  }
+
+  async getAllMembershipRequests(groupId: string): Promise<{data: any, error: any}> {
+    const membershipRequests: {data: any, error: any} = await this.supabaseClient
+    .from('membership_requests')
+    .select(
+      `id,
+      user_requests,
+      profiles!membership_requests_user_requests_fkey (
+        id,
+        name,
+        avatar_url
+      )`
+    )
+    .eq('group_requested', groupId)
+  return membershipRequests;
+  }
 }

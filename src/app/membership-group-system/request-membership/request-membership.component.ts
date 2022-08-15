@@ -1,6 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { AuthentificationQuery } from 'src/app/authentification/state/authentification.query';
+import { GroupsService } from 'src/app/groups/state/groups.service';
+import { GroupsQuery } from 'src/app/groups/state/groups.query';
+import { GroupUI } from 'src/app/groups/state/groups.store';
 import { MembershipService } from '../services/membership.service';
 
 @Component({
@@ -11,18 +14,27 @@ import { MembershipService } from '../services/membership.service';
 })
 export class RequestMembershipComponent implements OnInit {
   @Input() selectedGroupId: string = '';
-  isAlreadyMember: boolean = false;
-  membershipAlreadyRequested: boolean = true;
+  groupUI!: GroupUI;
 
   constructor(
     private messageService: MessageService,
     private membershipService: MembershipService,
-    private authentificationQuery: AuthentificationQuery
+    private authentificationQuery: AuthentificationQuery,
+    private groupsQuery: GroupsQuery,
+    private groupsService: GroupsService
   ) { }
 
   ngOnInit(): void {
+    this.membershipService.getRealTimeChangesIfStillMembershipRequested(this.selectedGroupId);
+    this.membershipService.getRealTimeChangesIfStillMember(this.selectedGroupId);
     this.checkIfMembershipAlreadyRequested();
     this.checkIfAlreadyMember();
+    this.groupsQuery.selectUI$(this.selectedGroupId).subscribe((ui) => {
+      if(ui) {
+        this.groupUI = ui;
+        console.log(this.groupUI)
+      }
+    })
   }
 
   checkIfMembershipAlreadyRequested(): void {
@@ -30,9 +42,9 @@ export class RequestMembershipComponent implements OnInit {
       this.membershipService.membershipAlreadyRequested(this.selectedGroupId)
       .then((results) => {
         if(results.data[0] !== undefined) {
-          this.membershipAlreadyRequested = true;
+          this.groupsService.updateRequestedMembership(this.selectedGroupId, true)
         } else {
-          this.membershipAlreadyRequested = false;
+          this.groupsService.updateRequestedMembership(this.selectedGroupId, false)
         }
       })
       .catch();
@@ -44,9 +56,9 @@ export class RequestMembershipComponent implements OnInit {
       this.membershipService.alreadyMember(this.selectedGroupId)
       .then((results) => {
         if(results.data[0] !== undefined) {
-          this.isAlreadyMember = true;
+          this.groupsService.updateIsMember(this.selectedGroupId, true)
         } else {
-          this.isAlreadyMember = false;
+          this.groupsService.updateIsMember(this.selectedGroupId, false)
         }
       })
       .catch();
@@ -54,10 +66,10 @@ export class RequestMembershipComponent implements OnInit {
   }
 
   requestMembershipOrLeaveGroup(): void {
-    if(this.isAlreadyMember) {
+    if(this.groupUI.isMember) {
       this.leaveGroup();
     } else {
-      if (this.membershipAlreadyRequested) {
+      if (this.groupUI.requestedMembership) {
         this.cancelRequestMembership();
       } else {
         this.requestMembership();
@@ -68,7 +80,6 @@ export class RequestMembershipComponent implements OnInit {
   requestMembership(): void {
     this.membershipService.requestMembership(this.selectedGroupId)
     .then(() => {
-      this.membershipAlreadyRequested = true;
       this.messageService.add({severity:'success', summary: 'Beitrittansfrage verschickt.'});
     })
     .catch((error: any) =>  {
@@ -79,7 +90,6 @@ export class RequestMembershipComponent implements OnInit {
   cancelRequestMembership(): void {
     this.membershipService.cancelMembershipRequest(this.selectedGroupId)
     .then(() => {
-      this.membershipAlreadyRequested = false;
       this.messageService.add({severity:'success', summary: 'Beitrittansfrage zurückgezogen.'});
     })
     .catch((error: any) =>  {
@@ -95,7 +105,6 @@ export class RequestMembershipComponent implements OnInit {
     if (loggedInID) {
       this.membershipService.removeMember(loggedInID, this.selectedGroupId)
       .then(() => {
-        this.isAlreadyMember = false;
         this.messageService.add({severity:'success', summary: 'Erfolgreich ausgetreten.'});
       })
       .catch((error: any) =>  {

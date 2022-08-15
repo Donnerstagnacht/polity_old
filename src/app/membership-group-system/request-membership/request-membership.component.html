@@ -2,7 +2,7 @@
 <button
 pButton
 type="button"
-label="{{isAlreadyMember ? 'Austreten' : membershipAlreadyRequested  ? 'Anfrage zurückziehen' : 'Mitgliedschaft anfragen'}}"
+label="{{groupUI.isMember ? 'Austreten' : groupUI.requestedMembership  ? 'Anfrage zurückziehen' : 'Mitgliedschaft anfragen'}}"
 (click)="requestMembershipOrLeaveGroup()"
 >
 </button>

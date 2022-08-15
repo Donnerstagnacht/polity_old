@@ -33,9 +33,9 @@ export class FollowerGroupManagementComponent implements OnInit {
   ngOnInit(): void {
     this.getSelectedId();
     this.link = `/groups/${this.selectedGroupId}/edit`;
-    this.getAllFollower();
     this.groupsService.getAllFollowers(this.selectedGroupId);
     this.groupsService.getRealTimeChangesFollowers(this.selectedGroupId);
+    this.getAllFollower();
   }
 
   getAllFollower(): void {
@@ -44,7 +44,7 @@ export class FollowerGroupManagementComponent implements OnInit {
     this.group$.subscribe((group: Group | undefined) => {
       if(group?.followers) {
         console.log('called requests');
-        console.log(group.membership_requests)
+        console.log(group.followers)
         this.followers = []
         this.followers = group.followers;
       }
@@ -69,6 +69,15 @@ export class FollowerGroupManagementComponent implements OnInit {
   }
 
   onRemoveFollower(event: {id: string, user_id: string}): void {
+    console.log('onrRemove follower')
+    console.log('id')
+    console.log(event.user_id)
+    console.log('user_id')
+    console.log(event.user_id)
+    console.log('group_id')
+
+    console.log(this.selectedGroupId)
+
     this.followingGroupsService.removeFollowerTransaction(event.user_id, this.selectedGroupId)
     .then(() => {
       this.getAllFollower();

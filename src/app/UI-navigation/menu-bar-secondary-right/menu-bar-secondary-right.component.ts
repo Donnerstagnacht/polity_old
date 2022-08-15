@@ -7,6 +7,9 @@ import { MenuItem } from 'primeng/api';
   styleUrls: ['./menu-bar-secondary-right.component.scss']
 })
 export class MenuBarSecondaryRightComponent implements OnInit {
+  @Input() menuItemsSpecial: MenuItem[] = [];
+  @Input() menuItemsStandart: MenuItem[] = [];
+  @Input() specialOrStandart: boolean = false;
   @Input() menuItems: MenuItem[] = [];
 
   constructor() { }

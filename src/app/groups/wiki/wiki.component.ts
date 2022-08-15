@@ -8,6 +8,8 @@ import { groupsMenuitemsParameter, groupsMenuitemsMegaParameter, groupsMenuitems
 import { GroupsService } from '../services/groups.service';
 import { GroupsQuery } from '../state/groups.query';
 import { GroupsService as GroupsServiceState } from '../state/groups.service';
+import { GroupUI } from '../state/groups.store';
+import { MembershipService } from 'src/app/membership-group-system/services/membership.service';
 @Component({
   selector: 'app-wiki',
   templateUrl: './wiki.component.html',
@@ -15,13 +17,16 @@ import { GroupsService as GroupsServiceState } from '../state/groups.service';
   providers: [MessageService]
 })
 export class WikiComponent implements OnInit {
-  menuItems: MenuItem[] = [];
-  menuItemsMega: MegaMenuItem[] = [];
+  menuItemsSpecial: MenuItem[] = [];
+  menuItemsStandart: MenuItem[] = [];
+  menuItemsMegaSpecial: MegaMenuItem[] = [];
+  menuItemsMegaStandart: MegaMenuItem[] = [];
+
 
   selectedGroupId: string | undefined = undefined;
   group$ = new Observable<Group | undefined>();
-
-  isAlreadyFollower: boolean = false;
+  groupUI$ = new Observable<GroupUI | undefined>();
+  groupUI!: GroupUI;
 
   constructor(
     private route: ActivatedRoute,
@@ -29,6 +34,7 @@ export class WikiComponent implements OnInit {
     private groupsServiceState: GroupsServiceState,
     private messageService: MessageService,
     private followingGroupsService: FollowingGroupsService,
+    private membershipService: MembershipService,
     private groupsQuery: GroupsQuery
   ) { }
 
@@ -39,6 +45,42 @@ export class WikiComponent implements OnInit {
       this.getGroupById(this.selectedGroupId);
       this.checkIfAlreadyFollower(this.selectedGroupId);
       this.groupsServiceState.getRealTimeChanges(this.selectedGroupId);
+      this.followingGroupsService.getRealTimeChangesIfStillFollower(this.selectedGroupId);
+      this.membershipService.getRealTimeChangesIfStillAdmin(this.selectedGroupId);
+    }
+
+    if (this.selectedGroupId) {
+      this.menuItemsSpecial = groupsMenuitemsParameterLoggedIn(this.selectedGroupId);
+      this.menuItemsStandart = groupsMenuitemsParameter(this.selectedGroupId);
+      this.menuItemsMegaSpecial = groupsMenuitemsMegaParameterLoggedIn(this.selectedGroupId);
+      this.menuItemsMegaStandart = groupsMenuitemsMegaParameter(this.selectedGroupId);
+
+/*       console.log('US Store test')
+      const test =  {isMember: true};
+      console.log('set data')
+      this.groupsServiceState.updateIsMember(this.selectedGroupId, true);
+      this.groupsServiceState.updateIsAdmin(this.selectedGroupId, true);
+      this.groupsServiceState.updateIsFollowing(this.selectedGroupId, true);
+      this.groupsServiceState.updateRequestedMembership(this.selectedGroupId, true); */
+
+/*       this.groupsQuery.selectIsMember$.subscribe(isMember => {
+        console.log('found ui is member')
+        console.log(isMember);
+      }) */
+      //this.groupsQuery.ui.selectEntity(this.selectedGroupId).subscribe(ui => {
+      this.groupUI$ = this.groupsQuery.selectUI$(this.selectedGroupId);
+      this.groupsQuery.selectUI$(this.selectedGroupId).subscribe((ui: GroupUI | undefined) => {
+        console.log(ui)
+        console.log('query is following test')
+        console.log(ui?.isFollowing)
+        if (ui) {
+          this.groupUI = ui;
+        }
+      })
+      if(this.selectedGroupId && this.groupUI) {
+        // this.displayAdminMenu(this.selectedGroupId, this.groupUI.isAdmin);
+      }
+      // this.groupsQuery.selectEntity(this.selectedGroupId).subscribe(is)
     }
   }
 
@@ -59,10 +101,13 @@ export class WikiComponent implements OnInit {
     }); */
     this.groupsService.isLoggedInUserAdmin(selectedGroupId)
     .then((results) => {
-      this.displayAdminMenu(selectedGroupId!, results.data.is_admin);
+      // this.displayAdminMenu(selectedGroupId!, results.data.is_admin);
+      console.log('*************+++++++')
+      console.log(results.data.is_admin)
+      this.groupsServiceState.updateIsAdmin(selectedGroupId, results.data.is_admin);
     })
     .catch((error) => {
-      this.displayAdminMenu(selectedGroupId!, false);
+      // this.displayAdminMenu(selectedGroupId!, false);
     });
   }
 
@@ -74,16 +119,23 @@ export class WikiComponent implements OnInit {
   checkIfAlreadyFollower(selectedGroupId: string): void {
     this.followingGroupsService.isAlreadyFollower(selectedGroupId)
     .then((results) => {
+      console.log('results of follower check')
       if(results.data[0] !== undefined) {
-        this.isAlreadyFollower = true;
+        console.log('following')
+        if(this.selectedGroupId) {
+          this.groupsServiceState.updateIsFollowing(this.selectedGroupId, true);
+        }
       } else {
-        this.isAlreadyFollower = false;
+        if(this.selectedGroupId) {
+          console.log('no following')
+          this.groupsServiceState.updateIsFollowing(this.selectedGroupId, false);
+        }
       }
     })
     .catch();
   }
 
-  displayAdminMenu(selectedGroupId: string, isAdmin: boolean): void {
+/*   displayAdminMenu(selectedGroupId: string, isAdmin: boolean): void {
     if(isAdmin) {
       this.menuItemsMega = groupsMenuitemsMegaParameterLoggedIn(selectedGroupId);
       this.menuItems = groupsMenuitemsParameterLoggedIn(selectedGroupId);
@@ -91,11 +143,42 @@ export class WikiComponent implements OnInit {
       this.menuItemsMega = groupsMenuitemsMegaParameter(selectedGroupId);
       this.menuItems = groupsMenuitemsParameter(selectedGroupId);
     }
-  }
+  } */
 
 
   followOrUnfollowGroup(): void {
-    if(this.selectedGroupId) {
+    if (this.selectedGroupId) {
+      if(this.groupUI?.isFollowing) {
+        this.followingGroupsService.unfollowTransaction(this.selectedGroupId)
+        .then(() => {
+          if(this.selectedGroupId) {
+            this.groupsServiceState.updateIsFollowing(this.selectedGroupId, false);
+            this.messageService.add({severity:'success', summary: 'Du folgst einer neuen Inspirationsquelle.'});
+          }
+        })
+        .catch((error) => {
+          this.messageService.add({severity:'error', summary: error});
+        });
+      } else {
+        this.followingGroupsService.followTransaction(this.selectedGroupId)
+        .then(() => {
+          if(this.selectedGroupId) {
+            this.groupsServiceState.updateIsFollowing(this.selectedGroupId, true)
+            this.messageService.add({severity:'success', summary: 'Du folgst einer neuen Inspirationsquelle.'});
+          }
+        })
+        .catch((error) => {
+          this.messageService.add({severity:'error', summary: error});
+        });
+
+    }
+
+    }
+
+
+
+
+/*     if(this.selectedGroupId) {
       if(this.isAlreadyFollower) {
         this.followingGroupsService.unfollowTransaction(this.selectedGroupId)
         .then(() => {
@@ -115,7 +198,7 @@ export class WikiComponent implements OnInit {
           this.messageService.add({severity:'error', summary: error});
         });
       }
-    }
+    } */
   }
 
 }
