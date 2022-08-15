@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute  } from '@angular/router';
 import { AuthentificationQuery } from '../../authentification/state/authentification.query';
 import { ProfileService } from '../state/profile.service';
@@ -24,7 +24,6 @@ export class ProfileComponent implements OnInit {
   profile$ = new Observable<Profile | undefined>();
   profileUI!: ProfileUI;
 
-  isAlreadyFollower: boolean = false;
   selectedProfileId: string | null = null;
   loggedInUserId: string | null = null;
 
@@ -92,14 +91,13 @@ export class ProfileComponent implements OnInit {
 
   followOrUnfollowProfile(): void {
     if(this.selectedProfileId) {
-      if(this.isAlreadyFollower) {
+      if(this.profileUI.isFollowing) {
         this.followingservice.unfollowTransaction(this.selectedProfileId)
         .then(() => {
-          this.isAlreadyFollower = false;
           if(this.selectedProfileId) {
-            this.profileService.updateIsFollowing(this.selectedProfileId, false)
+            this.profileService.updateIsFollowing(this.selectedProfileId, false);
+            this.messageService.add({severity:'success', summary: 'Du folgst einer neuen Inspirationsquelle.'});
           }
-          this.messageService.add({severity:'success', summary: 'Du folgst einer neuen Inspirationsquelle.'});
         })
         .catch((error) => {
           this.messageService.add({severity:'error', summary: error});
@@ -107,11 +105,10 @@ export class ProfileComponent implements OnInit {
       } else {
         this.followingservice.followTransaction(this.selectedProfileId)
         .then(() => {
-          this.isAlreadyFollower = true;
           if(this.selectedProfileId) {
-            this.profileService.updateIsFollowing(this.selectedProfileId, true)
+            this.profileService.updateIsFollowing(this.selectedProfileId, true);
+            this.messageService.add({severity:'success', summary: 'Du folgst einer neuen Inspirationsquelle.'});
           }
-          this.messageService.add({severity:'success', summary: 'Du folgst einer neuen Inspirationsquelle.'});
         })
         .catch((error) => {
           this.messageService.add({severity:'error', summary: error});
@@ -125,13 +122,11 @@ export class ProfileComponent implements OnInit {
       this.followingservice.isAlreadyFollower(this.selectedProfileId)
       .then((results) => {
         if(results.data[0] !== undefined) {
-          this.isAlreadyFollower = true;
           console.log('following')
           if(this.selectedProfileId) {
             this.profileService.updateIsFollowing(this.selectedProfileId, true);
           }
         } else {
-          this.isAlreadyFollower = false;
           if(this.selectedProfileId) {
             this.profileService.updateIsFollowing(this.selectedProfileId, false);
           }

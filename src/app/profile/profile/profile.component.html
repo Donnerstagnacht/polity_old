@@ -17,9 +17,8 @@
         </app-wiki-header>
         <div class="flex flex-column">
           <div
-            class="flex align-items-center justify-content-center">
+          *ngIf="profileUI" class="flex align-items-center justify-content-center">
             <button
-              *ngIf="!(this.selectedProfileId === this.loggedInUserId)"
               pButton
               type="button"
               label="{{profileUI.isFollowing ? 'Unfollow' : 'Follow'}}"
