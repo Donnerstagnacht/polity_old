@@ -1,9 +1,10 @@
 <app-menu-bar-secondary-top
-  *ngIf="this.selectedProfileId === this.loggedInUserId"
-  [menuItems]="menuItemsMega">
+  [megaMenuItemSpecial]="menuItemsMegaSpecial"
+  [megaMenuItemStandart]="menuItemsMegaStandart"
+  [specialOrStandart]="profileUI.isOwner">
 </app-menu-bar-secondary-top>
 <p-toast styleClass="max-w-90"	 position="top-right">></p-toast>
-  <app-wrapper-grid [noTopBar]="!(this.selectedProfileId === this.loggedInUserId)">
+  <app-wrapper-grid [noTopBar]="false">
     <div slot="main">
       <div class="mb-8" >
         <app-wiki-header
@@ -21,7 +22,7 @@
               *ngIf="!(this.selectedProfileId === this.loggedInUserId)"
               pButton
               type="button"
-              label="{{isAlreadyFollower ? 'Unfollow' : 'Follow'}}"
+              label="{{profileUI.isFollowing ? 'Unfollow' : 'Follow'}}"
               (click)="followOrUnfollowProfile()"
             >
             </button>
@@ -68,8 +69,9 @@
   </div>
   <div slot="side">
     <app-menu-bar-secondary-right
-      *ngIf="this.selectedProfileId === this.loggedInUserId"
-      [menuItems]="menuItems">
+    [menuItemsSpecial]="menuItemsSpecial"
+    [menuItemsStandart]="menuItemsStandart"
+    [specialOrStandart]="profileUI.isOwner">
     </app-menu-bar-secondary-right>
   </div>
 </app-wrapper-grid>

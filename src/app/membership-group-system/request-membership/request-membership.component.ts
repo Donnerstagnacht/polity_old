@@ -3,8 +3,8 @@ import { MessageService } from 'primeng/api';
 import { AuthentificationQuery } from 'src/app/authentification/state/authentification.query';
 import { GroupsService } from 'src/app/groups/state/groups.service';
 import { GroupsQuery } from 'src/app/groups/state/groups.query';
-import { GroupUI } from 'src/app/groups/state/groups.store';
 import { MembershipService } from '../services/membership.service';
+import { GroupUI } from 'src/app/groups/state/group.model';
 
 @Component({
   selector: 'app-request-membership',

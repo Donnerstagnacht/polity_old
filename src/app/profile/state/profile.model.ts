@@ -19,6 +19,17 @@ export interface Profile {
   followers: profile_list_item[]
 }
 
+export type ProfileUI = {
+  isFollowing: boolean;
+  isOwner: boolean;
+
+}
+
+export const initialGroupUIState: ProfileUI = {
+  isFollowing: false,
+  isOwner: false
+}
+
 export function createProfile(params: Partial<Profile>) {
   return {
     ...params

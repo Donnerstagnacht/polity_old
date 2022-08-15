@@ -4,8 +4,8 @@ import { AuthentificationQuery } from '../../authentification/state/authentifica
 import { ProfileService } from '../state/profile.service';
 import { FollowingService } from 'src/app/following-profiles-system/services/following.service';
 import { MegaMenuItem, MenuItem, MessageService } from 'primeng/api';
-import { profileMenuitems, profileMenuitemsMega } from '../state/profileMenuItems';
-import { Profile } from '../state/profile.model';
+import { profileMenuitems, profileMenuitemsIsOwner, profileMenuitemsMega, profileMenuitemsMegaIsOwner } from '../state/profileMenuItems';
+import { Profile, ProfileUI } from '../state/profile.model';
 import { ProfileQuery } from '../state/profile.query';
 import { Observable } from 'rxjs';
 
@@ -16,10 +16,13 @@ import { Observable } from 'rxjs';
   providers: [MessageService]
 })
 export class ProfileComponent implements OnInit {
-  menuItems: MenuItem[] = profileMenuitems;
-  menuItemsMega: MegaMenuItem[] = profileMenuitemsMega;
+  menuItemsSpecial: MenuItem[] = [];
+  menuItemsStandart: MenuItem[] = [];
+  menuItemsMegaSpecial: MegaMenuItem[] = [];
+  menuItemsMegaStandart: MegaMenuItem[] = [];
 
   profile$ = new Observable<Profile | undefined>();
+  profileUI!: ProfileUI;
 
   isAlreadyFollower: boolean = false;
   selectedProfileId: string | null = null;
@@ -37,10 +40,27 @@ export class ProfileComponent implements OnInit {
   ngOnInit(): void {
     this.getLoggedInUserId$();
     this.getSelectedId();
+    if(this.selectedProfileId) {
+      this.profileService.checkIfIsOwner(this.selectedProfileId);
+    }
     this.getSelectedProfile();
+    if (this.selectedProfileId) {
+      this.profileQuery.selectUI$(this.selectedProfileId).subscribe((ui: ProfileUI | undefined) => {
+        console.log(ui)
+        if(ui) {
+          this.profileUI = ui;
+        }
+      });
+    }
     this.checkIfAlreadyFollower();
     if (this.selectedProfileId) {
+      this.menuItemsSpecial = profileMenuitemsIsOwner(this.selectedProfileId);
+      this.menuItemsStandart = profileMenuitems(this.selectedProfileId);
+      this.menuItemsMegaSpecial = profileMenuitemsMegaIsOwner(this.selectedProfileId);
+      this.menuItemsMegaStandart = profileMenuitemsMega(this.selectedProfileId);
+
       this.profileService.getRealTimeChanges(this.selectedProfileId);
+      this.profileService.getRealTimeChangesIfStillFollower(this.selectedProfileId);
     }
   }
 
@@ -76,6 +96,9 @@ export class ProfileComponent implements OnInit {
         this.followingservice.unfollowTransaction(this.selectedProfileId)
         .then(() => {
           this.isAlreadyFollower = false;
+          if(this.selectedProfileId) {
+            this.profileService.updateIsFollowing(this.selectedProfileId, false)
+          }
           this.messageService.add({severity:'success', summary: 'Du folgst einer neuen Inspirationsquelle.'});
         })
         .catch((error) => {
@@ -85,6 +108,9 @@ export class ProfileComponent implements OnInit {
         this.followingservice.followTransaction(this.selectedProfileId)
         .then(() => {
           this.isAlreadyFollower = true;
+          if(this.selectedProfileId) {
+            this.profileService.updateIsFollowing(this.selectedProfileId, true)
+          }
           this.messageService.add({severity:'success', summary: 'Du folgst einer neuen Inspirationsquelle.'});
         })
         .catch((error) => {
@@ -100,8 +126,15 @@ export class ProfileComponent implements OnInit {
       .then((results) => {
         if(results.data[0] !== undefined) {
           this.isAlreadyFollower = true;
+          console.log('following')
+          if(this.selectedProfileId) {
+            this.profileService.updateIsFollowing(this.selectedProfileId, true);
+          }
         } else {
           this.isAlreadyFollower = false;
+          if(this.selectedProfileId) {
+            this.profileService.updateIsFollowing(this.selectedProfileId, false);
+          }
         }
       })
       .catch();

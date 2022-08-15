@@ -39,8 +39,9 @@ export class AuthentificationService {
     this.authentificationStore.reset();
     this.profileStore.reset();
     this.groupStore.reset();
-    this.groupStore.ui.reset();
+    // this.groupStore.ui.reset();
     this.groupStore.resetUIStore();
+    this.profileStore.resetUIStore();
     // resetStores();
     this.persistStorage.clear();
     if (response.error) {

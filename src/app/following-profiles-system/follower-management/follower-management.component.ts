@@ -2,11 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { Observable } from 'rxjs';
 import { AuthentificationQuery } from 'src/app/authentification/state/authentification.query';
-import { profile_list_item } from 'src/app/groups/state/profile_list_item.model';
 import { Profile } from 'src/app/profile/state/profile.model';
 import { ProfileQuery } from 'src/app/profile/state/profile.query';
 import { ProfileService } from 'src/app/profile/state/profile.service';
-import { ProfileStore } from 'src/app/profile/state/profile.store';
 import { FollowingService } from '../services/following.service';
 
 @Component({

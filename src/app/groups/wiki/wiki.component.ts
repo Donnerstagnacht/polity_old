@@ -8,7 +8,7 @@ import { groupsMenuitemsParameter, groupsMenuitemsMegaParameter, groupsMenuitems
 import { GroupsService } from '../services/groups.service';
 import { GroupsQuery } from '../state/groups.query';
 import { GroupsService as GroupsServiceState } from '../state/groups.service';
-import { GroupUI } from '../state/groups.store';
+import { GroupUI } from '../state/group.model';
 import { MembershipService } from 'src/app/membership-group-system/services/membership.service';
 @Component({
   selector: 'app-wiki',
@@ -25,7 +25,6 @@ export class WikiComponent implements OnInit {
 
   selectedGroupId: string | undefined = undefined;
   group$ = new Observable<Group | undefined>();
-  groupUI$ = new Observable<GroupUI | undefined>();
   groupUI!: GroupUI;
 
   constructor(
@@ -68,7 +67,6 @@ export class WikiComponent implements OnInit {
         console.log(isMember);
       }) */
       //this.groupsQuery.ui.selectEntity(this.selectedGroupId).subscribe(ui => {
-      this.groupUI$ = this.groupsQuery.selectUI$(this.selectedGroupId);
       this.groupsQuery.selectUI$(this.selectedGroupId).subscribe((ui: GroupUI | undefined) => {
         console.log(ui)
         console.log('query is following test')

@@ -23,6 +23,20 @@ export interface Group {
   followers?: profile_list_item[]
 }
 
+export type GroupUI = {
+  isFollowing: boolean;
+  isAdmin: boolean;
+  requestedMembership: boolean;
+  isMember: boolean;
+}
+
+export const initialGroupUIState: GroupUI = {
+  isFollowing: false,
+  isAdmin: false,
+  requestedMembership: false,
+  isMember: false
+}
+
 export function createGroup(params: Partial<Group>) {
   return {
     ...params,

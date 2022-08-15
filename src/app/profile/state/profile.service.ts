@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ID } from '@datorama/akita';
 import { createClient, RealtimeSubscription, SupabaseClient } from '@supabase/supabase-js';
+import { AuthentificationQuery } from 'src/app/authentification/state/authentification.query';
 import { FollowingService } from 'src/app/following-profiles-system/services/following.service';
 import { GroupsService } from 'src/app/groups/state/groups.service';
 import { profile_list_item } from 'src/app/groups/state/profile_list_item.model';
@@ -17,7 +18,8 @@ export class ProfileService {
     private profileStore: ProfileStore,
     private profileFollowingService: FollowingService,
     private groupsService: GroupsService,
-    private profileQuery: ProfileQuery
+    private profileQuery: ProfileQuery,
+    private authentificationQuery: AuthentificationQuery
     ) {
     this.supabaseClient = createClient(environment.supabaseUrl, environment.supabaseKey)
 
@@ -252,5 +254,57 @@ export class ProfileService {
     return subscription;
   }
 
+  checkIfIsOwner(profil_id: string): void {
+    let loggedInID: string | null = '';
+    this.authentificationQuery.uuid$.subscribe(uuid => {
+      loggedInID = uuid;
+    })
+
+    if(loggedInID === profil_id) {
+      this.updateIsProfileOwner(loggedInID, true)
+    } else {
+      this.updateIsProfileOwner(profil_id, false)
+    }
+  }
+
+  updateIsFollowing(id: string, valueIsFollowing: boolean): void {
+    const update = {isFollowing: valueIsFollowing}
+    this.profileStore.ui.upsert(id, update)
+  }
+
+  updateIsProfileOwner(id: string, valueIsOwner: boolean): void {
+    const update = {isOwner: valueIsOwner}
+    this.profileStore.ui.upsert(id, update)
+  }
+
+  getRealTimeChangesIfStillFollower(profile_id: string): RealtimeSubscription {
+    let loggedInID: string | null = '';
+    this.authentificationQuery.uuid$.subscribe(uuid => {
+      loggedInID = uuid;
+    })
+    console.log('Is still follower called?')
+    console.log(loggedInID)
+    const subscription = this.supabaseClient
+    .from<any>(`following_profile_system`)
+    .on('INSERT', (payload) => {
+      console.log('Payload')
+      console.log(payload)
+      if(payload.new.following === profile_id && payload.new.follower === loggedInID) {
+        this.updateIsFollowing(profile_id, true);
+      }
+    })
+    .on('DELETE', (payload) => {
+      console.log('Payload')
+      console.log(payload)
+      console.log('profile.id_')
+      console.log(payload.old.following)
+      console.log(profile_id)
+      if(payload.old.following === profile_id && payload.old.follower === loggedInID) {
+        this.updateIsFollowing(profile_id, false);
+      }
+    })
+    .subscribe()
+    return subscription;
+  }
 
 }

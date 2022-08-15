@@ -1,5 +1,8 @@
-<app-menu-bar-secondary-top [menuItems]="menuItemsMega"></app-menu-bar-secondary-top>
-
+<app-menu-bar-secondary-top
+  [megaMenuItemSpecial]="menuItemsMegaSpecial"
+  [megaMenuItemStandart]="menuItemsMegaStandart"
+  [specialOrStandart]="isOwner">
+</app-menu-bar-secondary-top>
 <app-wrapper-grid>
   <div slot="main">
     <div class="mb-8">
@@ -23,6 +26,9 @@
     </div>
   </div>
   <div slot="side">
-    <app-menu-bar-secondary-right [menuItems]="menuItems"></app-menu-bar-secondary-right>
-  </div>
+    <app-menu-bar-secondary-right
+    [menuItemsSpecial]="menuItemsSpecial"
+    [menuItemsStandart]="menuItemsStandart"
+    [specialOrStandart]="isOwner">
+    </app-menu-bar-secondary-right>  </div>
 </app-wrapper-grid>

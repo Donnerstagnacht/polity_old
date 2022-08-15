@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { EntityUIQuery, QueryEntity } from '@datorama/akita';
 import { Observable } from 'rxjs';
-import { GroupsStore, GroupsState, GroupUIState, GroupUI } from './groups.store';
+import { GroupUI } from './group.model';
+import { GroupsStore, GroupsState, GroupUIState } from './groups.store';
 
 @Injectable({ providedIn: 'root' })
 export class GroupsQuery extends QueryEntity<GroupsState> {
