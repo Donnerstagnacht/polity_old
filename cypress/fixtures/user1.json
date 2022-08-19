@@ -1,0 +1,12 @@
+{
+  "name": "User 1",
+  "email": "user1@gmail.com",
+  "password": "12345678",
+  "website": "www.user1.com",
+  "about": "I am User 1 and I love to test this app.",
+  "contactEmail": "user1@contactemail.com",
+  "contactPhone": "9999.9999",
+  "street": "User 1 street",
+  "postCode": "User 1 post Code",
+  "city": "User 1 City"
+}

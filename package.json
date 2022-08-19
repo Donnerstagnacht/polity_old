@@ -7,7 +7,8 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "docker": "docker-compose -f ./docker/docker-compose.yml -f ./docker/dev/docker-compose.dev.yml up"
+    "docker": "docker-compose -f ./docker/docker-compose.yml -f ./docker/dev/docker-compose.dev.yml up",
+    "e2e": "cypress open"
   },
   "private": true,
   "dependencies": {
@@ -42,6 +43,7 @@
     "@types/jasmine": "~3.10.0",
     "@types/node": "^12.11.1",
     "@types/uuid": "^8.3.4",
+    "cypress": "^10.6.0",
     "jasmine-core": "~4.0.0",
     "karma": "~6.3.0",
     "karma-chrome-launcher": "~3.1.0",

@@ -3,7 +3,7 @@
   <div slot="main">
     <div class="mb-8">
       <div class="mx-4">
-        <app-back-button [title]="'Zurück'" [link]="'/profile/edit'"></app-back-button>
+        <app-back-button data-cy="backButton" [title]="'Zurück'" [link]="'/profile/edit'"></app-back-button>
         <div class="mt-4" *ngIf="profile">
           <h5>Persönliche Daten</h5>
           <p *ngIf="profile">{{profile.name}}</p>
@@ -17,6 +17,7 @@
                   pInputText
                   name="name"
                   [(ngModel)]="profile.name"
+                  data-cy="name"
                 >
                 <label for="float-input">Name</label>
               </span>
@@ -29,6 +30,7 @@
                   pInputText
                   name="website"
                   [(ngModel)]="profile.website"
+                  data-cy="website"
                 >
                 <label for="float-input">Website</label>
               </span>
@@ -42,6 +44,7 @@
                 class="w-full"
                 name="about"
                 [(ngModel)]="profile.about"
+                data-cy="about"
               ></textarea>
               <label for="float-input">Über mich</label>
             </span>
@@ -58,6 +61,7 @@
               [auto]="true"
               [customUpload]="true"
               class="full-w"
+              data-cy="imageUpload"
             >
             </p-fileUpload>
 
@@ -84,6 +88,7 @@
                   pInputText
                   name="contact_email"
                   [(ngModel)]="profile.contact_email"
+                  data-cy="contactEmail"
                 >
                 <label for="float-input">Email</label>
               </span>
@@ -96,6 +101,7 @@
                   pInputText
                   name="contact_phone"
                   [(ngModel)]="profile.contact_phone"
+                  data-cy="contactPhone"
                   >
                 <label for="float-input">Phone</label>
               </span>
@@ -111,6 +117,7 @@
                   pInputText
                   name="street"
                   [(ngModel)]="profile.street"
+                  data-cy="street"
                   >
                 <label for="float-input">Street</label>
               </span>
@@ -123,6 +130,7 @@
                   pInputText
                   name="post_code"
                   [(ngModel)]="profile.post_code"
+                  data-cy="postCode"
                 >
                 <label for="float-input">Post Code</label>
               </span>
@@ -135,6 +143,7 @@
                   pInputText
                   name="city"
                   [(ngModel)]="profile.city"
+                  data-cy="city"
                 >
                 <label for="float-input">City</label>
               </span>
@@ -148,6 +157,7 @@
               label="{{loading ? 'Loading ...' : 'Update'}}"
               (click)="updateContactInformation(profile)"
               [disabled]="loading"
+              data-cy="updateProfileInformationButton"
             >
             </button>
             </div>

@@ -12,17 +12,17 @@ export class MenuBarLeftComponent implements OnInit {
   showAddMenu:boolean = false;
 
   loggedInItems: MenuItem[] = [
-    {label: 'PROFIL', routerLink: ['/profile']},
-    {label: 'GRUPPEN', routerLink: ['/groups']},
-    {label: 'ERSTELLEN', command: () => this.toggleFullScreen()},
-    {label: 'SUCHE', routerLink: ['/search']},
-    {label: 'ORGA', routerLink: ['/orga']}
+    {label: 'PROFIL', routerLink: ['/profile'], id: 'profile-cy'},
+    {label: 'GRUPPEN', routerLink: ['/groups'], id: 'groups-cy'},
+    {label: 'ERSTELLEN', command: () => this.toggleFullScreen(), id: 'create-cy'},
+    {label: 'SUCHE', routerLink: ['/search'], id: 'search-cy'},
+    {label: 'ORGA', routerLink: ['/orga'],  id: 'orga-cy'}
   ];
 
   loggedOutItems: MenuItem[] = [
-    {label: 'Login', routerLink: ['/login']},
-    {label: 'Register', routerLink: ['/register']},
-    {label: 'Über', routerLink: ['/über']}
+    {label: 'Login', routerLink: ['/login'], id: 'login-cy'},
+    {label: 'Register', routerLink: ['/register'], id: 'register-cy'},
+    {label: 'Über', routerLink: ['/über'], id: 'about-cy'}
   ];
 
   constructor(
