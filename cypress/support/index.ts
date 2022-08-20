@@ -12,7 +12,8 @@ export type User = {
   contactPhone: string,
   street: string,
   postCode: string,
-  city: string
+  city: string,
+  ftsName: string
 }
 
 export {};
@@ -64,6 +65,13 @@ declare global {
        * @example cy.uploadProfileImage()
        */
       uploadProfileImage(): Chainable<Element>
+
+      /**
+       * Custom command to searchUser
+       * @param user - User data
+       * @example cy.searchUser(user)
+       */
+      searchUser(user: User): Chainable<Element>
 
       /**
        * Custom command to followProfile

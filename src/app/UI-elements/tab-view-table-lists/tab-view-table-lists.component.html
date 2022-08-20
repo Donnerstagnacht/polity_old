@@ -16,6 +16,7 @@
                     [(ngModel)]="filterString"
                     name="filterString"
                     (input)="followerTable.filterGlobal(filterString, 'contains')"
+                    data-cy="filterFirstTab"
                     placeholder="Search keyword" />
                 </span>
         </div>
@@ -75,6 +76,7 @@
                     [(ngModel)]="filterString"
                     name="filterString"
                     (input)="followingTable.filterGlobal(filterString, 'contains')"
+                    data-cy="filterSecondTab"
                     placeholder="Search keyword" />
                 </span>
         </div>

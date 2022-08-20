@@ -8,5 +8,6 @@
   "contactPhone": "8888.8888",
   "street": "User 2 street",
   "postCode": "User 2 post Code",
-  "city": "User 2 City"
+  "city": "User 2 City",
+  "ftsName": "User"
 }

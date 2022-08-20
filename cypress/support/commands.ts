@@ -35,6 +35,7 @@ Cypress.Commands.add('login', (email: string, password: string) => {
 })
 
 Cypress.Commands.add('logout', () => {
+  // cy.pause()
   // Setup
   cy.get('#profile-cy').click()
   cy.get('#edit-cy').click()
@@ -99,4 +100,16 @@ Cypress.Commands.add('uploadProfileImage', () => {
 
     // Navigate to
     cy.url().should('include', 'login')
+})
+
+Cypress.Commands.add('searchUser', (user: User) => {
+  cy.get('#search-cy').click()
+  // Type searchstring
+  cy.get('[data-cy="searchBar"]').type(user.ftsName).type('{enter}')
+  // check if search results appear
+  cy.contains(user.name).click()
+  // checks if click on search result redirects to requested page
+  cy.url().should('include', 'profile')
+  cy.contains(user.name)
+  cy.contains(user.about)
 })

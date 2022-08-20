@@ -2,7 +2,7 @@
   <div slot="main">
     <div class="mb-2">
       <p-card>
-        <form (submit)="onSearch(searchBar.value)">
+        <form data-cy="searchForm" (submit)="onSearch(searchBar.value)">
           <div class="grid">
             <div class="col-12">
               <span class="p-float-label">
@@ -13,6 +13,7 @@
                   type="text"
                   pInputText
                   [value]=" ''"
+                  data-cy="searchBar"
                   >
                 <label for="float-input">Search</label>
               </span>
