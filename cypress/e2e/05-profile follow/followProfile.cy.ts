@@ -108,6 +108,7 @@ describe('Tests Profile following system', () => {
           cy.searchUser(user2)
           cy.contains('Unfollow').click()
           cy.wait(2000)
+          cy.wait(500)
           cy.contains('#Follower', user2OutFollower.toString())
           cy.wait(2000)
           cy.wait(500)
