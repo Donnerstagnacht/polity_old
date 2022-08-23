@@ -8,7 +8,8 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "docker": "docker-compose -f ./docker/docker-compose.yml -f ./docker/dev/docker-compose.dev.yml up",
-    "e2e": "cypress open"
+    "e2e_open": "cypress open",
+    "e2e_run": "cypress run"
   },
   "private": true,
   "dependencies": {

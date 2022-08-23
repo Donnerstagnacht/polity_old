@@ -16,6 +16,19 @@ export type User = {
   ftsName: string
 }
 
+export type Group = {
+  name: string,
+  level: string,
+  about: string,
+  contactEmail: string,
+  contactPhone: string,
+  street: string,
+  postCode: string,
+  city: string,
+  ftsName: string
+  numberOfStartMembers: string
+}
+
 export {};
 
 declare global {
@@ -54,6 +67,20 @@ declare global {
       fillChangeProfileForm(user: User): Chainable<Element>
 
       /**
+       * Custom command to fill the ChangeGroup Profile Form
+       * @param group - User data
+       * @example cy.fillChangeGroupForm(group)
+       */
+       fillChangeGroupForm(group: Group): Chainable<Element>
+
+      /**
+       * Custom command to check if the group profile update changes are displayed on group wiki page
+       * @param group - Group data
+       * @example cy.checkGroupWikiDataAndVisibilityExeptImage(group)
+       */
+       checkGroupWikiDataAndVisibilityExeptImage(group: Group): Chainable<Element>
+
+            /**
        * Custom command to check if the profile update changes are displayed on profile wiki page
        * @param user - User data
        * @example cy.checkUserWikiDataAndVisibilityExeptImage(user)
@@ -98,10 +125,26 @@ declare global {
       removeProfileFollow(): Chainable<Element>
 
       /**
+       * Custom command to fill the create GroupForm
+       * @param group - Group to be created
+       * @param user - Group creator
+       * @example cy.fillCreateGroupForm()
+       */
+      fillCreateGroupForm(group: Group, user: User): Chainable<Element>
+
+      /**
        * Custom command to createGroup
-       * @example cy.createGroup()
+       * @param group - Group data
+       * @example cy.createGroup(group)
        */
       createGroup(): Chainable<Element>
+
+      /**
+       * Custom command to search a group
+       * @param group - Group data
+       * @example cy.searchGroup(group)
+       */
+      searchGroup(group: Group): Chainable<Element>
 
       /**
        * Custom command to changeGroup

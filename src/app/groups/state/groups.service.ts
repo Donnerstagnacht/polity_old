@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { NgEntityService } from '@datorama/akita-ng-entity-service';
 import { GroupsStore, GroupsState } from './groups.store';
-import { Group } from './group.model';
+import { Group, GroupCore } from './group.model';
 import { createClient, RealtimeSubscription, SupabaseClient } from '@supabase/supabase-js';
 import { environment } from 'src/environments/environment';
 import { profile_list_item } from './profile_list_item.model';
@@ -40,11 +40,11 @@ export class GroupsService extends NgEntityService<GroupsState> {
     return subscription;
   }
 
-  updateGroup(group: Partial<Group>, id: string | undefined) {
+  updateGroup(group: Partial<GroupCore>, id: string | undefined) {
     const update = {
-      ...group,
-      members: [],
-      membership_requests: []
+      ...group
+/*       members: [],
+      membership_requests: [] */
       // updated_at: new Date()
     }
     let updateId = group.id;
@@ -53,10 +53,13 @@ export class GroupsService extends NgEntityService<GroupsState> {
     }
 
     console.log('updated')
+    console.log(group)
+    console.log(updateId),
+    console.log(update)
 
     return this.supabaseClient
       .from('groups')
-      .update(update, {
+      .update(group, {
       returning: 'minimal', // Don't return the value after inserting
       })
       .match({id: updateId})

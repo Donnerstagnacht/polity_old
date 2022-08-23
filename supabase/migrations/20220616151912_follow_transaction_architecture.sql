@@ -76,6 +76,21 @@ BEGIN
 END;
 $$;
 
+-- 1.1 delete follower by relationship Id
+DROP function if exists delete_following_follower_relationship_by_id(relationship_id uuid);
+create or replace function delete_following_follower_relationship_by_id(relationship_id uuid)
+returns void
+language plpgsql
+security definer
+as
+$$
+BEGIN
+  DELETE FROM "following_profile_system"
+  WHERE
+  "id" = relationship_id;
+END;
+$$;
+
 
 --2. decrement follower
 DROP function if exists decrementfollower_counter(userId uuid);

@@ -15,11 +15,6 @@
           imgUrl: group.avatar_url
         }">
       </app-wiki-header>
-      <h1>test 2</h1>
-      <h1 *ngIf="group$ | async as group">{{group.description}} Test</h1>
-      <h1>test 3</h1>
-      <h1 *ngIf="group$ | async as group">{{group.description}} Test</h1>
-
       <div class="flex flex-column">
         <div *ngIf="groupUI" class="flex align-items-center justify-content-center">
           <button

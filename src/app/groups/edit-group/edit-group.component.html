@@ -3,11 +3,11 @@
   <div slot="main">
     <div class="mb-8">
       <div class="mx-4">
-        <app-back-button [title]="'Zurück'" [link]="backLink"></app-back-button>
+        <app-back-button data-cy="backButton" [title]="'Zurück'" [link]="backLink"></app-back-button>
         <form
         class="mt-4"
         #editGroupForm = "ngForm"
-        *ngIf="group && group !== undefined">
+        *ngIf="this.group && this.group !== undefined">
           <h5>Persönliche Daten</h5>
           <div class="grid">
             <div class="col-12">
@@ -19,6 +19,7 @@
                   [autoResize]="true"
                   class="w-full"
                   [(ngModel)]="group.description"
+                  data-cy="about"
                 ></textarea>
                 <label for="float-input">Über mich</label>
               </span>
@@ -34,6 +35,7 @@
               [auto]="true"
               [customUpload]="true"
               class="full-w"
+              data-cy=""
             >
             </p-fileUpload>
 
@@ -61,6 +63,7 @@
                   name="contact_email"
                   pInputText
                   [(ngModel)]="group.contact_email"
+                  data-cy="contactEmail"
                 >
                 <label for="float-input">Email</label>
               </span>
@@ -73,6 +76,7 @@
                   pInputText
                   name="contact_phone"
                   [(ngModel)]="group.contact_phone"
+                  data-cy="contactPhone"
                   >
                 <label for="float-input">Phone</label>
               </span>
@@ -88,6 +92,7 @@
                   pInputText
                   name="street"
                   [(ngModel)]="group.street"
+                  data-cy="street"
                   >
                 <label for="float-input">Street</label>
               </span>
@@ -100,6 +105,7 @@
                   pInputText
                   name="post_code"
                   [(ngModel)]="group.post_code"
+                  data-cy="postCode"
                 >
                 <label for="float-input">Post Code</label>
               </span>
@@ -112,6 +118,7 @@
                   pInputText
                   name="city"
                   [(ngModel)]="group.city"
+                  data-cy="city"
                 >
                 <label for="float-input">City</label>
               </span>
@@ -125,6 +132,7 @@
                 label="{{loading ? 'Loading ...' : 'Update'}}"
                 (click)="updateGroup(group)"
                 [disabled]="loading"
+                data-cy="updateGroupInformationButton"
               >
               </button>
             </div>

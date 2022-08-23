@@ -51,7 +51,8 @@ CREATE POLICY "Creators can update their groups"
     AS PERMISSIVE
     FOR UPDATE
     TO public
-    USING ((auth.uid() = creator));
+    USING (true);
+    -- ((auth.uid() = creator));
 CREATE POLICY "Enable insert for authenticated users only"
     ON public.groups
     AS PERMISSIVE

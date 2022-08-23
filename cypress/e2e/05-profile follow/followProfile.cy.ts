@@ -15,15 +15,18 @@ describe('Tests Profile following system', () => {
 
   beforeEach(() => {
     cy.viewport(1024, 514)
-    cy.visit('http://localhost:4200')
   })
 
   it('Follows user and unfollow from own following management tab (remove following)', () => {
+    cy.visit('http://localhost:4200')
     cy.login(user1.email, user1.password)
     cy.get('#Following')
     .invoke('text')
     .then(Number)
     .then((following: number) => {
+      cy.wait(2000)
+      cy.wait(100)
+      cy.wait(100)
       cy.log(following.toString())
       // check the incremented value
       cy.searchUser(user2)
@@ -32,15 +35,24 @@ describe('Tests Profile following system', () => {
         .invoke('text')
         .then(Number)
         .then((follower: number) => {
+          cy.wait(2000)
+          cy.wait(100)
+          cy.wait(100)
           cy.log(follower.toString())
           // click follow button
           cy.get('[data-cy="followButton"]').click()
+          cy.wait(1000)
+          cy.wait(100)
+          cy.wait(100)
           // check the incremented follower value
           cy.contains('#Follower', (follower + 1).toString())
 
           // go back to own profile
           cy.get('#profile-cy').click()
           // chat that following is incremented
+          cy.wait(2000)
+          cy.wait(100)
+          cy.wait(100)
           cy.contains('#Following', (following + 1).toString())
 
           // check that new following is listed and can be removed
@@ -56,10 +68,17 @@ describe('Tests Profile following system', () => {
 
           // checks that counter got reduced again after removing following
           cy.get('#profile-cy').click()
+          cy.wait(4000)
+          cy.wait(100)
+          cy.wait(100)
+          cy.wait(100)
           cy.contains('#Following', (following).toString())
 
           // checks that follower counter got decremented, too
           cy.searchUser(user2)
+          cy.wait(2000)
+          cy.wait(100)
+          cy.wait(100)
           cy.contains('#Follower', (follower).toString())
 
           cy.logout()
@@ -74,6 +93,9 @@ describe('Tests Profile following system', () => {
     .invoke('text')
     .then(Number)
     .then((user1InFollowing: number) => {
+      cy.wait(2000)
+      cy.wait(100)
+      cy.wait(100)
       cy.log(user1InFollowing.toString())
       // check the incremented value
       cy.searchUser(user2)
@@ -82,15 +104,26 @@ describe('Tests Profile following system', () => {
         .invoke('text')
         .then(Number)
         .then((user2OutFollower: number) => {
+          cy.wait(2000)
+          cy.wait(100)
+          cy.wait(100)
           cy.log(user2OutFollower.toString())
           // click follow button
           cy.get('[data-cy="followButton"]').click()
           // check the incremented follower value
+          cy.wait(3000)
+          cy.wait(100)
+          cy.wait(100)
+          cy.wait(100)
           cy.contains('#Follower', (user2OutFollower + 1).toString())
 
           // go back to own profile
           cy.get('#profile-cy').click()
           // chat that following is incremented
+          cy.wait(2000)
+          cy.wait(100)
+          cy.wait(100)
+          cy.wait(100)
           cy.contains('#Following', (user1InFollowing + 1).toString())
 
           // check that new following is listed and can be removed
@@ -106,14 +139,20 @@ describe('Tests Profile following system', () => {
 
           // clicks unfollow button
           cy.searchUser(user2)
+          cy.wait(100)
           cy.contains('Unfollow').click()
           cy.wait(2000)
           cy.wait(500)
+          cy.wait(100)
+          cy.wait(100)
           cy.contains('#Follower', user2OutFollower.toString())
           cy.wait(2000)
           cy.wait(500)
           // checks that counter got reduced again after removing following
           cy.get('#profile-cy').click()
+          cy.wait(500)
+          cy.wait(100)
+          cy.wait(100)
           cy.contains('#Following', (user1InFollowing).toString())
           // checks that following disappeared
           cy.get('#edit-cy').click()
@@ -132,6 +171,9 @@ describe('Tests Profile following system', () => {
     .invoke('text')
     .then(Number)
     .then((user1Following: number) => {
+      cy.wait(2000)
+      cy.wait(100)
+      cy.wait(100)
       cy.log(user1Following.toString())
       // check the incremented value
       cy.searchUser(user2)
@@ -140,15 +182,26 @@ describe('Tests Profile following system', () => {
         .invoke('text')
         .then(Number)
         .then((user2Follower: number) => {
+          cy.wait(2000)
+          cy.wait(100)
+          cy.wait(100)
           cy.log(user2Follower.toString())
           // click follow button
           cy.get('[data-cy="followButton"]').click()
           // check the incremented follower value
+          cy.wait(1000)
+          cy.wait(100)
+          cy.wait(100)
           cy.contains('#Follower', (user2Follower + 1).toString())
-
+          cy.wait(3000)
           // go back to own profile
           cy.get('#profile-cy').click()
           // chat that following is incremented
+          cy.wait(4000)
+          cy.wait(100)
+          cy.wait(100)
+          cy.wait(100)
+
           cy.contains('#Following', (user1Following + 1).toString())
 
           // check that new following is listed and can be removed
@@ -169,6 +222,9 @@ describe('Tests Profile following system', () => {
           .invoke('text')
           .then(Number)
           .then((user2InFollower: number) => {
+            cy.wait(2000)
+            cy.wait(100)
+            cy.wait(100)
             cy.log(user2InFollower.toString())
 
             cy.get('#edit-cy').click()
@@ -180,12 +236,22 @@ describe('Tests Profile following system', () => {
               .wait(2000)
             cy.contains(user1.name)
             cy.get('[icon="pi pi-times"]').click()
+            cy.wait(2000)
+            cy.wait(100)
+            cy.wait(100)
+            cy.contains(user1.name).should('not.exist')
 
             cy.get('#profile-cy').click()
+            cy.wait(2000)
+            cy.wait(100)
+            cy.wait(100)
             cy.contains('#Follower', (user2InFollower-1).toString())
             cy.logout()
             cy.login(user1.email, user2.password)
 
+            cy.wait(2000)
+            cy.wait(100)
+            cy.wait(100)
             cy.contains('#Following', user1Following.toString())
             // checks that counter got reduced again after removing following
             cy.get('#edit-cy').click()

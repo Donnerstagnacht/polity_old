@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { AuthentificationQuery } from 'src/app/authentification/state/authentification.query';
+import { Group } from 'src/app/groups/state/group.model';
 import { Profile } from 'src/app/profile/state/profile.model';
 import { ProfileQuery } from 'src/app/profile/state/profile.query';
 import { GroupsService } from '../../groups/services/groups.service';
@@ -7,27 +8,6 @@ import { MenuService } from '../menu.service';
 
 export interface carouselPages {
   pageNumber: number
-}
-
-
-export interface Group {
-  id?: string,
-  created_at?: string,
-  name: string,
-  description: string,
-  creator: string,
-  member_counter?: number,
-  events_counter?: number,
-  level: string,
-  street: string,
-  post_code: string,
-  city: string,
-  contact_phone: string,
-  avatar_url: string,
-  follower_counter?: number,
-  amendment_counter?: number,
-  contact_email: string,
-  updated_at?: Date
 }
 
 @Component({
@@ -65,9 +45,6 @@ export class CreateGroupComponent implements OnInit {
 
   ngOnInit(): void {
     this.getLoggedInUserId$();
-    this.getSelectedProfile();
-    this.getLoggedInUser();
-
     this.carouselPages = [
       {
         pageNumber: 1,
@@ -87,7 +64,7 @@ export class CreateGroupComponent implements OnInit {
     this.authentificationQuery.uuid$.subscribe((uuid) => {
       if(uuid) {
         this.loggedInUserId = uuid;
-        // console.log(this.loggedInUserId)
+        this.getSelectedProfile();
       }
     })
   }
@@ -100,13 +77,12 @@ export class CreateGroupComponent implements OnInit {
           if(profile) {
             //Review
             this.loggedInUser = profile;
-            // console.log(this.loggedInUser)
           }
         })
     }
   }
 
-  getLoggedInUser(): void {
+  assignGroupCreator(): void {
     if(this.loggedInUser) {
       this.newGroup.creator = this.loggedInUser.id;
     }
@@ -117,7 +93,6 @@ export class CreateGroupComponent implements OnInit {
   }
 
   pageForward(): void {
-    // console.log(this.newGroup)
     if(this.page === this.carouselPages.length-1) {
       this.page = this.carouselPages.length-1;
     } else {
@@ -138,10 +113,11 @@ export class CreateGroupComponent implements OnInit {
   }
 
   createGroup(): void {
+    this.assignGroupCreator();
+    console.log(this.newGroup)
     this.groupsService.createGroupTransaction(
       this.newGroup
     ).then((result) => {
-      // console.log('success');
       this.showAddGroupDialog = false;
       this.newGroup = {
         name: '',

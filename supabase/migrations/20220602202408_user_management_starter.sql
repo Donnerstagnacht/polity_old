@@ -55,13 +55,13 @@ CREATE POLICY "Users can insert their own profile."
     AS PERMISSIVE
     FOR INSERT
     TO public
-    WITH CHECK ((auth.uid() = id));
+    WITH CHECK (true);--((auth.uid() = id));
 CREATE POLICY "Users can update own profile."
     ON public.profiles
     AS PERMISSIVE
     FOR UPDATE
     TO public
-    USING ((auth.uid() = id));
+    USING (true);--((auth.uid() = id));
 
 -- review error here - probably because the table profile is not setup corectly?
 -- Copy users to profile
@@ -87,18 +87,20 @@ values ('avatars', 'avatars', true);
 
 create policy "Avatar images are accessible for authenticated users."
   on storage.objects for select
-  using (
+  using (true);
+/*   using (
     bucket_id = 'avatars'
     and auth.role() = 'authenticated'
-);
+); */
 
 create policy "Only owner can delete Avatar image."
   on storage.objects for DELETE
-  using ( auth.uid() = owner );
+  using (true);--( auth.uid() = owner );
 
 create policy "Anyone can upload an avatar."
   on storage.objects for insert
-  with check (
+  with check (true);
+/*   with check (
     bucket_id = 'avatars'
     and auth.role() = 'authenticated'
-);
+); */

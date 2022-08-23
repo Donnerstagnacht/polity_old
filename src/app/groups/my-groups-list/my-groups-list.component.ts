@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Group } from '../../UI-dialogs/create-group/create-group.component';
 import { GroupsService } from '../services/groups.service';
+import { Group } from '../state/group.model';
 
 @Component({
   selector: 'app-my-groups-list',

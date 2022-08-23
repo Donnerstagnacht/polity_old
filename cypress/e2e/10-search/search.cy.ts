@@ -1,8 +1,9 @@
 /// <reference types="cypress" />
-import {User} from '../../support/index';
+import {Group, User} from '../../support/index';
 describe('Tests Profile features', () => {
   let user1: User;
   let user2: User;
+  let group1: Group;
 
   before(() => {
     cy.fixture('user1').then((user: User) => {
@@ -10,6 +11,9 @@ describe('Tests Profile features', () => {
     })
     cy.fixture('user2').then((user: User) => {
       user2 = user;
+    })
+    cy.fixture('group1').then((group: Group) => {
+      group1 = group;
     })
   })
 
@@ -23,6 +27,13 @@ describe('Tests Profile features', () => {
     cy.login(user1.email, user1.password)
     // navigate to change Profile Form
     cy.searchUser(user2)
+  })
+
+  it('Searches a group and navigates to group Profile', () => {
+    // sets it up for laptop-screens
+    cy.login(user1.email, user1.password)
+    // navigate to change Profile Form
+    cy.searchGroup(group1)
   })
 
 

@@ -1,0 +1,12 @@
+{
+  "name": "Group 1",
+  "about": "This is group 1 created for testing",
+  "level": "Lokal",
+  "contactEmail": "user1@contactemail.com",
+  "contactPhone": "9999.9999",
+  "street": "User 1 street",
+  "postCode": "User 1 post Code",
+  "city": "User 1 City",
+  "ftsName": "Group",
+  "numberOfStartMembers": "1"
+}

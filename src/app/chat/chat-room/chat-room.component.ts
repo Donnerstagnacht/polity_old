@@ -4,7 +4,6 @@ import { FollowingService } from 'src/app/following-profiles-system/services/fol
 import { GroupsService } from 'src/app/groups/state/groups.service';
 import { ProfileService } from 'src/app/profile/state/profile.service';
 import { Profile } from 'src/app/profile/state/profile.model';
-import { Group } from 'src/app/UI-dialogs/create-group/create-group.component';
 import { Message } from 'src/app/UI-elements/message/message.component';
 import { ChatService } from '../services/chat.service';
 import { Observable } from 'rxjs';
@@ -12,6 +11,7 @@ import { ProfileQuery } from 'src/app/profile/state/profile.query';
 import { AuthentificationQuery } from '../../authentification/state/authentification.query';
 import { ChatRoomService } from './state/chat-room.service';
 import { ChatRoomQuery } from './state/chat-room.query';
+import { Group } from 'src/app/groups/state/group.model';
 
 @Component({
   selector: 'app-chat-room',

@@ -30,6 +30,7 @@
                         pInputText
                         id="name-input"
                         type="text"
+                        data-cy="create-group-name"
                         class="form-control transparent-background w-full">
                   <label class="transparent-background" for="name-input">Name</label>
                   <div [hidden]="name.valid || name.pristine">
@@ -44,6 +45,8 @@
                     [autoResize]="true"
                     class="w-full transparent-background"
                     name="description"
+                    id="about-input"
+                    data-cy="create-group-about"
                     [(ngModel)]="newGroup.description"
                   ></textarea>
                   <label class="transparent-background"  for="float-input">Beschreibung</label>
@@ -56,7 +59,7 @@
           </div>
           <div *ngIf="carouselPage.pageNumber === 2 && this.loggedInUser">
             <div class="surface-variant border-round pb-2 max-width-carousel">
-              <h4 class="pt-4">fhjkjk{{this.newGroup.name}} </h4>
+              <h4 class="pt-4">{{this.newGroup.name}} </h4>
               <div class="">
                 <div class="flex justify-content-around">
                   <div class="text-center">
@@ -104,7 +107,7 @@
   <div class="flex align-items-center justify-content-center m-3">
       <button class="mr-2 p-button-text" pButton type="button" (click)="this.pageBackward()">Zurück</button>
       <button *ngIf="this.page !== this.carouselPages.length-1" class= "ml-2" pButton type="button" (click)="this.pageForward()">Vorwärts</button>
-      <button *ngIf="this.page === this.carouselPages.length-1" class= "ml-2" pButton type="button" (click)="this.createGroup()">ERSTELLEN</button>
+      <button data-cy="create-group-button" *ngIf="this.page === this.carouselPages.length-1" class= "ml-2" pButton type="button" (click)="this.createGroup()">ERSTELLEN</button>
   </div>
 </div>
 </p-sidebar>

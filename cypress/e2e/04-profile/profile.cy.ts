@@ -15,10 +15,10 @@ describe('Tests Profile features', () => {
 
   beforeEach(() => {
     cy.viewport(1024, 514)
-    cy.visit('http://localhost:4200')
   })
 
   it('User 1 edits Profile & changes are displayed on profile wiki', () => {
+    cy.visit('http://localhost:4200')
     // sets it up for laptop-screens
     cy.login(user1.email, user1.password)
     // navigate to change Profile Form
@@ -33,7 +33,7 @@ describe('Tests Profile features', () => {
   })
 
   it('User 1 uploads new Profile Image & it is displayed on users profile wiki', () => {
-    cy.login(user1.email, user2.password)
+    cy.get('#profile-cy')
     cy.navigateFromProfileWikiToEditProfile()
     // checks if upload button exists and selects a file
     cy.contains('Choose').and('be.visible')
@@ -43,8 +43,18 @@ describe('Tests Profile features', () => {
     cy.get('[data-cy="backButton"]').click()
     cy.get('#overview-cy').click()
 
+    cy.wait(4000)
+    cy.wait(100)
+    cy.wait(100)
+    cy.wait(100)
+
+
     // check if image exists on profile wiki page
     cy.get('img')
+      .wait(4000)
+      .wait(100)
+      .wait(100)
+      .wait(100)
       .should('be.visible')
       .and(($img: JQuery<HTMLImageElement>) => {
         // "naturalWidth" and "naturalHeight" are set when the image loads
@@ -73,7 +83,7 @@ describe('Tests Profile features', () => {
   })
 
   it('User 2 uploads new Profile Image & it is displayed on users profile wiki', () => {
-    cy.login(user2.email, user2.password)
+    cy.get('#profile-cy')
     cy.navigateFromProfileWikiToEditProfile()
     // checks if upload button exists and selects a file
     cy.contains('Choose').and('be.visible')
@@ -82,9 +92,17 @@ describe('Tests Profile features', () => {
     // navigate to profile wiki
     cy.get('[data-cy="backButton"]').click()
     cy.get('#overview-cy').click()
+    cy.wait(4000)
+    .wait(100)
+    .wait(100)
+    .wait(100)
 
     // check if image exists on profile wiki page
     cy.get('img')
+    .wait(4000)
+    .wait(100)
+    .wait(100)
+    .wait(100)
       .should('be.visible')
       .and(($img: JQuery<HTMLImageElement>) => {
         // "naturalWidth" and "naturalHeight" are set when the image loads

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { AuthentificationQuery } from '../../authentification/state/authentification.query';
 import { environment } from 'src/environments/environment';
-import { Group } from '../../UI-dialogs/create-group/create-group.component';
+import { Group } from '../state/group.model';
 @Injectable({
   providedIn: 'root'
 })
@@ -19,6 +19,7 @@ export class GroupsService {
     newGroup: Group
 
   ): Promise<{data: any, error: any}> {
+    console.log(newGroup)
     const createGroupResult: {data: any, error: any} = await this.supabaseClient
       .rpc('create_group_transaction', {
         name: newGroup.name,

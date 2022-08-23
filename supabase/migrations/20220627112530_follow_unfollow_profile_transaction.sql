@@ -201,3 +201,18 @@ BEGIN
   PERFORM delete_room(room_id_in);
 END;
 $$;
+
+--4.1 Unfollow transaction by Id
+DROP function if exists unfollow_transaction_by_id(followerId uuid, followingId uuid, relationship_id uuid);
+create or replace function unfollow_transaction_by_id(followerId uuid, followingId uuid, relationship_id uuid)
+returns void
+language plpgsql
+security definer
+as
+$$
+BEGIN
+  PERFORM delete_following_follower_relationship_by_id(relationship_id);
+  PERFORM decrementfollower_counter(followingId);
+  PERFORM decrementfollowing_counter(followerId);
+END;
+$$;

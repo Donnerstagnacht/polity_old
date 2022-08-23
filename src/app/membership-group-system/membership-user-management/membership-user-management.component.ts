@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { MessageService } from 'primeng/api';
-import { Group } from 'src/app/UI-dialogs/create-group/create-group.component';
 import { GroupsService } from 'src/app/groups/services/groups.service';
 import { MembershipService } from '../services/membership.service';
 import { AuthentificationQuery } from 'src/app/authentification/state/authentification.query';
+import { Group } from 'src/app/groups/state/group.model';
 
 @Component({
   selector: 'app-membership-user-management',
