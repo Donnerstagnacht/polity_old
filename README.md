@@ -1,12 +1,11 @@
-# Polity - Vision
+## Polity - Vision
 The goal of polity is to create a - theoretically - global real-time decision platform for political parties, individuals and public bodies.
 
-You can access a Clickdummy/visual prototype here:
-https://www.figma.com/proto/cAT8Aonu8P7ojwgnKcVlkz/Polity?node-id=51098%3A4670
+##### You can access a Clickdummy/visual prototype here: <br/> https://www.figma.com/proto/cAT8Aonu8P7ojwgnKcVlkz/Polity?node-id=51098%3A4670
+
 In case you would like to improve the overall design, message tobias.hassebrock@gmail.com to gain access to the Figma Design files.
 
-You can find a demo of the current master Branch here:
-coming soon.
+##### You can find a demo of the current master Branch here: <br/> coming soon.
 ## Weekly Wednesday meeting and collaboration
 We are meeting every Wednesday at 8pm CET on a discord server to work on the project and have a good time in general. To start, you can also choose a task from our published projects.
 
