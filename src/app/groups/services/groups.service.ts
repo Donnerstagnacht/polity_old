@@ -35,10 +35,12 @@ export class GroupsService {
     this.authentificationQuery.uuid$.subscribe((uuid: any) => {
       loggedInID = uuid;
     });
+    console.log('called get GROUPS' + loggedInID)
     const groups: {data: any, error: any} = await this.supabaseClient
     .from('group_members')
     .select(
       `
+      id,
       group_id,
       groups(
         name,

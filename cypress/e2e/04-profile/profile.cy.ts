@@ -43,7 +43,7 @@ describe('Tests Profile features', () => {
     cy.get('[data-cy="backButton"]').click()
     cy.get('#overview-cy').click()
 
-    cy.wait(4000)
+    cy.wait(10000)
     cy.wait(100)
     cy.wait(100)
     cy.wait(100)
@@ -51,7 +51,7 @@ describe('Tests Profile features', () => {
 
     // check if image exists on profile wiki page
     cy.get('img')
-      .wait(4000)
+      .wait(10000)
       .wait(100)
       .wait(100)
       .wait(100)
@@ -92,14 +92,14 @@ describe('Tests Profile features', () => {
     // navigate to profile wiki
     cy.get('[data-cy="backButton"]').click()
     cy.get('#overview-cy').click()
-    cy.wait(4000)
+    cy.wait(10000)
     .wait(100)
     .wait(100)
     .wait(100)
 
     // check if image exists on profile wiki page
     cy.get('img')
-    .wait(4000)
+    .wait(10000)
     .wait(100)
     .wait(100)
     .wait(100)

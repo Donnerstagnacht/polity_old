@@ -1,6 +1,6 @@
 <div class="fixed w-full top-fixed surface"><!--mx-4-->
   <div class="flex">
-    <app-back-button class="" [title]="'Zurück'" [link]="'/orga'"></app-back-button>
+    <app-back-button data-cy="backButton" class="" [title]="'Zurück'" [link]="'/orga'"></app-back-button>
     <div *ngIf="profile"  class="flex align-items-center w-full">
         <div class="w-full flex justify-content-end">
           <p class="flex align-items-center" *ngIf="profile">{{profile.name}}</p>

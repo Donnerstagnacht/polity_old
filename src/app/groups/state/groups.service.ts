@@ -147,6 +147,37 @@ export class GroupsService extends NgEntityService<GroupsState> {
     .catch((error) => console.log(error))
   }
 
+  getAllGroupFollowingsOfUser(user_id: string): void {
+    this.getAllFollowings(user_id)
+    .then((response) => {
+      console.log('response')
+      console.log(response)
+
+      let allFollowings: profile_list_item[] = [];
+      response.data.forEach((groupProfile: {
+        id: string,
+        profiles: {
+          avatar_url: string,
+          id: string,
+          name: string,
+        },
+        follower: string
+      }) => {
+        allFollowings.push(
+          {
+            id: groupProfile.id,
+            user_id: groupProfile.follower,
+            avatar_url: groupProfile.profiles.avatar_url,
+            name: groupProfile.profiles.name
+          }
+        )
+      })
+      this.groupsStore.update(user_id, {followers: allFollowings})
+
+    })
+    .catch((error) => console.log(error))
+  }
+
   getAllMemberShipRequests(group_id: string): void {
     this.getAllMembershipRequests(group_id)
     .then((response) => {
@@ -491,6 +522,22 @@ export class GroupsService extends NgEntityService<GroupsState> {
       )`
     )
     .eq('following', groupId)
+  return followers;
+  }
+
+  async getAllFollowings(userId: string): Promise<{data: any, error: any}> {
+    const followers: {data: any, error: any} = await this.supabaseClient
+    .from('following_group_system')
+    .select(
+      `id,
+      following,
+      groups!following_group_system_following_fkey (
+        id,
+        name,
+        avatar_url
+      )`
+    )
+    .eq('follower', userId)
   return followers;
   }
 

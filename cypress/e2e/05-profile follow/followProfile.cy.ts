@@ -120,7 +120,7 @@ describe('Tests Profile following system', () => {
           // go back to own profile
           cy.get('#profile-cy').click()
           // chat that following is incremented
-          cy.wait(2000)
+          cy.wait(4000)
           cy.wait(100)
           cy.wait(100)
           cy.wait(100)
@@ -146,11 +146,12 @@ describe('Tests Profile following system', () => {
           cy.wait(100)
           cy.wait(100)
           cy.contains('#Follower', user2OutFollower.toString())
-          cy.wait(2000)
+          cy.wait(4000)
           cy.wait(500)
           // checks that counter got reduced again after removing following
           cy.get('#profile-cy').click()
-          cy.wait(500)
+          cy.wait(4000)
+          cy.wait(100)
           cy.wait(100)
           cy.wait(100)
           cy.contains('#Following', (user1InFollowing).toString())
@@ -189,7 +190,8 @@ describe('Tests Profile following system', () => {
           // click follow button
           cy.get('[data-cy="followButton"]').click()
           // check the incremented follower value
-          cy.wait(1000)
+          cy.wait(4000)
+          cy.wait(100)
           cy.wait(100)
           cy.wait(100)
           cy.contains('#Follower', (user2Follower + 1).toString())
@@ -236,7 +238,7 @@ describe('Tests Profile following system', () => {
               .wait(2000)
             cy.contains(user1.name)
             cy.get('[icon="pi pi-times"]').click()
-            cy.wait(2000)
+            cy.wait(4000)
             cy.wait(100)
             cy.wait(100)
             cy.contains(user1.name).should('not.exist')

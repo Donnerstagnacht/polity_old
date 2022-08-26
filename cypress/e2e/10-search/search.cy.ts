@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 import {Group, User} from '../../support/index';
-describe('Tests Profile features', () => {
+describe('Tests search features', () => {
   let user1: User;
   let user2: User;
   let group1: Group;
@@ -19,10 +19,10 @@ describe('Tests Profile features', () => {
 
   beforeEach(() => {
     cy.viewport(1024, 514)
-    cy.visit('http://localhost:4200')
   })
 
   it('Searches User and navigates to user Profile', () => {
+    cy.visit('http://localhost:4200')
     // sets it up for laptop-screens
     cy.login(user1.email, user1.password)
     // navigate to change Profile Form
@@ -30,8 +30,6 @@ describe('Tests Profile features', () => {
   })
 
   it('Searches a group and navigates to group Profile', () => {
-    // sets it up for laptop-screens
-    cy.login(user1.email, user1.password)
     // navigate to change Profile Form
     cy.searchGroup(group1)
   })

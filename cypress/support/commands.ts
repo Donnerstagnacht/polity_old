@@ -117,7 +117,6 @@ Cypress.Commands.add('checkGroupWikiDataAndVisibilityExeptImage', (group: Group)
   cy.wait(100)
   cy.wait(100)
 
-  cy.contains(group.about).and('not.be.visible')
   cy.contains(group.contactEmail).and('be.visible')
   cy.contains(group.contactPhone).and('be.visible')
   cy.contains(group.street).and('be.visible')

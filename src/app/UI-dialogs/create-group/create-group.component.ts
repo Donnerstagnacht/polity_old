@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { AuthentificationQuery } from 'src/app/authentification/state/authentification.query';
 import { Group } from 'src/app/groups/state/group.model';
-import { Profile } from 'src/app/profile/state/profile.model';
+import { ProfileCore } from 'src/app/profile/state/profile.model';
 import { ProfileQuery } from 'src/app/profile/state/profile.query';
 import { GroupsService } from '../../groups/services/groups.service';
 import { MenuService } from '../menu.service';
@@ -20,7 +20,7 @@ export class CreateGroupComponent implements OnInit {
   showInput: boolean = true;
   carouselPages: carouselPages[] = [];
   page: number = 0;
-  loggedInUser: Profile | undefined;
+  loggedInUser: ProfileCore | undefined;
   loggedInUserId: string | null = null;
 
   newGroup: Group = {
@@ -73,7 +73,7 @@ export class CreateGroupComponent implements OnInit {
     if (this.loggedInUserId) {
       this.profileQuery
         .selectProfileById(this.loggedInUserId)
-        .subscribe((profile: Profile | undefined) => {
+        .subscribe((profile: ProfileCore | undefined) => {
           if(profile) {
             //Review
             this.loggedInUser = profile;

@@ -78,6 +78,20 @@ GRANT EXECUTE ON FUNCTION public.cancel_group_membership_request(uuid, uuid) TO 
 GRANT EXECUTE ON FUNCTION public.cancel_group_membership_request(uuid, uuid) TO postgres;
 GRANT EXECUTE ON FUNCTION public.cancel_group_membership_request(uuid, uuid) TO service_role;
 
+-- 1.2.1. cancel membership request by request
+DROP function if exists cancel_group_membership_request_by_request(request_id uuid);
+create or replace function cancel_group_membership_request_by_request(request_id uuid)
+returns void
+language plpgsql
+security definer
+as
+$$
+BEGIN
+  DELETE FROM "membership_requests"
+  WHERE
+  "id" = request_id;
+END;
+$$;
 
 --*****************************
 --*****  2.  Join Grpup  ******
@@ -134,31 +148,22 @@ GRANT EXECUTE ON FUNCTION public.increment_group_member_counter(uuid) TO service
 --2.3 increment groups counter => lookup file "create Groups.sql"
 
 
--- 2.4 Confirm Membership transaction
-CREATE OR REPLACE FUNCTION public.confirm_membership_transaction(
-	user_id_requests uuid,
-	group_id_requested uuid)
-    RETURNS void
-    LANGUAGE 'plpgsql'
-    COST 100
-    VOLATILE SECURITY DEFINER PARALLEL UNSAFE
-AS $BODY$
+
+-- 3.4 Confirm Membership transaction
+DROP function if exists confirm_membership_transaction(user_id_requests uuid, group_id_requested uuid, requested_id uuid);
+create or replace function confirm_membership_transaction(user_id_requests uuid, group_id_requested uuid, requested_id uuid)
+returns void
+language plpgsql
+security definer
+as
+$$
 BEGIN
   PERFORM add_member(user_id_requests, group_id_requested, false, false , false);
-  PERFORM cancel_group_membership_request(user_id_requests, group_id_requested);
+  PERFORM cancel_group_membership_request_by_request(requested_id);
   PERFORM increment_groups_counter(user_id_requests);
   PERFORM increment_group_member_counter(group_id_requested);
 END;
-$BODY$;
-ALTER FUNCTION public.confirm_membership_transaction(uuid, uuid)
-    OWNER TO postgres;
-
-GRANT EXECUTE ON FUNCTION public.confirm_membership_transaction(uuid, uuid) TO PUBLIC;
-GRANT EXECUTE ON FUNCTION public.confirm_membership_transaction(uuid, uuid) TO anon;
-GRANT EXECUTE ON FUNCTION public.confirm_membership_transaction(uuid, uuid) TO authenticated;
-GRANT EXECUTE ON FUNCTION public.confirm_membership_transaction(uuid, uuid) TO postgres;
-GRANT EXECUTE ON FUNCTION public.confirm_membership_transaction(uuid, uuid) TO service_role;
-
+$$;
 
 --***************************
 --*****  3. Leave Grpup  ****
@@ -190,6 +195,20 @@ GRANT EXECUTE ON FUNCTION public.delete_member(uuid, uuid) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.delete_member(uuid, uuid) TO postgres;
 GRANT EXECUTE ON FUNCTION public.delete_member(uuid, uuid) TO service_role;
 
+-- 3.1.1 Delete member by id
+DROP function if exists delete_member_by_id(membership_id uuid);
+CREATE OR REPLACE FUNCTION delete_member_by_id(membership_id uuid)
+    RETURNS void
+    LANGUAGE 'plpgsql'
+    COST 100
+    VOLATILE SECURITY DEFINER PARALLEL UNSAFE
+AS $BODY$
+BEGIN
+  DELETE FROM "group_members"
+  WHERE
+  "id" = membership_id;
+END;
+$BODY$;
 
 -- 3.2 Decrement Groups Counter
 CREATE OR REPLACE FUNCTION public.decrement_groups_counter(
@@ -262,3 +281,18 @@ GRANT EXECUTE ON FUNCTION public.remove_membership_transaction(uuid, uuid) TO an
 GRANT EXECUTE ON FUNCTION public.remove_membership_transaction(uuid, uuid) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.remove_membership_transaction(uuid, uuid) TO postgres;
 GRANT EXECUTE ON FUNCTION public.remove_membership_transaction(uuid, uuid) TO service_role;
+
+--3.4 Remove Membership transaction by id
+DROP function if exists remove_membership_transaction_by_membership_id(membership_id uuid, user_id_requests uuid, group_id_requested uuid);
+CREATE OR REPLACE FUNCTION remove_membership_transaction_by_membership_id(membership_id uuid, user_id_requests uuid, group_id_requested uuid)
+    RETURNS void
+    LANGUAGE 'plpgsql'
+    COST 100
+    VOLATILE SECURITY DEFINER PARALLEL UNSAFE
+AS $BODY$
+BEGIN
+  PERFORM delete_member_by_id(membership_id);
+  PERFORM decrement_groups_counter(user_id_requests);
+  PERFORM decrement_group_member_counter(group_id_requested);
+END;
+$BODY$;

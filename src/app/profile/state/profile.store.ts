@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { EntityState, EntityStore, EntityUIStore, StoreConfig } from '@datorama/akita';
-import { Profile, ProfileUI } from './profile.model';
+import { Profile, ProfileCore, ProfileUI } from './profile.model';
 
 export interface ProfileState extends EntityState<Profile> {}
 export interface ProfileUIState extends EntityState<ProfileUI> {}

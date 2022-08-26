@@ -31,7 +31,8 @@
           </td>
           <td>
             <button
-            *ngIf="acceptButtonNeededFirstTab"
+              data-cy="acceptFromFirstTab"
+              *ngIf="acceptButtonNeededFirstTab"
               pButton
               pRipple
               type="button"
@@ -42,12 +43,13 @@
           </td>
           <td>
             <button
+              data-cy="removeFromFirstTab"
               pButton
               pRipple
               type="button"
               icon="pi pi-times"
               class="p-button-rounded p-button-text p-button-danger"
-              (click)="removeFromFirstDataTab(dataFirstTab.id, dataFirstTab.user_id)"
+              (click)="removeFromFirstDataTab(dataFirstTab.id, dataFirstTab.user_id, dataFirstTab.isGroup)"
               ></button>
           </td>
         </tr>
@@ -98,6 +100,7 @@
               icon="pi pi-check"
               class="p-button-rounded p-button-text p-button-success"
               (click)="acceptFromSecondTab(dataSecondTab.user_id)"
+              data-cy="acceptFromSecondTab"
               ></button>
           </td>
           <td>
@@ -107,7 +110,8 @@
               type="button"
               icon="pi pi-times"
               class="p-button-rounded p-button-text p-button-danger"
-              (click)="removeFromSecondDataTab(dataSecondTab.id, dataSecondTab.user_id)"
+              (click)="removeFromSecondDataTab(dataSecondTab.id, dataSecondTab.user_id, dataSecondTab.isGroup)"
+              data-cy="removeFromSecondTab"
               ></button>
           </td>
         </tr>

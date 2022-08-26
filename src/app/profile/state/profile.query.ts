@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { EntityUIQuery, QueryEntity } from '@datorama/akita';
 import { Observable } from 'rxjs';
-import { Profile, ProfileUI } from './profile.model';
+import { ProfileCore, ProfileUI } from './profile.model';
 import { ProfileStore, ProfileState, ProfileUIState } from './profile.store';
 
 @Injectable({ providedIn: 'root' })
@@ -13,7 +13,7 @@ export class ProfileQuery extends QueryEntity<ProfileState> {
     this.createUIQuery();
   }
 
-  selectProfileById(uuid: string): Observable<Profile | undefined> {
+  selectProfileById(uuid: string): Observable<ProfileCore | undefined> {
     return this.selectEntity(uuid)
   }
 

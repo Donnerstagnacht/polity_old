@@ -5,7 +5,7 @@ import { ProfileService } from '../state/profile.service';
 import { FollowingService } from 'src/app/following-profiles-system/services/following.service';
 import { MegaMenuItem, MenuItem, MessageService } from 'primeng/api';
 import { profileMenuitems, profileMenuitemsIsOwner, profileMenuitemsMega, profileMenuitemsMegaIsOwner } from '../state/profileMenuItems';
-import { Profile, ProfileUI } from '../state/profile.model';
+import { ProfileCore, ProfileUI } from '../state/profile.model';
 import { ProfileQuery } from '../state/profile.query';
 import { Observable } from 'rxjs';
 
@@ -21,7 +21,7 @@ export class ProfileComponent implements OnInit {
   menuItemsMegaSpecial: MegaMenuItem[] = [];
   menuItemsMegaStandart: MegaMenuItem[] = [];
 
-  profile$ = new Observable<Profile | undefined>();
+  profile$ = new Observable<ProfileCore | undefined>();
   profileUI!: ProfileUI;
 
   selectedProfileId: string | null = null;

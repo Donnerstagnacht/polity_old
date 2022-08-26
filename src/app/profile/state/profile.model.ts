@@ -1,6 +1,6 @@
 import { profile_list_item } from "src/app/groups/state/profile_list_item.model";
 
-export interface Profile {
+export interface ProfileCore {
   id: string;
   amendment_counter: number;
   follower_counter: number;
@@ -20,6 +20,10 @@ export interface Profile {
   fts?: string // test
 }
 
+export interface Profile extends ProfileCore {
+  groups?: profile_list_item[]
+}
+
 export type ProfileUI = {
   isFollowing: boolean;
   isOwner: boolean;
@@ -31,8 +35,8 @@ export const initialGroupUIState: ProfileUI = {
   isOwner: false
 }
 
-export function createProfile(params: Partial<Profile>) {
+export function createProfile(params: Partial<ProfileCore>) {
   return {
     ...params
-  } as Profile;
+  } as ProfileCore;
 }

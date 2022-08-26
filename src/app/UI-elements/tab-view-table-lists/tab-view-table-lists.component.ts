@@ -21,8 +21,8 @@ export class TabViewTableListsComponent implements OnInit {
 
   filterString: string = '';
 
-  @Output() removeItemFromFirstTab: EventEmitter<{id: string, user_id: string}> = new EventEmitter<{id: string, user_id: string}>();
-  @Output() removeItemFromSecontTab: EventEmitter<{id: string, user_id: string}> = new EventEmitter<{id: string, user_id: string}>();
+  @Output() removeItemFromFirstTab: EventEmitter<{id: string, user_id: string, boolean?: boolean}> = new EventEmitter<{id: string, user_id: string, boolean?: boolean}>();
+  @Output() removeItemFromSecontTab: EventEmitter<{id: string, user_id: string, boolean?: boolean}> = new EventEmitter<{id: string, user_id: string,  boolean?: boolean}>();
 
   @Output() acceptItemFromFirstTab: EventEmitter<{id: string, user_id: string}> = new EventEmitter<{id: string, user_id: string}>();
   @Output() acceptItemFromSecontTab: EventEmitter<string> = new EventEmitter<string>();
@@ -39,20 +39,32 @@ export class TabViewTableListsComponent implements OnInit {
     console.log(this.dataSecondTab)
   }
 
-  removeFromFirstDataTab(id: string, user_id: string) {
+  removeFromFirstDataTab(id: string, user_id: string, boolean?: boolean) {
     console.log('id')
     console.log(id);
     console.log('user_id')
     console.log(user_id)
-    this.removeItemFromFirstTab.emit({id, user_id});
+    console.log('boolean')
+    console.log(boolean)
+    if(boolean) {
+      this.removeItemFromFirstTab.emit({id, user_id, boolean});
+    } else {
+      this.removeItemFromFirstTab.emit({id, user_id});
+    }
   }
 
-  removeFromSecondDataTab(id: string, user_id: string) {
+  removeFromSecondDataTab(id: string, user_id: string, boolean?: boolean) {
     console.log('id')
     console.log(id);
     console.log('user_id')
     console.log(user_id)
-    this.removeItemFromSecontTab.emit({id, user_id});
+    console.log('boolean')
+    console.log(boolean)
+    if(boolean) {
+      this.removeItemFromSecontTab.emit({id, user_id, boolean});
+    } else {
+      this.removeItemFromSecontTab.emit({id, user_id});
+    }
   }
 
   acceptFromFirstTab(id: string, user_id: string) {

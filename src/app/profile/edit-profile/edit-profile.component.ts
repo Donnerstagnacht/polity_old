@@ -4,7 +4,7 @@ import { Session } from '@supabase/supabase-js';
 import { MessageService } from 'primeng/api';
 import { AuthentificationQuery } from 'src/app/authentification/state/authentification.query';
 import { ImgUploadObject, StorageService } from 'src/app/utilities/storage/services/storage.service';
-import { Profile } from '../state/profile.model';
+import { ProfileCore } from '../state/profile.model';
 import { ProfileQuery } from '../state/profile.query';
 import { ProfileService } from '../state/profile.service';
 
@@ -16,7 +16,7 @@ import { ProfileService } from '../state/profile.service';
 })
 export class EditProfileComponent implements OnInit {
   loading: boolean = true;
-  profile: Profile | undefined;
+  profile: ProfileCore | undefined;
   loggedInUserId: string | null = null;
 
   session: Session | undefined;
@@ -48,7 +48,7 @@ export class EditProfileComponent implements OnInit {
     if (this.loggedInUserId) {
       this.profileQuery
         .selectProfileById(this.loggedInUserId)
-        .subscribe((profile: Profile | undefined) => {
+        .subscribe((profile: ProfileCore | undefined) => {
           if(profile) {
             //Review
             this.profile = JSON.parse(JSON.stringify(profile));
@@ -58,7 +58,7 @@ export class EditProfileComponent implements OnInit {
     }
   }
 
-  updateContactInformation(profile: Partial<Profile>): void {
+  updateContactInformation(profile: Partial<ProfileCore>): void {
     console.log('user id')
     console.log(this.loggedInUserId)
     console.log('profile')

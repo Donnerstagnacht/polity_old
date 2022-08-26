@@ -124,7 +124,7 @@ export class MembershipGroupManagementComponent implements OnInit {
     console.log(event.user_id)
     console.log('membership_id')
     console.log(event.id)
-    this.membershipService.removeMemberByMembershipId(event.user_id, this.selectedGroupId, event.id)
+    this.membershipService.removeMemberByMembershipId(event.id, event.user_id, this.selectedGroupId)
     .then(() => {
       // this.getAllMembershipRequests();
       this.messageService.add({severity:'success', summary: 'Mitglied entfernt.'});

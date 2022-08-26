@@ -136,16 +136,16 @@ export class MembershipService {
     return cancelMembershipResult;
   }
 
-  async removeMemberByMembershipId(user_requested: string, group_requested: string, membership_id: string): Promise<{data: any, error: any}> {
+  async removeMemberByMembershipId(membership_id: string, user_requested: string, group_requested: string): Promise<{data: any, error: any}> {
+    console.log('membership_id')
+    console.log(membership_id)
     console.log('user_id')
     console.log(user_requested)
     console.log('group_requested')
     console.log(group_requested)
-    console.log('membership_id')
-    console.log(membership_id)
 
     const cancelMembershipResult: { data: any, error: any } = await this.supabaseClient
-      .rpc('remove_membership_transaction_by_membership_id', {user_id_requests: user_requested, group_id_requested: group_requested, membership_id: membership_id})
+      .rpc('remove_membership_transaction_by_membership_id', {membership_id: membership_id, user_id_requests: user_requested, group_id_requested: group_requested})
     return cancelMembershipResult;
   }
 

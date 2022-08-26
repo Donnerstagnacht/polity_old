@@ -9,7 +9,7 @@
     "test": "ng test",
     "docker": "docker-compose -f ./docker/docker-compose.yml -f ./docker/dev/docker-compose.dev.yml up",
     "e2e_open": "cypress open",
-    "e2e_run": "cypress run"
+    "e2e_run": "cypress run --spec 'cypress/e2e/all.cy.ts'"
   },
   "private": true,
   "dependencies": {

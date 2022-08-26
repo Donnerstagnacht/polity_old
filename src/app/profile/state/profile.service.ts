@@ -6,7 +6,7 @@ import { FollowingService } from 'src/app/following-profiles-system/services/fol
 import { GroupsService } from 'src/app/groups/state/groups.service';
 import { profile_list_item } from 'src/app/groups/state/profile_list_item.model';
 import { environment } from 'src/environments/environment';
-import { Profile } from './profile.model';
+import { ProfileCore } from './profile.model';
 import { ProfileQuery } from './profile.query';
 import { ProfileStore } from './profile.store';
 
@@ -28,7 +28,7 @@ export class ProfileService {
   add(uuid: string) {
     this.selectProfil(uuid)
     .then((results) => {
-      const profile: Profile = results.data;
+      const profile: ProfileCore = results.data;
       // console.log(profile);
       this.profileStore.add(profile);
     })
@@ -39,7 +39,7 @@ export class ProfileService {
 
   getRealTimeChanges(uuid: string): RealtimeSubscription {
     const subscription = this.supabaseClient
-    .from<Profile>(`profiles:id=eq.${uuid}`)
+    .from<ProfileCore>(`profiles:id=eq.${uuid}`)
     .on('UPDATE', (payload) => {
       this.profileStore.update(payload.new.id, payload.new)
     })
@@ -47,7 +47,7 @@ export class ProfileService {
     return subscription;
   }
 
-  update(id: any, profile: Partial<Profile>) {
+  update(id: any, profile: Partial<ProfileCore>) {
     console.log('called')
     console.log(profile)
     const update = {
@@ -128,34 +128,62 @@ export class ProfileService {
   }
 
   getAllFollowings(profil_id: string): void {
-    this.profileFollowingService.getAllFollowing(profil_id)
-    .then((response) => {
+    this.groupsService.getAllFollowings(profil_id)
+    .then((groups) => {
+      console.log('group followings')
       console.log('response')
-      console.log(response)
+      console.log(groups)
 
-      let allFollowings: profile_list_item[] = [];
-      response.data.forEach((profile: {
-        id: string,
-        profiles: {
-          avatar_url: string,
+      this.profileFollowingService.getAllFollowing(profil_id)
+      .then((profiles) => {
+        console.log('profile followings')
+        console.log('response')
+        console.log(profiles)
+
+        let allFollowings: profile_list_item[] = [];
+        profiles.data.forEach((profile: {
           id: string,
-          name: string,
-        },
-        following: string
-      }) => {
-        allFollowings.push(
-          {
-            id: profile.id,
-            user_id: profile.following,
-            avatar_url: profile.profiles.avatar_url,
-            name: profile.profiles.name
-          }
-        )
-      })
-      this.profileStore.update(profil_id, {followings: allFollowings})
+          profiles: {
+            avatar_url: string,
+            id: string,
+            name: string,
+          },
+          following: string
+        }) => {
+          allFollowings.push(
+            {
+              id: profile.id,
+              user_id: profile.following,
+              avatar_url: profile.profiles.avatar_url,
+              name: profile.profiles.name,
+              isGroup: false
+            }
+          )
+        })
+        groups.data.forEach((group: {
+          id: string,
+          groups: {
+            avatar_url: string,
+            id: string,
+            name: string,
+          },
+          following: string
+        }) => {
+          allFollowings.push(
+            {
+              id: group.id,
+              user_id: group.following,
+              avatar_url: group.groups.avatar_url,
+              name: group.groups.name,
+              isGroup: true
+            }
+          )
+        })
+        this.profileStore.update(profil_id, {followings: allFollowings})
 
+      })
+      .catch((error) => console.log(error))
     })
-    .catch((error) => console.log(error))
   }
 
   getRealTimeChangesFollowerSystem(profil_id: string): RealtimeSubscription {
@@ -258,6 +286,64 @@ export class ProfileService {
     return subscription;
   }
 
+  getRealTimeChangesGroupFollowerSystem(profil_id: string): RealtimeSubscription {
+    console.log('test 2 activated')
+    const subscription = this.supabaseClient
+    .from<any>(`following_group_system`)
+    .on('INSERT', (payload) => {
+      console.log('Payload')
+      console.log(payload)
+      if(payload.new.follower === profil_id) {
+        this.groupsService.selectGroup(payload.new.following).then((group) => {
+          console.log(group)
+          console.log(group.data.id)
+          console.log(group.data.name)
+          console.log(group.data.avatar_url)
+          console.log()
+          let groupData: profile_list_item = {
+            id: payload.new.id,
+            user_id: group.data.id,
+            avatar_url: group.data.avatar_url,
+            name: group.data.name
+          }
+          console.log(groupData)
+          const entity = this.profileQuery.getEntity(profil_id);
+          console.log('oldState');
+          console.log(entity?.followings);
+          if(entity && entity.followings) {
+            const followings: profile_list_item[] = Object.assign([], entity.followings)
+            followings.push(groupData);
+            console.log('newState');
+            console.log(followings)
+            this.profileStore.update(profil_id, {followings: followings})
+          }
+        })
+      }
+    })
+    .on('DELETE', (payload) => {
+      console.log('Payload')
+      console.log(payload)
+      if(payload.old.follower === profil_id) {
+        console.log(payload.old.id)
+        const entity = this.profileQuery.getEntity(profil_id);
+        console.log('oldState');
+        console.log(entity);
+        if(entity && entity.followings) {
+          const followings: profile_list_item[] = Object.assign([], entity.followers)
+          let requestId: number = followings.findIndex((request) => request.id === payload.old.id);
+          followings.splice(requestId);
+          console.log('newState');
+          console.log(requestId)
+          console.log(payload.old.id)
+          console.log(followings);
+          this.profileStore.update(profil_id, {followings: followings})
+        }
+    }
+    })
+    .subscribe()
+    return subscription;
+  }
+
   checkIfIsOwner(profil_id: string): void {
     let loggedInID: string | null = '';
     this.authentificationQuery.uuid$.subscribe(uuid => {
@@ -279,6 +365,11 @@ export class ProfileService {
   updateIsProfileOwner(id: string, valueIsOwner: boolean): void {
     const update = {isOwner: valueIsOwner}
     this.profileStore.ui.upsert(id, update)
+  }
+
+  updateGroupsOfProfile(id: string, groupsOfProfile: profile_list_item[]): void {
+    const update = {groups: groupsOfProfile}
+    this.profileStore.upsert(id, update)
   }
 
   getRealTimeChangesIfStillFollower(profile_id: string): RealtimeSubscription {
@@ -305,6 +396,86 @@ export class ProfileService {
       console.log(profile_id)
       if(payload.old.following === profile_id && payload.old.follower === loggedInID) {
         this.updateIsFollowing(profile_id, false);
+      }
+    })
+    .subscribe()
+    return subscription;
+  }
+
+  getRealTimeChangesGroupsOfProfile(user_id: string): RealtimeSubscription {
+    console.log('activated Get followers')
+    const subscription = this.supabaseClient
+    .from<any>(`group_members`)
+    .on('INSERT', (payload) => {
+      console.log('Payload')
+      console.log(payload)
+      if(payload.new.user_id === user_id) {
+        this.groupsService.selectGroup(payload.new.group_id).then((group) => {
+          console.log(group)
+          console.log(group.data.id)
+          console.log(group.data.name)
+          console.log(group.data.avatar_url)
+          console.log()
+
+          let groupData: profile_list_item = {
+            id: payload.old.id,
+            user_id: group.data.id,
+            avatar_url: group.data.avatar_url,
+            name: group.data.name
+          }
+          console.log(groupData)
+          const entity = this.profileQuery.getEntity(user_id);
+
+          console.log('oldState');
+          console.log(entity);
+          console.log('oldState followers');
+          console.log(entity?.followers);
+
+          if(entity && entity.groups) {
+            const groupsOfProfile: profile_list_item[] = Object.assign([], entity.groups)
+            groupsOfProfile.push(groupData);
+            console.log('newState');
+            console.log(groupsOfProfile)
+            this.profileStore.update(user_id, {groups: groupsOfProfile})
+          }
+        })
+      }
+    })
+    .on('DELETE', (payload) => {
+      console.log('Payload')
+      console.log(payload)
+      console.log('group.id_')
+      console.log(payload.old.following)
+      console.log(user_id)
+      if(payload.old.user_id === user_id) {
+        this.groupsService.selectGroup(payload.old.group_id).then((group) => {
+          console.log(group)
+          console.log(group.data.id)
+          console.log(group.data.name)
+          console.log(group.data.avatar_url)
+          console.log()
+
+          let groupData: profile_list_item = {
+            id: payload.old.id,
+            user_id: group.data.id,
+            avatar_url: group.data.avatar_url,
+            name: group.data.name
+          }
+          console.log(groupData)
+          const entity = this.profileQuery.getEntity(user_id);
+          console.log('oldState');
+          console.log(entity?.groups);
+          if(entity && entity.groups) {
+            const groupsOfProfile: profile_list_item[] = Object.assign([], entity.groups)
+            let requestId: number = groupsOfProfile.findIndex((request) => request.id === payload.old.id);
+            groupsOfProfile.splice(requestId);
+            console.log('newState');
+            console.log(requestId)
+            console.log(payload.old.id)
+            console.log(groupsOfProfile);
+            this.profileStore.update(user_id, {groups: groupsOfProfile})
+          }
+        })
       }
     })
     .subscribe()

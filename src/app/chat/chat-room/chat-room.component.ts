@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FollowingService } from 'src/app/following-profiles-system/services/following.service';
 import { GroupsService } from 'src/app/groups/state/groups.service';
 import { ProfileService } from 'src/app/profile/state/profile.service';
-import { Profile } from 'src/app/profile/state/profile.model';
+import { ProfileCore } from 'src/app/profile/state/profile.model';
 import { Message } from 'src/app/UI-elements/message/message.component';
 import { ChatService } from '../services/chat.service';
 import { Observable } from 'rxjs';
@@ -26,8 +26,8 @@ export class ChatRoomComponent implements OnInit {
   messages$ = new Observable<Message[]>();
   loggedInUserId: string | null = '';
   @ViewChild('messages') content!: ElementRef;
-  profile!: Profile;
-  profile$ = new Observable<Profile | undefined>();
+  profile!: ProfileCore;
+  profile$ = new Observable<ProfileCore | undefined>();
   group!: Group;
   isGroup: boolean = false;
   chatPartner: string = '';
@@ -138,7 +138,7 @@ export class ChatRoomComponent implements OnInit {
     this.profileService.add(this.chatPartner)
     if(this.loggedInUserId)
     this.profile$ = this.profileQuery.selectProfileById(this.loggedInUserId);
-    this.profile$.subscribe((profile: Profile | undefined) => {
+    this.profile$.subscribe((profile: ProfileCore | undefined) => {
       if (profile) {
         this.profile = profile;
       }

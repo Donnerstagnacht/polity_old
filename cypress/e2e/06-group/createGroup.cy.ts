@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 import {Group, User} from '../../support/index';
-describe('Tests Profile following system', () => {
+describe('Test group edit and create group features', () => {
   let user1: User;
   let user2: User;
   let group1: Group
@@ -19,10 +19,10 @@ describe('Tests Profile following system', () => {
 
   beforeEach(() => {
     cy.viewport(1024, 514)
-    cy.visit('http://localhost:4200')
   })
 
   it('Creates a group', () => {
+    cy.visit('http://localhost:4200')
     cy.login(user1.email, user1.password)
     cy.get('#create-cy').click()
     cy.get('[data-cy="group"]').click()
@@ -33,6 +33,24 @@ describe('Tests Profile following system', () => {
     cy.contains(group1.name).click()
     cy.contains('#Mitglieder', group1.numberOfStartMembers)
 
+/*     cy.get('#edit-cy').click()
+    cy.get('[data-cy="group-edit"]').click()
+    cy.fillChangeGroupForm(group1)
+
+    cy.get('[data-cy="backButton"]').click()
+
+    cy.get('#overview-cy').click()
+    cy.wait(4000)
+    cy.wait(100)
+    cy.wait(100)
+    cy.wait(100)
+
+    cy.checkGroupWikiDataAndVisibilityExeptImage(group1) */
+  })
+
+  it('Changes a groups wiki exept image', () => {
+    cy.get('#groups-cy').click()
+    cy.contains(group1.name).click()
     cy.get('#edit-cy').click()
     cy.get('[data-cy="group-edit"]').click()
     cy.fillChangeGroupForm(group1)
@@ -46,6 +64,37 @@ describe('Tests Profile following system', () => {
     cy.wait(100)
 
     cy.checkGroupWikiDataAndVisibilityExeptImage(group1)
+  })
+
+  it('User 1 uploads new group Image & it is displayed on the groups wiki', () => {
+    cy.get('#profile-cy')
+    cy.contains(group1.name).click()
+    cy.get('#edit-cy').click()
+    cy.get('[data-cy="group-edit"]').click()
+    // checks if upload button exists and selects a file
+    cy.contains('Choose').and('be.visible')
+    cy.get('input[type=file]').selectFile('C:/Users/Tobi/polity/src/assets/images/tobi2.jpg', { force: true })
+
+    // navigate to profile wiki
+    cy.get('[data-cy="backButton"]').click()
+    cy.get('#overview-cy').click()
+    cy.wait(6000)
+    .wait(100)
+    .wait(100)
+    .wait(100)
+
+    // check if image exists on profile wiki page
+    cy.get('img')
+    .wait(5000)
+    .wait(100)
+    .wait(100)
+    .wait(100)
+      .should('be.visible')
+      .and(($img: JQuery<HTMLImageElement>) => {
+        // "naturalWidth" and "naturalHeight" are set when the image loads
+        expect($img[0].naturalWidth).to.be.greaterThan(0)
+      })
+    cy.logout()
   })
 
 })

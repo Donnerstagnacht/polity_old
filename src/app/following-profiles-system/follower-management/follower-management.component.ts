@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { Observable } from 'rxjs';
 import { AuthentificationQuery } from 'src/app/authentification/state/authentification.query';
-import { Profile } from 'src/app/profile/state/profile.model';
+import { FollowingGroupsService } from 'src/app/following-groups-system/services/following-groups.service';
+import { ProfileCore } from 'src/app/profile/state/profile.model';
 import { ProfileQuery } from 'src/app/profile/state/profile.query';
 import { ProfileService } from 'src/app/profile/state/profile.service';
 import { FollowingService } from '../services/following.service';
@@ -21,7 +22,7 @@ export class FollowerManagementComponent implements OnInit {
   titleFollowings: string = 'Followings';
   noDataFollower: string = 'Du hast noch keine Follower.';
   noDataFollowings: string = 'Du folgst noch niemanden.';
-  profile$ = new Observable<Profile | undefined>();
+  profile$ = new Observable<ProfileCore | undefined>();
   loggedInID: string = '';
 
 
@@ -31,6 +32,7 @@ export class FollowerManagementComponent implements OnInit {
     private messageService: MessageService,
     private profileQuery: ProfileQuery,
     private profileService: ProfileService,
+    private followingGroupsService: FollowingGroupsService,
     private authentificationQuery: AuthentificationQuery
   ) { }
 
@@ -40,6 +42,7 @@ export class FollowerManagementComponent implements OnInit {
     this.profileService.getAllFollowings(this.loggedInID);
     this.getFollowingSystem();
     this.profileService.getRealTimeChangesFollowerSystem(this.loggedInID);
+    this.profileService.getRealTimeChangesGroupFollowerSystem(this.loggedInID);
   }
 
   getProfileId(): void {
@@ -53,7 +56,7 @@ export class FollowerManagementComponent implements OnInit {
   getFollowingSystem(): void {
     console.log('called getAllFollower');
     this.profile$ = this.profileQuery.selectEntity(this.loggedInID);
-    this.profile$.subscribe((profile: Profile | undefined) => {
+    this.profile$.subscribe((profile: ProfileCore | undefined) => {
       if(profile?.followers) {
         console.log('called requests');
         console.log(profile.followers)
@@ -113,27 +116,52 @@ export class FollowerManagementComponent implements OnInit {
     });
   }
 
-  onRemoveFollower(event: {id: string, user_id: string}): void {
-    this.followingService.removeFollowerTransactionById(event)
-    .then(() => {
-      // this.getAllFollowing();
-      this.messageService.add({severity:'success', summary: 'Follower entfernt.'});
-    })
-    .catch((error: any) =>  {
-      this.messageService.add({severity:'error', summary: error})
-    })
+  onRemoveFollower(event: {id: string, user_id: string, isGroup?: boolean | undefined}): void {
+    console.log(event.isGroup);
+    if(event.isGroup) {
+      console.log('group');
+    } else {
+      console.log('no group');
+      this.followingService.removeFollowerTransactionById(event)
+      .then(() => {
+        this.messageService.add({severity:'success', summary: 'Follower entfernt.'});
+      })
+      .catch((error: any) =>  {
+        this.messageService.add({severity:'error', summary: error})
+      })
+    }
+
   }
 
-  onUnFollow(event: {id: string, user_id: string}): void {
-    console.log('onUnFollow')
-    console.log(event.user_id)
-    this.followingService.unfollowTransaction(event.user_id)
-    .then(() => {
-      // this.getAllFollower();
-      this.messageService.add({severity:'success', summary: 'Du folgst der Person nicht mehr.'});
-    })
-    .catch((error) => {
-      this.messageService.add({severity:'success', summary: error});
-    })
+  onUnFollow(event: {id: string, user_id: string, boolean?: boolean}): void {
+    // renaming it for better readable code
+    const isGroup: boolean | undefined = event.boolean;
+    const group_id: string = event.user_id;
+    console.log(isGroup);
+    console.log(this.loggedInID)
+    console.log(group_id)
+    if(isGroup) {
+      console.log('group');
+      this.followingGroupsService.removeFollowerTransaction(this.loggedInID, group_id)
+      .then(() => {
+        this.messageService.add({severity:'success', summary: 'Du folgst der Gruppe nicht mehr.'});
+      })
+      .catch((error) => {
+        this.messageService.add({severity:'success', summary: error});
+      })
+    } else {
+      console.log('no group');
+      console.log('onUnFollow')
+      console.log(event.user_id)
+      this.followingService.unfollowTransaction(event.user_id)
+      .then(() => {
+        // this.getAllFollower();
+        this.messageService.add({severity:'success', summary: 'Du folgst der Person nicht mehr.'});
+      })
+      .catch((error) => {
+        this.messageService.add({severity:'success', summary: error});
+      })
+    }
+
   }
 }
