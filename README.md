@@ -43,7 +43,7 @@ Thus, the data is highly normalized in the database. However, in the Akita store
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
 
-## Development server backend (Supabase Backend)
+## Development server Backend (Supabase)
 Run `supabase start` for a local dev server. Navigate to `http://localhost:54323/`. 
 
 Follow the local development guide of Supabase to reset or reload your environment:
@@ -60,7 +60,7 @@ In general, use speaking names and choose a longer more specific name over a sho
 ## Documentation
 Use the typescript Doc convention to document your code - especially for reused services & state management files.
 ## Testing Approach
-The project used no unit tests so far. However, all features should be comitted with a working end-to-end test.
+The project uses no unit tests so far. However, all features should be comitted with a working end-to-end test.
 ## Recommended "Definition of Done" Checklist
 This is not mandatory - but a guideline.
 1. Check naming conventions
