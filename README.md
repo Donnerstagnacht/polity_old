@@ -34,9 +34,13 @@ We are meeting every Wednesday at 8pm CET on a discord server to work on the pro
   <br>
   <a href="https://discord.gg/5bpnZ5ys"><img src="https://img.shields.io/badge/Discord-up-brightgreen" alt="Discord" /></a>
   <br>
+  <strong>👉Issues</strong>
+  <br>
+  <a href="https://github.com/Donnerstagnacht/polity/issues"><img src="https://img.shields.io/badge/issues-up-brightgreen" /></a>
+  <br>
   <strong>👉Projects</strong>
   <br>
-  <a href=""><img src="https://img.shields.io/badge/Projects-soon-red" /></a>
+  <a href="https://github.com/Donnerstagnacht/polity/projects"><img src="https://img.shields.io/badge/projects-up-brightgreen" /></a>
   <br>
   Contact:
   <br>
