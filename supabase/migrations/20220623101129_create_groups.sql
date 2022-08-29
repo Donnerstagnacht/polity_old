@@ -39,32 +39,10 @@ ALTER TABLE IF EXISTS public.groups
 
 
 -- 1.2 Create Groups policies
-ALTER TABLE IF EXISTS public.groups
-    ENABLE ROW LEVEL SECURITY;
 GRANT ALL ON TABLE public.groups TO anon;
 GRANT ALL ON TABLE public.groups TO authenticated;
 GRANT ALL ON TABLE public.groups TO postgres;
 GRANT ALL ON TABLE public.groups TO service_role;
-
-CREATE POLICY "Creators can update their groups"
-    ON public.groups
-    AS PERMISSIVE
-    FOR UPDATE
-    TO public
-    USING (true);
-    -- ((auth.uid() = creator));
-CREATE POLICY "Enable insert for authenticated users only"
-    ON public.groups
-    AS PERMISSIVE
-    FOR INSERT
-    TO authenticated
-    WITH CHECK (true);
-CREATE POLICY "Everyone can read groups"
-    ON public.groups
-    AS PERMISSIVE
-    FOR SELECT
-    TO public
-    USING (true);
 
 
 -- 2.1 Create Group Members

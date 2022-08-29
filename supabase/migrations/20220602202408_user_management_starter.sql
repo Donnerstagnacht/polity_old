@@ -31,37 +31,11 @@ CREATE TABLE IF NOT EXISTS public.profiles
 
 TABLESPACE pg_default;
 
-ALTER TABLE IF EXISTS public.profiles
-    OWNER to postgres;
-
-ALTER TABLE IF EXISTS public.profiles
-    ENABLE ROW LEVEL SECURITY;
-
+ALTER TABLE IF EXISTS public.profiles OWNER to postgres;
 GRANT ALL ON TABLE public.profiles TO anon;
-
 GRANT ALL ON TABLE public.profiles TO authenticated;
-
 GRANT ALL ON TABLE public.profiles TO postgres;
-
 GRANT ALL ON TABLE public.profiles TO service_role;
-CREATE POLICY "Public profiles are viewable by everyone."
-    ON public.profiles
-    AS PERMISSIVE
-    FOR SELECT
-    TO public
-    USING (true);
-CREATE POLICY "Users can insert their own profile."
-    ON public.profiles
-    AS PERMISSIVE
-    FOR INSERT
-    TO public
-    WITH CHECK (true);--((auth.uid() = id));
-CREATE POLICY "Users can update own profile."
-    ON public.profiles
-    AS PERMISSIVE
-    FOR UPDATE
-    TO public
-    USING (true);--((auth.uid() = id));
 
 -- review error here - probably because the table profile is not setup corectly?
 -- Copy users to profile
@@ -84,23 +58,3 @@ FOR EACH ROW EXECUTE PROCEDURE signup_copy_to_users_table();
 -- Set up Storage!
 insert into storage.buckets (id, name, public)
 values ('avatars', 'avatars', true);
-
-create policy "Avatar images are accessible for authenticated users."
-  on storage.objects for select
-  using (true);
-/*   using (
-    bucket_id = 'avatars'
-    and auth.role() = 'authenticated'
-); */
-
-create policy "Only owner can delete Avatar image."
-  on storage.objects for DELETE
-  using (true);--( auth.uid() = owner );
-
-create policy "Anyone can upload an avatar."
-  on storage.objects for insert
-  with check (true);
-/*   with check (
-    bucket_id = 'avatars'
-    and auth.role() = 'authenticated'
-); */
