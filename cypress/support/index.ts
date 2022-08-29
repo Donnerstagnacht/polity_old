@@ -29,6 +29,11 @@ export type Group = {
   numberOfStartMembers: string
 }
 
+export type Messages = {
+  messageFromUser2: string,
+  messageFromUser1: string
+}
+
 export {};
 
 declare global {
@@ -164,6 +169,20 @@ declare global {
        */
       followGroup(): Chainable<Element>
 
+       /**
+       * Custom command to open chat with person
+       * @param user - User data
+       * @example cy.openChatWithUser(user)
+       */
+      openChatWithUser(user: User): Chainable<Element>
+
+             /**
+       * Custom command to open chat with group
+       * @param group - Group data
+       * @example cy.openChatWithGroup(group)
+       */
+      openChatWithGroup(group: Group): Chainable<Element>
+
       /**
        * Custom command to unFollowGroup
        * @example cy.unFollowGroup()
@@ -175,6 +194,13 @@ declare global {
        * @example cy.requestGroupMembership()
        */
       requestGroupMembership(): Chainable<Element>
+
+      /**
+       * Custom command to follow or unfollow a user (searches & clicks follow button)
+       * @param user - User data
+       * @example cy.clickFollowButtonWithoutCheck()
+       */
+      clickFollowButtonWithoutCheck(user: User): Chainable<Element>
 
       /**
        * Custom command to withdrawGroupMembership

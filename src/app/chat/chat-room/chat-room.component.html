@@ -3,11 +3,15 @@
     <app-back-button data-cy="backButton" class="" [title]="'Zurück'" [link]="'/orga'"></app-back-button>
     <div *ngIf="profile"  class="flex align-items-center w-full">
         <div class="w-full flex justify-content-end">
-          <p class="flex align-items-center" *ngIf="profile">{{profile.name}}</p>
+          <p routerLink="/profile/{{profile.id}}" class="flex align-items-center cursor-pointer" *ngIf="profile">{{profile.name}}</p>
           <a routerLink="/profile/{{profile.id}}" class="flex align-items-center ml-5 mr-5 cursor-pointer">
             <p-avatar class="border-round flex align-items-center justify-content-center" shape="circle" styleClass="border-round"  image={{profile.avatar_url}}></p-avatar>
           </a>
         </div>
+        <i
+          (click)="rejectRequest()"
+          data-cy="delete-chat"
+          class="cursor-pointer pi pi-times align-items-center flex justify-content-center mr-4 on-dark-surface-in-dark-theme"></i>
     </div>
     <div *ngIf="group" class="flex align-items-center w-full">
       <div class="w-full flex justify-content-end">
@@ -66,6 +70,7 @@
   <form (ngSubmit)="onSendMessage()" #messageForm="ngForm">
     <span class="p-float-label">
       <input
+      data-cy="send-message"
       [(ngModel)]="message"
       name="message"
       id="message"

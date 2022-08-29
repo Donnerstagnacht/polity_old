@@ -137,7 +137,7 @@ export class ChatRoomComponent implements OnInit {
   getProfile(): void {
     this.profileService.add(this.chatPartner)
     if(this.loggedInUserId)
-    this.profile$ = this.profileQuery.selectProfileById(this.loggedInUserId);
+    this.profile$ = this.profileQuery.selectProfileById(this.chatPartner);
     this.profile$.subscribe((profile: ProfileCore | undefined) => {
       if (profile) {
         this.profile = profile;

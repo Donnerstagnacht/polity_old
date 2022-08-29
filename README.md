@@ -70,7 +70,7 @@ Thus, the data is highly normalized in the database. However, in the Akita store
   <li>It is not 100% clear, when a real-time subscription delivers the new data and how this influences data integrity</li>
 </ol>
 <br>
-Angular files are organized in the <code>src</code> folder while Cypress files are organized in the <code>Cypress</code> folder. Subfolders mirror app features and mostly correspond to the available routes. However, the file order of Cypress files should be identical to their test execution order.
+Angular files are organized in the <code>src/app</code> folder while Cypress files are organized in the <code>Cypress/e2e</code> folder. Subfolders mirror app features and mostly correspond to the available routes. However, the file order of Cypress files should be identical to their test execution order.
 <br>
 <br>
 Supabase files and functions are organized in the <code>supabase</code> folder and must (!) be in the order of deploying them to the database during resets.
@@ -85,7 +85,7 @@ Run <code>supabase start</code> for a local dev server. Navigate to <code>http:/
 Reset your backend environment before running the e2e test by executing the <code>resetinfrastructureAutomatic.bat</code> file. Otherwise, run <code>npm run e2e_open</code> to open the Cypress test runner and execute tests without resetting your Supabase environment. Run <code>npm run e2e_run</code> to run the e2e test in your command line.
 
 <h1>Naming conventions</h1>
-PostgreSQL code and code or variables which are used to call PostgreSQL functions, should be written in lower case with underscores e.g. <code>a_variable_for_a_postgres functions.</code> For purely frontend related variables and code camelCase is used e.g. <code>aVariableForTheFrontend</code>
+PostgreSQL code and code or variables which are used to call PostgreSQL functions, should be written in lower case with underscores e.g. <code>a_variable_for_a_postgres functions.</code> For purely frontend related variables and code camelCase is used e.g. <code>aVariableForTheFrontend</code>. HTML elements used for testing should either contain the <code>data-cy="element-name"</code> attribute or an id with the postfix <code>cy</code>, e.g. <code>id="element-name-cy"</code>.
 <br>
 In general, use speaking names and choose a longer more specific name over a short unspecific name.
 

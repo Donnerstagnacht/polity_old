@@ -126,7 +126,7 @@ describe('Tests Group following system', () => {
           // go back to own profile
           cy.get('#profile-cy').click()
           // chat that following is incremented
-          cy.wait(2000)
+          cy.wait(6000)
           cy.wait(100)
           cy.wait(100)
           cy.wait(100)

@@ -194,6 +194,10 @@ describe('Tests Group Membership system', () => {
 
         cy.get('[data-cy="backButton"]').click()
         cy.get('#overview-cy').click()
+        cy.wait(4000)
+        cy.wait(100)
+        cy.wait(100)
+        cy.wait(100)
         cy.contains('#Mitglieder', (group1MemberBefore + 1).toString())
 
         cy.logout()

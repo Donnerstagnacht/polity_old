@@ -183,23 +183,24 @@ describe('Tests Profile following system', () => {
         .invoke('text')
         .then(Number)
         .then((user2Follower: number) => {
-          cy.wait(2000)
+          cy.wait(4000)
+          cy.wait(100)
           cy.wait(100)
           cy.wait(100)
           cy.log(user2Follower.toString())
           // click follow button
           cy.get('[data-cy="followButton"]').click()
           // check the incremented follower value
-          cy.wait(4000)
+          cy.wait(10000)
           cy.wait(100)
           cy.wait(100)
           cy.wait(100)
           cy.contains('#Follower', (user2Follower + 1).toString())
-          cy.wait(3000)
+          cy.wait(4000)
           // go back to own profile
           cy.get('#profile-cy').click()
           // chat that following is incremented
-          cy.wait(4000)
+          cy.wait(5000)
           cy.wait(100)
           cy.wait(100)
           cy.wait(100)

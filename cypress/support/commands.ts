@@ -1,5 +1,4 @@
 /// <reference types="cypress" />
-
 import { Group, User } from "."
 
 Cypress.Commands.add('register', (name: string, email: string, password: string) => {
@@ -178,4 +177,39 @@ Cypress.Commands.add('searchGroup', (group: Group) => {
   cy.url().should('include', 'groups')
   cy.contains(group.name)
   cy.contains(group.about)
+})
+
+Cypress.Commands.add('openChatWithUser', (user: User) => {
+  cy.get('#orga-cy').click()
+  cy.get('[data-cy="filter-chats"]')
+    .type(user.name)
+    .type('{enter}')
+  cy.wait(4000)
+  cy.wait(100)
+  cy.wait(100)
+  cy.wait(100)
+  cy.contains(user.name).click()
+  cy.wait(1000)
+  cy.contains(user.name)
+})
+
+Cypress.Commands.add('openChatWithGroup', (group: Group) => {
+  cy.get('#orga-cy').click()
+  cy.get('[data-cy="filter-chats"]')
+    .type(group.name)
+    .type('{enter}')
+  cy.wait(4000)
+  cy.wait(100)
+  cy.wait(100)
+  cy.wait(100)
+  cy.contains(group.name).click()
+  cy.wait(1000)
+  cy.contains(group.name)
+})
+
+Cypress.Commands.add('clickFollowButtonWithoutCheck', (user: User) => {
+  cy.get('#search-cy').click()
+  cy.searchUser(user)
+  cy.wait(4000)
+  cy.get('[data-cy="followButton"]').click()
 })
