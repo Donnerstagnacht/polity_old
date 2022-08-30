@@ -69,9 +69,8 @@ Data is added to the database mostly by PostgreSQL functions. To display data to
 
 Thus, the data is highly normalized in the database. However, in the Akita store the data may be denormalized to offer frontend components a quick and easy access to the desired data. This approach brings three challenges:
 <ol>
-  <li>Many real-time subscriptions (WebSocket connections) are used to mirror the initial SQL joins. We currently do not know if this approach is performant</li>
+  <li>Many real-time subscriptions are used to mirror the initial SQL joins. We currently do not know if this approach is performant</li>
    <li>Most business logic is transferred to powerful PostgreSQL functions and Supabase real-time subscriptions</li>
-  <li>It is not 100% clear, when a real-time subscription delivers the new data and how this influences data integrity</li>
 </ol>
 <br>
 Angular files are organized in the <code>src/app</code> folder while Cypress files are organized in the <code>Cypress/e2e</code> folder. Subfolders mirror app features and mostly correspond to the available routes. However, the file order of Cypress files should be identical to their test execution order.
@@ -94,9 +93,13 @@ Supabase files and functions are organized in the <code>supabase</code> folder a
    ```sh
    yarn install
    ```
+2. Install Supabase CLI
+   ```sh
+   (todo)
+   ```
 3. Run Development instance
    ```sh
-   yarn dev
+   yarn start
    ```
 <hr>
 <h1>Development server Frontend (Angular)</h1>
