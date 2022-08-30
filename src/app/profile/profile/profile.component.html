@@ -8,7 +8,7 @@
     <div slot="main">
       <div class="mb-8" >
         <app-wiki-header
-          *ngIf="profile$ | async as profile"
+          *ngIf="profile"
           [wikiHeader]="{
             title: profile.name,
             subtitle: 'TODO',

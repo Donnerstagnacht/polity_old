@@ -22,10 +22,13 @@ export class ProfileComponent implements OnInit {
   menuItemsMegaStandart: MegaMenuItem[] = [];
 
   profile$ = new Observable<ProfileCore | undefined>();
+  profile?: ProfileCore;
   profileUI!: ProfileUI;
 
   selectedProfileId: string | null = null;
   loggedInUserId: string | null = null;
+
+  calledRealTime: boolean = false;
 
   constructor(
     private authentificationQuery: AuthentificationQuery,
@@ -45,21 +48,27 @@ export class ProfileComponent implements OnInit {
     this.getSelectedProfile();
     if (this.selectedProfileId) {
       this.profileQuery.selectUI$(this.selectedProfileId).subscribe((ui: ProfileUI | undefined) => {
-        console.log(ui)
         if(ui) {
           this.profileUI = ui;
         }
       });
     }
     this.checkIfAlreadyFollower();
+    if(this.selectedProfileId && !this.calledRealTime) {
+      console.log(this.calledRealTime)
+      // review gets called everytime page loads =>
+      // realtime update ist not fired after loaded twice probalbly
+      // recheck
+      // could be due to two calls
+      this.profileService.getRealTimeChanges(this.selectedProfileId);
+      this.profileService.getRealTimeChangesIfStillFollower(this.selectedProfileId);
+      this.calledRealTime = true;
+    }
     if (this.selectedProfileId) {
       this.menuItemsSpecial = profileMenuitemsIsOwner(this.selectedProfileId);
       this.menuItemsStandart = profileMenuitems(this.selectedProfileId);
       this.menuItemsMegaSpecial = profileMenuitemsMegaIsOwner(this.selectedProfileId);
       this.menuItemsMegaStandart = profileMenuitemsMega(this.selectedProfileId);
-
-      this.profileService.getRealTimeChanges(this.selectedProfileId);
-      this.profileService.getRealTimeChangesIfStillFollower(this.selectedProfileId);
     }
   }
 
@@ -86,6 +95,11 @@ export class ProfileComponent implements OnInit {
     if (this.selectedProfileId) {
       this.profileService.add(this.selectedProfileId);
       this.profile$ = this.profileQuery.selectProfileById(this.selectedProfileId)
+      this.profile$.subscribe((profile: ProfileCore | undefined) => {
+        if(profile) {
+          this.profile = profile;
+        }
+      })
     }
   }
 

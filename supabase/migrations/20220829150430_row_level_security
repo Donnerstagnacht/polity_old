@@ -46,6 +46,7 @@ CREATE POLICY "Authenticated users can insert their own and new follow profile r
     FOR INSERT
     TO authenticated
     WITH CHECK ((auth.uid() = follower) OR (auth.uid() = following));
+
 -- 2.2 READ: Authenticated users can read follow profile relationships
 DROP POLICY  IF EXISTS "Authenticated users can read follow profile relationships." ON following_profile_system;
 CREATE POLICY "Authenticated users can read follow profile relationships."
@@ -54,6 +55,7 @@ CREATE POLICY "Authenticated users can read follow profile relationships."
     FOR SELECT
     TO authenticated
     USING (true);
+
 -- 2.3 UPDATE: Authenticated user can update own follow profile relationships
 DROP POLICY  IF EXISTS "Users can not update follow profile relationships." ON following_profile_system;
 CREATE POLICY "Users can not update follow profile relationships."
@@ -86,6 +88,7 @@ CREATE POLICY "Authenticated users can insert new group membership"
     FOR INSERT
     TO authenticated
     WITH CHECK (true);
+
 -- 3.2 READ: Authenticated users can read group membership
 DROP POLICY  IF EXISTS "Authenticated users can read group membership" ON group_members;
 CREATE POLICY "Authenticated users can read group membership"
@@ -94,6 +97,7 @@ CREATE POLICY "Authenticated users can read group membership"
     FOR SELECT
     TO authenticated
     USING (true);
+
 -- 3.3 UPDATE: Authenticated user can update group membership
 /*** REVIEW ***/
 -- Admins should be able to delete group membership
@@ -129,6 +133,7 @@ CREATE POLICY "Authenticated users can create new groups."
     FOR INSERT
     TO authenticated
     WITH CHECK (true);
+
 -- 4.2 READ: Authenticated users can view groups.
 DROP POLICY  IF EXISTS "Authenticated users can view groups." ON groups;
 CREATE POLICY "Authenticated users can view groups."
@@ -137,6 +142,7 @@ CREATE POLICY "Authenticated users can view groups."
     FOR SELECT
     TO authenticated
     USING (true);
+
 -- 4.3.1 UPDATE: Group admins can update  user can up
 /*** REVIEW ***/
 -- 4.3.1 UPDATE: Group admins should be able to update groups wiki
@@ -189,8 +195,8 @@ CREATE POLICY "Membership requests can not be updated."
     AS PERMISSIVE
     FOR UPDATE
     TO authenticated
-    USING (false)
-    WITH check (true);
+    USING (false);
+    --WITH check (true);
 
 -- 5.4 DELETE: Logged in user can delete membership requests.
 /*** REVIEW ***/
@@ -213,7 +219,7 @@ CREATE POLICY "Authenticated users can insert their own profile."
     AS PERMISSIVE
     FOR INSERT
     TO authenticated
-    WITH CHECK ((auth.uid() = id));
+    WITH CHECK (true);
 
 -- 6.2 READ: Authenticated users can select all profiles
 DROP POLICY IF EXISTS "Authenticated users can view profiles." ON profiles;
@@ -230,8 +236,8 @@ CREATE POLICY "Authenticated users can update profiles."
     AS PERMISSIVE
     FOR UPDATE
     TO authenticated
-    USING (true)
-    WITH check (true);
+    USING (true);
+    --WITH check (true);
 
 -- 6.3.2 UPDATE: Only logged in user can update their own private data
 /*** REVIEW https://stackoverflow.com/questions/72756376/supabase-solutions-for-column-level-security ***/
@@ -252,7 +258,7 @@ CREATE POLICY "Authenticated users can delete their own profile."
     AS PERMISSIVE
     FOR DELETE
     TO authenticated
-    USING ((auth.uid() = id));
+    USING (true);
 
 -- 7. for rooms
 ALTER TABLE IF EXISTS public.rooms ENABLE ROW LEVEL SECURITY;
@@ -385,57 +391,3 @@ CREATE POLICY "Authenticated users can delete rooms participants."
     FOR DELETE
     TO authenticated
     USING (true);
-
-
--- 10. Storage
--- 10.1 CREATE: All authenticated users should be able to upload an avatar
-DROP POLICY IF EXISTS "Authenticated users can upload an avatar." ON storage.objects;
-create policy "Authenticated users can upload an avatar."
-  ON storage.objects
-  AS PERMISSIVE
-  FOR INSERT
-  TO authenticated
-  WITH CHECK (true);
-/*   with check (
-    bucket_id = 'avatars'
-    and auth.role() = 'authenticated'
-); */
-
--- 10.2 READ: All authenticated users should be able to upload an avatar
-DROP POLICY IF EXISTS "Authenticated users can access avatar images." ON storage.objects;
-create policy "Authenticated users can access avatar images."
-  ON storage.objects
-  AS PERMISSIVE
-  FOR SELECT
-  TO authenticated
-  USING (true);
-/*   using (
-    bucket_id = 'avatars'
-    and auth.role() = 'authenticated'
-); */
-
--- 10.3 UPDATE: All authenticated users should be able to UPDATE an avatar
-/*** REVIEW ***/
--- users should be able to update own avatar
--- admins should be able to update avatar of their groups
-DROP POLICY IF EXISTS "Authenticated users can update avatar images." ON storage.objects;
-create policy "Authenticated users can update avatar images."
-  ON storage.objects
-  AS PERMISSIVE
-  FOR DELETE
-  TO authenticated
-  USING (true);
-  --WITH check (true);
-  --( auth.uid() = owner );
-
--- 10.4 DELETE: All authenticated users should be able to DELETE an avatar
-/*** REVIEW ***/
--- users should be able to delete own avatar
--- admins should be able to delete avatar of their groups
-DROP POLICY IF EXISTS "Authenticated users can delete avatar images." ON storage.objects;
-create policy "Authenticated users can delete avatar images."
-  ON storage.objects
-  AS PERMISSIVE
-  FOR DELETE
-  TO authenticated
-  USING (true);--( auth.uid() = owner );

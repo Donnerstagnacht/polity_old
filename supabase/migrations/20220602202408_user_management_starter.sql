@@ -54,7 +54,3 @@ DROP TRIGGER IF EXISTS signup_copy on auth.users;
 CREATE TRIGGER signup_copy
 AFTER INSERT ON auth.users
 FOR EACH ROW EXECUTE PROCEDURE signup_copy_to_users_table();
-
--- Set up Storage!
-insert into storage.buckets (id, name, public)
-values ('avatars', 'avatars', true);

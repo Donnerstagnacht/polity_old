@@ -58,14 +58,10 @@ export class EditProfileComponent implements OnInit {
     }
   }
 
-  updateContactInformation(profile: Partial<ProfileCore>): void {
-    console.log('user id')
-    console.log(this.loggedInUserId)
-    console.log('profile')
-    console.log(profile)
+  async updateContactInformation(profile: Partial<ProfileCore>): Promise<void> {
     try {
       this.loading = true;
-      this.profileService.update(this.loggedInUserId, profile)
+      await this.profileService.update(this.loggedInUserId, profile)
       this.messageService.add({severity:'success', summary: 'Update erfolgreich.'});
     } catch (error: any) {;
       this.messageService.add({severity:'error', summary: error});
@@ -86,8 +82,7 @@ export class EditProfileComponent implements OnInit {
           'avatars'
         );
         this.profile!.avatar_url = avatar_url
-        this.updateContactInformation(
-          {avatar_url:  avatar_url});
+        await this.updateContactInformation({avatar_url:  avatar_url});
         fileUploader.clear();
         this.messageService.add({severity:'success', summary: 'Upload des Avatars war erfolgreich.'});
       } catch (error: any) {

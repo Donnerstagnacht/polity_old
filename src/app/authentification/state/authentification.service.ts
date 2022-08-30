@@ -23,10 +23,7 @@ export class AuthentificationService {
   }
 
   async signIn(email: string, password: string) {
-    const response: SessionResponse = await this.supabaseClient.auth.signIn({ email, password })
-    .then((response: SessionResponse) => {
-      return response;
-    });
+    const response: SessionResponse = await this.supabaseClient.auth.signIn({ email, password });
     if (response.error) throw new Error(response.error.message);
     this.authentificationStore.update({
       sessionResponse: response,

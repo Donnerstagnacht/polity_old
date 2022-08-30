@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ID } from '@datorama/akita';
-import { createClient, RealtimeSubscription, SupabaseClient } from '@supabase/supabase-js';
+import { createClient, RealtimeSubscription, SupabaseClient, PostgrestResponse } from '@supabase/supabase-js';
+import { Console } from 'console';
 import { AuthentificationQuery } from 'src/app/authentification/state/authentification.query';
 import { FollowingService } from 'src/app/following-profiles-system/services/following.service';
 import { GroupsService } from 'src/app/groups/state/groups.service';
@@ -38,18 +39,24 @@ export class ProfileService {
   }
 
   getRealTimeChanges(uuid: string): RealtimeSubscription {
+    console.log('called')
     const subscription = this.supabaseClient
     .from<ProfileCore>(`profiles:id=eq.${uuid}`)
     .on('UPDATE', (payload) => {
+      console.log('update')
+      console.log(payload)
+      this.profileStore.update(payload.new.id, payload.new)
+    })
+    .on('INSERT', (payload) => {
+      console.log('insert')
+      console.log(payload)
       this.profileStore.update(payload.new.id, payload.new)
     })
     .subscribe()
     return subscription;
   }
 
-  update(id: any, profile: Partial<ProfileCore>) {
-    console.log('called')
-    console.log(profile)
+  async update(id: any, profile: Partial<ProfileCore>): Promise<PostgrestResponse<any>> {
     const update = {
       ...profile,
       id: id,
@@ -58,13 +65,11 @@ export class ProfileService {
     }
     console.log('update')
     console.log(update)
-    return this.supabaseClient.from('profiles').upsert(update, {
+    const response: PostgrestResponse<any> = await this.supabaseClient.from('profiles').upsert(update, {
       returning: 'minimal', // Don't return the value after inserting
     })
-    .then(() => {
-      //console.log('worked')
-      // this.profileStore.update(id, profile);
-    });
+    if (response.error) throw new Error(response.error.message);
+    return response;
   }
 
   remove(id: ID) {
@@ -377,8 +382,6 @@ export class ProfileService {
     this.authentificationQuery.uuid$.subscribe(uuid => {
       loggedInID = uuid;
     })
-    console.log('Is still follower called?')
-    console.log(loggedInID)
     const subscription = this.supabaseClient
     .from<any>(`following_profile_system`)
     .on('INSERT', (payload) => {

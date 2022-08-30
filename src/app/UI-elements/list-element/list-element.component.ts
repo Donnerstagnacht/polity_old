@@ -11,9 +11,6 @@ export class ListElementComponent implements OnInit {
 
   constructor() { }
 
-  ngOnInit(): void {
-    console.log(this.title);
-    console.log(this.link)
-  }
+  ngOnInit(): void {}
 
 }
