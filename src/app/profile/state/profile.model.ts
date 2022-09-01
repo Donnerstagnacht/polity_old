@@ -15,13 +15,14 @@ export interface ProfileCore {
   post_code: string;
   city: string;
   about: string;
-  followings: profile_list_item[],
-  followers: profile_list_item[],
+
   fts?: string // test
 }
 
 export interface Profile extends ProfileCore {
-  groups?: profile_list_item[]
+  groups?: profile_list_item[],
+  followings: profile_list_item[],
+  followers: profile_list_item[],
 }
 
 export type ProfileUI = {

@@ -1,10 +1,11 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
-import { Session } from '@supabase/supabase-js';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { RealtimeSubscription, Session } from '@supabase/supabase-js';
 import { MessageService } from 'primeng/api';
+import { Subscription } from 'rxjs';
 import { AuthentificationQuery } from 'src/app/authentification/state/authentification.query';
 import { ImgUploadObject, StorageService } from 'src/app/utilities/storage/services/storage.service';
-import { ProfileCore } from '../state/profile.model';
+import { Profile, ProfileCore } from '../state/profile.model';
 import { ProfileQuery } from '../state/profile.query';
 import { ProfileService } from '../state/profile.service';
 
@@ -14,13 +15,16 @@ import { ProfileService } from '../state/profile.service';
   styleUrls: ['./edit-profile.component.scss'],
   providers: [ MessageService, HttpClient ]
 })
-export class EditProfileComponent implements OnInit {
+export class EditProfileComponent implements OnInit, OnDestroy {
   loading: boolean = true;
   profile: ProfileCore | undefined;
   loggedInUserId: string | null = null;
 
   session: Session | undefined;
   uploading: boolean = false;
+
+  test: Subscription | undefined;
+  test2: RealtimeSubscription | undefined;
 
   constructor(
     private messageService: MessageService,
@@ -33,6 +37,9 @@ export class EditProfileComponent implements OnInit {
   ngOnInit(): void {
     this.getLoggedInUserId$();
     this.getSelectedProfile();
+    if(this.loggedInUserId) {
+      this.test2 = this.profileService.getRealTimeChanges(this.loggedInUserId);
+    }
     // this.getProfile();
   }
 
@@ -46,12 +53,31 @@ export class EditProfileComponent implements OnInit {
 
   getSelectedProfile(): void {
     if (this.loggedInUserId) {
-      this.profileQuery
+      this.test = this.profileQuery
         .selectProfileById(this.loggedInUserId)
-        .subscribe((profile: ProfileCore | undefined) => {
+        .subscribe((profile: Profile | undefined) => {
           if(profile) {
             //Review
-            this.profile = JSON.parse(JSON.stringify(profile));
+            const profilecore: ProfileCore = {
+              id: profile.id,
+              amendment_counter: profile.amendment_counter,
+              follower_counter: profile.follower_counter,
+              following_counter: profile.following_counter,
+              groups_counter: profile.groups_counter,
+              name: profile.name,
+              website: profile.website,
+              avatar_url: profile.avatar_url,
+              contact_email: profile.contact_email,
+              contact_phone: profile.contact_phone,
+              street: profile.street,
+              post_code: profile.post_code,
+              city: profile.city,
+              about: profile.about,
+              fts: profile.fts
+            }
+            console.log('new Profile in profile edit component fetched')
+            console.log(profile)
+            this.profile = JSON.parse(JSON.stringify(profilecore));
             this.loading = false;
           }
         })
@@ -94,4 +120,17 @@ export class EditProfileComponent implements OnInit {
       this.uploading = false;
     }
   }
+
+  ngOnDestroy(): void {
+    console.log('destroyed');
+    if(this.test) {
+      this.test.unsubscribe()
+      console.log('1 destroyed');
+    }
+    if(this.test2) {
+      this.test2.unsubscribe()
+      console.log('2 destroyed');
+
+    }
+}
 }

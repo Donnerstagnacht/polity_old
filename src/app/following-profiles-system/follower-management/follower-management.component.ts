@@ -3,7 +3,7 @@ import { MessageService } from 'primeng/api';
 import { Observable } from 'rxjs';
 import { AuthentificationQuery } from 'src/app/authentification/state/authentification.query';
 import { FollowingGroupsService } from 'src/app/following-groups-system/services/following-groups.service';
-import { ProfileCore } from 'src/app/profile/state/profile.model';
+import { Profile, ProfileCore } from 'src/app/profile/state/profile.model';
 import { ProfileQuery } from 'src/app/profile/state/profile.query';
 import { ProfileService } from 'src/app/profile/state/profile.service';
 import { FollowingService } from '../services/following.service';
@@ -22,7 +22,7 @@ export class FollowerManagementComponent implements OnInit {
   titleFollowings: string = 'Followings';
   noDataFollower: string = 'Du hast noch keine Follower.';
   noDataFollowings: string = 'Du folgst noch niemanden.';
-  profile$ = new Observable<ProfileCore | undefined>();
+  profile$ = new Observable<Profile | undefined>();
   loggedInID: string = '';
 
 
@@ -56,7 +56,7 @@ export class FollowerManagementComponent implements OnInit {
   getFollowingSystem(): void {
     console.log('called getAllFollower');
     this.profile$ = this.profileQuery.selectEntity(this.loggedInID);
-    this.profile$.subscribe((profile: ProfileCore | undefined) => {
+    this.profile$.subscribe((profile: Profile | undefined) => {
       if(profile?.followers) {
         console.log('called requests');
         console.log(profile.followers)

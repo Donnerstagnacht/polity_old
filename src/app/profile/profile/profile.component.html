@@ -29,7 +29,7 @@
           </div>
         </div>
         <app-key-figures
-        *ngIf="profile$ | async as profile"
+        *ngIf="profile"
         [keyFigureList]="[
           {
             name: 'Anträge',
@@ -52,7 +52,7 @@
 
         <div class="mb-30">
           <app-about-and-contact
-            *ngIf="profile$ | async as profile"
+            *ngIf="profile"
             [contactData]="{
               about: profile.about,
               contact_email: profile.contact_email,

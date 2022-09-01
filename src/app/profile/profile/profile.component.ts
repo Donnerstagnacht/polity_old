@@ -1,13 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute  } from '@angular/router';
 import { AuthentificationQuery } from '../../authentification/state/authentification.query';
 import { ProfileService } from '../state/profile.service';
 import { FollowingService } from 'src/app/following-profiles-system/services/following.service';
 import { MegaMenuItem, MenuItem, MessageService } from 'primeng/api';
 import { profileMenuitems, profileMenuitemsIsOwner, profileMenuitemsMega, profileMenuitemsMegaIsOwner } from '../state/profileMenuItems';
-import { ProfileCore, ProfileUI } from '../state/profile.model';
+import { Profile, ProfileCore, ProfileUI } from '../state/profile.model';
 import { ProfileQuery } from '../state/profile.query';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
+import { RealtimeSubscription } from '@supabase/supabase-js';
 
 @Component({
   selector: 'app-profile',
@@ -15,7 +16,7 @@ import { Observable } from 'rxjs';
   styleUrls: ['./profile.component.scss'],
   providers: [MessageService]
 })
-export class ProfileComponent implements OnInit {
+export class ProfileComponent implements OnInit, OnDestroy {
   menuItemsSpecial: MenuItem[] = [];
   menuItemsStandart: MenuItem[] = [];
   menuItemsMegaSpecial: MegaMenuItem[] = [];
@@ -29,6 +30,12 @@ export class ProfileComponent implements OnInit {
   loggedInUserId: string | null = null;
 
   calledRealTime: boolean = false;
+  test: Subscription | undefined;
+  test2: Subscription | undefined;
+  test3: RealtimeSubscription | undefined;
+  test4: RealtimeSubscription | undefined;
+
+
 
   constructor(
     private authentificationQuery: AuthentificationQuery,
@@ -45,7 +52,6 @@ export class ProfileComponent implements OnInit {
     if(this.selectedProfileId) {
       this.profileService.checkIfIsOwner(this.selectedProfileId);
     }
-    this.getSelectedProfile();
     if (this.selectedProfileId) {
       this.profileQuery.selectUI$(this.selectedProfileId).subscribe((ui: ProfileUI | undefined) => {
         if(ui) {
@@ -54,15 +60,29 @@ export class ProfileComponent implements OnInit {
       });
     }
     this.checkIfAlreadyFollower();
-    if(this.selectedProfileId && !this.calledRealTime) {
-      console.log(this.calledRealTime)
+    if(this.selectedProfileId) {
       // review gets called everytime page loads =>
       // realtime update ist not fired after loaded twice probalbly
       // recheck
       // could be due to two calls
-      this.profileService.getRealTimeChanges(this.selectedProfileId);
-      this.profileService.getRealTimeChangesIfStillFollower(this.selectedProfileId);
-      this.calledRealTime = true;
+      const profileFromStore: Profile | undefined = this.profileQuery.getEntity(this.selectedProfileId);
+        if(profileFromStore) {
+          console.log('already in store')
+          this.test = this.profileQuery.selectEntity(this.selectedProfileId).subscribe((profile: Profile | undefined) => {
+            if(profile) {
+              console.log('loaded profile data from store again')
+              console.log(profile)
+              this.profile = profile;
+            }
+        })
+      } else {
+        if(this.selectedProfileId) {
+          console.log('data not in store, fetched data and activate Realtime subscription')
+          this.getSelectedProfile();
+        }
+      }
+      this.test3 = this.profileService.getRealTimeChanges(this.selectedProfileId);
+      this.test4 = this.profileService.getRealTimeChangesIfStillFollower(this.selectedProfileId);
     }
     if (this.selectedProfileId) {
       this.menuItemsSpecial = profileMenuitemsIsOwner(this.selectedProfileId);
@@ -84,7 +104,10 @@ export class ProfileComponent implements OnInit {
     this.route.paramMap.subscribe(parameter => {
       let routeParameter: string = String(parameter.get('id'));
       if(routeParameter === 'null') {
+        console.log('no route')
         this.selectedProfileId = this.loggedInUserId;
+        console.log(this.selectedProfileId)
+
       } else {
         this.selectedProfileId = routeParameter;
       }
@@ -93,10 +116,14 @@ export class ProfileComponent implements OnInit {
 
   getSelectedProfile(): void {
     if (this.selectedProfileId) {
+      console.log('profile-id')
+      console.log(this.selectedProfileId)
       this.profileService.add(this.selectedProfileId);
-      this.profile$ = this.profileQuery.selectProfileById(this.selectedProfileId)
-      this.profile$.subscribe((profile: ProfileCore | undefined) => {
+      this.test2 = this.profileQuery.selectProfileById(this.selectedProfileId)
+      .subscribe((profile: ProfileCore | undefined) => {
         if(profile) {
+          console.log('new profile in profile component fetched')
+          console.log(profile)
           this.profile = profile;
         }
       })
@@ -148,5 +175,25 @@ export class ProfileComponent implements OnInit {
       })
       .catch();
     }
+  }
+
+  ngOnDestroy(): void {
+      console.log('destroyed');
+      if(this.test) {
+        this.test.unsubscribe()
+        console.log('1 destroyed');
+      }
+      if(this.test2) {
+        this.test2.unsubscribe()
+        console.log('2 destroyed');
+      }
+      if(this.test3) {
+        this.test3.unsubscribe()
+        console.log('3 destroyed');
+      }
+      if(this.test4) {
+        this.test4.unsubscribe()
+        console.log('4 destroyed');
+      }
   }
 }

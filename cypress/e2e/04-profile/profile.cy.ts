@@ -66,10 +66,13 @@ describe('Tests Profile features', () => {
   // code could be refactored
   it('Logs user 1 out', () => {
     cy.logout();
+    cy.wait(4000)
   })
 
   it('User 2 edits Profile & changes are displayed on profile wiki', () => {
     // sets it up for laptop-screens
+    cy.wait(1000)
+
     cy.login(user2.email, user2.password)
     // navigate to change Profile Form
     cy.navigateFromProfileWikiToEditProfile()

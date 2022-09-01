@@ -227,7 +227,8 @@ CREATE POLICY "Authenticated users can view profiles."
     ON public.profiles
     AS PERMISSIVE
     FOR SELECT
-    TO authenticated
+    TO public
+    --TO authenticated
     USING (true);
 -- 6.3.1 UPDATE: Authenticated user can edit profiles
 DROP POLICY IF EXISTS "Authenticated users can update profiles." ON profiles;
@@ -235,8 +236,11 @@ CREATE POLICY "Authenticated users can update profiles."
     ON public.profiles
     AS PERMISSIVE
     FOR UPDATE
-    TO authenticated
+    --TO authenticated
+    TO public
     USING (true);
+    --USING ((auth.uid() = id));
+    --USING (true);
     --WITH check (true);
 
 -- 6.3.2 UPDATE: Only logged in user can update their own private data

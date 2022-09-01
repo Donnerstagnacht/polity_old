@@ -28,9 +28,10 @@ Cypress.Commands.add('login', (email: string, password: string) => {
   cy.get('[data-cy="password"]').clear();
   cy.get('[data-cy="password"]').type(password);
   cy.get('[data-cy="login"]').click();
-
+  cy.wait(2000)
   // Navigate to
   cy.url().should('include', 'profile')
+  cy.wait(2000)
 })
 
 Cypress.Commands.add('logout', () => {
@@ -46,7 +47,9 @@ Cypress.Commands.add('logout', () => {
 
 Cypress.Commands.add('navigateFromProfileWikiToEditProfile', () => {
   cy.get('#profile-cy').click()
+  cy.wait(1000)
   cy.get('#edit-cy').click()
+  cy.wait(1000)
   cy.get('[data-cy="profile-edit"]').click()
 })
 

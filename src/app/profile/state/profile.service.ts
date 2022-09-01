@@ -7,7 +7,7 @@ import { FollowingService } from 'src/app/following-profiles-system/services/fol
 import { GroupsService } from 'src/app/groups/state/groups.service';
 import { profile_list_item } from 'src/app/groups/state/profile_list_item.model';
 import { environment } from 'src/environments/environment';
-import { ProfileCore } from './profile.model';
+import { Profile, ProfileCore } from './profile.model';
 import { ProfileQuery } from './profile.query';
 import { ProfileStore } from './profile.store';
 
@@ -29,7 +29,7 @@ export class ProfileService {
   add(uuid: string) {
     this.selectProfil(uuid)
     .then((results) => {
-      const profile: ProfileCore = results.data;
+      const profile: Profile = results.data;
       // console.log(profile);
       this.profileStore.add(profile);
     })
