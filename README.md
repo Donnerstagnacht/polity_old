@@ -18,9 +18,9 @@
 </p>
 
 <p align="center">
-  <stong><strong>A Master Demo coming soon</strong>
+  <stong><strong>Current development state</strong>
   <br>
-    <a href=""><img src="https://img.shields.io/badge/Prototype-soon-red" alt="Prototype" /></a>
+    <a href="https://donnerstagnacht.github.io/polity/register"><img src="https://img.shields.io/badge/prototype-up-brightgreen" alt="Prototype" /></a>
 </p>
   
 <hr>
