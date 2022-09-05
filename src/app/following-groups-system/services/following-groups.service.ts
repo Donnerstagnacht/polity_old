@@ -1,29 +1,39 @@
 import { Injectable } from '@angular/core';
 import { createClient, RealtimeSubscription, SupabaseClient } from '@supabase/supabase-js';
 import { AuthentificationQuery } from '../../authentification/state/authentification.query';
-
 import { environment } from 'src/environments/environment';
 import { GroupsService } from 'src/app/groups/state/groups.service';
-import { result } from 'cypress/types/lodash';
+import { Subscription } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FollowingGroupsService {
   private supabaseClient: SupabaseClient;
+  loggedInID: string | null = '';
+  authSubscription: Subscription | undefined;
 
   constructor(
     private authentificationQuery: AuthentificationQuery,
-    private groupsService: GroupsService) {
-    this.supabaseClient = createClient(environment.supabaseUrl, environment.supabaseKey)
-   }
+    private groupsService: GroupsService
+  ) {
+    this.supabaseClient = createClient(environment.supabaseUrl, environment.supabaseKey);
+    this.authSubscription = this.authentificationQuery.uuid$.subscribe(uuid => {
+      this.loggedInID = uuid;
+    })
+  }
+
+  ngOnDestroy(): void {
+    if(this.authSubscription) {
+      this.authSubscription.unsubscribe();
+    }
+  }
 
   async isAlreadyFollower(following: string): Promise<{data: any, error: any}> {
     let loggedInID: string | null = '';
-    this.authentificationQuery.uuid$.subscribe(uuid => {
-      loggedInID = uuid;
-    })
-
+    if(this.loggedInID) {
+      loggedInID = this.loggedInID;
+    }
     const results: {data: any, error: any} = await this.supabaseClient
       .from('following_group_system')
       .select(
@@ -57,9 +67,9 @@ export class FollowingGroupsService {
 
   async followTransaction(follower: string): Promise<{data: any, error: any}> {
     let loggedInID: string | null = '';
-    this.authentificationQuery.uuid$.subscribe(uuid => {
-      loggedInID = uuid;
-    })
+    if(this.loggedInID) {
+      loggedInID = this.loggedInID;
+    }
     const followTransactionResult: { data: any, error: any } = await this.supabaseClient
       .rpc('followgrouptransaction', {followingid: follower, followerid: loggedInID})
     if(followTransactionResult.error) throw new Error(followTransactionResult.error.message);
@@ -68,9 +78,9 @@ export class FollowingGroupsService {
 
   async unfollowTransaction(follower: string): Promise<{data: any, error: any}> {
     let loggedInID: string | null = '';
-    this.authentificationQuery.uuid$.subscribe(uuid => {
-      loggedInID = uuid;
-    })
+    if(this.loggedInID) {
+      loggedInID = this.loggedInID;
+    }
     const unfollowTransactionResult: { data: any, error: any } = await this.supabaseClient
       .rpc('unfollowgrouptransaction', {followingid: follower, followerid: loggedInID});
     if(unfollowTransactionResult.error) throw new Error(unfollowTransactionResult.error.message);
@@ -86,11 +96,9 @@ export class FollowingGroupsService {
 
   getRealTimeChangesIfStillFollower(group_id: string): RealtimeSubscription {
     let loggedInID: string | null = '';
-    this.authentificationQuery.uuid$.subscribe(uuid => {
-      loggedInID = uuid;
-    })
-/*     console.log('Is still follower called?')
-    console.log(loggedInID) */
+    if(this.loggedInID) {
+      loggedInID = this.loggedInID;
+    }
     const subscription = this.supabaseClient
     .from<any>(`following_group_system`)
     .on('INSERT', (payload) => {

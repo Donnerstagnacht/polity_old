@@ -1,6 +1,4 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { MenuItem } from 'primeng/api';
-import { Observable } from 'rxjs';
 import { MenuService } from '../menu.service';
 
 @Component({
@@ -16,15 +14,11 @@ export class ActionsOverlayComponent implements OnInit {
 
   constructor(private menuService: MenuService) { }
 
-  ngOnInit(): void {
-
-  }
+  ngOnInit(): void {}
 
   openAddGroupPanel(): void {
     this.showCreateGroupMenu = true;
     this.showAddMenu = false;
-    console.log(this.showCreateGroupMenu);
-    // console.log(this.showAddMenu);
     this.menuService.showGroupMenu();
   }
 

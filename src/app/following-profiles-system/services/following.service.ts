@@ -2,22 +2,35 @@ import { Injectable } from '@angular/core';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { AuthentificationQuery } from 'src/app/authentification/state/authentification.query';
 import { environment } from 'src/environments/environment';
+import { Subscription } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FollowingService {
   private supabaseClient: SupabaseClient;
+  loggedInID: string | null = '';
+  authSubscription: Subscription | undefined;
 
   constructor(private authentificationQuery: AuthentificationQuery) {
-    this.supabaseClient = createClient(environment.supabaseUrl, environment.supabaseKey)
-   }
+    this.supabaseClient = createClient(environment.supabaseUrl, environment.supabaseKey);
+    this.supabaseClient = createClient(environment.supabaseUrl, environment.supabaseKey);
+    this.authSubscription = this.authentificationQuery.uuid$.subscribe(uuid => {
+      this.loggedInID = uuid;
+    })
+  }
+
+  ngOnDestroy(): void {
+    if(this.authSubscription) {
+      this.authSubscription.unsubscribe();
+    }
+  }
 
   async isAlreadyFollower(following: string): Promise<{data: any, error: any}> {
     let loggedInID: string | null = '';
-    this.authentificationQuery.uuid$.subscribe(uuid => {
-      loggedInID = uuid;
-    });
+    if(this.loggedInID) {
+      loggedInID = this.loggedInID;
+    }
     const results: {data: any, error: any} = await this.supabaseClient
       .from('following_profile_system')
       .select(
@@ -33,9 +46,9 @@ export class FollowingService {
 
   async getAllFollower(user_id?: string): Promise<{data: any, error: any}> {
     let loggedInID: string | null = '';
-    this.authentificationQuery.uuid$.subscribe(uuid => {
-      loggedInID = uuid;
-    });
+    if(this.loggedInID) {
+      loggedInID = this.loggedInID;
+    }
     let userToFetch: string;
     if(user_id) {
       userToFetch = user_id;
@@ -60,9 +73,9 @@ export class FollowingService {
 
   async getAllFollowing(user_id?: string): Promise<{data: any, error: any}> {
     let loggedInID: string | null = '';
-    this.authentificationQuery.uuid$.subscribe(uuid => {
-      loggedInID = uuid;
-    });
+    if(this.loggedInID) {
+      loggedInID = this.loggedInID;
+    }
     let userToFetch: string;
     if(user_id) {
       userToFetch = user_id;
@@ -86,9 +99,9 @@ export class FollowingService {
 
   async followTransaction(following: string): Promise<{data: any, error: any}> {
     let loggedInID: string | null = '';
-    this.authentificationQuery.uuid$.subscribe(uuid => {
-      loggedInID = uuid;
-    });
+    if(this.loggedInID) {
+      loggedInID = this.loggedInID;
+    }
     const followTransactionResult: { data: any, error: any } = await this.supabaseClient
       .rpc('followtransaction', {followingid: following, followerid: loggedInID});
     if(followTransactionResult.error) throw new Error(followTransactionResult.error.message);
@@ -97,9 +110,9 @@ export class FollowingService {
 
   async unfollowTransaction(follower: string): Promise<{data: any, error: any}> {
     let loggedInID: string | null = '';
-    this.authentificationQuery.uuid$.subscribe(uuid => {
-      loggedInID = uuid;
-    });
+    if(this.loggedInID) {
+      loggedInID = this.loggedInID;
+    }
     const unfollowTransactionResult: { data: any, error: any } = await this.supabaseClient
       .rpc('unfollowtransaction', {followingid: follower, followerid: loggedInID});
     if(unfollowTransactionResult.error) throw new Error(unfollowTransactionResult.error.message);
@@ -108,9 +121,9 @@ export class FollowingService {
 
   async removeFollowerTransaction(follower: string): Promise<{data: any, error: any}> {
     let loggedInID: string | null = '';
-    this.authentificationQuery.uuid$.subscribe(uuid => {
-      loggedInID = uuid;
-    });
+    if(this.loggedInID) {
+      loggedInID = this.loggedInID;
+    }
     const unfollowTransactionResult: { data: any, error: any } = await this.supabaseClient
       .rpc('unfollowtransaction', {followingid: loggedInID, followerid: follower});
     if(unfollowTransactionResult.error) throw new Error(unfollowTransactionResult.error.message);
@@ -119,9 +132,9 @@ export class FollowingService {
 
   async removeFollowerTransactionById(event: {id: string, user_id: string}): Promise<{data: any, error: any}> {
     let loggedInID: string | null = '';
-    this.authentificationQuery.uuid$.subscribe(uuid => {
-      loggedInID = uuid;
-    });
+    if(this.loggedInID) {
+      loggedInID = this.loggedInID;
+    }
     const unfollowTransactionResult: { data: any, error: any } = await this.supabaseClient
       .rpc('unfollow_transaction_by_id', {followingid: loggedInID, followerid: event.user_id, relationship_id: event.id});
     if(unfollowTransactionResult.error) throw new Error(unfollowTransactionResult.error.message);

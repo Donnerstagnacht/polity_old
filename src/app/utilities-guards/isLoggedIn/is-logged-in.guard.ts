@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
-import { TestBed } from '@angular/core/testing';
 import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
-import { catchError, map, Observable, of, take, tap } from 'rxjs';
+import { map, Observable, take } from 'rxjs';
 import { AuthentificationQuery } from 'src/app/authentification/state/authentification.query';
 import { AuthentificationService } from '../../authentification/state/authentification.service';
 
@@ -11,7 +10,6 @@ import { AuthentificationService } from '../../authentification/state/authentifi
 export class IsLoggedInGuard implements CanActivate {
   constructor(
     private authentificationQuery: AuthentificationQuery,
-    private authentificationService: AuthentificationService,
     private router: Router
   ) {}
 

@@ -3,25 +3,37 @@ import { createClient, RealtimeSubscription, SupabaseClient } from '@supabase/su
 import { AuthentificationQuery } from 'src/app/authentification/state/authentification.query';
 import { GroupsService } from 'src/app/groups/state/groups.service';
 import { environment } from 'src/environments/environment';
+import { Subscription } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MembershipService {
   private supabaseClient: SupabaseClient;
+  loggedInID: string | null = '';
+  authSubscription: Subscription | undefined;
 
   constructor(
     private authentificationQuery: AuthentificationQuery,
     private groupsService: GroupsService
-    ) {
-    this.supabaseClient = createClient(environment.supabaseUrl, environment.supabaseKey)
-   }
+  ) {
+    this.supabaseClient = createClient(environment.supabaseUrl, environment.supabaseKey);
+    this.authSubscription = this.authentificationQuery.uuid$.subscribe(uuid => {
+      this.loggedInID = uuid;
+    })
+  }
 
-   async membershipAlreadyRequested(group_requested: string): Promise<{data: any, error: any}> {
+  ngOnDestroy(): void {
+    if(this.authSubscription) {
+      this.authSubscription.unsubscribe();
+    }
+  }
+
+  async membershipAlreadyRequested(group_requested: string): Promise<{data: any, error: any}> {
     let loggedInID: string | null = '';
-    this.authentificationQuery.uuid$.subscribe(uuid => {
-      loggedInID = uuid;
-    });
+    if(this.loggedInID) {
+      loggedInID = this.loggedInID;
+    }
     const results: {data: any, error: any} = await this.supabaseClient
       .from('membership_requests')
       .select(
@@ -36,9 +48,9 @@ export class MembershipService {
 
   async alreadyMember(group_requested: string, user_requests?: string): Promise<{data: any, error: any}> {
     let loggedInID: string | null = '';
-    this.authentificationQuery.uuid$.subscribe(uuid => {
-      loggedInID = uuid;
-    });
+    if(this.loggedInID) {
+      loggedInID = this.loggedInID;
+    }
     let user_id = loggedInID;
     if (user_requests) {
       user_id = user_requests;
@@ -80,9 +92,9 @@ export class MembershipService {
 
   async requestMembership(group_requested: string): Promise<{data: any, error: any}> {
     let loggedInID: string | null = '';
-    this.authentificationQuery.uuid$.subscribe(uuid => {
-      loggedInID = uuid;
-    });
+    if(this.loggedInID) {
+      loggedInID = this.loggedInID;
+    }
     const requestMembershipResult: { data: any, error: any } = await this.supabaseClient
       .rpc('insert_group_membership_request', {user_requests: loggedInID, group_requested: group_requested});
     if(requestMembershipResult.error) throw new Error(requestMembershipResult.error.message);
@@ -91,9 +103,9 @@ export class MembershipService {
 
   async cancelMembershipRequest(group_requested: string): Promise<{data: any, error: any}> {
     let loggedInID: string | null = '';
-    this.authentificationQuery.uuid$.subscribe(uuid => {
-      loggedInID = uuid;
-    });
+    if(this.loggedInID) {
+      loggedInID = this.loggedInID;
+    }
     const cancelMembershipResult: { data: any, error: any } = await this.supabaseClient
       .rpc('cancel_group_membership_request', {user_id_requests: loggedInID, group_id_requested: group_requested});
     if(cancelMembershipResult.error) throw new Error(cancelMembershipResult.error.message);
@@ -124,9 +136,9 @@ export class MembershipService {
 
   getRealTimeChangesIfStillMembershipRequested(group_id: string): RealtimeSubscription {
     let loggedInID: string | null = '';
-    this.authentificationQuery.uuid$.subscribe(uuid => {
-      loggedInID = uuid;
-    })
+    if(this.loggedInID) {
+      loggedInID = this.loggedInID;
+    }
     const subscription = this.supabaseClient
     .from<any>(`membership_requests`)
     .on('INSERT', (payload) => {
@@ -145,9 +157,9 @@ export class MembershipService {
 
   getRealTimeChangesIfStillMember(group_id: string): RealtimeSubscription {
     let loggedInID: string | null = '';
-    this.authentificationQuery.uuid$.subscribe(uuid => {
-      loggedInID = uuid;
-    })
+    if(this.loggedInID) {
+      loggedInID = this.loggedInID;
+    }
     const subscription = this.supabaseClient
     .from<any>(`group_members`)
     .on('INSERT', (payload) => {
@@ -166,9 +178,9 @@ export class MembershipService {
 
   getRealTimeChangesIfStillAdmin(group_id: string): RealtimeSubscription {
     let loggedInID: string | null = '';
-    this.authentificationQuery.uuid$.subscribe(uuid => {
-      loggedInID = uuid;
-    })
+    if(this.loggedInID) {
+      loggedInID = this.loggedInID;
+    }
     const subscription = this.supabaseClient
     .from<any>(`group_members:user_id=eq.${loggedInID}`)
     .on('UPDATE', (payload) => {

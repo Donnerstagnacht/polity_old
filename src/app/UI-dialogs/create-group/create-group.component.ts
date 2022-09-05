@@ -5,6 +5,8 @@ import { ProfileCore } from 'src/app/profile/state/profile.model';
 import { ProfileQuery } from 'src/app/profile/state/profile.query';
 import { GroupsService } from '../../groups/services/groups.service';
 import { MenuService } from '../menu.service';
+import { Subscription } from 'rxjs';
+
 
 export interface carouselPages {
   pageNumber: number
@@ -22,6 +24,10 @@ export class CreateGroupComponent implements OnInit {
   page: number = 0;
   loggedInUser: ProfileCore | undefined;
   loggedInUserId: string | null = null;
+
+  menuSubscription: Subscription | undefined;
+  profileSubscription: Subscription | undefined;
+
 
   newGroup: Group = {
     name: '',
@@ -41,7 +47,12 @@ export class CreateGroupComponent implements OnInit {
     private groupsService: GroupsService,
     private menuService: MenuService,
     private profileQuery: ProfileQuery
-    ) { }
+  ) { }
+
+  ngOnDestroy(): void {
+    this.menuSubscription?.unsubscribe();
+    this.profileSubscription?.unsubscribe();
+  }
 
   ngOnInit(): void {
     this.getLoggedInUserId$();
@@ -54,14 +65,14 @@ export class CreateGroupComponent implements OnInit {
       }
     ]
 
-    this.menuService.getMenuStatus().subscribe((menuStatus) => {
+    this.menuSubscription = this.menuService.getMenuStatus().subscribe((menuStatus) => {
       this.showAddGroupDialog = menuStatus;
     })
 
   }
 
   getLoggedInUserId$(): void {
-    this.authentificationQuery.uuid$.subscribe((uuid) => {
+    this.profileSubscription = this.authentificationQuery.uuid$.subscribe((uuid) => {
       if(uuid) {
         this.loggedInUserId = uuid;
         this.getSelectedProfile();

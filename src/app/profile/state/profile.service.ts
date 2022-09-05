@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ID } from '@datorama/akita';
 import { createClient, RealtimeSubscription, SupabaseClient, PostgrestResponse } from '@supabase/supabase-js';
-import { Console } from 'console';
 import { AuthentificationQuery } from 'src/app/authentification/state/authentification.query';
 import { FollowingService } from 'src/app/following-profiles-system/services/following.service';
 import { GroupsService } from 'src/app/groups/state/groups.service';
@@ -10,10 +9,13 @@ import { environment } from 'src/environments/environment';
 import { Profile, ProfileCore } from './profile.model';
 import { ProfileQuery } from './profile.query';
 import { ProfileStore } from './profile.store';
+import { Subscription } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class ProfileService {
   private supabaseClient: SupabaseClient;
+  authSubscription: Subscription | undefined;
+  loggedInID: string | null = '';
 
   constructor(
     private profileStore: ProfileStore,
@@ -21,9 +23,17 @@ export class ProfileService {
     private groupsService: GroupsService,
     private profileQuery: ProfileQuery,
     private authentificationQuery: AuthentificationQuery
-    ) {
-    this.supabaseClient = createClient(environment.supabaseUrl, environment.supabaseKey)
+  ) {
+    this.supabaseClient = createClient(environment.supabaseUrl, environment.supabaseKey);
+    this.authSubscription = this.authentificationQuery.uuid$.subscribe(uuid => {
+      this.loggedInID = uuid;
+    })
+  }
 
+  ngOnDestroy(): void {
+    if(this.authSubscription) {
+      this.authSubscription.unsubscribe();
+    }
   }
 
   async upsert(uuid: string): Promise<void> {
@@ -338,15 +348,15 @@ export class ProfileService {
   }
 
   checkIfIsOwner(profil_id: string): void {
-    this.authentificationQuery.uuid$.subscribe((loggedInID: string | null) => {
-      if(profil_id === loggedInID) {
-        this.updateIsProfileOwner(loggedInID, true);
+    if(this.loggedInID) {
+      if(profil_id === this.loggedInID) {
+        this.updateIsProfileOwner(this.loggedInID, true);
         console.log('owner')
       } else {
         this.updateIsProfileOwner(profil_id, false);
         console.log('not owner')
       }
-    })
+    }
   }
 
   updateIsFollowing(id: string, valueIsFollowing: boolean): void {
@@ -366,9 +376,9 @@ export class ProfileService {
 
   getRealTimeChangesIfStillFollower(profile_id: string): RealtimeSubscription {
     let loggedInID: string | null = '';
-    this.authentificationQuery.uuid$.subscribe(uuid => {
-      loggedInID = uuid;
-    })
+    if(this.loggedInID) {
+      loggedInID = this.loggedInID;
+    }
     const subscription = this.supabaseClient
     .from<any>(`following_profile_system`)
     .on('INSERT', (payload) => {

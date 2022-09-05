@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { MegaMenuItem } from 'primeng/api';
 import { AuthentificationQuery } from 'src/app/authentification/state/authentification.query';
+import { Subscription } from 'rxjs';
+
 @Component({
   selector: 'app-menu-bar-bottom',
   templateUrl: './menu-bar-bottom.component.html',
@@ -10,6 +12,7 @@ export class MenuBarBottomComponent implements OnInit {
   display: boolean = true;
   items: MegaMenuItem[] = [];
   showAddMenu: boolean = false;
+  authSubscription: Subscription | undefined;
 
   loggedInItems: MegaMenuItem[] = [
     {icon: 'pi pi-fw pi-user', /* label: 'Profil', */ routerLink: ['/profile']},
@@ -27,10 +30,14 @@ export class MenuBarBottomComponent implements OnInit {
 
   constructor(
     private readonly authentificationQuery: AuthentificationQuery,
-    ) { }
+  ) { }
+
+  ngOnDestroy(): void {
+    this.authSubscription?.unsubscribe();
+  }
 
     ngOnInit(): void {
-      this.authentificationQuery.uuid$.subscribe(uuid => {
+      this.authSubscription = this.authentificationQuery.uuid$.subscribe(uuid => {
         if(uuid) {
           this.items = this.loggedInItems;
         } else {

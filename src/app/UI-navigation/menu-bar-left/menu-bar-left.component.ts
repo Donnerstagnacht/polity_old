@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { AuthentificationQuery } from 'src/app/authentification/state/authentification.query';
+import { Subscription } from 'rxjs';
+
 @Component({
   selector: 'app-menu-bar-left',
   templateUrl: './menu-bar-left.component.html',
@@ -10,6 +12,7 @@ export class MenuBarLeftComponent implements OnInit {
   display: boolean = true;
   items: MenuItem[] = [];
   showAddMenu:boolean = false;
+  authSubscription: Subscription | undefined;
 
   loggedInItems: MenuItem[] = [
     {label: 'PROFIL', routerLink: ['/profile'], id: 'profile-cy'},
@@ -27,16 +30,20 @@ export class MenuBarLeftComponent implements OnInit {
 
   constructor(
     private authentificationQuery: AuthentificationQuery
-    ) { }
+  ) { }
 
   ngOnInit(): void {
-    this.authentificationQuery.uuid$.subscribe(uuid => {
+    this.authSubscription = this.authentificationQuery.uuid$.subscribe(uuid => {
       if(uuid) {
         this.items = this.loggedInItems;
       } else {
         this.items = this.loggedOutItems;
       }
     })
+  }
+
+  ngOnDestroy(): void {
+    this.authSubscription?.unsubscribe();
   }
 
   toggleFullScreen(): void {

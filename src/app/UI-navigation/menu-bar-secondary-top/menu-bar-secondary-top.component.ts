@@ -1,6 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MegaMenuItem } from 'primeng/api';
-import { MegaMenu } from 'primeng/megamenu';
 
 @Component({
   selector: 'app-menu-bar-secondary-top',

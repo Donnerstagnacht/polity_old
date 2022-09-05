@@ -3,17 +3,30 @@ import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { AuthentificationQuery } from '../../authentification/state/authentification.query';
 import { environment } from 'src/environments/environment';
 import { Group } from '../state/group.model';
+import { Subscription } from 'rxjs';
+
 @Injectable({
   providedIn: 'root'
 })
 export class GroupsService {
   private supabaseClient: SupabaseClient;
+  loggedInID: string | null = '';
+  authSubscription: Subscription | undefined;
 
   constructor(
     private readonly authentificationQuery: AuthentificationQuery,
-    ) {
-    this.supabaseClient = createClient(environment.supabaseUrl, environment.supabaseKey)
-   }
+  ) {
+    this.supabaseClient = createClient(environment.supabaseUrl, environment.supabaseKey);
+    this.authSubscription = this.authentificationQuery.uuid$.subscribe(uuid => {
+      this.loggedInID = uuid;
+    })
+  }
+
+  ngOnDestroy(): void {
+    if(this.authSubscription) {
+      this.authSubscription.unsubscribe();
+    }
+  }
 
   async createGroupTransaction(
     newGroup: Group
@@ -32,9 +45,9 @@ export class GroupsService {
 
   async getAllGroupsOfId(): Promise<{data: any, error: any}> {
     let loggedInID: string | null = '';
-    this.authentificationQuery.uuid$.subscribe((uuid: any) => {
-      loggedInID = uuid;
-    });
+    if(this.loggedInID) {
+      loggedInID = this.loggedInID;
+    }
     const groups: {data: any, error: any} = await this.supabaseClient
       .from('group_members')
       .select(
@@ -56,9 +69,9 @@ export class GroupsService {
 
   async isLoggedInUserAdmin(groupId: string):  Promise<{data: any, error: any}> {
     let loggedInID: string | null = '';
-    this.authentificationQuery.uuid$.subscribe(uuid => {
-      loggedInID = uuid;
-    });
+    if(this.loggedInID) {
+      loggedInID = this.loggedInID;
+    }
     const results: {data: any, error: any} = await this.supabaseClient
     .from('group_members')
     .select(
