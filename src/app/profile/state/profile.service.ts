@@ -26,15 +26,16 @@ export class ProfileService {
 
   }
 
-  add(uuid: string) {
-    this.selectProfil(uuid)
+  async upsert(uuid: string): Promise<void> {
+    await this.selectProfil(uuid)
     .then((results) => {
       const profile: Profile = results.data;
       // console.log(profile);
-      this.profileStore.add(profile);
+      this.profileStore.upsert(uuid, profile);
     })
     .catch((error) => {
-      console.log(error);
+      // console.log(error);
+      throw new Error(error.message);
     })
   }
 
@@ -45,12 +46,12 @@ export class ProfileService {
     .on('UPDATE', (payload) => {
       console.log('update')
       console.log(payload)
-      this.profileStore.update(payload.new.id, payload.new)
+      this.profileStore.upsert(payload.new.id, payload.new)
     })
     .on('INSERT', (payload) => {
       console.log('insert')
       console.log(payload)
-      this.profileStore.update(payload.new.id, payload.new)
+      this.profileStore.upsert(payload.new.id, payload.new)
     })
     .subscribe()
     return subscription;
@@ -96,17 +97,14 @@ export class ProfileService {
         groups_counter`
       )
       .eq('id', uuid)
-      .single()
-    // console.log(results);
+      .single();
+      if(results.error) throw  new Error(results.error.message);
     return results;
   }
 
-  getAllFollowers(profil_id: string): void {
-    this.profileFollowingService.getAllFollower(profil_id)
-    .then((response) => {
-      console.log('response')
-      console.log(response)
-
+  async getAllFollowers(profil_id: string): Promise<void> {
+    const response: {data: any, error: any} = await this.profileFollowingService.getAllFollower(profil_id);
+    if(response.data) {
       let allFollowers: profile_list_item[] = [];
       response.data.forEach((profile: {
         id: string,
@@ -126,69 +124,56 @@ export class ProfileService {
           }
         )
       })
-      this.profileStore.update(profil_id, {followers: allFollowers})
-
-    })
-    .catch((error) => console.log(error))
+      this.profileStore.upsert(profil_id, {followers: allFollowers})
+    }
+    if(response.error) throw new Error(response.error);
   }
 
-  getAllFollowings(profil_id: string): void {
-    this.groupsService.getAllFollowings(profil_id)
-    .then((groups) => {
-      console.log('group followings')
-      console.log('response')
-      console.log(groups)
-
-      this.profileFollowingService.getAllFollowing(profil_id)
-      .then((profiles) => {
-        console.log('profile followings')
-        console.log('response')
-        console.log(profiles)
-
-        let allFollowings: profile_list_item[] = [];
-        profiles.data.forEach((profile: {
-          id: string,
-          profiles: {
-            avatar_url: string,
-            id: string,
-            name: string,
-          },
-          following: string
-        }) => {
-          allFollowings.push(
-            {
-              id: profile.id,
-              user_id: profile.following,
-              avatar_url: profile.profiles.avatar_url,
-              name: profile.profiles.name,
-              isGroup: false
-            }
-          )
-        })
-        groups.data.forEach((group: {
-          id: string,
-          groups: {
-            avatar_url: string,
-            id: string,
-            name: string,
-          },
-          following: string
-        }) => {
-          allFollowings.push(
-            {
-              id: group.id,
-              user_id: group.following,
-              avatar_url: group.groups.avatar_url,
-              name: group.groups.name,
-              isGroup: true
-            }
-          )
-        })
-        this.profileStore.update(profil_id, {followings: allFollowings})
-
-      })
-      .catch((error) => console.log(error))
+  async getAllFollowings(profil_id: string): Promise<void> {
+    const groups: {data: any, error: any} = await this.groupsService.getAllFollowings(profil_id);
+    const profiles: {data: any, error: any} = await this.profileFollowingService.getAllFollowing(profil_id);
+    let allFollowings: profile_list_item[] = [];
+    profiles.data.forEach((profile: {
+      id: string,
+      profiles: {
+        avatar_url: string,
+        id: string,
+        name: string,
+      },
+      following: string
+    }) => {
+      allFollowings.push(
+        {
+          id: profile.id,
+          user_id: profile.following,
+          avatar_url: profile.profiles.avatar_url,
+          name: profile.profiles.name,
+          isGroup: false
+        }
+      )
     })
+    groups.data.forEach((group: {
+      id: string,
+      groups: {
+        avatar_url: string,
+        id: string,
+        name: string,
+      },
+      following: string
+    }) => {
+      allFollowings.push(
+        {
+          id: group.id,
+          user_id: group.following,
+          avatar_url: group.groups.avatar_url,
+          name: group.groups.name,
+          isGroup: true
+        }
+      )
+    })
+    this.profileStore.upsert(profil_id, {followings: allFollowings})
+    if(groups.error) throw new Error(groups.error.message);
+    if(profiles.error) throw new Error(profiles.error.message);
   }
 
   getRealTimeChangesFollowerSystem(profil_id: string): RealtimeSubscription {
@@ -256,32 +241,36 @@ export class ProfileService {
       console.log(payload)
       if(payload.old.following === profil_id) {
           console.log(payload.old.id)
-          const entity = this.profileQuery.getEntity(profil_id);
+          const profile: Profile | undefined = this.profileQuery.getEntity(profil_id);
           console.log('oldState');
-          console.log(entity);
-          if(entity && entity.followers) {
-            const followers: profile_list_item[] = Object.assign([], entity.followers)
-            let requestId: number = followers.findIndex((request) => request.id === payload.old.id);
-            followers.splice(requestId);
+          console.log(profile);
+          if(profile && profile.followers) {
+            const followers: profile_list_item[] = Object.assign([], profile.followers)
+            let idToSliceOut: number = followers.findIndex((follower: profile_list_item) => follower.id === payload.old.id);
+            followers.splice(idToSliceOut, 1);
             console.log('newState');
-            console.log(requestId)
+            console.log(idToSliceOut)
             console.log(payload.old.id)
             console.log(followers);
             this.profileStore.update(profil_id, {followers: followers})
           }
       }
       if(payload.old.follower === profil_id) {
-        console.log(payload.old.id)
+        console.log('follower')
         const entity = this.profileQuery.getEntity(profil_id);
         console.log('oldState');
-        console.log(entity);
+        console.log();
         if(entity && entity.followings) {
-          const followings: profile_list_item[] = Object.assign([], entity.followers)
-          let requestId: number = followings.findIndex((request) => request.id === payload.old.id);
-          followings.splice(requestId);
-          console.log('newState');
-          console.log(requestId)
+          const followings: profile_list_item[] = Object.assign([], entity.followings)
+          console.log('followings')
+          console.log(entity.followings)
+          console.log('to Delete')
+          console.log()
+          let idToSpliceOut: number = followings.findIndex((following: profile_list_item) => following.user_id === payload.old.following);
+          console.log(idToSpliceOut)
           console.log(payload.old.id)
+          followings.splice(idToSpliceOut, 1);
+          console.log('newState');
           console.log(followings);
           this.profileStore.update(profil_id, {followings: followings})
         }
@@ -329,14 +318,13 @@ export class ProfileService {
       console.log('Payload')
       console.log(payload)
       if(payload.old.follower === profil_id) {
-        console.log(payload.old.id)
         const entity = this.profileQuery.getEntity(profil_id);
         console.log('oldState');
         console.log(entity);
         if(entity && entity.followings) {
-          const followings: profile_list_item[] = Object.assign([], entity.followers)
+          const followings: profile_list_item[] = Object.assign([], entity.followings)
           let requestId: number = followings.findIndex((request) => request.id === payload.old.id);
-          followings.splice(requestId);
+          followings.splice(requestId, 1);
           console.log('newState');
           console.log(requestId)
           console.log(payload.old.id)
@@ -350,16 +338,15 @@ export class ProfileService {
   }
 
   checkIfIsOwner(profil_id: string): void {
-    let loggedInID: string | null = '';
-    this.authentificationQuery.uuid$.subscribe(uuid => {
-      loggedInID = uuid;
+    this.authentificationQuery.uuid$.subscribe((loggedInID: string | null) => {
+      if(profil_id === loggedInID) {
+        this.updateIsProfileOwner(loggedInID, true);
+        console.log('owner')
+      } else {
+        this.updateIsProfileOwner(profil_id, false);
+        console.log('not owner')
+      }
     })
-
-    if(loggedInID === profil_id) {
-      this.updateIsProfileOwner(loggedInID, true)
-    } else {
-      this.updateIsProfileOwner(profil_id, false)
-    }
   }
 
   updateIsFollowing(id: string, valueIsFollowing: boolean): void {
@@ -439,7 +426,7 @@ export class ProfileService {
             groupsOfProfile.push(groupData);
             console.log('newState');
             console.log(groupsOfProfile)
-            this.profileStore.update(user_id, {groups: groupsOfProfile})
+            this.profileStore.upsert(user_id, {groups: groupsOfProfile})
           }
         })
       }
@@ -471,12 +458,12 @@ export class ProfileService {
           if(entity && entity.groups) {
             const groupsOfProfile: profile_list_item[] = Object.assign([], entity.groups)
             let requestId: number = groupsOfProfile.findIndex((request) => request.id === payload.old.id);
-            groupsOfProfile.splice(requestId);
+            groupsOfProfile.splice(requestId, 1);
             console.log('newState');
             console.log(requestId)
             console.log(payload.old.id)
             console.log(groupsOfProfile);
-            this.profileStore.update(user_id, {groups: groupsOfProfile})
+            this.profileStore.upsert(user_id, {groups: groupsOfProfile})
           }
         })
       }

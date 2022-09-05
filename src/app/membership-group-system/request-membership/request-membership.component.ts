@@ -2,9 +2,11 @@ import { Component, Input, OnInit } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { AuthentificationQuery } from 'src/app/authentification/state/authentification.query';
 import { GroupsService } from 'src/app/groups/state/groups.service';
+import { Subscription } from 'rxjs';
 import { GroupsQuery } from 'src/app/groups/state/groups.query';
 import { MembershipService } from '../services/membership.service';
 import { GroupUI } from 'src/app/groups/state/group.model';
+import { RealtimeSubscription } from '@supabase/supabase-js';
 
 @Component({
   selector: 'app-request-membership',
@@ -16,6 +18,11 @@ export class RequestMembershipComponent implements OnInit {
   @Input() selectedGroupId: string = '';
   groupUI!: GroupUI;
 
+  authSubscription: Subscription | undefined;
+  groupSubscription: Subscription | undefined;
+  stillMemberRealtimeSubscription: RealtimeSubscription | undefined;
+  stillMembershipRequestedRealtimeSubscription: RealtimeSubscription | undefined;
+
   constructor(
     private messageService: MessageService,
     private membershipService: MembershipService,
@@ -25,16 +32,30 @@ export class RequestMembershipComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.membershipService.getRealTimeChangesIfStillMembershipRequested(this.selectedGroupId);
-    this.membershipService.getRealTimeChangesIfStillMember(this.selectedGroupId);
+    this.stillMemberRealtimeSubscription = this.membershipService.getRealTimeChangesIfStillMembershipRequested(this.selectedGroupId);
+    this.stillMemberRealtimeSubscription = this.membershipService.getRealTimeChangesIfStillMember(this.selectedGroupId);
     this.checkIfMembershipAlreadyRequested();
     this.checkIfAlreadyMember();
-    this.groupsQuery.selectUI$(this.selectedGroupId).subscribe((ui) => {
+    this.groupSubscription = this.groupsQuery.selectUI$(this.selectedGroupId).subscribe((ui) => {
       if(ui) {
         this.groupUI = ui;
-        console.log(this.groupUI)
       }
     })
+  }
+
+  ngOnDestroy(): void {
+    if(this.authSubscription) {
+      this.authSubscription.unsubscribe()
+    }
+    if(this.groupSubscription) {
+      this.groupSubscription.unsubscribe()
+    }
+    if(this.stillMemberRealtimeSubscription) {
+      this.stillMemberRealtimeSubscription.unsubscribe()
+    }
+    if(this.stillMembershipRequestedRealtimeSubscription) {
+      this.stillMembershipRequestedRealtimeSubscription.unsubscribe()
+    }
   }
 
   checkIfMembershipAlreadyRequested(): void {
@@ -77,39 +98,36 @@ export class RequestMembershipComponent implements OnInit {
     }
   }
 
-  requestMembership(): void {
-    this.membershipService.requestMembership(this.selectedGroupId)
-    .then(() => {
+  async requestMembership(): Promise<void> {
+    try {
+      await this.membershipService.requestMembership(this.selectedGroupId);
       this.messageService.add({severity:'success', summary: 'Beitrittansfrage verschickt.'});
-    })
-    .catch((error: any) =>  {
-      this.messageService.add({severity:'error', summary: error})
-    })
+    } catch(error: any) {
+      this.messageService.add({severity:'error', summary: error.message});
+    }
   }
 
-  cancelRequestMembership(): void {
-    this.membershipService.cancelMembershipRequest(this.selectedGroupId)
-    .then(() => {
+  async cancelRequestMembership(): Promise<void> {
+    try {
+      await this.membershipService.cancelMembershipRequest(this.selectedGroupId);
       this.messageService.add({severity:'success', summary: 'Beitrittansfrage zurückgezogen.'});
-    })
-    .catch((error: any) =>  {
-      this.messageService.add({severity:'error', summary: error})
-    })
+    } catch(error: any) {
+      this.messageService.add({severity:'error', summary: error.message});
+    }
   }
 
-  leaveGroup(): void{
+  async leaveGroup(): Promise<void> {
     let loggedInID: string | null = '';
-    this.authentificationQuery.uuid$.subscribe(uuid => {
+    this.authSubscription = this.authentificationQuery.uuid$.subscribe(uuid => {
       loggedInID = uuid;
     });
-    if (loggedInID) {
-      this.membershipService.removeMember(loggedInID, this.selectedGroupId)
-      .then(() => {
+    try {
+      if(loggedInID) {
+        await this.membershipService.removeMember(loggedInID, this.selectedGroupId)
         this.messageService.add({severity:'success', summary: 'Erfolgreich ausgetreten.'});
-      })
-      .catch((error: any) =>  {
-        this.messageService.add({severity:'error', summary: error})
-      })
+      }
+    } catch(error: any) {
+      this.messageService.add({severity:'error', summary: error})
     }
   }
 

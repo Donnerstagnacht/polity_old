@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MegaMenuItem, MenuItem } from 'primeng/api';
+import { Subscription } from 'rxjs';
 import { AuthentificationQuery } from 'src/app/authentification/state/authentification.query';
 import { AuthentificationService } from 'src/app/authentification/state/authentification.service';
 import { profileMenuitems, profileMenuitemsIsOwner, profileMenuitemsMega, profileMenuitemsMegaIsOwner } from '../state/profileMenuItems';
@@ -10,13 +11,15 @@ import { profileMenuitems, profileMenuitemsIsOwner, profileMenuitemsMega, profil
   templateUrl: './edit.component.html',
   styleUrls: ['./edit.component.scss']
 })
-export class EditComponent implements OnInit {
+export class EditComponent implements OnInit, OnDestroy {
   menuItemsSpecial: MenuItem[] = [];
   menuItemsStandart: MenuItem[] = [];
   menuItemsMegaSpecial: MegaMenuItem[] = [];
   menuItemsMegaStandart: MegaMenuItem[] = [];
   loggedInUserId: string = '';
   isOwner: boolean = true;
+
+  loggedInUserSubscription?: Subscription;
 
   constructor(
     private readonly authentificationService: AuthentificationService,
@@ -25,7 +28,7 @@ export class EditComponent implements OnInit {
     ) { }
 
   ngOnInit(): void {
-    this.authentificationQuery.uuid$.subscribe((uuid: any) => {
+    this.loggedInUserSubscription = this.authentificationQuery.uuid$.subscribe((uuid: string | null) => {
       if(uuid) {
         this.loggedInUserId = uuid;
         this.menuItemsSpecial = profileMenuitemsIsOwner(this.loggedInUserId);
@@ -36,9 +39,14 @@ export class EditComponent implements OnInit {
     })
   }
 
+  ngOnDestroy(): void {
+    if(this.loggedInUserSubscription) {
+      this.loggedInUserSubscription.unsubscribe()
+    }
+  }
+
   async signOut(): Promise<any> {
     await this.authentificationService.signOut();
     this.router.navigate(['/login']);
   }
-
 }

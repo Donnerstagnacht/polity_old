@@ -72,7 +72,7 @@ export class CreateGroupComponent implements OnInit {
   getSelectedProfile(): void {
     if (this.loggedInUserId) {
       this.profileQuery
-        .selectProfileById(this.loggedInUserId)
+        .selectEntity(this.loggedInUserId)
         .subscribe((profile: ProfileCore | undefined) => {
           if(profile) {
             //Review

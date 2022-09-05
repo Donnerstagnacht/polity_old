@@ -1,14 +1,21 @@
+<p-toast styleClass="max-w-90"	 position="top-right">></p-toast>
 <app-menu-bar-secondary-top
- [megaMenuItemSpecial]="menuItemsMegaSpecial"
- [megaMenuItemStandart]="menuItemsMegaStandart"
-[specialOrStandart]="groupUI.isAdmin">
+  [megaMenuItemSpecial]="menuItemsMegaSpecial"
+  [megaMenuItemStandart]="menuItemsMegaStandart"
+  [specialOrStandart]="groupUI.isAdmin">
 </app-menu-bar-secondary-top>
-<!-- <p-toast styleClass="max-w-90"	 position="top-right">></p-toast> -->
 <app-wrapper-grid>
   <div slot="main">
-    <div class="mb-8">
+    <app-loading-spinner
+    [error]="error"
+    [loading]="loadingInitial"
+    [errorMessage]="errorMessage"
+    (retryAction)="loadInitialData()"
+  >
+  </app-loading-spinner>
+    <div *ngIf="!loadingInitial && !loading && !error" class="mb-8" >
       <app-wiki-header
-        *ngIf="group$ | async as group"
+        *ngIf="group"
         [wikiHeader]="{
           title: group.name,
           subtitle: group.level,
@@ -32,7 +39,7 @@
         </div>
       </div>
       <app-key-figures
-        *ngIf="group$ | async as group"
+        *ngIf="group"
         [keyFigureList]="[
           {
             name: 'Mitglieder',
@@ -54,7 +61,7 @@
       </app-key-figures>
       <div class="mb-30">
         <app-about-and-contact
-          *ngIf="group$ | async as group"
+          *ngIf="group"
           [contactData]="{
             about: group.description,
             contact_email: group.contact_email,

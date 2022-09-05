@@ -1,12 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MegaMenuItem, MenuItem, MessageService } from 'primeng/api';
-import { GroupCore } from '../../groups/state/group.model';
+import { Group, GroupCore } from '../../groups/state/group.model';
 import { groupsMenuitemsParameter, groupsMenuitemsMegaParameter} from '../state/groupMenuItems';
 import { GroupsService  } from '../state/groups.service';
 import { ImgUploadObject, StorageService } from 'src/app/utilities/storage/services/storage.service';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { GroupsQuery } from '../state/groups.query';
+import { RealtimeSubscription } from '@supabase/supabase-js';
 
 @Component({
   selector: 'app-edit-group',
@@ -14,15 +15,18 @@ import { GroupsQuery } from '../state/groups.query';
   styleUrls: ['./edit-group.component.scss'],
   providers: [MessageService]
 })
-export class EditGroupComponent implements OnInit {
+export class EditGroupComponent implements OnInit, OnDestroy {
   menuItems: MenuItem[] = [];
   menuItemsMega: MegaMenuItem[] = [];
   selectedGroupId: string = '';
-  group!: GroupCore;
   backLink: string = '';
   loading: boolean = false;
   uploading: boolean = false;
   group$ = new Observable<GroupCore | undefined>();
+  group!: GroupCore;
+
+  groupCoreSubscription: Subscription | undefined;
+  groupCoreRealtimeSubscription: RealtimeSubscription | undefined;
 
   constructor(
     private route: ActivatedRoute,
@@ -35,12 +39,53 @@ export class EditGroupComponent implements OnInit {
   ngOnInit(): void {
     this.getSelectedId();
     if(this.selectedGroupId) {
-      this.getGroupById(this.selectedGroupId);
       this.menuItemsMega = groupsMenuitemsMegaParameter(this.selectedGroupId);
       this.menuItems = groupsMenuitemsParameter(this.selectedGroupId);
       this.backLink = `/groups/${this.selectedGroupId}/edit`;
     }
+
+    if(this.selectedGroupId) {
+      this.groupCoreSubscription = this.groupQuery.selectEntity(this.selectedGroupId).subscribe((group: Group | undefined ) => {
+        if(group) {
+          this.group = {
+            id: group.id,
+            created_at: group.created_at,
+            name: group.name,
+            description: group.description,
+            creator: group.creator,
+            member_counter: group.member_counter,
+            events_counter: group.events_counter,
+            level: group.level,
+            street: group.street,
+            post_code: group.post_code,
+            city: group.city,
+            contact_phone: group.contact_phone,
+            avatar_url: group.avatar_url,
+            follower_counter: group.follower_counter,
+            amendment_counter: group.amendment_counter,
+            contact_email: group.contact_email,
+            updated_at: group.updated_at
+          }
+        } else {
+          if(this.selectedGroupId) {
+            this.groupsService.findGroup(this.selectedGroupId);
+          }
+        }
+        if(this.selectedGroupId) {
+          this.groupCoreRealtimeSubscription = this.groupsService.getRealTimeChanges(this.selectedGroupId);
+        }
+      });
+    }
     this.group = {...this.group}
+  }
+
+  ngOnDestroy(): void {
+    if(this.groupCoreSubscription) {
+      this.groupCoreSubscription.unsubscribe()
+    }
+    if(this.groupCoreRealtimeSubscription) {
+      this.groupCoreRealtimeSubscription.unsubscribe()
+    }
   }
 
   getSelectedId(): void {
@@ -49,69 +94,7 @@ export class EditGroupComponent implements OnInit {
     })
   }
 
-  getGroupById(selectedGroupId: string): void {
-    console.log('called')
-    this.group$ = this.groupQuery.selectEntity(selectedGroupId);
-    this.group$.subscribe((group: GroupCore | undefined) => {
-      console.log('inner')
-      if(group) {
-        console.log(group)
-        this.group = {
-          id: group.id,
-          created_at: group.created_at,
-          name: group.name,
-          description: group.description,
-          creator: group.creator,
-          member_counter: group.member_counter,
-          events_counter: group.events_counter,
-          level: group.level,
-          street: group.street,
-          post_code: group.post_code,
-          city: group.city,
-          contact_phone: group.contact_phone,
-          avatar_url: group.avatar_url,
-          follower_counter: group.follower_counter,
-          amendment_counter: group.amendment_counter,
-          contact_email: group.contact_email,
-          updated_at: group.updated_at
-        }
-
-        console.log(this.group)
-      }
-    })
-
-/*     this.groupsService.findGroup(this.selectedGroupId)
-    .then((results) => {
-      this.group = results.data;
-    })
-    .catch((error) => {
-      console.log(error);
-    }); */
-  }
-
   async updateGroup(group: Partial<GroupCore>, id?: string): Promise<void> {
-    console.log(group)
-    console.log(id)
-
-/*     const updateData: GroupCore =  {
-      id: group.id,
-      created_at: group.created_at,
-      name: group.name,
-      description: group.description,
-      creator: group.creator,
-      member_counter: group.member_counter,
-      events_counter: group.events_counter,
-      level: group.level,
-      street: group.street,
-      post_code: group.post_code,
-      city: group.city,
-      contact_phone: group.contact_phone,
-      avatar_url: group.avatar_url,
-      follower_counter: group.follower_counter,
-      amendment_counter: group.amendment_counter,
-      contact_email: group.contact_email,
-      updated_at: group.updated_at
-    } */
     try {
       this.loading = true;
       await this.groupsService.updateGroup(group, id);
@@ -121,7 +104,6 @@ export class EditGroupComponent implements OnInit {
     } finally {
       this.loading = false;
     }
-
   }
 
   async updateGroupPhoto(event: any, fileUploader: any) {

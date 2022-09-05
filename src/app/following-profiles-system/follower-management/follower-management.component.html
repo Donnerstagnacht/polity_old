@@ -1,7 +1,14 @@
 <p-toast styleClass="max-w-90"	 position="top-right"></p-toast>
 <app-wrapper-grid [noTopBar]="true">
   <div slot="main">
-    <div class="mb-8">
+    <app-loading-spinner
+    [error]="error"
+    [loading]="loadingInitial"
+    [errorMessage]="errorMessage"
+    (retryAction)="loadInitialData()"
+  >
+  </app-loading-spinner>
+    <div *ngIf="!loadingInitial && !error" class="mb-8" >
       <div class="mx-4">
         <app-back-button data-cy="backButton" [title]="'Zurück'" [link]="'/profile/edit'"></app-back-button>
         <div class="mb-30">

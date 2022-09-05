@@ -5,6 +5,7 @@ import { ToastModule } from 'primeng/toast';
 import { WrapperGridModule } from '../UI-structure/wrapper-grid/wrapper-grid.module';
 import { BackButtonModule } from '../UI-elements/back-button/back-button.module';
 import { TabViewTableListsModule } from '../UI-elements/tab-view-table-lists/tab-view-table-lists.module';
+import { LoadingSpinnerModule } from '../UI-elements/loading-spinner/loading-spinner.module';
 
 
 
@@ -17,7 +18,8 @@ import { TabViewTableListsModule } from '../UI-elements/tab-view-table-lists/tab
     ToastModule,
     WrapperGridModule,
     BackButtonModule,
-    TabViewTableListsModule
+    TabViewTableListsModule,
+    LoadingSpinnerModule
   ]
 })
 export class FollowingGroupsSystemModule { }

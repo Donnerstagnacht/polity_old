@@ -1,0 +1,10 @@
+<div *ngIf="loading" class="flex align-items-center justify-content-center h-screen">
+  <p-progressSpinner *ngIf="!error" class="flex align-items-center justify-content-center"></p-progressSpinner>
+</div>
+
+<div *ngIf="!loading && error"  class="flex align-items-center justify-content-center h-screen">
+  <div class="text-center">
+    <p *ngIf="error && errorMessage" class="">{{errorMessage}}</p>
+    <button (click)="startRetryAction()" pButton type="button" label="Retry" class="p-button-raised"></button>
+  </div>
+</div>

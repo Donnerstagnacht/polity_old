@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { NgEntityService } from '@datorama/akita-ng-entity-service';
 import { GroupsStore, GroupsState } from './groups.store';
 import { Group, GroupCore } from './group.model';
-import { createClient, RealtimeSubscription, SupabaseClient } from '@supabase/supabase-js';
+import { createClient, PostgrestResponse, RealtimeSubscription, SupabaseClient } from '@supabase/supabase-js';
 import { environment } from 'src/environments/environment';
 import { profile_list_item } from './profile_list_item.model';
 import { GroupsQuery } from './groups.query';
@@ -17,16 +17,14 @@ export class GroupsService extends NgEntityService<GroupsState> {
     this.supabaseClient = createClient(environment.supabaseUrl, environment.supabaseKey)
   }
 
-  findGroup(uuid: string): void {
-    this.selectGroup(uuid)
+  async findGroup(uuid: string): Promise<void> {
+    await this.selectGroup(uuid)
     .then((results) => {
       let group: Group = results.data;
-      console.log('Data received from backend')
-      console.log(group)
       this.groupsStore.add(group);
     })
-    .catch((error) => {
-      console.log(error);
+    .catch((error: any) => {
+      if(error) throw new Error(error.message)
     })
   }
 
@@ -40,7 +38,7 @@ export class GroupsService extends NgEntityService<GroupsState> {
     return subscription;
   }
 
-  updateGroup(group: Partial<GroupCore>, id: string | undefined) {
+  async updateGroup(group: Partial<GroupCore>, id: string | undefined) {
     const update = {
       ...group
 /*       members: [],
@@ -57,12 +55,13 @@ export class GroupsService extends NgEntityService<GroupsState> {
     console.log(updateId),
     console.log(update)
 
-    return this.supabaseClient
+    const response: PostgrestResponse<any> = await this.supabaseClient
       .from('groups')
       .update(group, {
       returning: 'minimal', // Don't return the value after inserting
       })
-      .match({id: updateId})
+      .match({id: updateId});
+    if(response.error) throw new Error(response.error.message);
   }
 
   async selectGroup(uuid: string): Promise<{data: any, error: any}> {
@@ -86,13 +85,17 @@ export class GroupsService extends NgEntityService<GroupsState> {
       )
       .eq('id', uuid)
       .single();
-    results.data.members = [];
-    results.data.membership_requests = [];
+    if(results.data) {
+      results.data.members = [];
+      results.data.membership_requests = [];
+    }
+    if(results.error) throw new Error(results.error.message);
     return results;
   }
 
-  getAllMembers(groupId: string) {
-    this.selectAllMembers(groupId).then((response) => {
+  async getAllMembers(groupId: string): Promise<void> {
+    const response: {data: any, error: any} = await this.selectAllMembers(groupId);
+    if(response.data) {
       let allMembers: profile_list_item[] = [];
       response.data.forEach((profile: {
         id: string,
@@ -111,13 +114,14 @@ export class GroupsService extends NgEntityService<GroupsState> {
             name: profile.profiles.name
           }
         )
-      })
-      this.groupsStore.update(groupId, {members: allMembers})
-    })
+      });
+      this.groupsStore.update(groupId, {members: allMembers});
+    }
+    if(response.error) throw new Error(response.error.message);
   }
 
-  getAllFollowers(group_id: string): void {
-    this.getAllFollower(group_id)
+  async getAllFollowers(group_id: string): Promise<void> {
+    await this.getAllFollower(group_id)
     .then((response) => {
       console.log('response')
       console.log(response)
@@ -142,9 +146,10 @@ export class GroupsService extends NgEntityService<GroupsState> {
         )
       })
       this.groupsStore.update(group_id, {followers: allFollowers})
-
     })
-    .catch((error) => console.log(error))
+    .catch((error: any) => {
+      throw new Error(error.message);
+    })
   }
 
   getAllGroupFollowingsOfUser(user_id: string): void {
@@ -178,12 +183,9 @@ export class GroupsService extends NgEntityService<GroupsState> {
     .catch((error) => console.log(error))
   }
 
-  getAllMemberShipRequests(group_id: string): void {
-    this.getAllMembershipRequests(group_id)
-    .then((response) => {
-      console.log('response')
-      console.log(response)
-
+  async processGetAllMemberShipRequests(group_id: string): Promise<void> {
+    const response: {data: any, error: any} = await this.getAllMembershipRequests(group_id);
+    if(response.data) {
       let allMembers: profile_list_item[] = [];
       response.data.forEach((profile: {
         id: string,
@@ -202,39 +204,27 @@ export class GroupsService extends NgEntityService<GroupsState> {
             name: profile.profiles.name
           }
         )
-      })
-      this.groupsStore.update(group_id, {membership_requests: allMembers})
-    })
-
-/*     .then((membershipRequests) => {
-      this.membershipRequests = [];
-      membershipRequests.data.forEach((profile: any) => {
-        let id: any = profile.profiles.id;
-        let name: any = profile.profiles.name;
-        let avatar_url: any = profile.profiles.avatar_url;
-        this.membershipRequests.push({
-          'id': id,
-          'name': name,
-          'avatar_url': avatar_url
-        });
       });
-    }) */
+      this.groupsStore.update(group_id, {membership_requests: allMembers});
+    }
+    if(response.error) throw new Error(response.error.message);
   }
 
   async selectAllMembers(groupId: string): Promise<{data: any, error: any}> {
     const members: {data: any, error: any} = await this.supabaseClient
-    .from('group_members')
-    .select(
-      `id,
-      user_id,
-      profiles!group_members_user_id_fkey (
-        id,
-        name,
-        avatar_url
-      )`
-    )
-    .eq('group_id', groupId)
-  return members;
+      .from('group_members')
+      .select(
+        `id,
+        user_id,
+        profiles!group_members_user_id_fkey (
+          id,
+          name,
+          avatar_url
+        )`
+      )
+      .eq('group_id', groupId);
+    if(members.error) throw new Error(members.error.message);
+    return members;
   }
 
   getRealTimeChangesMembershipRequests(group_id: string): RealtimeSubscription {
@@ -282,7 +272,7 @@ export class GroupsService extends NgEntityService<GroupsState> {
           if(entity && entity.membership_requests) {
             const membership_requests: profile_list_item[] = Object.assign([], entity.membership_requests)
             let requestId: number = membership_requests.findIndex((request) => request.id === payload.old.id);
-            membership_requests.splice(requestId);
+            membership_requests.splice(requestId, 1);
             console.log('newState');
             console.log(requestId)
             console.log(payload.old.id)
@@ -362,7 +352,7 @@ export class GroupsService extends NgEntityService<GroupsState> {
           if(entity && entity.members) {
             const members: profile_list_item[] = Object.assign([], entity.members)
             let requestId: number = members.findIndex((request) => request.id === payload.old.id);
-            members.splice(requestId);
+            members.splice(requestId, 1);
             console.log('newState');
             console.log(requestId)
             console.log(payload.old.id)
@@ -443,7 +433,7 @@ export class GroupsService extends NgEntityService<GroupsState> {
           if(entity && entity.followers) {
             const followers: profile_list_item[] = Object.assign([], entity.followers)
             let requestId: number = followers.findIndex((request) => request.id === payload.old.id);
-            followers.splice(requestId);
+            followers.splice(requestId, 1);
             console.log('newState');
             console.log(requestId)
             console.log(payload.old.id)
@@ -511,18 +501,19 @@ export class GroupsService extends NgEntityService<GroupsState> {
 
   async getAllFollower(groupId: string): Promise<{data: any, error: any}> {
     const followers: {data: any, error: any} = await this.supabaseClient
-    .from('following_group_system')
-    .select(
-      `id,
-      follower,
-      profiles!following_group_system_follower_fkey (
-        id,
-        name,
-        avatar_url
-      )`
-    )
-    .eq('following', groupId)
-  return followers;
+      .from('following_group_system')
+      .select(
+        `id,
+        follower,
+        profiles!following_group_system_follower_fkey (
+          id,
+          name,
+          avatar_url
+        )`
+      )
+      .eq('following', groupId);
+    if(followers.error) throw new Error(followers.error.message);
+    return followers;
   }
 
   async getAllFollowings(userId: string): Promise<{data: any, error: any}> {
@@ -543,17 +534,18 @@ export class GroupsService extends NgEntityService<GroupsState> {
 
   async getAllMembershipRequests(groupId: string): Promise<{data: any, error: any}> {
     const membershipRequests: {data: any, error: any} = await this.supabaseClient
-    .from('membership_requests')
-    .select(
-      `id,
-      user_requests,
-      profiles!membership_requests_user_requests_fkey (
-        id,
-        name,
-        avatar_url
-      )`
-    )
-    .eq('group_requested', groupId)
-  return membershipRequests;
+      .from('membership_requests')
+      .select(
+        `id,
+        user_requests,
+        profiles!membership_requests_user_requests_fkey (
+          id,
+          name,
+          avatar_url
+        )`
+      )
+      .eq('group_requested', groupId)
+      if(membershipRequests.error) throw new Error(membershipRequests.error.message);
+    return membershipRequests;
   }
 }

@@ -16,7 +16,7 @@ export class IsGroupAdminGuard implements CanActivate {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    console.log("AlwaysAuthGuard");
+    console.log("Admin guard");
     const groupId: string = route.params['id'];
     const isAdmin: Promise<boolean> = this.groupsService.isLoggedInUserAdmin(groupId)
     .then((results) => {
@@ -24,6 +24,7 @@ export class IsGroupAdminGuard implements CanActivate {
       if (isAdminResults) {
         return true
       } else {
+        console.log('no admin')
         this.router.navigate(['/groups'])
         return false;
       }

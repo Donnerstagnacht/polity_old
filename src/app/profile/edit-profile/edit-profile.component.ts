@@ -23,8 +23,9 @@ export class EditProfileComponent implements OnInit, OnDestroy {
   session: Session | undefined;
   uploading: boolean = false;
 
-  test: Subscription | undefined;
-  test2: RealtimeSubscription | undefined;
+  profileSubscription: Subscription | undefined;
+  userIdSubscription: Subscription | undefined;
+  profileRealTimeSubscription: RealtimeSubscription | undefined;
 
   constructor(
     private messageService: MessageService,
@@ -38,26 +39,26 @@ export class EditProfileComponent implements OnInit, OnDestroy {
     this.getLoggedInUserId$();
     this.getSelectedProfile();
     if(this.loggedInUserId) {
-      this.test2 = this.profileService.getRealTimeChanges(this.loggedInUserId);
+      this.profileRealTimeSubscription = this.profileService.getRealTimeChanges(this.loggedInUserId);
     }
-    // this.getProfile();
   }
 
   getLoggedInUserId$(): void {
-    this.authentificationQuery.uuid$.subscribe((uuid) => {
+    this.userIdSubscription = this.authentificationQuery.uuid$.subscribe((uuid) => {
       if(uuid) {
         this.loggedInUserId = uuid;
       }
     })
   }
 
+  // could create error if user visits page directly by link without visiting profile wiki pag
+  // due to fact that user is not stored in store
   getSelectedProfile(): void {
     if (this.loggedInUserId) {
-      this.test = this.profileQuery
-        .selectProfileById(this.loggedInUserId)
+      this.profileSubscription = this.profileQuery
+        .selectEntity(this.loggedInUserId)
         .subscribe((profile: Profile | undefined) => {
           if(profile) {
-            //Review
             const profilecore: ProfileCore = {
               id: profile.id,
               amendment_counter: profile.amendment_counter,
@@ -75,8 +76,6 @@ export class EditProfileComponent implements OnInit, OnDestroy {
               about: profile.about,
               fts: profile.fts
             }
-            console.log('new Profile in profile edit component fetched')
-            console.log(profile)
             this.profile = JSON.parse(JSON.stringify(profilecore));
             this.loading = false;
           }
@@ -122,15 +121,14 @@ export class EditProfileComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    console.log('destroyed');
-    if(this.test) {
-      this.test.unsubscribe()
-      console.log('1 destroyed');
+    if(this.profileSubscription) {
+      this.profileSubscription.unsubscribe()
     }
-    if(this.test2) {
-      this.test2.unsubscribe()
-      console.log('2 destroyed');
-
+    if(this.profileRealTimeSubscription) {
+      this.profileRealTimeSubscription.unsubscribe()
+    }
+    if (this.userIdSubscription) {
+      this.userIdSubscription.unsubscribe()
     }
 }
 }

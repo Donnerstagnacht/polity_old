@@ -12,6 +12,7 @@ import { ButtonModule } from 'primeng/button';
 import { WrapperGridModule } from '../UI-structure/wrapper-grid/wrapper-grid.module';
 import { BackButtonModule } from '../UI-elements/back-button/back-button.module';
 import { TabViewTableListsModule } from '../UI-elements/tab-view-table-lists/tab-view-table-lists.module';
+import { LoadingSpinnerModule } from '../UI-elements/loading-spinner/loading-spinner.module';
 
 
 @NgModule({
@@ -31,7 +32,8 @@ import { TabViewTableListsModule } from '../UI-elements/tab-view-table-lists/tab
     ButtonModule,
     WrapperGridModule,
     BackButtonModule,
-    TabViewTableListsModule
+    TabViewTableListsModule,
+    LoadingSpinnerModule
   ]
 })
 export class FollowingProfilesSystemModule { }

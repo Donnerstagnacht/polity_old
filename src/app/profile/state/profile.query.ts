@@ -13,10 +13,6 @@ export class ProfileQuery extends QueryEntity<ProfileState> {
     this.createUIQuery();
   }
 
-  selectProfileById(uuid: string): Observable<Profile | undefined> {
-    return this.selectEntity(uuid)
-  }
-
   selectUI$(profile_id: string): Observable<ProfileUI | undefined> {
     return this.ui.selectEntity(profile_id);
   }

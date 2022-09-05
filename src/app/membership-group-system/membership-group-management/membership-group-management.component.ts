@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { RealtimeSubscription } from '@supabase/supabase-js';
 import { MessageService } from 'primeng/api';
-import { Observable } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { Group } from 'src/app/groups/state/group.model';
 import { GroupsQuery } from 'src/app/groups/state/groups.query';
 import { GroupsService } from 'src/app/groups/state/groups.service';
@@ -18,13 +19,23 @@ export class MembershipGroupManagementComponent implements OnInit {
   membershipRequests: any[] = [];
   members: any[] = [];
 
-  group$ = new Observable<Group | undefined>();
-
   link: string = '';
   titleMembershipRequests: string = 'Beitrittsanfragen';
   noDataMembershiprequests: string = 'Du hast aktuell keine offenen Beitrittsanfragen.';
   titleMembers: string = 'Mitglieder';
   noDataMembers: string = 'Du hast aktuell noch keine Mitglieder.';
+
+  loadMemebershipRequests: boolean = false;
+  loadMembers: boolean = false;
+  loadingInitial: boolean = false;
+  error: boolean = false;
+  errorMembershipRequests: boolean = false;
+  errorMembers: boolean = false;
+  errorMessage: string | undefined;
+
+  membersRealtimeSubscription: RealtimeSubscription | undefined;
+  membershipRequestsRealtimeSubscription: RealtimeSubscription | undefined;
+  groupSubscription: Subscription | undefined;
 
   constructor(
     private membershipService: MembershipService,
@@ -37,17 +48,65 @@ export class MembershipGroupManagementComponent implements OnInit {
   ngOnInit(): void {
     this.getSelectedId();
     this.link = `/groups/${this.selectedGroupId}/edit`;
-    this.groupService.getAllMemberShipRequests(this.selectedGroupId);
-    this.getAllMembershipRequests();
-    // this.getAllMembers();
-    this.groupService.getAllMembers(this.selectedGroupId)
-    this.groupService.getRealTimeChangesMembers(this.selectedGroupId)
-    this.groupService.getRealTimeChangesMembershipRequests(this.selectedGroupId)
+    this.loadInitialData();
+    this.membersRealtimeSubscription = this.groupService.getRealTimeChangesMembers(this.selectedGroupId)
+    this.membershipRequestsRealtimeSubscription = this.groupService.getRealTimeChangesMembershipRequests(this.selectedGroupId)
   }
 
-  getAllMembershipRequests(): void {
-    this.group$ = this.groupQuery.selectEntity(this.selectedGroupId);
-    this.group$.subscribe((group: Group | undefined) => {
+  ngOnDestroy(): void {
+    if(this.membersRealtimeSubscription) {
+      this.membersRealtimeSubscription.unsubscribe();
+    }
+    if(this.membershipRequestsRealtimeSubscription) {
+      this.membershipRequestsRealtimeSubscription.unsubscribe();
+    }
+    if(this.groupSubscription) {
+      this.groupSubscription.unsubscribe();
+    }
+  }
+
+  async loadInitialData(): Promise<void> {
+    try{
+      this.error = false;
+      this.errorMembers = false;
+      this.loadMemebershipRequests = true;
+      this.loadingInitial = this.loadMemebershipRequests || this.loadMembers;
+      this.errorMembershipRequests = false;
+      await this.groupService.processGetAllMemberShipRequests(this.selectedGroupId);
+    } catch(error: any) {
+      this.errorMembershipRequests = true;
+      this.error = this.errorMembershipRequests || this.errorMembers
+      this.errorMessage = error.message;
+      this.messageService.add({severity:'error', summary: error.message})
+    } finally {
+      this.loadMemebershipRequests = false;
+      this.loadingInitial =  this.loadMemebershipRequests || this.loadMembers;
+    }
+
+    if(!this.errorMembershipRequests) {
+      try{
+        this.error = false;
+        this.errorMembers = false;
+
+        this.loadMembers = true;
+        this.loadingInitial =  this.loadMemebershipRequests || this.loadMembers;
+        await this.groupService.getAllMembers(this.selectedGroupId);
+      } catch(error: any) {
+        this.errorMembers = true;
+        this.error = this.errorMembershipRequests || this.errorMembers;
+        this.errorMessage = error.message;
+        this.messageService.add({severity:'error', summary: error.message});
+      } finally {
+        this.loadMembers = false;
+        this.loadingInitial =  this.loadMemebershipRequests || this.loadMembers;
+      }
+    }
+    this.getAllMembersAndMembershipRequestsFromStore();
+  }
+
+  async getAllMembersAndMembershipRequestsFromStore(): Promise<void> {
+    this.groupSubscription = this.groupQuery.selectEntity(this.selectedGroupId)
+    .subscribe((group: Group | undefined) => {
       if(group?.membership_requests) {
         console.log('called requests');
         console.log(group.membership_requests)
@@ -68,70 +127,30 @@ export class MembershipGroupManagementComponent implements OnInit {
     })
   }
 
-  acceptMembershipRequest(event: {id: string, user_id: string}): void {
-    console.log('user_id')
-    console.log(event.user_id)
-    console.log('group_id')
-    console.log(this.selectedGroupId)
-    console.log('request_id')
-    console.log(event.id)
-    this.membershipService.confirmMembershipRequest(event.user_id, this.selectedGroupId, event.id)
-    .then(() => {
-      // this.getAllMembershipRequests();
+  async acceptMembershipRequest(event: {id: string, user_id: string}): Promise<void> {
+    try {
+      await this.membershipService.confirmMembershipRequest(event.user_id, this.selectedGroupId, event.id);
       this.messageService.add({severity:'success', summary: 'Du hast ein neues Mitglied aufgenommen.'});
-    })
-    .catch((error: any) =>  {
-      this.messageService.add({severity:'error', summary: error})
-    })
+    } catch(error: any) {
+      this.messageService.add({severity:'error', summary: error.message});
+    }
   }
 
-  cancelMembershipRequest(event: {id: string, user_id: string }): void {
-    console.log('canceld called')
-    console.log(event.id)
-    this.membershipService.removeMembershipRequestById(event.id)
-    .then((results) => {
-      console.log(results)
-      /// this.getAllMembershipRequests();
+  async cancelMembershipRequest(event: {id: string, user_id: string }): Promise<void> {
+    try {
+      await this.membershipService.removeMembershipRequestById(event.id);
       this.messageService.add({severity:'success', summary: 'Anfrage entfernt.'});
-    })
-    .catch((error: any) =>  {
-      this.messageService.add({severity:'error', summary: error})
-    })
+    } catch(error: any) {
+      this.messageService.add({severity:'error', summary: error.message});
+    }
   }
 
-/*   getAllMembers(): void {
-    this.membershipService.getAllMembers(this.selectedGroupId)
-    .then((members) => {
-      this.members = [];
-      members.data.forEach((profile: any) => {
-        let id: any = profile.profiles.id;
-        let name: any = profile.profiles.name;
-        let avatar_url: any = profile.profiles.avatar_url;
-        this.members.push({
-          'id': id,
-          'name': name,
-          'avatar_url': avatar_url
-        });
-      });
-    })
-    .catch((error) => {
-      this.messageService.add({severity:'error', summary: 'Fehler beim laden. ' + error});
-    });
-  } */
-
-  removeMember(event: {id: string, user_id: string}): void {
-    console.log('user_id')
-    console.log(event.user_id)
-    console.log('membership_id')
-    console.log(event.id)
-    this.membershipService.removeMemberByMembershipId(event.id, event.user_id, this.selectedGroupId)
-    .then(() => {
-      // this.getAllMembershipRequests();
+  async removeMember(event: {id: string, user_id: string}): Promise<void> {
+    try {
+      await this.membershipService.removeMemberByMembershipId(event.id, event.user_id, this.selectedGroupId);
       this.messageService.add({severity:'success', summary: 'Mitglied entfernt.'});
-    })
-    .catch((error: any) =>  {
-      this.messageService.add({severity:'error', summary: error})
-    })
+    } catch(error: any) {
+      this.messageService.add({severity:'error', summary: error.message});
+    }
   }
-
 }

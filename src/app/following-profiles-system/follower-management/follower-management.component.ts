@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
+import { RealtimeSubscription } from '@supabase/supabase-js';
 import { MessageService } from 'primeng/api';
-import { Observable } from 'rxjs';
 import { AuthentificationQuery } from 'src/app/authentification/state/authentification.query';
 import { FollowingGroupsService } from 'src/app/following-groups-system/services/following-groups.service';
-import { Profile, ProfileCore } from 'src/app/profile/state/profile.model';
+import { Profile } from 'src/app/profile/state/profile.model';
 import { ProfileQuery } from 'src/app/profile/state/profile.query';
 import { ProfileService } from 'src/app/profile/state/profile.service';
 import { FollowingService } from '../services/following.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-follower-management',
@@ -22,11 +23,24 @@ export class FollowerManagementComponent implements OnInit {
   titleFollowings: string = 'Followings';
   noDataFollower: string = 'Du hast noch keine Follower.';
   noDataFollowings: string = 'Du folgst noch niemanden.';
-  profile$ = new Observable<Profile | undefined>();
   loggedInID: string = '';
-
-
   filterString: string = '';
+
+  loadingInitial: boolean = false;
+  loadingFollower: boolean = false;
+  loadingFollowing: boolean = false;
+
+  error: boolean = false;
+  errorFollower: boolean = false;
+  errorFollowing: boolean = false;
+
+  errorMessage: string | undefined;
+
+  profileFollowerRealtimeSubscription: RealtimeSubscription | undefined;
+  groupFollowerRealtimeSubscription: RealtimeSubscription | undefined;
+  profileSubscription: Subscription | undefined;
+  authSubscription: Subscription | undefined;
+
   constructor(
     private followingService: FollowingService,
     private messageService: MessageService,
@@ -38,15 +52,63 @@ export class FollowerManagementComponent implements OnInit {
 
   ngOnInit(): void {
     this.getProfileId();
-    this.profileService.getAllFollowers(this.loggedInID);
-    this.profileService.getAllFollowings(this.loggedInID);
+    this.loadInitialData();
+  }
+
+  ngOnDestroy(): void {
+    if(this.profileFollowerRealtimeSubscription) {
+      this.profileFollowerRealtimeSubscription.unsubscribe();
+    }
+    if(this.groupFollowerRealtimeSubscription) {
+      this.groupFollowerRealtimeSubscription.unsubscribe();
+    }
+    if(this.authSubscription) {
+      this.authSubscription.unsubscribe();
+    }
+    if(this.profileSubscription) {
+      this.profileSubscription.unsubscribe();
+    }
+  }
+
+  async loadInitialData(): Promise<void> {
+    try{
+      this.loadingInitial = true;
+      this.loadingFollower = true;
+      this.error = false;
+      this.loadingInitial = this.loadingFollower || this.loadingFollowing;
+      await this.profileService.getAllFollowers(this.loggedInID);
+    } catch(error: any) {
+      this.errorFollower = true;
+      this.error = this.errorFollower || this.errorFollowing;
+      this.errorMessage = error.message;
+      this.messageService.add({severity:'error', summary: error.message})
+    } finally {
+      this.loadingFollower = false;
+      this.loadingInitial = this.loadingFollower || this.loadingFollowing;
+    }
+
+    if(!this.errorFollower) {
+      try{
+        this.loadingFollowing = true;
+        this.errorFollowing = false;
+        await this.profileService.getAllFollowings(this.loggedInID);
+      } catch(error: any) {
+        this.errorFollowing = true;
+        this.error = this.errorFollower || this.errorFollowing;
+        this.errorMessage = error.message;
+        this.messageService.add({severity:'error', summary: error.message})
+      } finally {
+        this.loadingFollowing = false;
+        this.loadingInitial = this.loadingFollower || this.loadingFollowing;
+      }
+    }
     this.getFollowingSystem();
-    this.profileService.getRealTimeChangesFollowerSystem(this.loggedInID);
-    this.profileService.getRealTimeChangesGroupFollowerSystem(this.loggedInID);
+    this.profileFollowerRealtimeSubscription = this.profileService.getRealTimeChangesFollowerSystem(this.loggedInID);
+    this.groupFollowerRealtimeSubscription = this.profileService.getRealTimeChangesGroupFollowerSystem(this.loggedInID);
   }
 
   getProfileId(): void {
-    this.authentificationQuery.uuid$.subscribe(uuid => {
+    this.authSubscription = this.authentificationQuery.uuid$.subscribe(uuid => {
       if(uuid) {
         this.loggedInID = uuid;
       }
@@ -54,114 +116,48 @@ export class FollowerManagementComponent implements OnInit {
   }
 
   getFollowingSystem(): void {
-    console.log('called getAllFollower');
-    this.profile$ = this.profileQuery.selectEntity(this.loggedInID);
-    this.profile$.subscribe((profile: Profile | undefined) => {
+    this.profileSubscription = this.profileQuery.selectEntity(this.loggedInID)
+    .subscribe((profile: Profile | undefined) => {
       if(profile?.followers) {
-        console.log('called requests');
-        console.log(profile.followers)
         this.followers = []
         this.followers = profile.followers;
       }
       if(profile?.followings) {
-        console.log('called requests');
-        console.log(profile.followings)
         this.followings = []
         this.followings = profile.followings;
       }
-
     })
   }
 
-
-  getAllFollower(): void {
-    this.followingService.getAllFollower()
-    .then((followers) => {
-      this.followers = [];
-      followers.data.forEach((profile: any) => {
-        let id: any = profile.profiles.id;
-        let name: any = profile.profiles.name;
-        let avatar_url: any = profile.profiles.avatar_url;
-        this.followers.push({
-          'id': id,
-          'name': name,
-          'avatar_url': avatar_url
-        });
-      });
-    })
-    .catch((error) => {
-      this.messageService.add({severity:'success', summary: 'Fehler beim laden. ' + error});
-    });
-  }
-
-        /**review**/
-  getAllFollowing(): void {
-    this.followingService.getAllFollowing()
-    .then((followings) => {
-      this.followings = [];
-      followings.data.forEach((profile: any) => {
-        let id: any = profile.profiles.id;
-        let name: any = profile.profiles.name;
-        let avatar_url: any = profile.profiles.avatar_url;
-        this.followings.push({
-          'id': id,
-          'name': name,
-          'avatar_url': avatar_url
-        });
-
-      });
-    })
-    .catch((error) => {
-      this.messageService.add({severity:'success', summary: 'Fehler beim laden. ' + error});
-    });
-  }
-
-  onRemoveFollower(event: {id: string, user_id: string, isGroup?: boolean | undefined}): void {
-    console.log(event.isGroup);
+  async onRemoveFollower(event: {id: string, user_id: string, isGroup?: boolean | undefined}): Promise<void> {
     if(event.isGroup) {
-      console.log('group');
     } else {
-      console.log('no group');
-      this.followingService.removeFollowerTransactionById(event)
-      .then(() => {
+      try {
+        await this.followingService.removeFollowerTransactionById(event);
         this.messageService.add({severity:'success', summary: 'Follower entfernt.'});
-      })
-      .catch((error: any) =>  {
-        this.messageService.add({severity:'error', summary: error})
-      })
+      } catch(error: any) {
+        this.messageService.add({severity:'error', summary: error});
+      }
     }
-
   }
 
-  onUnFollow(event: {id: string, user_id: string, boolean?: boolean}): void {
-    // renaming it for better readable code
+  async onUnFollow(event: {id: string, user_id: string, boolean?: boolean}): Promise<void> {
     const isGroup: boolean | undefined = event.boolean;
     const group_id: string = event.user_id;
-    console.log(isGroup);
-    console.log(this.loggedInID)
-    console.log(group_id)
     if(isGroup) {
-      console.log('group');
-      this.followingGroupsService.removeFollowerTransaction(this.loggedInID, group_id)
-      .then(() => {
+      try {
+        await this.followingGroupsService.removeFollowerTransaction(this.loggedInID, group_id);
         this.messageService.add({severity:'success', summary: 'Du folgst der Gruppe nicht mehr.'});
-      })
-      .catch((error) => {
-        this.messageService.add({severity:'success', summary: error});
-      })
+      } catch(error: any) {
+        this.messageService.add({severity:'error', summary: error});
+      }
     } else {
-      console.log('no group');
-      console.log('onUnFollow')
-      console.log(event.user_id)
-      this.followingService.unfollowTransaction(event.user_id)
-      .then(() => {
-        // this.getAllFollower();
+      try {
+        await this.followingService.unfollowTransaction(event.user_id);
         this.messageService.add({severity:'success', summary: 'Du folgst der Person nicht mehr.'});
-      })
-      .catch((error) => {
-        this.messageService.add({severity:'success', summary: error});
-      })
+      } catch(error: any) {
+        this.messageService.add({severity:'error', summary: error});
+      }
     }
-
   }
 }

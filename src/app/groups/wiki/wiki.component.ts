@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MegaMenuItem, MenuItem, MessageService } from 'primeng/api';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { FollowingGroupsService } from 'src/app/following-groups-system/services/following-groups.service';
 import { groupsMenuitemsParameter, groupsMenuitemsMegaParameter, groupsMenuitemsMegaParameterLoggedIn, groupsMenuitemsParameterLoggedIn } from '../state/groupMenuItems';
 import { GroupsService } from '../services/groups.service';
@@ -9,13 +9,14 @@ import { GroupsQuery } from '../state/groups.query';
 import { GroupsService as GroupsServiceState } from '../state/groups.service';
 import { Group, GroupUI } from '../state/group.model';
 import { MembershipService } from 'src/app/membership-group-system/services/membership.service';
+import { RealtimeSubscription } from '@supabase/supabase-js';
 @Component({
   selector: 'app-wiki',
   templateUrl: './wiki.component.html',
   styleUrls: ['./wiki.component.scss'],
   providers: [MessageService]
 })
-export class WikiComponent implements OnInit {
+export class WikiComponent implements OnInit, OnDestroy {
   menuItemsSpecial: MenuItem[] = [];
   menuItemsStandart: MenuItem[] = [];
   menuItemsMegaSpecial: MegaMenuItem[] = [];
@@ -23,8 +24,23 @@ export class WikiComponent implements OnInit {
 
 
   selectedGroupId: string | undefined = undefined;
-  group$ = new Observable<Group | undefined>();
+  group: Group | undefined;
   groupUI!: GroupUI;
+
+  groupSubscription!: Subscription;
+  groupRealTimeSubscription!: RealtimeSubscription;
+  getRealTimeSubscriptionIsAdmin!: RealtimeSubscription;
+  getRealTimeSubscriptionIsFollower!: RealtimeSubscription;
+  realTimeSubscriptionFollowers!: RealtimeSubscription;
+  uiSubscription!: Subscription;
+
+  loadsFollow: boolean = false;
+  loadsMembership: boolean = false;
+
+  loadingInitial: boolean = false;
+  loading: boolean = false;
+  error: boolean = false;
+  errorMessage: string | undefined;
 
   constructor(
     private route: ActivatedRoute,
@@ -39,45 +55,69 @@ export class WikiComponent implements OnInit {
   ngOnInit(): void {
     this.getSelectedId();
     if(this.selectedGroupId) {
-      this.checkIfLoggedInUserIsAdmin(this.selectedGroupId);
-      this.getGroupById(this.selectedGroupId);
-      this.checkIfAlreadyFollower(this.selectedGroupId);
-      this.groupsServiceState.getRealTimeChanges(this.selectedGroupId);
-      this.followingGroupsService.getRealTimeChangesIfStillFollower(this.selectedGroupId);
-      this.membershipService.getRealTimeChangesIfStillAdmin(this.selectedGroupId);
+      this.uiSubscription = this.groupsQuery.selectUI$(this.selectedGroupId).subscribe((ui: GroupUI | undefined) => {
+        if (ui) {
+          this.groupUI = ui;
+        }
+      })
     }
+    if(this.selectedGroupId) {
+      this.checkIfLoggedInUserIsAdmin(this.selectedGroupId);
+      this.checkIfAlreadyFollower();
+    }
+    this.loadInitialData();
 
     if (this.selectedGroupId) {
       this.menuItemsSpecial = groupsMenuitemsParameterLoggedIn(this.selectedGroupId);
       this.menuItemsStandart = groupsMenuitemsParameter(this.selectedGroupId);
       this.menuItemsMegaSpecial = groupsMenuitemsMegaParameterLoggedIn(this.selectedGroupId);
       this.menuItemsMegaStandart = groupsMenuitemsMegaParameter(this.selectedGroupId);
+    }
+  }
 
-/*       console.log('US Store test')
-      const test =  {isMember: true};
-      console.log('set data')
-      this.groupsServiceState.updateIsMember(this.selectedGroupId, true);
-      this.groupsServiceState.updateIsAdmin(this.selectedGroupId, true);
-      this.groupsServiceState.updateIsFollowing(this.selectedGroupId, true);
-      this.groupsServiceState.updateRequestedMembership(this.selectedGroupId, true); */
-
-/*       this.groupsQuery.selectIsMember$.subscribe(isMember => {
-        console.log('found ui is member')
-        console.log(isMember);
-      }) */
-      //this.groupsQuery.ui.selectEntity(this.selectedGroupId).subscribe(ui => {
-      this.groupsQuery.selectUI$(this.selectedGroupId).subscribe((ui: GroupUI | undefined) => {
-        console.log(ui)
-        console.log('query is following test')
-        console.log(ui?.isFollowing)
-        if (ui) {
-          this.groupUI = ui;
-        }
-      })
-      if(this.selectedGroupId && this.groupUI) {
-        // this.displayAdminMenu(this.selectedGroupId, this.groupUI.isAdmin);
+  ngOnDestroy(): void {
+      if(this.groupSubscription) {
+        this.groupSubscription.unsubscribe()
       }
-      // this.groupsQuery.selectEntity(this.selectedGroupId).subscribe(is)
+      if(this.groupRealTimeSubscription) {
+        this.groupRealTimeSubscription.unsubscribe()
+      }
+      if(this.getRealTimeSubscriptionIsAdmin) {
+        this.getRealTimeSubscriptionIsAdmin.unsubscribe()
+      }
+      if(this.getRealTimeSubscriptionIsFollower) {
+        this.getRealTimeSubscriptionIsFollower.unsubscribe()
+      }
+      if(this.uiSubscription) {
+        this.uiSubscription.unsubscribe()
+      }
+      if(this.realTimeSubscriptionFollowers) {
+        this.realTimeSubscriptionFollowers.unsubscribe()
+      }
+  }
+
+  async loadInitialData(): Promise<void> {
+    this.error = false;
+    this.loadingInitial = true;
+    if(this.selectedGroupId) {
+      try {
+        await this.groupsServiceState.findGroup(this.selectedGroupId);
+        this.groupSubscription = this.groupsQuery.selectEntity(this.selectedGroupId).subscribe((group: Group | undefined) => {
+          if(group) {
+            this.group = group;
+          }
+        })
+        this.groupRealTimeSubscription = this.groupsServiceState.getRealTimeChanges(this.selectedGroupId);
+        this.getRealTimeSubscriptionIsAdmin = this.followingGroupsService.getRealTimeChangesIfStillFollower(this.selectedGroupId);
+        this.getRealTimeSubscriptionIsFollower = this.membershipService.getRealTimeChangesIfStillAdmin(this.selectedGroupId);
+        this.realTimeSubscriptionFollowers = this.groupsServiceState.getRealTimeChangesFollowers(this.selectedGroupId);
+      } catch(error: any) {
+        this.error = true;
+        this.errorMessage = error.message
+        this.messageService.add({severity:'error', summary: error.message});
+      } finally {
+        this.loadingInitial = false;
+      }
     }
   }
 
@@ -87,115 +127,67 @@ export class WikiComponent implements OnInit {
     });
   }
 
-      // need to implement profile store
-  checkIfLoggedInUserIsAdmin(selectedGroupId: string): void {
-/*     this.group$.subscribe((group: Group | undefined ) => {
-      if (group !== undefined && group.id === selectedGroupId) {
-        this.displayAdminMenu(selectedGroupId!, true);
-      } else {
-        this.displayAdminMenu(selectedGroupId!, false);
-      }
-    }); */
-    this.groupsService.isLoggedInUserAdmin(selectedGroupId)
-    .then((results) => {
-      // this.displayAdminMenu(selectedGroupId!, results.data.is_admin);
-      console.log('*************+++++++')
-      console.log(results.data.is_admin)
-      this.groupsServiceState.updateIsAdmin(selectedGroupId, results.data.is_admin);
-    })
-    .catch((error) => {
-      // this.displayAdminMenu(selectedGroupId!, false);
-    });
+  async checkIfLoggedInUserIsAdmin(selectedGroupId: string): Promise<void> {
+    try {
+      this.error = false;
+      this.loading = true;
+      await this.groupsService.isLoggedInUserAdmin(selectedGroupId)
+      this.groupsServiceState.updateIsAdmin(selectedGroupId, true);
+    } catch(error: any) {
+      this.groupsServiceState.updateIsAdmin(selectedGroupId, false);
+    } finally {
+      this.loading = false;
+    }
   }
 
-  getGroupById(selectedGroupId: string): void {
-    this.groupsServiceState.findGroup(selectedGroupId);
-    this.group$ = this.groupsQuery.selectEntity(selectedGroupId);
-  }
-
-  checkIfAlreadyFollower(selectedGroupId: string): void {
-    this.followingGroupsService.isAlreadyFollower(selectedGroupId)
-    .then((results) => {
-      console.log('results of follower check')
-      if(results.data[0] !== undefined) {
-        console.log('following')
+  async checkIfAlreadyFollower(): Promise<void> {
+    try {
+      if(this.selectedGroupId) {
+        this.error = false;
+        this.loading = true;
+        await this.followingGroupsService.isAlreadyFollower(this.selectedGroupId);
         if(this.selectedGroupId) {
           this.groupsServiceState.updateIsFollowing(this.selectedGroupId, true);
         }
-      } else {
-        if(this.selectedGroupId) {
-          console.log('no following')
-          this.groupsServiceState.updateIsFollowing(this.selectedGroupId, false);
-        }
       }
-    })
-    .catch();
+    } catch(error: any) {
+      if(this.selectedGroupId) {
+        this.groupsServiceState.updateIsFollowing(this.selectedGroupId, false);
+      }
+    } finally {
+      this.loading = false;
+    }
   }
 
-/*   displayAdminMenu(selectedGroupId: string, isAdmin: boolean): void {
-    if(isAdmin) {
-      this.menuItemsMega = groupsMenuitemsMegaParameterLoggedIn(selectedGroupId);
-      this.menuItems = groupsMenuitemsParameterLoggedIn(selectedGroupId);
-    } else {
-      this.menuItemsMega = groupsMenuitemsMegaParameter(selectedGroupId);
-      this.menuItems = groupsMenuitemsParameter(selectedGroupId);
-    }
-  } */
-
-
-  followOrUnfollowGroup(): void {
+  async followOrUnfollowGroup(): Promise<void> {
     if (this.selectedGroupId) {
       if(this.groupUI?.isFollowing) {
-        this.followingGroupsService.unfollowTransaction(this.selectedGroupId)
-        .then(() => {
+        try {
+          this.loadsFollow = true;
+          await this.followingGroupsService.unfollowTransaction(this.selectedGroupId)
           if(this.selectedGroupId) {
             this.groupsServiceState.updateIsFollowing(this.selectedGroupId, false);
-            this.messageService.add({severity:'success', summary: 'Du folgst einer neuen Inspirationsquelle.'});
+            this.messageService.add({severity:'success', summary: 'Eine Ideenquelle weniger.'});
           }
-        })
-        .catch((error) => {
-          this.messageService.add({severity:'error', summary: error});
-        });
+        } catch(error: any) {
+            this.messageService.add({severity:'error', summary: error});
+        } finally {
+          this.loadsFollow = false;
+        }
       } else {
-        this.followingGroupsService.followTransaction(this.selectedGroupId)
-        .then(() => {
+        try {
+          this.loadsFollow = true;
+          await this.followingGroupsService.followTransaction(this.selectedGroupId)
           if(this.selectedGroupId) {
             this.groupsServiceState.updateIsFollowing(this.selectedGroupId, true)
             this.messageService.add({severity:'success', summary: 'Du folgst einer neuen Inspirationsquelle.'});
           }
-        })
-        .catch((error) => {
-          this.messageService.add({severity:'error', summary: error});
-        });
-
-    }
-
-    }
-
-
-
-
-/*     if(this.selectedGroupId) {
-      if(this.isAlreadyFollower) {
-        this.followingGroupsService.unfollowTransaction(this.selectedGroupId)
-        .then(() => {
-          this.isAlreadyFollower = false;
-          this.messageService.add({severity:'success', summary: 'Du folgst einer neuen Inspirationsquelle.'});
-        })
-        .catch((error) => {
-          this.messageService.add({severity:'error', summary: error});
-        });
-      } else {
-        this.followingGroupsService.followTransaction(this.selectedGroupId)
-        .then(() => {
-          this.isAlreadyFollower = true;
-          this.messageService.add({severity:'success', summary: 'Du folgst einer neuen Inspirationsquelle.'});
-        })
-        .catch((error) => {
-          this.messageService.add({severity:'error', summary: error});
-        });
+        } catch(error: any) {
+          this.messageService.add({severity:'error', summary: error.message});
+        } finally {
+          this.loadsFollow = false;
+        }
       }
-    } */
+    }
   }
-
 }

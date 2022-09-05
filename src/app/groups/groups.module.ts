@@ -31,6 +31,8 @@ import { HeadlineOfListModule } from '../UI-elements/headline-of-list/headline-o
 import { AboutAndContactModule } from '../UI-elements/about-and-contact/about-and-contact.module';
 import { WikiHeaderModule } from '../UI-elements/wiki-header/wiki-header.module';
 import { KeyFiguresModule } from '../UI-elements/key-figures/key-figures.module';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { LoadingSpinnerModule } from '../UI-elements/loading-spinner/loading-spinner.module';
 
 @NgModule({
   declarations: [
@@ -68,7 +70,8 @@ import { KeyFiguresModule } from '../UI-elements/key-figures/key-figures.module'
     AboutAndContactModule,
     WikiHeaderModule,
     KeyFiguresModule,
-    HttpClientModule
+    HttpClientModule,
+    LoadingSpinnerModule
   ]
 })
 export class GroupsModule { }

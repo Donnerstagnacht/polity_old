@@ -72,17 +72,11 @@ export class MembershipService {
   }
 
   async confirmMembershipRequest(user_requests: string, group_requested: string, requested_id_in: string): Promise<{data: any, error: any}> {
-    console.log('user_id')
-    console.log(user_requests)
-    console.log('group_id')
-    console.log(group_requested)
-    console.log('request_id')
-    console.log(requested_id_in)
     const confirmMembershipResult: { data: any, error: any } = await this.supabaseClient
-      .rpc('confirm_membership_transaction', {user_id_requests: user_requests, group_id_requested: group_requested, requested_id: requested_id_in})
+      .rpc('confirm_membership_transaction', {user_id_requests: user_requests, group_id_requested: group_requested, requested_id: requested_id_in});
+    if(confirmMembershipResult.error) throw new Error(confirmMembershipResult.error.message);
     return confirmMembershipResult;
   }
-
 
   async requestMembership(group_requested: string): Promise<{data: any, error: any}> {
     let loggedInID: string | null = '';
@@ -90,7 +84,8 @@ export class MembershipService {
       loggedInID = uuid;
     });
     const requestMembershipResult: { data: any, error: any } = await this.supabaseClient
-      .rpc('insert_group_membership_request', {user_requests: loggedInID, group_requested: group_requested})
+      .rpc('insert_group_membership_request', {user_requests: loggedInID, group_requested: group_requested});
+    if(requestMembershipResult.error) throw new Error(requestMembershipResult.error.message);
     return requestMembershipResult;
   }
 
@@ -99,53 +94,30 @@ export class MembershipService {
     this.authentificationQuery.uuid$.subscribe(uuid => {
       loggedInID = uuid;
     });
-    console.log('user_id')
-    console.log(loggedInID)
-    console.log('group_id')
-    console.log(group_requested)
     const cancelMembershipResult: { data: any, error: any } = await this.supabaseClient
-      .rpc('cancel_group_membership_request', {user_id_requests: loggedInID, group_id_requested: group_requested})
+      .rpc('cancel_group_membership_request', {user_id_requests: loggedInID, group_id_requested: group_requested});
+    if(cancelMembershipResult.error) throw new Error(cancelMembershipResult.error.message);
     return cancelMembershipResult;
   }
 
   async removeMembershipRequestById(request_id: string): Promise<{data: any, error: any}> {
     const cancelMembershipResult: { data: any, error: any } = await this.supabaseClient
-      .rpc('cancel_group_membership_request_by_request', {request_id: request_id})
+      .rpc('cancel_group_membership_request_by_request', {request_id: request_id});
+    if(cancelMembershipResult.error) throw new Error(cancelMembershipResult.error.message);
     return cancelMembershipResult;
   }
 
-/*   async getAllMembers(groupId: string): Promise<{data: any, error: any}> {
-    const membershipRequests: {data: any, error: any} = await this.supabaseClient
-    .from('group_members')
-    .select(
-      `id,
-      user_id,
-      profiles!group_members_user_id_fkey (
-        id,
-        name,
-        avatar_url
-      )`
-    )
-    .eq('group_id', groupId)
-  return membershipRequests;
-  } */
-
   async removeMember(user_requested: string, group_requested: string): Promise<{data: any, error: any}> {
     const cancelMembershipResult: { data: any, error: any } = await this.supabaseClient
-      .rpc('remove_membership_transaction', {user_id_requests: user_requested, group_id_requested: group_requested})
+      .rpc('remove_membership_transaction', {user_id_requests: user_requested, group_id_requested: group_requested});
+    if(cancelMembershipResult.error) throw new Error(cancelMembershipResult.error.message);
     return cancelMembershipResult;
   }
 
   async removeMemberByMembershipId(membership_id: string, user_requested: string, group_requested: string): Promise<{data: any, error: any}> {
-    console.log('membership_id')
-    console.log(membership_id)
-    console.log('user_id')
-    console.log(user_requested)
-    console.log('group_requested')
-    console.log(group_requested)
-
     const cancelMembershipResult: { data: any, error: any } = await this.supabaseClient
-      .rpc('remove_membership_transaction_by_membership_id', {membership_id: membership_id, user_id_requests: user_requested, group_id_requested: group_requested})
+      .rpc('remove_membership_transaction_by_membership_id', {membership_id: membership_id, user_id_requests: user_requested, group_id_requested: group_requested});
+    if(cancelMembershipResult.error) throw new Error(cancelMembershipResult.error.message);
     return cancelMembershipResult;
   }
 
@@ -155,23 +127,14 @@ export class MembershipService {
     this.authentificationQuery.uuid$.subscribe(uuid => {
       loggedInID = uuid;
     })
-    console.log('Is still membership request called?')
-    console.log(loggedInID)
     const subscription = this.supabaseClient
     .from<any>(`membership_requests`)
     .on('INSERT', (payload) => {
-      console.log('Payload')
-      console.log(payload)
       if(payload.new.group_requested === group_id && payload.new.user_requests === loggedInID) {
         this.groupsService.updateRequestedMembership(group_id, true);
       }
     })
     .on('DELETE', (payload) => {
-      console.log('Payload')
-      console.log(payload)
-      console.log('group.id_')
-      console.log(payload.old.following)
-      console.log(group_id)
       if(payload.old.group_requested === group_id && payload.old.user_requests === loggedInID) {
         this.groupsService.updateRequestedMembership(group_id, false);
       }
@@ -185,23 +148,14 @@ export class MembershipService {
     this.authentificationQuery.uuid$.subscribe(uuid => {
       loggedInID = uuid;
     })
-    console.log('Is still membership request called?')
-    console.log(loggedInID)
     const subscription = this.supabaseClient
     .from<any>(`group_members`)
     .on('INSERT', (payload) => {
-      console.log('Payload')
-      console.log(payload)
       if(payload.new.group_id === group_id && payload.new.user_id === loggedInID) {
         this.groupsService.updateIsMember(group_id, true);
       }
     })
     .on('DELETE', (payload) => {
-      console.log('Payload')
-      console.log(payload)
-      console.log('group.id_')
-      console.log(payload.old.following)
-      console.log(group_id)
       if(payload.old.group_id === group_id && payload.old.user_id === loggedInID) {
         this.groupsService.updateIsMember(group_id, false);
       }
@@ -215,25 +169,13 @@ export class MembershipService {
     this.authentificationQuery.uuid$.subscribe(uuid => {
       loggedInID = uuid;
     })
-    console.log('Is still ADMIN request called?')
-    console.log(loggedInID)
     const subscription = this.supabaseClient
     .from<any>(`group_members:user_id=eq.${loggedInID}`)
     .on('UPDATE', (payload) => {
-      console.log('Payload')
-      console.log(payload)
-      console.log(payload.new.group_id)
-      console.log(group_id)
-      console.log('isAdmin')
-      console.log(payload.new.is_admin)
-
-
       if(payload.new.group_id === group_id) {
         if(payload.new.is_admin) {
-          console.log(true)
           this.groupsService.updateIsAdmin(group_id, true);
         } else {
-          console.log(false)
           this.groupsService.updateIsAdmin(group_id, false)
         }
       }

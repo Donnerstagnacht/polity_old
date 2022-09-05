@@ -1,12 +1,19 @@
+<p-toast styleClass="max-w-90"	 position="top-right">></p-toast>
 <app-menu-bar-secondary-top
   [megaMenuItemSpecial]="menuItemsMegaSpecial"
   [megaMenuItemStandart]="menuItemsMegaStandart"
   [specialOrStandart]="profileUI.isOwner">
 </app-menu-bar-secondary-top>
-<p-toast styleClass="max-w-90"	 position="top-right">></p-toast>
   <app-wrapper-grid [noTopBar]="false">
     <div slot="main">
-      <div class="mb-8" >
+      <app-loading-spinner
+        [error]="error"
+        [loading]="loading"
+        [errorMessage]="errorMessage"
+        (retryAction)="loadInitialData()"
+      >
+      </app-loading-spinner>
+      <div *ngIf="!loading && !error" class="mb-8" >
         <app-wiki-header
           *ngIf="profile"
           [wikiHeader]="{
@@ -17,13 +24,14 @@
         </app-wiki-header>
         <div class="flex flex-column">
           <div
-          *ngIf="profileUI" class="flex align-items-center justify-content-center">
+          *ngIf="!profileUI.isOwner" class="flex align-items-center justify-content-center">
             <button
               pButton
               type="button"
               label="{{profileUI.isFollowing ? 'Unfollow' : 'Follow'}}"
               (click)="followOrUnfollowProfile()"
               data-cy="followButton"
+              [disabled]="loading"
             >
             </button>
           </div>

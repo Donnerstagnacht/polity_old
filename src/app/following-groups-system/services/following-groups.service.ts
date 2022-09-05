@@ -4,6 +4,7 @@ import { AuthentificationQuery } from '../../authentification/state/authentifica
 
 import { environment } from 'src/environments/environment';
 import { GroupsService } from 'src/app/groups/state/groups.service';
+import { result } from 'cypress/types/lodash';
 
 @Injectable({
   providedIn: 'root'
@@ -31,7 +32,9 @@ export class FollowingGroupsService {
         following`
       )
       .eq('follower', loggedInID)
-      .eq('following', following)
+      .eq('following', following);
+    if(results.data[0] === undefined) throw new Error('no data')
+    if(results.error) throw new Error(results.error.message);
     return results;
 
   }
@@ -59,6 +62,7 @@ export class FollowingGroupsService {
     })
     const followTransactionResult: { data: any, error: any } = await this.supabaseClient
       .rpc('followgrouptransaction', {followingid: follower, followerid: loggedInID})
+    if(followTransactionResult.error) throw new Error(followTransactionResult.error.message);
     return followTransactionResult;
   }
 
@@ -68,13 +72,15 @@ export class FollowingGroupsService {
       loggedInID = uuid;
     })
     const unfollowTransactionResult: { data: any, error: any } = await this.supabaseClient
-      .rpc('unfollowgrouptransaction', {followingid: follower, followerid: loggedInID})
+      .rpc('unfollowgrouptransaction', {followingid: follower, followerid: loggedInID});
+    if(unfollowTransactionResult.error) throw new Error(unfollowTransactionResult.error.message);
     return unfollowTransactionResult;
   }
 
   async removeFollowerTransaction(follower: string, groupId: string): Promise<{data: any, error: any}> {
     const unfollowTransactionResult: { data: any, error: any } = await this.supabaseClient
-      .rpc('unfollowgrouptransaction', {followingid: groupId, followerid: follower})
+      .rpc('unfollowgrouptransaction', {followingid: groupId, followerid: follower});
+    if(unfollowTransactionResult.error) throw new Error(unfollowTransactionResult.error.message);
     return unfollowTransactionResult;
   }
 
@@ -83,8 +89,8 @@ export class FollowingGroupsService {
     this.authentificationQuery.uuid$.subscribe(uuid => {
       loggedInID = uuid;
     })
-    console.log('Is still follower called?')
-    console.log(loggedInID)
+/*     console.log('Is still follower called?')
+    console.log(loggedInID) */
     const subscription = this.supabaseClient
     .from<any>(`following_group_system`)
     .on('INSERT', (payload) => {

@@ -28,6 +28,7 @@ import { KeyFiguresModule } from '../UI-elements/key-figures/key-figures.module'
 import { HeadlineOfListModule } from '../UI-elements/headline-of-list/headline-of-list.module';
 import { SwitchThemeModule } from '../UI-structure/switch-theme/switch-theme.module';
 import { AboutAndContactModule } from '../UI-elements/about-and-contact/about-and-contact.module';
+import { LoadingSpinnerModule } from '../UI-elements/loading-spinner/loading-spinner.module';
 
 @NgModule({
   declarations: [
@@ -66,7 +67,8 @@ import { AboutAndContactModule } from '../UI-elements/about-and-contact/about-an
     WikiHeaderModule,
     KeyFiguresModule,
     HeadlineOfListModule,
-    SwitchThemeModule
+    SwitchThemeModule,
+    LoadingSpinnerModule
   ],
 })
 export class ProfileModule { }

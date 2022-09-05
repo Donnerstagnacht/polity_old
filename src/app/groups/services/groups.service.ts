@@ -29,31 +29,30 @@ export class GroupsService {
       })
     return createGroupResult;
   }
-  /*TODO*/
+
   async getAllGroupsOfId(): Promise<{data: any, error: any}> {
     let loggedInID: string | null = '';
     this.authentificationQuery.uuid$.subscribe((uuid: any) => {
       loggedInID = uuid;
     });
-    console.log('called get GROUPS' + loggedInID)
     const groups: {data: any, error: any} = await this.supabaseClient
-    .from('group_members')
-    .select(
-      `
-      id,
-      group_id,
-      groups(
-        name,
-        level,
-        description,
-        creator,
-        avatar_url
-      )      `
-    )
-    .eq('user_id', loggedInID)
-  return groups;
+      .from('group_members')
+      .select(
+        `
+        id,
+        group_id,
+        groups(
+          name,
+          level,
+          description,
+          creator,
+          avatar_url
+        )`
+      )
+      .eq('user_id', loggedInID);
+    if(groups.error) throw new Error(groups.error.message);
+    return groups;
   }
-
 
   async isLoggedInUserAdmin(groupId: string):  Promise<{data: any, error: any}> {
     let loggedInID: string | null = '';
@@ -68,7 +67,8 @@ export class GroupsService {
     )
     .eq('user_id', loggedInID)
     .eq('group_id', groupId)
-    .single()
+    .single();
+    if(results.error) throw new Error(results.error.message);
     return results;
   }
 
