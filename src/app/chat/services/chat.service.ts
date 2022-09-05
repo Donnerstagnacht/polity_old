@@ -2,27 +2,35 @@ import { Injectable } from '@angular/core';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { AuthentificationQuery } from '../../authentification/state/authentification.query';
 import { environment } from 'src/environments/environment';
-
+import { Subscription } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
 export class ChatService {
   private supabaseClient: SupabaseClient;
-
+  loggedInID: string | undefined;
+  authSubscription: Subscription | undefined;
 
   constructor(private readonly authentificationQuery: AuthentificationQuery) {
-    this.supabaseClient = createClient(environment.supabaseUrl, environment.supabaseKey)
-   }
+    this.supabaseClient = createClient(environment.supabaseUrl, environment.supabaseKey);
+    this.authentificationQuery.uuid$.subscribe((uuid: any) => {
+      this.loggedInID = uuid;
+    });
+  }
+
+  ngOnDestroy(): void {
+    if(this.authSubscription) {
+      this.authSubscription.unsubscribe();
+    }
+  }
 
   async resetNumberOfUnreadMessages(room_id: string, message_reader: string): Promise<{data: any, error: any}> {
-    console.log('called')
-    console.log('service: room_id' + room_id)
-    console.log('service: chatpartner' + message_reader)
     const chatResults: {data: any, error: any} = await this.supabaseClient
       .rpc('reset_number_of_unread_messages', {
         room_id_in: room_id,
         user_id_of_reader: message_reader
       })
+    if(chatResults.error) throw new Error(chatResults.error.message);
     return chatResults;
   }
 
@@ -31,7 +39,8 @@ export class ChatService {
       .rpc('reset_number_of_unread_messages_in_group', {
         group_id_in: group_id,
         user_id_of_reader: message_reader
-      })
+      });
+    if(chatResults.error) throw new Error(chatResults.error.message);
     return chatResults;
   }
 
@@ -39,19 +48,9 @@ export class ChatService {
     const messages: {data: any, error: any} = await this.supabaseClient
     .rpc('select_all_messages_of_room', {
       room_id_in: room_id
-    })
+    });
+    if(messages.error) throw new Error(messages.error.message);
     return messages;
-/*     const results: {data: any, error: any} = await this.supabaseClient
-    .from('rooms_messages')
-    .select(
-      `id,
-      created_at,
-      user_id,
-      content
-      `
-    )
-    .eq('room_id', room_id)
-    .order('created_at', { ascending: true }) */
   }
 
   async sendMessage(
@@ -61,10 +60,11 @@ export class ChatService {
     is_group_in: boolean,
     group_id_in: string | undefined | null
     ): Promise<{data: any, error: any}> {
+    console.log('called')
     let message_sender: string | null = '';
-    this.authentificationQuery.uuid$.subscribe((uuid: any) => {
-      message_sender = uuid;
-    });
+    if(this.loggedInID) {
+      message_sender = this.loggedInID;
+    }
     const messageFeedback: {data: any, error: any} = await this.supabaseClient
       .rpc('send_message_transaction', {
         room_id_in: room_id,
@@ -73,7 +73,9 @@ export class ChatService {
         content_in: content_in,
         is_group: is_group_in,
         group_id_in: group_id_in
-      })
+      });
+     if(messageFeedback.error) throw new Error(messageFeedback.error.message);
+    console.log('ended no error');
     return messageFeedback;
   }
 
@@ -85,7 +87,8 @@ export class ChatService {
       )
       .eq('room_id', room_id)
       .eq('user_id', loggedInUserId)
-      .single()
+      .single();
+    if(results.error) throw new Error(results.error.message);
     return results;
   }
 
@@ -94,20 +97,22 @@ export class ChatService {
     .rpc('accept_chat_request', {
       room_id_in: room_id,
       user_id_of_reader: loggedInUserId
-    })
+    });
+  if(acceptFeedback.error) throw new Error(acceptFeedback.error.message);
   return acceptFeedback;
   }
 
   async getChatPartner(room_id: string): Promise<{data: any, error: any}> {
     let message_sender: string | null = '';
-    this.authentificationQuery.uuid$.subscribe(uuid => {
-      message_sender = uuid;
-    });
+    if(this.loggedInID) {
+      message_sender = this.loggedInID;
+    }
     const groupFeedback: {data: any, error: any} = await this.supabaseClient
       .rpc('select_chat_partner', {
         message_sender: message_sender,
         room_id_in: room_id
-      })
+      });
+    if(groupFeedback.error) throw new Error(groupFeedback.error.message);
     return groupFeedback;
   }
 
@@ -117,7 +122,8 @@ export class ChatService {
         room_id_in: room_id,
         follower_id: chatPartner,
         following_id: loggedInID
-      })
+      });
+    if(deleteFeedback.error) throw new Error(deleteFeedback.error.message);
     return deleteFeedback;
   }
 
@@ -125,7 +131,8 @@ export class ChatService {
     const groupFeedback: {data: any, error: any} = await this.supabaseClient
       .rpc('select_group_as_chat_partner', {
         room_id_in: room_id
-      })
+      });
+    if(groupFeedback.error) throw new Error(groupFeedback.error.message);
     return groupFeedback;
   }
 

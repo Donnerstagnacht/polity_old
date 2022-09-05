@@ -15,6 +15,7 @@ import { MenuBarSecondaryTopModule } from '../UI-navigation/menu-bar-secondary-t
 import { BackButtonModule } from '../UI-elements/back-button/back-button.module';
 import { MessageModule } from '../UI-elements/message/message.module';
 import { ChatListItemModule } from '../UI-elements/chat-list-item/chat-list-item.module';
+import { LoadingSpinnerModule } from '../UI-elements/loading-spinner/loading-spinner.module';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import { ChatListItemModule } from '../UI-elements/chat-list-item/chat-list-item
     NewsModule,
     BackButtonModule,
     MessageModule,
-    ChatListItemModule
+    ChatListItemModule,
+    LoadingSpinnerModule
   ]
 })
 export class ChatModule { }

@@ -6,29 +6,31 @@ import { ProfileService } from 'src/app/profile/state/profile.service';
 import { ProfileCore } from 'src/app/profile/state/profile.model';
 import { Message } from 'src/app/UI-elements/message/message.component';
 import { ChatService } from '../services/chat.service';
-import { Observable } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { ProfileQuery } from 'src/app/profile/state/profile.query';
 import { AuthentificationQuery } from '../../authentification/state/authentification.query';
 import { ChatRoomService } from './state/chat-room.service';
 import { ChatRoomQuery } from './state/chat-room.query';
 import { Group } from 'src/app/groups/state/group.model';
+import { MessageService } from 'primeng/api';
+import { RealtimeSubscription } from '@supabase/supabase-js';
 
 @Component({
   selector: 'app-chat-room',
   templateUrl: './chat-room.component.html',
-  styleUrls: ['./chat-room.component.scss']
+  styleUrls: ['./chat-room.component.scss'],
+  providers: [MessageService]
 })
 export class ChatRoomComponent implements OnInit {
   @Input() name: string = '';
   @Input() avatarUrl: string = '';
   message: string = '';
   selectedRoomId: string = '';
-  messages$ = new Observable<Message[]>();
   loggedInUserId: string | null = '';
   @ViewChild('messages') content!: ElementRef;
   profile!: ProfileCore;
-  profile$ = new Observable<ProfileCore | undefined>();
   group!: Group;
+  messagesOfChat: Message[] = [];
   isGroup: boolean = false;
   chatPartner: string = '';
 
@@ -36,7 +38,17 @@ export class ChatRoomComponent implements OnInit {
   loggedInUserAcceptedRequest: boolean = true;
   enquirer: boolean = false;
 
-  test = true;
+  scrolledDown = true;
+
+  loadingInitial: boolean = false;
+  error: boolean = false;
+  errorMessage: string | undefined;
+
+  profileSubscription: Subscription | undefined;
+  authSubscription: Subscription | undefined;
+  messageSubscription: Subscription | undefined;
+  messageRealtimeSubscription: RealtimeSubscription | undefined;
+  scrollNotifierSubscription: Subscription | undefined;
 
   constructor(
     private chatService: ChatService,
@@ -48,28 +60,82 @@ export class ChatRoomComponent implements OnInit {
     private profileQuery: ProfileQuery,
     private followingService: FollowingService,
     private groupsService: GroupsService,
-    private router: Router
+    private router: Router,
+    private messageService: MessageService
   ) { }
 
   ngOnInit(): void {
     this.getSelectedId();
-    if (this.selectedRoomId) {
-      this.chatRoomService.getRealTimeChanges(this.selectedRoomId);
-    }
-    this.chatRoomService.getAllMessagesOfChat(this.selectedRoomId);
-    this.messages$ = this.chatRoomQuery.messages$
-
-    this.getChatPartner();
     this.getLoggedInUserId();
-    if(this.selectedRoomId) {
-      this.scrollDown(true)
+    this.scrollNotifierSubscription = this.chatRoomService.scrollDownNotifierOfUser.subscribe((sender_id: string) => {
+      console.log('Please scroll')
+      console.log('Please reset counter')
+      this.scrollDown();
+      this.scrollDown();
+      this.scrollDown();
+      this.scrollDown();
+      this.scrollDown();
+      this.scrollDown();
+      this.scrollDown();
+      console.log('sender_id')
+      console.log(sender_id);
+      console.log('logged in')
+      console.log(this.loggedInUserId);
+      if(sender_id !== this.loggedInUserId) {
+        console.log('reset because other id')
+        this.resetUnreadMessageCounterWhileChatOpen();
+      }
+    })
+    this.getChatPartner();
+    this.loadInitialData();
+    this.scrollDown();
+  }
+
+  ngOnDestroy(): void {
+    if(this.authSubscription) {
+      this.authSubscription.unsubscribe();
+    }
+    if(this.profileSubscription) {
+      this.profileSubscription.unsubscribe();
+    }
+    if(this.messageRealtimeSubscription) {
+      this.messageRealtimeSubscription.unsubscribe();
+    }
+    if(this.messageSubscription) {
+      this.messageSubscription.unsubscribe();
+    }
+    if(this.scrollNotifierSubscription) {
+      this.scrollNotifierSubscription.unsubscribe();
     }
   }
 
-  ngAfterViewChecked() {
-    this.scrollDown(this.test);
+  async resetUnreadMessageCounterWhileChatOpen(): Promise<void> {
+    try {
+      if(this.loggedInUserId) {
+        await this.chatService.resetNumberOfUnreadMessages(this.selectedRoomId, this.chatPartner);
+      }
+    } catch(error: any) {
+      this.messageService.add({severity:'error', summary: error.message});
+    }
   }
 
+  async loadInitialData(): Promise<void> {
+    try {
+      this.loadingInitial = true;
+      this.error = false;
+      await this.chatRoomService.getAllMessagesOfChat(this.selectedRoomId);
+      this.messageSubscription = this.chatRoomQuery.messages$.subscribe((messages: Message[]) => {
+        this.messagesOfChat = messages;
+      })
+      this.messageRealtimeSubscription = this.chatRoomService.getRealTimeChangesMessages(this.selectedRoomId);
+    } catch(error: any) {
+      this.error = true;
+      this.errorMessage = error.message;
+      this.messageService.add({severity:'error', summary: error.message});
+    } finally {
+      this.loadingInitial = false;
+    }
+  }
 
   getSelectedId(): void {
     this.route.paramMap.subscribe(parameter => {
@@ -77,169 +143,145 @@ export class ChatRoomComponent implements OnInit {
     })
   }
 
-  onSendMessage(): void {
+  async onSendMessage(): Promise<void> {
     let groupIdParameter;
     if (this.group) {
       groupIdParameter = this.group.id
     } else {
       groupIdParameter = undefined
-
     }
-    this.chatService.sendMessage(
-      this.selectedRoomId,
-      this.chatPartner,
-      this.message,
-      this.isGroup,
-      groupIdParameter
-      )
-    .then(() => {
-      this.message = '';
-/*       this.chatService.getAllMessagesOfChat(this.selectedRoomId)
-      .then((messages) => {
-        this.allMessages = messages.data;
-      }) */
-    });
+    try {
+      const result: {data: any, error: any} = await this.chatService.sendMessage(
+        this.selectedRoomId,
+        this.chatPartner,
+        this.message,
+        this.isGroup,
+        groupIdParameter
+        );
+        this.message = '';
+    } catch(error: any) {
+      this.messageService.add({severity:'error', summary: error.message});
+    }
   }
 
-/*   getAllMessages(): void {
-    this.chatService.getAllMessagesOfChat(this.selectedRoomId)
-    .then((messages) => {
-      this.allMessages = messages.data;
-      if(this.isGroup && this.loggedInUserId) {
-        this.chatService.resetNumberOfUnreadMessagesOfGroup(this.chatPartner, this.loggedInUserId);
-      } else {
-        this.chatService.resetNumberOfUnreadMessages(this.selectedRoomId, this.chatPartner);
-      }
-    })
-    .catch((error) => {
-      console.log(error)
-    })
-  } */
-
   getLoggedInUserId(): void {
-    this.authentificationQuery.uuid$.subscribe((uuid: any) => {
+    this.authSubscription = this.authentificationQuery.uuid$.subscribe((uuid: any) => {
       this.loggedInUserId = uuid;
     });
   }
 
-  scrollDown(test: boolean): void {
+  async scrollDown(): Promise<void> {
     try {
+      console.log('scoll');
       this.content.nativeElement.scrollTop = this.content.nativeElement.scrollHeight;
-    } catch(err) {
-
+    } catch(error: any) {
+      this.messageService.add({severity:'error', summary: error.message});
     } finally {
-      if (test) {
-        this.test = false;
-      }
+      console.log('final')
     }
   }
 
   getProfile(): void {
-    this.profileService.upsert(this.chatPartner)
-    if(this.loggedInUserId)
-    this.profile$ = this.profileQuery.selectEntity(this.chatPartner);
-    this.profile$.subscribe((profile: ProfileCore | undefined) => {
+    this.profileService.upsert(this.chatPartner);
+    this.profileSubscription = this.profileQuery.selectEntity(this.chatPartner)
+    .subscribe((profile: ProfileCore | undefined) => {
       if (profile) {
         this.profile = profile;
       }
     })
   }
 
-  getGroup(): void {
-    this.groupsService.selectGroup(this.chatPartner)
-    .then((group) => {
+  async getGroup(): Promise<void> {
+    try {
+      const group: {data: any, error: any} = await this.groupsService.selectGroup(this.chatPartner)
       this.group = group.data;
-    })
-    .catch((error) => {
-      console.log(error);
-    })
+    } catch(error: any) {
+      this.messageService.add({severity:'error', summary: error.message});
+    }
   }
 
-  getChatPartner(): void {
-    this.chatService.getChatPartner(this.selectedRoomId)
-    .then((chatPartner) => {
+  async getChatPartner(): Promise<void> {
+    try {
+      const chatPartner: {data: any, error: any} = await this.chatService.getChatPartner(this.selectedRoomId);
       this.chatPartner = chatPartner.data;
-      if(this.chatPartner) {
-        this.isGroup = false;
-        this.getProfile();
-        this.chatService.resetNumberOfUnreadMessages(this.selectedRoomId, this.chatPartner);
-        this.scrollDown(this.test);
-      } else {
-        this.isGroup = true;
-        this.chatService.getGroupAsChatPartner(this.selectedRoomId)
-        .then((results) => {
-          this.chatPartner = results.data;
-          this.getGroup();
-          this.scrollDown(this.test);
-        })
-        .catch((error) => {
-          console.log(error)
-        })
-      }
-      this.checkIfChatPartnerAcceptedRequest();
-      this.checkIfChatLoggedInUserAcceptedRequest();
-    })
-    .catch((error) => {
-      console.log(error);
-    })
-  }
-
-  checkIfChatPartnerAcceptedRequest(): void {
-    if(this.chatPartner) {
-      this.chatService.checkIfChatPartnerAcceptedRequest(this.selectedRoomId, this.chatPartner)
-      .then((results) => {
-        this.chatPartnerAcceptedRequest = results.data.accepted;
-      })
-      .catch((error) => {
-        console.log(error)
-      })
+        if(this.chatPartner) {
+          this.isGroup = false;
+          this.getProfile();
+          try {
+            if(this.loggedInUserId) {
+              this.chatService.resetNumberOfUnreadMessages(this.selectedRoomId, this.chatPartner);
+            }
+          } catch(error: any) {
+            this.messageService.add({severity:'error', summary: error.message});
+          }
+          this.scrollDown();
+        } else {
+          try {
+            this.isGroup = true;
+            const results: {data: any, error: any} = await this.chatService.getGroupAsChatPartner(this.selectedRoomId);
+            this.chatPartner = results.data;
+            this.getGroup();
+            this.scrollDown();
+          } catch(error: any) {
+            this.messageService.add({severity:'error', summary: error.message});
+          }
+        }
+        this.checkIfChatPartnerAcceptedRequest();
+        this.checkIfChatLoggedInUserAcceptedRequest();
+    } catch(error: any) {
+      this.messageService.add({severity:'error', summary: error.message});
     }
   }
 
-  checkIfChatLoggedInUserAcceptedRequest(): void {
-    if(this.loggedInUserId) {
-      this.chatService.checkIfChatPartnerAcceptedRequest(this.selectedRoomId, this.loggedInUserId)
-      .then((results) => {
+  async checkIfChatPartnerAcceptedRequest(): Promise<void> {
+    try {
+      const results: {data: any, error: any} = await this.chatService.checkIfChatPartnerAcceptedRequest(this.selectedRoomId, this.chatPartner);
+      this.chatPartnerAcceptedRequest = results.data.accepted;
+    } catch(error: any) {
+      this.messageService.add({severity:'error', summary: error.message});
+    }
+  }
+
+  async checkIfChatLoggedInUserAcceptedRequest(): Promise<void> {
+    try {
+      if(this.loggedInUserId) {
+        const results: {data: any, error: any} = await this.chatService.checkIfChatPartnerAcceptedRequest(this.selectedRoomId, this.loggedInUserId)
         this.loggedInUserAcceptedRequest = results.data.accepted;
-      })
-      .catch((error) => {
-        console.log(error)
-      })
+      }
+    } catch(error: any) {
+      this.messageService.add({severity:'error', summary: error.message});
     }
   }
 
-  acceptRequestAndFollow(): void {
-    this.followingService.followTransaction(this.chatPartner)
-    .then((results) => {
+  async acceptRequestAndFollow(): Promise<void> {
+    try {
+      const results: {data: any, error: any} = await this.followingService.followTransaction(this.chatPartner)
       this.loggedInUserAcceptedRequest = true;
-    })
-    .catch((error) => {
-      console.log(error)
-    });
-  }
-
-  acceptRequest(): void {
-    if(this.loggedInUserId) {
-      this.chatService.acceptChatRequest(this.selectedRoomId, this.loggedInUserId)
-      .then((results) => {
-        this.loggedInUserAcceptedRequest = true;
-      })
-      .catch((error) => {
-        console.log(error)
-      });
+    } catch(error: any) {
+      this.messageService.add({severity:'error', summary: error.message});
     }
   }
 
-  rejectRequest(): void {
-    if(this.loggedInUserId) {
-      this.chatService.rejectChatRequest(this.selectedRoomId, this.chatPartner, this.loggedInUserId)
-      .then((results) => {
+  async acceptRequest(): Promise<void> {
+    try {
+      if(this.loggedInUserId) {
+        const results: {data: any, error: any} = await this.chatService.acceptChatRequest(this.selectedRoomId, this.loggedInUserId)
+        this.loggedInUserAcceptedRequest = true;
+      }
+    } catch(error: any) {
+      this.messageService.add({severity:'error', summary: error.message});
+    }
+  }
+
+  async rejectRequest(): Promise<void> {
+    try {
+      if(this.loggedInUserId) {
+        const results: {data: any, error: any } = await this.chatService.rejectChatRequest(this.selectedRoomId, this.chatPartner, this.loggedInUserId)
         this.loggedInUserAcceptedRequest = false;
         this.router.navigate(['/orga'])
-      })
-      .catch((error) => {
-        console.log(error)
-      });
+      }
+    } catch(error: any) {
+      this.messageService.add({severity:'error', summary: error.message});
     }
   }
 
