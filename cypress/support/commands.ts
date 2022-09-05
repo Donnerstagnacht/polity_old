@@ -35,7 +35,6 @@ Cypress.Commands.add('login', (email: string, password: string) => {
 })
 
 Cypress.Commands.add('logout', () => {
-  // cy.pause()
   // Setup
   cy.get('#profile-cy').click()
   cy.get('#edit-cy').click()

@@ -24,11 +24,19 @@ describe('Tests Profile features', () => {
     // navigate to change Profile Form
     cy.navigateFromProfileWikiToEditProfile()
     // fill form
+    cy.wait(2000)
+    cy.wait(100)
+    cy.wait(100)
+    cy.wait(100)
     cy.fillChangeProfileForm(user1)
     // navigate to profile wiki
     cy.get('[data-cy="backButton"]').click()
     cy.get('#overview-cy').click()
     // check if data is diplayed
+    cy.wait(2000)
+    cy.wait(100)
+    cy.wait(100)
+    cy.wait(100)
     cy.checkUserWikiDataAndVisibilityExeptImage(user1)
   })
 
@@ -77,11 +85,19 @@ describe('Tests Profile features', () => {
     // navigate to change Profile Form
     cy.navigateFromProfileWikiToEditProfile()
     // fill form
+    cy.wait(2000)
+    cy.wait(100)
+    cy.wait(100)
+    cy.wait(100)
     cy.fillChangeProfileForm(user2)
     // navigate to profile wiki
     cy.get('[data-cy="backButton"]').click()
     cy.get('#overview-cy').click()
     // check if data is diplayed
+    cy.wait(2000)
+    cy.wait(100)
+    cy.wait(100)
+    cy.wait(100)
     cy.checkUserWikiDataAndVisibilityExeptImage(user2)
   })
 

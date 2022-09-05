@@ -18,14 +18,15 @@ export class GroupsService extends NgEntityService<GroupsState> {
   }
 
   async findGroup(uuid: string): Promise<void> {
-    await this.selectGroup(uuid)
-    .then((results) => {
-      let group: Group = results.data;
-      this.groupsStore.add(group);
-    })
-    .catch((error: any) => {
-      if(error) throw new Error(error.message)
-    })
+    try {
+      const results: {data: any, error: any} = await this.selectGroup(uuid);
+      if(results) {
+        let group: Group = results.data;
+        this.groupsStore.upsert(group.id, group);
+      }
+    } catch(error: any) {
+      throw new Error(error.message)
+    }
   }
 
   getRealTimeChanges(uuid: string): RealtimeSubscription {

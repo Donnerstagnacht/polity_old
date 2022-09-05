@@ -62,9 +62,16 @@ describe('Tests Profile following system', () => {
           cy.get('[data-cy="filterSecondTab"]')
             .type(user2.name)
             .type('{enter}')
-            .wait(2000)
-          cy.contains(user2.name)
-          cy.get('[icon="pi pi-times"]').click()
+          cy.wait(100)
+          cy.wait(2000)
+          cy.wait(100)
+          cy.wait(100)
+          cy.wait(100)
+          cy.get('[data-cy="second-table"]').within(() => {
+            cy.contains(user2.name)
+            cy.get('[icon="pi pi-times"]').click()
+          })
+
 
           // checks that counter got reduced again after removing following
           cy.get('#profile-cy').click()
@@ -88,7 +95,6 @@ describe('Tests Profile following system', () => {
 
   it('Follows user and unfollows user from followed user profile (unfollow button)', () => {
     cy.login(user1.email, user1.password)
-    // cy.pause()
     cy.get('#Following')
     .invoke('text')
     .then(Number)
@@ -167,6 +173,7 @@ describe('Tests Profile following system', () => {
   })
 
   it('Follows user, logs out, logs in in followed account and removes follower from  follower management tab (remove follower)', () => {
+    // logs user 1 in
     cy.login(user1.email, user1.password)
     cy.get('#Following')
     .invoke('text')
@@ -188,7 +195,7 @@ describe('Tests Profile following system', () => {
           cy.wait(100)
           cy.wait(100)
           cy.log(user2Follower.toString())
-          // click follow button
+          // follows user 2 => click follow button
           cy.get('[data-cy="followButton"]').click()
           // check the incremented follower value
           cy.wait(10000)
@@ -218,7 +225,7 @@ describe('Tests Profile following system', () => {
           cy.contains(user2.name)
           cy.get('[icon="pi pi-times"]')
 
-          //logsout and in other account
+          //logsout user 1 and logs in user2 account
           cy.logout()
           cy.login(user2.email, user1.password)
           cy.get('#Follower')
@@ -238,11 +245,20 @@ describe('Tests Profile following system', () => {
               .type('{enter}')
               .wait(2000)
             cy.contains(user1.name)
-            cy.get('[icon="pi pi-times"]').click()
+            cy.wait(2000)
+            cy.wait(100)
+            cy.wait(100)
+            cy.wait(100)
+            cy.get('[data-cy="first-table"]').within(() => {
+              cy.contains(user1.name)
+              cy.get('[icon="pi pi-times"]').click()
+            })
             cy.wait(4000)
             cy.wait(100)
             cy.wait(100)
-            cy.contains(user1.name).should('not.exist')
+            cy.get('[data-cy="first-table"]').within(() => {
+              cy.contains(user1.name).should('not.exist')
+            })
 
             cy.get('#profile-cy').click()
             cy.wait(2000)

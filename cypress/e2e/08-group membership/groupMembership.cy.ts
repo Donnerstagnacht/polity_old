@@ -27,9 +27,12 @@ describe('Tests Group Membership system', () => {
 
     cy.searchGroup(group1)
     cy.contains('Mitgliedschaft anfragen')
+    cy.wait(4000)
+    cy.wait(100)
+    cy.wait(100)
     cy.wait(100)
     cy.get('[data-cy="requestedMembershipButton"]').click()
-    cy.wait(1000)
+    cy.wait(4000)
     cy.wait(100)
     cy.wait(100)
     cy.wait(100)
@@ -131,7 +134,6 @@ describe('Tests Group Membership system', () => {
   })
 
   it('User requests membership, group admin accepts and members counter are incremented', () => {
-    // cy.pause()
     cy.login(user2.email, user2.password)
 
     cy.get('#Gruppen')
@@ -222,8 +224,6 @@ describe('Tests Group Membership system', () => {
   })
 
   it('User leaves group and counter are decremented', () => {
-    // cy.pause()
-    cy.visit('http://localhost:4200')
     cy.login(user1.email, user1.password)
 
     cy.get('#groups-cy').click()
@@ -298,17 +298,18 @@ describe('Tests Group Membership system', () => {
   })
 
   it('User leaves group from group overview and counter are decremented', () => {
-    // cy.pause()
-     /*****************************************************
+   /*****************************************************
    *  END ONLY LOGIN, request and accept membership
    * ***********************************************   */
-      cy.visit('http://localhost:4200')
   cy.login(user2.email, user2.password)
   cy.searchGroup(group1)
   cy.contains('Mitgliedschaft anfragen')
+  cy.wait(40000)
+  cy.wait(100)
+  cy.wait(100)
   cy.wait(100)
   cy.get('[data-cy="requestedMembershipButton"]').click()
-  cy.wait(4000)
+  cy.wait(10000)
   cy.wait(100)
   cy.wait(100)
   cy.wait(100)
@@ -481,8 +482,6 @@ describe('Tests Group Membership system', () => {
   /*****************************************************
    *  END ONLY LOGIN, request and accept membership
    * ***********************************************   */
-    // cy.pause()
-    cy.visit('http://localhost:4200')
     cy.login(user2.email, user2.password)
 
     cy.get('#Gruppen')

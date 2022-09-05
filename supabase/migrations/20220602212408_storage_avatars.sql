@@ -6,7 +6,8 @@ DROP POLICY IF EXISTS "Anyone can upload an avatar." ON storage.objects;
 create policy "Anyone can upload an avatar."
   ON storage.objects
   FOR INSERT
-  TO authenticated
+  TO public
+  --TO authenticated
   WITH CHECK (
     bucket_id = 'avatars'
     --and auth.role() = 'authenticated'
@@ -17,7 +18,8 @@ DROP POLICY IF EXISTS "Authenticated user can access avatar images." ON storage.
 create policy "Authenticated user can access avatar images."
   ON storage.objects
   FOR select
-  TO authenticated
+  TO public
+  --TO authenticated
   USING (
     bucket_id = 'avatars'
     --and auth.role() = 'authenticated'
@@ -28,6 +30,7 @@ DROP POLICY IF EXISTS "Nobody can update avatar images." ON storage.objects;
 create policy "Nobody can update avatar images."
   ON storage.objects
   FOR UPDATE
+  TO public
   --TO authenticated
   USING ( false );
 
@@ -36,6 +39,7 @@ DROP POLICY IF EXISTS "Only owner can delete their avatar images." ON storage.ob
 create policy "Only owner can delete their avatar images."
   ON storage.objects
   FOR DELETE
+  TO public
   --TO authenticated
   USING ( auth.uid() = owner );
 

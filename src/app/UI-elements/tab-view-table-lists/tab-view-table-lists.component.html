@@ -4,6 +4,7 @@
     [value]="dataFirstTab"
     #followerTable
     [globalFilterFields]="['name']"
+    data-cy="first-table"
     >
       <ng-template pTemplate="caption">
         <div class="flex justify-content-end">
@@ -66,6 +67,7 @@
     [value]="dataSecondTab"
     #followingTable
     [globalFilterFields]="['name']"
+    data-cy="second-table"
     >
       <ng-template pTemplate="caption">
         <div class="flex justify-content-end">

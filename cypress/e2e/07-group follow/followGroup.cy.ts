@@ -67,13 +67,15 @@ describe('Tests Group following system', () => {
             .type(group1.name)
             .type('{enter}')
             .wait(2000)
-          cy.contains(group1.name)
-          cy.get('[icon="pi pi-times"]').click()
+          cy.get('[data-cy="second-table"]').within(() => {
+            cy.contains(group1.name)
+            cy.get('[icon="pi pi-times"]').click()
+          })
 
           // checks that counter got reduced again after removing following
           cy.get('#profile-cy').click()
 
-          cy.wait(10000)
+          cy.wait(4000)
           cy.wait(100)
           cy.wait(100)
           cy.wait(100)
@@ -81,7 +83,8 @@ describe('Tests Group following system', () => {
 
           // checks that follower counter got decremented, too
           cy.searchGroup(group1)
-          cy.wait(2000)
+          cy.wait(4000)
+          cy.wait(100)
           cy.wait(100)
           cy.wait(100)
           cy.contains('#Follower', (group1FollowerBefore).toString())
@@ -93,7 +96,6 @@ describe('Tests Group following system', () => {
 
   it('Follows group and unfollows group with unfollow button of group profile', () => {
     cy.login(user1.email, user1.password)
-    // cy.pause()
     cy.get('#Following')
     .invoke('text')
     .then(Number)
