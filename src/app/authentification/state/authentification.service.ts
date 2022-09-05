@@ -33,6 +33,7 @@ export class AuthentificationService {
 
   async signOut() {
     const response = await this.supabaseClient.auth.signOut();
+    this.supabaseClient.removeAllSubscriptions();
     this.authentificationStore.reset();
     this.profileStore.reset();
     this.groupStore.reset();
