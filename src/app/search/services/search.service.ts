@@ -54,16 +54,16 @@ export class SearchService {
         searchTerm,
         {config: 'german'}
       )
-    if(localFilterOn) { searchQuery = searchQuery.eq('levelLocal', localFilterOn)}
-    if(regionalFilterOn) { searchQuery = searchQuery.eq('levelRegional', regionalFilterOn,)}
-    if(federalFilterOn) { searchQuery = searchQuery.eq('levelFederal', federalFilterOn)}
-    if(topicsFilterOn) { searchQuery = searchQuery.eq('topics', filteredTopics)}
-    if(dateRangeFilterOn) { searchQuery = searchQuery.eq('', createDateRangeValues)}
+    if(localFilterOn) { searchQuery = searchQuery.eq('levelLocal', localFilterOn)};
+    if(regionalFilterOn) { searchQuery = searchQuery.eq('levelRegional', regionalFilterOn)};
+    if(federalFilterOn) { searchQuery = searchQuery.eq('levelFederal', federalFilterOn)};
+    if(topicsFilterOn) { searchQuery = searchQuery.eq('topics', filteredTopics)};
+    if(dateRangeFilterOn) { searchQuery = searchQuery.eq('', createDateRangeValues)};
     // if(statusOpenOn) { searchQuery = searchQuery.eq('',)}
 
     // query calls database API
     const results: {data: any, error: any} = await searchQuery;
-    console.log(results);
+    if(results.error) throw new Error(results.error.message);
     return results;
   }
 

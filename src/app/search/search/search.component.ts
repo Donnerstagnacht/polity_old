@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
+import { MessageService } from 'primeng/api';
 import { SearchService } from '../services/search.service';
 @Component({
   selector: 'app-search',
   templateUrl: './search.component.html',
-  styleUrls: ['./search.component.scss']
+  styleUrls: ['./search.component.scss'],
+  providers: [MessageService]
 })
 export class SearchComponent implements OnInit {
   showFilterOptions: boolean = true;
@@ -22,58 +24,71 @@ export class SearchComponent implements OnInit {
   statusOpenOn: boolean = false;
   statusClosedOn: boolean = false;
 
-  searchTable: string = 'profiles'
+  searchTable: string = 'profiles';
+
+  loadingInitial: boolean = false;
+  loading: boolean = false;
+  error: boolean = false;
+  errorMessage: string | undefined;
+  lastSearchTerm: string = '';
 
   constructor(
     private searchService: SearchService,
+    private messageService: MessageService
     ) { }
 
   ngOnInit(): void {
 
   }
 
-  onSearch(
+  async onSearch(
     searchTerm: string,
-  ): void {
-    this.searchService.searchForResults(
-      this.searchTable,
-      searchTerm,
-      this.localFilterOn,
-      this.regionalFilterOn,
-      this.federalFilterOn,
+  ): Promise<void> {
+    try {
+      this.loadingInitial = true;
+      this.lastSearchTerm = searchTerm;
+      this.error = false;
+      const searchResults: {data: any, error: any } = await this.searchService.searchForResults(
+        this.searchTable,
+        searchTerm,
+        this.localFilterOn,
+        this.regionalFilterOn,
+        this.federalFilterOn,
 
-      this.topicsFilterOn,
-      this.filteredTopics,
-      this.dateRangeFilterOn,
-      this.createDateRangeValues,
+        this.topicsFilterOn,
+        this.filteredTopics,
+        this.dateRangeFilterOn,
+        this.createDateRangeValues,
 
-      this.statusOpenOn,
-      this.statusClosedOn
-    )
-    .then((results) => {
-      console.log(results.data[0]);
-      console.log(this.searchTable)
+        this.statusOpenOn,
+        this.statusClosedOn
+      );
       switch(this.searchTable) {
         case 'profiles': {
-          this.profileResults = results.data;
+          this.profileResults = searchResults.data;
           console.log(this.profileResults)
           break;
         }
         case 'profiles': {
-          this.profileResults = results.data;
+          this.profileResults = searchResults.data;
           break;
         }
         case 'groups': {
-          this.groupsResults = results.data;
+          this.groupsResults = searchResults.data;
           break;
         }
         case 'groups': {
-          this.groupsResults = results.data;
+          this.groupsResults = searchResults.data;
           break;
         }
       }
-    })
-    .catch((error) => console.log(error));
+    } catch(error: any) {
+      this.error = true;
+      this.errorMessage = error.message
+      this.messageService.add({severity:'error', summary: error.message});
+    } finally {
+      this.loadingInitial = false;
+    }
   }
 
   setLocalFilter(): void {

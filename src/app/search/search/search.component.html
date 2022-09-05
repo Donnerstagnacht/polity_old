@@ -82,6 +82,14 @@
       </p-panel>
     </div>
 
+    <app-loading-spinner
+    [error]="error"
+    [loading]="loadingInitial"
+    [errorMessage]="errorMessage"
+    (retryAction)="onSearch(lastSearchTerm)"
+  >
+  </app-loading-spinner>
+
     <p-tabView data-cy="search-tab-view" (onChange)="test($event)">
       <p-tabPanel data-cy="persons-search-results" header="PERSONEN">
         <div class="grid">

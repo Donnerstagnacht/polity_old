@@ -17,6 +17,7 @@ import { MenuBarSecondaryRightModule } from '../UI-navigation/menu-bar-secondary
 import { MenuBarSecondaryTopModule } from '../UI-navigation/menu-bar-secondary-top/menu-bar-secondary-top.module';
 import { ProfileCardModule } from '../UI-elements/profile-card/profile-card.module';
 import { GroupCardModule } from '../UI-elements/group-card/group-card.module';
+import { LoadingSpinnerModule } from '../UI-elements/loading-spinner/loading-spinner.module';
 
 @NgModule({
   declarations: [
@@ -40,7 +41,8 @@ import { GroupCardModule } from '../UI-elements/group-card/group-card.module';
     MenuBarSecondaryRightModule,
     MenuBarSecondaryTopModule,
     ProfileCardModule,
-    GroupCardModule
+    GroupCardModule,
+    LoadingSpinnerModule
   ]
 })
 export class SearchModule { }
