@@ -92,8 +92,14 @@
 
     <p-tabView data-cy="search-tab-view" (onChange)="test($event)">
       <p-tabPanel data-cy="persons-search-results" header="PERSONEN">
-        <div class="grid">
-          <div *ngFor="let result of profileResults" class="col-6 lg:col-3 lg:col-3">
+        <div
+        class="grid"
+        infiniteScroll
+        [infiniteScrollDistance]="1"
+        [infiniteScrollUpDistance]="1.5"
+        [infiniteScrollThrottle]="50"
+        (scrolled)="loadNewDataFromService()">
+          <div *ngFor="let result of profileResults.slice(paginationData.from, paginationData.to)" class="col-6 lg:col-3 lg:col-3">
             <app-profile-card [profile]="result"></app-profile-card>
           </div>
         </div>
@@ -102,8 +108,15 @@
           Content 2
       </p-tabPanel>
       <p-tabPanel id="groups-search-results" header="GRUPPEN">
-        <div>
-          <div *ngFor="let result of groupsResults" class="col-12 lg:col-6">
+        <div
+          class="grid"
+          class="grid"
+          infiniteScroll
+          [infiniteScrollDistance]="1"
+          [infiniteScrollUpDistance]="1.5"
+          [infiniteScrollThrottle]="50"
+          (scrolled)="loadNewDataFromService()">
+          <div *ngFor="let result of groupsResults.slice(paginationData.from, paginationData.to)" class="col-6 lg:col-6">
             <app-group-card [group]="result"></app-group-card>
           </div>
         </div>

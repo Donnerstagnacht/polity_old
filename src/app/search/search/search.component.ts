@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MessageService } from 'primeng/api';
+import { PaginationData, PaginationFrontendService } from 'src/app/utilities/storage/services/pagination-frontend.service';
 import { SearchService } from '../services/search.service';
 @Component({
   selector: 'app-search',
@@ -32,9 +33,19 @@ export class SearchComponent implements OnInit {
   errorMessage: string | undefined;
   lastSearchTerm: string = '';
 
+  paginationData: PaginationData = {
+    from: 0,
+    to: 4,
+    numberOfSearchResults: 0,
+    canLoad: true,
+    reloadDelay: 2000,
+    sizeOfNewLoad: 10
+  }
+
   constructor(
     private searchService: SearchService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private paginationService: PaginationFrontendService
     ) { }
 
   ngOnInit(): void {
@@ -47,6 +58,7 @@ export class SearchComponent implements OnInit {
     try {
       this.loadingInitial = true;
       this.lastSearchTerm = searchTerm;
+      this.paginationData.to = 4;
       this.error = false;
       const searchResults: {data: any, error: any } = await this.searchService.searchForResults(
         this.searchTable,
@@ -63,6 +75,7 @@ export class SearchComponent implements OnInit {
         this.statusOpenOn,
         this.statusClosedOn
       );
+      this.paginationData.numberOfSearchResults = searchResults.data.length;
       switch(this.searchTable) {
         case 'profiles': {
           this.profileResults = searchResults.data;
@@ -89,6 +102,10 @@ export class SearchComponent implements OnInit {
     } finally {
       this.loadingInitial = false;
     }
+  }
+
+  loadNewDataFromService(): void {
+    this.paginationData = this.paginationService.scrollDownAndLoadAscending(this.paginationData);
   }
 
   setLocalFilter(): void {

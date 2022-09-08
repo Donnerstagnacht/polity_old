@@ -51,7 +51,7 @@
               <button pButton class="p-button-raised" label="Mehr"  (click)="getMoreMessages()"></button>
             </div> -->
 
-            <div *ngFor="let message of this.messagesOfChat.slice(from,to)">
+            <div *ngFor="let message of this.messagesOfChat.slice(paginationData.from,paginationData.to)">
               <app-message [message]="message" [loggedInUserId]="loggedInUserId"></app-message>
             </div>
             <div #test1 >last element</div>

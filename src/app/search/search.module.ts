@@ -18,6 +18,7 @@ import { MenuBarSecondaryTopModule } from '../UI-navigation/menu-bar-secondary-t
 import { ProfileCardModule } from '../UI-elements/profile-card/profile-card.module';
 import { GroupCardModule } from '../UI-elements/group-card/group-card.module';
 import { LoadingSpinnerModule } from '../UI-elements/loading-spinner/loading-spinner.module';
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 
 @NgModule({
   declarations: [
@@ -42,7 +43,8 @@ import { LoadingSpinnerModule } from '../UI-elements/loading-spinner/loading-spi
     MenuBarSecondaryTopModule,
     ProfileCardModule,
     GroupCardModule,
-    LoadingSpinnerModule
+    LoadingSpinnerModule,
+    InfiniteScrollModule
   ]
 })
 export class SearchModule { }

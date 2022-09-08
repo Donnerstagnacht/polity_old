@@ -16,6 +16,7 @@ import { MessageService } from 'primeng/api';
 import { RealtimeSubscription } from '@supabase/supabase-js';
 import { ChatStore } from '../state/chat.store';
 import { ChatRoomStore } from './state/chat-room.store';
+import { PaginationData, PaginationFrontendService } from 'src/app/utilities/storage/services/pagination-frontend.service';
 
 @Component({
   selector: 'app-chat-room',
@@ -62,6 +63,15 @@ export class ChatRoomComponent implements OnInit {
   canLoad: boolean = true;
   checkView: boolean = true;
 
+  paginationData: PaginationData = {
+    from: 0,
+    to: 10,
+    canLoad: true,
+    reloadDelay: 2000,
+    sizeOfNewLoad: 10,
+    numberOfSearchResults: 0
+  }
+
   constructor(
     private chatService: ChatService,
     private chatRoomQuery: ChatRoomQuery,
@@ -75,7 +85,8 @@ export class ChatRoomComponent implements OnInit {
     private router: Router,
     private messageService: MessageService,
     private chatRoomStore: ChatRoomStore,
-    private renderer: Renderer2
+    private renderer: Renderer2,
+    private paginationService: PaginationFrontendService
   ) {}
 
   ngOnInit(): void {
@@ -104,8 +115,7 @@ export class ChatRoomComponent implements OnInit {
       console.log(sender_id);
       console.log('logged in')
       console.log(this.loggedInUserId);
-      this.from = this.from + 1;
-      this.to = this.to + 1;
+      this.paginationData.to = this.paginationData.to + 1;
       if(sender_id !== this.loggedInUserId) {
         console.log('reset because other id')
         this.resetUnreadMessageCounterWhileChatOpen();
@@ -121,14 +131,10 @@ export class ChatRoomComponent implements OnInit {
 
   }
 
-
   ngAfterViewChecked(): void {
-    //Called after every check of the component's view. Applies to components only.
-    //Add 'implements AfterViewChecked' to the class.
-        // ElementRef { nativeElement: <input> }
         console.log(window.scrollY);
-        console.log(this.from)
-        console.log(this.to)
+        console.log(this.paginationData.from)
+        console.log(this.paginationData.to)
         if(this.testBoolean) {
           console.log('called')
           console.log(this.testBoolean)
@@ -163,20 +169,13 @@ export class ChatRoomComponent implements OnInit {
     }
   }
 
-  async getMoreMessages(): Promise<void> {
+/*   async getMoreMessages(): Promise<void> {
     try {
-      this.from = this.from + 10;
-      this.to = this.to + 10;
-      console.log('from')
-      console.log(this.from)
-      console.log('to')
-      console.log(this.to)
-
-      await this.chatRoomService.getAllMessagesOfChat(this.selectedRoomId, this.from, this.to);
+      await this.chatRoomService.getAllMessagesOfChat(this.selectedRoomId, this..paginationData.from, this..paginationData.to);
     } catch(error: any) {
       this.messageService.add({severity:'error', summary: error.message});
     }
-  }
+  } */
 
   async resetUnreadMessageCounterWhileChatOpen(): Promise<void> {
     try {
@@ -192,17 +191,16 @@ export class ChatRoomComponent implements OnInit {
     try {
       this.loadingInitial = true;
       this.error = false;
-
-      console.log('from')
-      console.log(this.from)
-      console.log('to')
-      console.log(this.to)
-      await this.chatRoomService.getAllMessagesOfChat(this.selectedRoomId, this.from, this.to);
+      await this.chatRoomService.getAllMessagesOfChat(this.selectedRoomId, this.paginationData.from, this.paginationData.to);
       this.messageSubscription = this.chatRoomQuery.messages$.subscribe((messages: Message[]) => {
-        // this.messagesOfChat = messages;
         this.messagesOfChat = messages.reverse();
-        this.from = this.messagesOfChat.length-10;
-        this.to = this.messagesOfChat.length;
+
+        this.paginationData.from = this.messagesOfChat.length-10;
+        this.paginationData.to = this.messagesOfChat.length;
+        console.log('initial')
+        console.log(this.paginationData.from )
+        console.log(this.paginationData.to )
+
         if(this.MyProp) {
         } else {
           console.log('undefined')
@@ -224,14 +222,6 @@ export class ChatRoomComponent implements OnInit {
     }
   }
 
-  onScroll() {
-    console.log('scrolled directive!!');
-
-    // this.from = this.from - 10;
-
-    // this.from = this.from + 10;
-  }
-
   onScrollDown() {
     console.log('scrolled down!!');
     this.loadNewData();
@@ -241,28 +231,12 @@ export class ChatRoomComponent implements OnInit {
     console.log('scrolled up!!');
     this.loadNewData();
     console.log('from')
-    //this.from = this.from - 10;
   }
 
   loadNewData(): void {
     this.checkView = false;
-    if(this.canLoad) {
-      console.log('can load!!');
-      if(this.from - 10 > 0) {
-        this.from = this.from - 10;
-      } else {
-        this.from = 0;
-      }
-      this.canLoad = false;
-      console.log(this.from)
-      console.log('from')
-      console.log(this.to)
-      setTimeout(() => {
-        this.canLoad = true;
-      }, 2000);
-    }
+    this.paginationData = this.paginationService.scrollUpAndLoadDescending(this.paginationData);
   }
-
 
   getSelectedId(): void {
     this.route.paramMap.subscribe(parameter => {
