@@ -73,6 +73,9 @@ Thus, the data is highly normalized in the database. However, in the Akita store
    <li>Most business logic is transferred to powerful PostgreSQL functions and Supabase real-time subscriptions</li>
 </ol>
 <br>
+Therefore, never forget to unsubscribe to all opened subscriptons once the component or service is destroyed. Additionally, use the frontend pagination service to speed up load times.
+<br>
+<br>
 Angular files are organized in the <code>src/app</code> folder while Cypress files are organized in the <code>Cypress/e2e</code> folder. Subfolders mirror app features and mostly correspond to the available routes. However, the file order of Cypress files should be identical to their test execution order.
 <br>
 <br>
