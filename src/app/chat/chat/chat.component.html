@@ -32,8 +32,15 @@
       (retryAction)="loadInitialData()"
     >
     </app-loading-spinner>
-    <div *ngIf="!loadingInitial && !error">
-      <div *ngFor="let chat of chats$ | async">
+    <div
+      *ngIf="!loadingInitial && !error"
+      infiniteScroll
+      [infiniteScrollDistance]="1"
+      [infiniteScrollUpDistance]="1.5"
+      [infiniteScrollThrottle]="50"
+      (scrolled)="loadNewData()"
+      >
+      <div *ngFor="let chat of chats.slice(paginationData.from, paginationData.to)">
         <app-chat-list-item [chat]="chat"></app-chat-list-item>
       </div>
     </div>

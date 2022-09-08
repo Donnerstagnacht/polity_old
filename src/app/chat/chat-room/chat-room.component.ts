@@ -58,11 +58,8 @@ export class ChatRoomComponent implements OnInit {
   messageRealtimeSubscription: RealtimeSubscription | undefined;
   scrollNotifierSubscription: Subscription | undefined;
 
-  from: number = 0;
-  to: number = 10;
-  canLoad: boolean = true;
-  checkView: boolean = true;
 
+  checkView: boolean = true;
   paginationData: PaginationData = {
     from: 0,
     to: 10,

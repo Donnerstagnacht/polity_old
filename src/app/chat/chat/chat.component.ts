@@ -6,6 +6,7 @@ import { orgaeMenuitems, orgaMenuitemsMega } from '../state/orgaMenuItems';
 import { ChatQuery } from '../state/chat.query';
 import { Observable } from 'rxjs';
 import { RealtimeSubscription } from '@supabase/supabase-js';
+import { PaginationData, PaginationFrontendService } from 'src/app/utilities/storage/services/pagination-frontend.service';
 
 @Component({
   selector: 'app-chat',
@@ -20,7 +21,8 @@ export class ChatComponent implements OnInit {
   groupFilterOn: boolean = false;
   searchTerm: string = '';
 
-  chats$ = new Observable<Chat[]>();
+  // chats$ = new Observable<Chat[]>();
+  chats: Chat[] = [];
   chatRealTimeChanges: RealtimeSubscription | undefined;
   newFollowerRealTimeChanges: RealtimeSubscription | undefined;
 
@@ -28,15 +30,30 @@ export class ChatComponent implements OnInit {
   error: boolean = false;
   errorMessage: string | undefined;
 
+  paginationData: PaginationData = {
+    from: 0,
+    to: 4,
+    canLoad: true,
+    reloadDelay: 2000,
+    sizeOfNewLoad: 10,
+    numberOfSearchResults: 0
+  }
+
   constructor(
     private chatQuery: ChatQuery,
     private chatServiceStore: ChatServiceStore,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private paginationService: PaginationFrontendService
     ) { }
 
   ngOnInit(): void {
     this.loadInitialData();
-    this.chats$ = this.chatQuery.allChats$;
+    this.chatQuery.allChats$.subscribe((chats: Chat[]) => {
+      if(chats) {
+        this.chats = chats;
+        this.paginationData.numberOfSearchResults = this.chats.length;
+      }
+    });
   }
 
   async loadInitialData(): Promise<void> {
@@ -64,14 +81,22 @@ export class ChatComponent implements OnInit {
     }
   }
 
+  loadNewData(): void {
+    this.paginationData = this.paginationService.scrollDownAndLoadAscending(this.paginationData);
+  }
+
   onSearch(searchTerm: string): void {
     this.searchTerm = searchTerm;
-    this.chats$ = this.chatQuery.filterData(this.searchTerm, this.groupFilterOn);
+    this.chatQuery.filterData(this.searchTerm, this.groupFilterOn).subscribe((chats: Chat[]) => {
+      this.chats = chats;
+    });
   }
 
   setGroupFilter(): void {
     this.groupFilterOn = !this.groupFilterOn;
-    this.chats$ = this.chatQuery.filterData(this.searchTerm, this.groupFilterOn);
+    this.chatQuery.filterData(this.searchTerm, this.groupFilterOn).subscribe((chats: Chat[]) => {
+      this.chats = chats;
+    });
   }
 
 }
