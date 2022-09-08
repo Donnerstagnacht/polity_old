@@ -495,7 +495,8 @@ BEGIN
   where
     room_id = room_id_in
   order by
-    created_at asc
+    --created_at asc
+    created_at desc
   ;
 END;
 $$;

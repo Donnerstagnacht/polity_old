@@ -27,17 +27,36 @@
 <app-wrapper-grid [noTopBar]="true">
   <div slot="main">
     <div class="mb-8">
-
       <div *ngIf="loggedInUserAcceptedRequest && chatPartnerAcceptedRequest">
         <div *ngIf="messagesOfChat">
           <div *ngIf="messagesOfChat.length === 0">
             <p class="text-center margin-mid">Ihr habt euch noch keine Nachrichten geschrieben.</p>
           </div>
-          <div *ngIf="messagesOfChat.length > 0" #messages class="chat-scroll-container">
-            <div *ngFor="let message of this.messagesOfChat">
+<!--           <div *ngIf="messagesOfChat.length > 0" #messages class="chat-scroll-container">
+ -->
+
+          <div
+            *ngIf="messagesOfChat.length > 0"
+            #messages
+            class="search-results"
+            infiniteScroll
+            [infiniteScrollDistance]="1"
+            [infiniteScrollUpDistance]="1.5"
+            [infiniteScrollThrottle]="50"
+            (scrolledUp)="onScrollUp()"
+            (scrolled)="onScrollDown()"
+
+          >
+<!--             <div>
+              <button pButton class="p-button-raised" label="Mehr"  (click)="getMoreMessages()"></button>
+            </div> -->
+
+            <div *ngFor="let message of this.messagesOfChat.slice(from,to)">
               <app-message [message]="message" [loggedInUserId]="loggedInUserId"></app-message>
             </div>
-          </div>
+            <div #test1 >last element</div>
+
+           </div>
         </div>
 
       </div>
@@ -65,8 +84,8 @@
   <div slot="side">
   </div>
 </app-wrapper-grid>
-
-<div class="fixed w-full p-3 bottom-fixed left-0 background-color">
+<!-- #hello -->
+<div  class="fixed w-full p-3 bottom-fixed left-0 background-color">
   <form (ngSubmit)="onSendMessage()" #messageForm="ngForm">
     <span class="p-float-label">
       <input

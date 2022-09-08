@@ -9,19 +9,16 @@
   padding-left: 2rem;
 }
 
-.chat-scroll-container {
-  overflow-y: scroll;
+/* .search-results {
+  overflow-y: hidden;
   overflow-x: hidden;
-  height: calc(100vh - 10rem)!important;
-  margin-bottom: 8rem!important;
-  margin-top: 4rem;
-}
+  height: 600px!important;
+  flex: none;
+} */
 
 .margin-mid {
   margin-top: 40vh;
 }
-
-
 
 @media only screen and (min-width: $largeBreakPoint) {
   .bottom-fixed {
@@ -33,10 +30,5 @@
   .top-fixed {
     padding-left: 16rem;
     padding-right: 16rem;
-  }
-
-  .chat-scroll-container {
-    margin-bottom: 0rem;
-    height: calc(100vh - 10rem)!important;
   }
 }

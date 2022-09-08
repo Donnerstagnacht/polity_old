@@ -44,15 +44,6 @@ export class ChatService {
     return chatResults;
   }
 
-  async getAllMessagesOfChat(room_id: string): Promise<{data: any, error: any}> {
-    const messages: {data: any, error: any} = await this.supabaseClient
-    .rpc('select_all_messages_of_room', {
-      room_id_in: room_id
-    });
-    if(messages.error) throw new Error(messages.error.message);
-    return messages;
-  }
-
   async sendMessage(
     room_id: string,
     message_receiver: string,

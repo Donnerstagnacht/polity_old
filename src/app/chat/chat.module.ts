@@ -16,6 +16,8 @@ import { BackButtonModule } from '../UI-elements/back-button/back-button.module'
 import { MessageModule } from '../UI-elements/message/message.module';
 import { ChatListItemModule } from '../UI-elements/chat-list-item/chat-list-item.module';
 import { LoadingSpinnerModule } from '../UI-elements/loading-spinner/loading-spinner.module';
+import {VirtualScrollerModule} from 'primeng/virtualscroller';
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 
 @NgModule({
   declarations: [
@@ -37,7 +39,9 @@ import { LoadingSpinnerModule } from '../UI-elements/loading-spinner/loading-spi
     BackButtonModule,
     MessageModule,
     ChatListItemModule,
-    LoadingSpinnerModule
+    LoadingSpinnerModule,
+    VirtualScrollerModule,
+    InfiniteScrollModule
   ]
 })
 export class ChatModule { }

@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FollowingService } from 'src/app/following-profiles-system/services/following.service';
 import { GroupsService } from 'src/app/groups/state/groups.service';
@@ -14,6 +14,8 @@ import { ChatRoomQuery } from './state/chat-room.query';
 import { Group } from 'src/app/groups/state/group.model';
 import { MessageService } from 'primeng/api';
 import { RealtimeSubscription } from '@supabase/supabase-js';
+import { ChatStore } from '../state/chat.store';
+import { ChatRoomStore } from './state/chat-room.store';
 
 @Component({
   selector: 'app-chat-room',
@@ -22,6 +24,10 @@ import { RealtimeSubscription } from '@supabase/supabase-js';
   providers: [MessageService]
 })
 export class ChatRoomComponent implements OnInit {
+  @ViewChild("hello") MyProp?: ElementRef<HTMLElement>;
+  @ViewChild("test1") MyProp1?: ElementRef<HTMLElement>;
+
+
   @Input() name: string = '';
   @Input() avatarUrl: string = '';
   message: string = '';
@@ -33,6 +39,7 @@ export class ChatRoomComponent implements OnInit {
   messagesOfChat: Message[] = [];
   isGroup: boolean = false;
   chatPartner: string = '';
+  testBoolean: boolean = true;
 
   chatPartnerAcceptedRequest: boolean = true;
   loggedInUserAcceptedRequest: boolean = true;
@@ -50,6 +57,11 @@ export class ChatRoomComponent implements OnInit {
   messageRealtimeSubscription: RealtimeSubscription | undefined;
   scrollNotifierSubscription: Subscription | undefined;
 
+  from: number = 0;
+  to: number = 10;
+  canLoad: boolean = true;
+  checkView: boolean = true;
+
   constructor(
     private chatService: ChatService,
     private chatRoomQuery: ChatRoomQuery,
@@ -61,26 +73,39 @@ export class ChatRoomComponent implements OnInit {
     private followingService: FollowingService,
     private groupsService: GroupsService,
     private router: Router,
-    private messageService: MessageService
-  ) { }
+    private messageService: MessageService,
+    private chatRoomStore: ChatRoomStore,
+    private renderer: Renderer2
+  ) {}
 
   ngOnInit(): void {
+
     this.getSelectedId();
     this.getLoggedInUserId();
-    this.scrollNotifierSubscription = this.chatRoomService.scrollDownNotifierOfUser.subscribe((sender_id: string) => {
+    this.scrollNotifierSubscription = this.chatRoomService.newMessageOfUserNotifier.subscribe((sender_id: string) => {
+      this.checkView = true;
       console.log('Please scroll')
       console.log('Please reset counter')
+        console.log('in my prop')
+        // this.checkView = true;
+        // this.renderer.selectRootElement(this.MyProp1["nativeElement"]).scrollIntoView();
+        if(this.MyProp1) {
+
+        }
+
+/*       this.scrollDown();
       this.scrollDown();
       this.scrollDown();
       this.scrollDown();
       this.scrollDown();
       this.scrollDown();
-      this.scrollDown();
-      this.scrollDown();
+      this.scrollDown(); */
       console.log('sender_id')
       console.log(sender_id);
       console.log('logged in')
       console.log(this.loggedInUserId);
+      this.from = this.from + 1;
+      this.to = this.to + 1;
       if(sender_id !== this.loggedInUserId) {
         console.log('reset because other id')
         this.resetUnreadMessageCounterWhileChatOpen();
@@ -88,7 +113,36 @@ export class ChatRoomComponent implements OnInit {
     })
     this.getChatPartner();
     this.loadInitialData();
-    this.scrollDown();
+    // this.scrollDown();
+    if(this.MyProp) {
+    } else {
+      console.log('undefined')
+    }
+
+  }
+
+
+  ngAfterViewChecked(): void {
+    //Called after every check of the component's view. Applies to components only.
+    //Add 'implements AfterViewChecked' to the class.
+        // ElementRef { nativeElement: <input> }
+        console.log(window.scrollY);
+        console.log(this.from)
+        console.log(this.to)
+        if(this.testBoolean) {
+          console.log('called')
+          console.log(this.testBoolean)
+          this.testBoolean = true;
+          if(this.MyProp1) {
+            // console.log('found myprop1')
+            if(this.checkView) {
+              this.renderer.selectRootElement(this.MyProp1["nativeElement"]).scrollIntoView();
+            }
+          } else {
+            // console.log('undefined mypro1')
+          }
+        }
+
   }
 
   ngOnDestroy(): void {
@@ -109,6 +163,21 @@ export class ChatRoomComponent implements OnInit {
     }
   }
 
+  async getMoreMessages(): Promise<void> {
+    try {
+      this.from = this.from + 10;
+      this.to = this.to + 10;
+      console.log('from')
+      console.log(this.from)
+      console.log('to')
+      console.log(this.to)
+
+      await this.chatRoomService.getAllMessagesOfChat(this.selectedRoomId, this.from, this.to);
+    } catch(error: any) {
+      this.messageService.add({severity:'error', summary: error.message});
+    }
+  }
+
   async resetUnreadMessageCounterWhileChatOpen(): Promise<void> {
     try {
       if(this.loggedInUserId) {
@@ -123,10 +192,21 @@ export class ChatRoomComponent implements OnInit {
     try {
       this.loadingInitial = true;
       this.error = false;
-      await this.chatRoomService.getAllMessagesOfChat(this.selectedRoomId);
+
+      console.log('from')
+      console.log(this.from)
+      console.log('to')
+      console.log(this.to)
+      await this.chatRoomService.getAllMessagesOfChat(this.selectedRoomId, this.from, this.to);
       this.messageSubscription = this.chatRoomQuery.messages$.subscribe((messages: Message[]) => {
-        this.messagesOfChat = messages;
-      })
+        // this.messagesOfChat = messages;
+        this.messagesOfChat = messages.reverse();
+        this.from = this.messagesOfChat.length-10;
+        this.to = this.messagesOfChat.length;
+        if(this.MyProp) {
+        } else {
+          console.log('undefined')
+        }      })
       this.messageRealtimeSubscription = this.chatRoomService.getRealTimeChangesMessages(this.selectedRoomId);
     } catch(error: any) {
       this.error = true;
@@ -134,8 +214,55 @@ export class ChatRoomComponent implements OnInit {
       this.messageService.add({severity:'error', summary: error.message});
     } finally {
       this.loadingInitial = false;
+      console.log('called finally')
+      if(this.MyProp1) {
+        console.log('found in finally')
+        this.renderer.selectRootElement(this.MyProp1["nativeElement"]).scrollIntoView();
+      } else {
+        console.log('undefined')
+      }
     }
   }
+
+  onScroll() {
+    console.log('scrolled directive!!');
+
+    // this.from = this.from - 10;
+
+    // this.from = this.from + 10;
+  }
+
+  onScrollDown() {
+    console.log('scrolled down!!');
+    this.loadNewData();
+  }
+
+  onScrollUp() {
+    console.log('scrolled up!!');
+    this.loadNewData();
+    console.log('from')
+    //this.from = this.from - 10;
+  }
+
+  loadNewData(): void {
+    this.checkView = false;
+    if(this.canLoad) {
+      console.log('can load!!');
+      if(this.from - 10 > 0) {
+        this.from = this.from - 10;
+      } else {
+        this.from = 0;
+      }
+      this.canLoad = false;
+      console.log(this.from)
+      console.log('from')
+      console.log(this.to)
+      setTimeout(() => {
+        this.canLoad = true;
+      }, 2000);
+    }
+  }
+
 
   getSelectedId(): void {
     this.route.paramMap.subscribe(parameter => {
@@ -161,6 +288,13 @@ export class ChatRoomComponent implements OnInit {
         this.message = '';
     } catch(error: any) {
       this.messageService.add({severity:'error', summary: error.message});
+    } finally {
+      console.log('finnaly message send')
+      if(this.MyProp1) {
+        console.log('in my prop')
+        // this.renderer.selectRootElement(this.MyProp1["nativeElement"]).scrollIntoView();
+      }
+
     }
   }
 
@@ -170,7 +304,7 @@ export class ChatRoomComponent implements OnInit {
     });
   }
 
-  async scrollDown(): Promise<void> {
+/*   async scrollDown(): Promise<void> {
     try {
       console.log('scoll');
       this.content.nativeElement.scrollTop = this.content.nativeElement.scrollHeight;
@@ -179,7 +313,7 @@ export class ChatRoomComponent implements OnInit {
     } finally {
       console.log('final')
     }
-  }
+  } */
 
   getProfile(): void {
     this.profileService.upsert(this.chatPartner);
@@ -214,14 +348,14 @@ export class ChatRoomComponent implements OnInit {
           } catch(error: any) {
             this.messageService.add({severity:'error', summary: error.message});
           }
-          this.scrollDown();
+          // this.scrollDown();
         } else {
           try {
             this.isGroup = true;
             const results: {data: any, error: any} = await this.chatService.getGroupAsChatPartner(this.selectedRoomId);
             this.chatPartner = results.data;
             this.getGroup();
-            this.scrollDown();
+            // this.scrollDown();
           } catch(error: any) {
             this.messageService.add({severity:'error', summary: error.message});
           }

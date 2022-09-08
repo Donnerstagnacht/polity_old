@@ -40,7 +40,7 @@ export class AuthentificationService {
     // this.groupStore.ui.reset();
     this.groupStore.resetUIStore();
     this.profileStore.resetUIStore();
-    // resetStores();
+    resetStores();
     this.persistStorage.clear();
     if (response.error) {
       throw new Error(response.error.message);
