@@ -13,6 +13,7 @@
         <app-back-button data-cy="backButton" [title]="'Zurück'" [link]="link"></app-back-button>
         <div *ngIf="groupsOfUser" class="mb-30">
           <app-tab-view-table-lists
+          [paginationDataFirstTab]="paginationDataFirstTab"
           [dataFirstTab]="groupsOfUser"
           [titleFirstTab]="titleYourGroups"
           [noDataFirstTab]="noGroups"

@@ -10,6 +10,7 @@ import { ProfileQuery } from 'src/app/profile/state/profile.query';
 import { ProfileStore } from 'src/app/profile/state/profile.store';
 import { Profile } from 'src/app/profile/state/profile.model';
 import { RealtimeSubscription } from '@supabase/supabase-js';
+import { PaginationData } from 'src/app/utilities/storage/services/pagination-frontend.service';
 
 @Component({
   selector: 'app-membership-user-management',
@@ -34,6 +35,15 @@ export class MembershipUserManagementComponent implements OnInit {
   authSubscription: Subscription | undefined;
   profileSubscription: Subscription | undefined;
   groupsRealtimeSubscription: RealtimeSubscription | undefined;
+
+  paginationDataFirstTab: PaginationData = {
+    from: 0,
+    to: 2,
+    canLoad: true,
+    reloadDelay: 2000,
+    sizeOfNewLoad: 10,
+    numberOfSearchResults: 0
+  }
 
   constructor(
     private membershipService: MembershipService,
