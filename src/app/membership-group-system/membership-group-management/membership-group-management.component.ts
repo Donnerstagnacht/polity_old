@@ -6,6 +6,7 @@ import { Subscription } from 'rxjs';
 import { Group } from 'src/app/groups/state/group.model';
 import { GroupsQuery } from 'src/app/groups/state/groups.query';
 import { GroupsService } from 'src/app/groups/state/groups.service';
+import { PaginationData } from 'src/app/utilities/storage/services/pagination-frontend.service';
 import { MembershipService } from '../services/membership.service';
 
 @Component({
@@ -36,6 +37,24 @@ export class MembershipGroupManagementComponent implements OnInit {
   membersRealtimeSubscription: RealtimeSubscription | undefined;
   membershipRequestsRealtimeSubscription: RealtimeSubscription | undefined;
   groupSubscription: Subscription | undefined;
+
+  paginationDataFirstTab: PaginationData = {
+    from: 0,
+    to: 2,
+    canLoad: true,
+    reloadDelay: 2000,
+    sizeOfNewLoad: 10,
+    numberOfSearchResults: 0
+  }
+
+  paginationDataSecondTab: PaginationData = {
+    from: 0,
+    to: 2,
+    canLoad: true,
+    reloadDelay: 2000,
+    sizeOfNewLoad: 10,
+    numberOfSearchResults: 0
+  }
 
   constructor(
     private membershipService: MembershipService,

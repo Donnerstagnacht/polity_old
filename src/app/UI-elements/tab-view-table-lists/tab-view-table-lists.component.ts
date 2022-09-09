@@ -47,9 +47,11 @@ export class TabViewTableListsComponent implements OnInit {
     console.log(this.paginationDataFirstTab)
 
     if(this.paginationDataFirstTab) {
+      this.paginationDataFirstTab.numberOfSearchResults = this.dataFirstTab.length;
       this.dataFirstTabDisplayed = this.dataFirstTab.slice(this.paginationDataFirstTab.from, this.paginationDataFirstTab.to);
     }
     if(this.paginationDataSecondTab) {
+      this.paginationDataSecondTab.numberOfSearchResults = this.dataSecondTab.length;
       this.dataSecondTabDisplayed = this.dataSecondTab.slice(this.paginationDataSecondTab.from, this.paginationDataSecondTab.to);
     }
   }

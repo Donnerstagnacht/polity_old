@@ -13,6 +13,9 @@
         <app-back-button data-cy="backButton" [title]="'Zurück'" [link]="link"></app-back-button>
         <div class="mb-30">
           <app-tab-view-table-lists
+          [paginationDataFirstTab]="paginationDataFirstTab"
+          [paginationDataSecondTab]="paginationDataSecondTab"
+
           [dataFirstTab]="membershipRequests"
           [titleFirstTab]="titleMembershipRequests"
           [noDataFirstTab]="noDataMembershiprequests"
