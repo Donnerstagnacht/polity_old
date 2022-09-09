@@ -6,6 +6,7 @@ import { WrapperGridModule } from '../UI-structure/wrapper-grid/wrapper-grid.mod
 import { BackButtonModule } from '../UI-elements/back-button/back-button.module';
 import { TabViewTableListsModule } from '../UI-elements/tab-view-table-lists/tab-view-table-lists.module';
 import { LoadingSpinnerModule } from '../UI-elements/loading-spinner/loading-spinner.module';
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 
 
 
@@ -19,7 +20,8 @@ import { LoadingSpinnerModule } from '../UI-elements/loading-spinner/loading-spi
     WrapperGridModule,
     BackButtonModule,
     TabViewTableListsModule,
-    LoadingSpinnerModule
+    LoadingSpinnerModule,
+    InfiniteScrollModule
   ]
 })
 export class FollowingGroupsSystemModule { }

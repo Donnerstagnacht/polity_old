@@ -7,6 +7,7 @@ import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { TabViewTableListsComponent } from './tab-view-table-lists.component';
 import { FormsModule } from '@angular/forms';
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 
 
 
@@ -21,7 +22,8 @@ import { FormsModule } from '@angular/forms';
     TableModule,
     ButtonModule,
     InputTextModule,
-    FormsModule
+    FormsModule,
+    InfiniteScrollModule
   ],
   exports: [
     TabViewTableListsComponent

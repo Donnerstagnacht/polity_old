@@ -1,7 +1,13 @@
 <p-tabView>
-  <p-tabPanel header={{titleFirstTab}}>
+  <p-tabPanel
+    infiniteScroll
+    [infiniteScrollDistance]="1"
+    [infiniteScrollUpDistance]="1.5"
+    [infiniteScrollThrottle]="50"
+    (scrolled)="loadNewDataFirstTab()"
+    header={{titleFirstTab}}>
     <p-table
-    [value]="dataFirstTab"
+    [value]="dataFirstTabDisplayed"
     #followerTable
     [globalFilterFields]="['name']"
     data-cy="first-table"
@@ -62,7 +68,16 @@
       </ng-template>
     </p-table>
   </p-tabPanel>
-  <p-tabPanel *ngIf="secondTabNeeded" header={{titleSecondTab}}>
+  <p-tabPanel
+    *ngIf="secondTabNeeded"
+    header={{titleSecondTab}}
+    infiniteScroll
+    [infiniteScrollDistance]="1"
+    [infiniteScrollUpDistance]="1.5"
+    [infiniteScrollThrottle]="50"
+    (scrolled)="loadNewDataSecondTab()"
+    header={{titleFirstTab}}>
+    >
     <p-table
     [value]="dataSecondTab"
     #followingTable

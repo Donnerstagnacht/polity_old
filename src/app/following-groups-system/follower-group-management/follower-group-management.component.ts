@@ -6,6 +6,7 @@ import { Subscription } from 'rxjs';
 import { Group } from 'src/app/groups/state/group.model';
 import { GroupsQuery } from 'src/app/groups/state/groups.query';
 import { GroupsService } from 'src/app/groups/state/groups.service';
+import { PaginationData } from 'src/app/utilities/storage/services/pagination-frontend.service';
 import { FollowingGroupsService } from '../services/following-groups.service';
 
 @Component({
@@ -31,6 +32,15 @@ export class FollowerGroupManagementComponent implements OnInit, OnDestroy {
   loadingInitial: boolean = false;
   error: boolean = false;
   errorMessage: string | undefined;
+
+  paginationData: PaginationData = {
+    from: 0,
+    to: 2,
+    canLoad: true,
+    reloadDelay: 2000,
+    sizeOfNewLoad: 10,
+    numberOfSearchResults: 0
+  }
 
   constructor(
     private followingGroupsService: FollowingGroupsService,
@@ -79,6 +89,7 @@ export class FollowerGroupManagementComponent implements OnInit, OnDestroy {
         this.followers = []
         this.followers = group.followers;
       }
+      this.paginationData.numberOfSearchResults = this.followers.length;
       this.realTimeSubscriptionFollower = this.groupsService.getRealTimeChangesFollowers(this.selectedGroupId);
       this.realTimeSubscriptionGroup = this.groupsService.getRealTimeChanges(this.selectedGroupId);
     })

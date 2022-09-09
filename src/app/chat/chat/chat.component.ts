@@ -4,7 +4,7 @@ import { ChatService as ChatServiceStore } from '../state/chat.service';
 import { Chat } from '../state/chat.model';
 import { orgaeMenuitems, orgaMenuitemsMega } from '../state/orgaMenuItems';
 import { ChatQuery } from '../state/chat.query';
-import { Observable } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { RealtimeSubscription } from '@supabase/supabase-js';
 import { PaginationData, PaginationFrontendService } from 'src/app/utilities/storage/services/pagination-frontend.service';
 
@@ -25,6 +25,9 @@ export class ChatComponent implements OnInit {
   chats: Chat[] = [];
   chatRealTimeChanges: RealtimeSubscription | undefined;
   newFollowerRealTimeChanges: RealtimeSubscription | undefined;
+  chatSubscription: Subscription | undefined;
+  filterNameSubscription: Subscription | undefined;
+  filterGroupsSubscription: Subscription | undefined;
 
   loadingInitial: boolean = false;
   error: boolean = false;
@@ -48,7 +51,7 @@ export class ChatComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadInitialData();
-    this.chatQuery.allChats$.subscribe((chats: Chat[]) => {
+    this.chatSubscription = this.chatQuery.allChats$.subscribe((chats: Chat[]) => {
       if(chats) {
         this.chats = chats;
         this.paginationData.numberOfSearchResults = this.chats.length;
@@ -79,6 +82,17 @@ export class ChatComponent implements OnInit {
     if(this.newFollowerRealTimeChanges) {
       this.newFollowerRealTimeChanges.unsubscribe();
     }
+    if(this.chatSubscription) {
+      this.chatSubscription.unsubscribe();
+    }
+    if(this.filterGroupsSubscription) {
+      this.filterGroupsSubscription.unsubscribe();
+    }
+    if(this.filterNameSubscription) {
+      this.filterNameSubscription.unsubscribe();
+    }
+
+
   }
 
   loadNewData(): void {
@@ -87,14 +101,14 @@ export class ChatComponent implements OnInit {
 
   onSearch(searchTerm: string): void {
     this.searchTerm = searchTerm;
-    this.chatQuery.filterData(this.searchTerm, this.groupFilterOn).subscribe((chats: Chat[]) => {
+    this.filterNameSubscription = this.chatQuery.filterData(this.searchTerm, this.groupFilterOn).subscribe((chats: Chat[]) => {
       this.chats = chats;
     });
   }
 
   setGroupFilter(): void {
     this.groupFilterOn = !this.groupFilterOn;
-    this.chatQuery.filterData(this.searchTerm, this.groupFilterOn).subscribe((chats: Chat[]) => {
+    this.filterGroupsSubscription = this.chatQuery.filterData(this.searchTerm, this.groupFilterOn).subscribe((chats: Chat[]) => {
       this.chats = chats;
     });
   }
