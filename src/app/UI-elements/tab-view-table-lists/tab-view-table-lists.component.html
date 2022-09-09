@@ -28,13 +28,13 @@
                 </span>
         </div>
       </ng-template>
-      <ng-template pTemplate="body" let-dataFirstTab>
+      <ng-template pTemplate="body" let-dataFirstTabDisplayed>
         <tr>
           <td>
-            <p-avatar size="xlarge" shape="circle" styleClass="border-round" image={{dataFirstTab.avatar_url}}></p-avatar>
+            <p-avatar size="xlarge" shape="circle" styleClass="border-round" image={{dataFirstTabDisplayed.avatar_url}}></p-avatar>
           </td>
-          <td *ngIf="dataFirstTab.name">
-            {{dataFirstTab.name}}
+          <td *ngIf="dataFirstTabDisplayed.name">
+            {{dataFirstTabDisplayed.name}}
           </td>
           <td>
             <button
@@ -45,7 +45,7 @@
               type="button"
               icon="pi pi-check"
               class="p-button-rounded p-button-text p-button-success"
-              (click)="acceptFromFirstTab(dataFirstTab.id, dataFirstTab.user_id)"
+              (click)="acceptFromFirstTab(dataFirstTabDisplayed.id, dataFirstTabDisplayed.user_id)"
               ></button>
           </td>
           <td>
@@ -56,7 +56,7 @@
               type="button"
               icon="pi pi-times"
               class="p-button-rounded p-button-text p-button-danger"
-              (click)="removeFromFirstDataTab(dataFirstTab.id, dataFirstTab.user_id, dataFirstTab.isGroup)"
+              (click)="removeFromFirstDataTab(dataFirstTabDisplayed.id, dataFirstTabDisplayed.user_id, dataFirstTabDisplayed.isGroup)"
               ></button>
           </td>
         </tr>
@@ -76,10 +76,9 @@
     [infiniteScrollUpDistance]="1.5"
     [infiniteScrollThrottle]="50"
     (scrolled)="loadNewDataSecondTab()"
-    header={{titleFirstTab}}>
     >
     <p-table
-    [value]="dataSecondTab"
+    [value]="dataSecondTabDisplayed"
     #followingTable
     [globalFilterFields]="['name']"
     data-cy="second-table"
@@ -100,13 +99,13 @@
                 </span>
         </div>
       </ng-template>
-      <ng-template pTemplate="body" let-dataSecondTab>
+      <ng-template pTemplate="body" let-dataSecondTabDisplayed>
         <tr>
           <td>
-            <p-avatar size="xlarge" shape="circle" styleClass="border-round" image={{dataSecondTab.avatar_url}}></p-avatar>
+            <p-avatar size="xlarge" shape="circle" styleClass="border-round" image={{dataSecondTabDisplayed.avatar_url}}></p-avatar>
           </td>
-          <td *ngIf="dataSecondTab.name">
-            {{dataSecondTab.name}}
+          <td *ngIf="dataSecondTabDisplayed.name">
+            {{dataSecondTabDisplayed.name}}
           </td>
           <td>
             <button
@@ -116,7 +115,7 @@
               type="button"
               icon="pi pi-check"
               class="p-button-rounded p-button-text p-button-success"
-              (click)="acceptFromSecondTab(dataSecondTab.user_id)"
+              (click)="acceptFromSecondTab(dataSecondTabDisplayed.user_id)"
               data-cy="acceptFromSecondTab"
               ></button>
           </td>
@@ -127,7 +126,7 @@
               type="button"
               icon="pi pi-times"
               class="p-button-rounded p-button-text p-button-danger"
-              (click)="removeFromSecondDataTab(dataSecondTab.id, dataSecondTab.user_id, dataSecondTab.isGroup)"
+              (click)="removeFromSecondDataTab(dataSecondTabDisplayed.id, dataSecondTabDisplayed.user_id, dataSecondTabDisplayed.isGroup)"
               data-cy="removeFromSecondTab"
               ></button>
           </td>

@@ -8,6 +8,7 @@ import { ProfileQuery } from 'src/app/profile/state/profile.query';
 import { ProfileService } from 'src/app/profile/state/profile.service';
 import { FollowingService } from '../services/following.service';
 import { Subscription } from 'rxjs';
+import { PaginationData } from 'src/app/utilities/storage/services/pagination-frontend.service';
 
 @Component({
   selector: 'app-follower-management',
@@ -41,6 +42,24 @@ export class FollowerManagementComponent implements OnInit {
   profileSubscription: Subscription | undefined;
   authSubscription: Subscription | undefined;
 
+  paginationDataFirstTab: PaginationData = {
+    from: 0,
+    to: 2,
+    canLoad: true,
+    reloadDelay: 2000,
+    sizeOfNewLoad: 10,
+    numberOfSearchResults: 0
+  }
+
+  paginationDataSecondTab: PaginationData = {
+    from: 0,
+    to: 2,
+    canLoad: true,
+    reloadDelay: 2000,
+    sizeOfNewLoad: 10,
+    numberOfSearchResults: 0
+  }
+
   constructor(
     private followingService: FollowingService,
     private messageService: MessageService,
@@ -71,6 +90,8 @@ export class FollowerManagementComponent implements OnInit {
   }
 
   async loadInitialData(): Promise<void> {
+    console.log('before getFollowingSystem')
+    this.getFollowingSystem();
     try{
       this.loadingInitial = true;
       this.loadingFollower = true;
@@ -102,7 +123,7 @@ export class FollowerManagementComponent implements OnInit {
         this.loadingInitial = this.loadingFollower || this.loadingFollowing;
       }
     }
-    this.getFollowingSystem();
+
     this.profileFollowerRealtimeSubscription = this.profileService.getRealTimeChangesFollowerSystem(this.loggedInID);
     this.groupFollowerRealtimeSubscription = this.profileService.getRealTimeChangesGroupFollowerSystem(this.loggedInID);
   }
@@ -121,10 +142,16 @@ export class FollowerManagementComponent implements OnInit {
       if(profile?.followers) {
         this.followers = []
         this.followers = profile.followers;
+        this.paginationDataFirstTab.numberOfSearchResults = this.followers.length;
+        console.log('followers')
+        console.log(this.followers)
       }
       if(profile?.followings) {
         this.followings = []
         this.followings = profile.followings;
+        this.paginationDataSecondTab.numberOfSearchResults = this.followings.length;
+        console.log('followings')
+        console.log(this.followings)
       }
     })
   }

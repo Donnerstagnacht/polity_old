@@ -13,14 +13,16 @@
         <app-back-button data-cy="backButton" [title]="'Zurück'" [link]="'/profile/edit'"></app-back-button>
         <div class="mb-30">
           <app-tab-view-table-lists
-          [dataFirstTab]="followers"
-          [dataSecondTab]="followings"
-          [titleFirstTab]="titleFollower"
-          [titleSecondTab]="titleFollowings"
-          [noDataFirstTab]="noDataFollower"
-          [noDataFirstTab]="noDataFollowings"
-          (removeItemFromFirstTab)="onRemoveFollower($event)"
-          (removeItemFromSecontTab)="onUnFollow($event)"
+            [dataFirstTab]="followers"
+            [dataSecondTab]="followings"
+            [titleFirstTab]="titleFollower"
+            [titleSecondTab]="titleFollowings"
+            [noDataFirstTab]="noDataFollower"
+            [noDataFirstTab]="noDataFollowings"
+            [paginationDataFirstTab]="paginationDataFirstTab"
+            [paginationDataSecondTab]="paginationDataSecondTab"
+            (removeItemFromFirstTab)="onRemoveFollower($event)"
+            (removeItemFromSecontTab)="onUnFollow($event)"
           ></app-tab-view-table-lists>
         </div>
 
