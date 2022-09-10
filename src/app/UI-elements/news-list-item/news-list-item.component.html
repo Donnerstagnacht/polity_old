@@ -5,22 +5,22 @@
         <p-avatar shape="circle" styleClass="border-round" image="{{news.avatar_url}}"></p-avatar>
       </a>
       <a (click)="openConnectedId()"  class="flex-grow-1 mr-5 cursor-pointer">
-        <h4 class="my-0">{{news.connected_name}}</h4>
-        <p class="mt-1 mb-0">{{news.info}}</p>
+        <h4 class="my-0">{{news.name}} || {{news.title}}</h4>
+        <p class="mt-1 mb-0">{{news.content}}</p>
       </a>
       <a (click)="openConnectedId()" class="flex-none p-2 cursor-pointer">
         <div class="flex-space-between">
           <div class="text-center">
             <div>
               <p-tag *ngIf="news.type === 'task'" value="{{news.type}}" styleClass="primary-container font-normal primary-color"></p-tag>
-              <p-tag *ngIf="news.type === 'amendment'" value="{{news.type}}" styleClass="test accent-container-2 font-normal accent-color-2"></p-tag>
+              <p-tag *ngIf="news.type === 'amendment'" value="{{news.type}}" styleClass="accent-container-2 font-normal accent-color-2"></p-tag>
               <p-tag *ngIf="news.type === 'event'" value="{{news.type}}" styleClass="tertiary-container font-normal tertiary-color"></p-tag>
               <p-tag *ngIf="news.type === 'vote'" value="{{news.type}}" styleClass="primary-container font-normal primary-color"></p-tag>
               <p-tag *ngIf="news.type === 'account'" value="{{news.type}}" styleClass="primary-container font-normal primary-color"></p-tag>
             </div>
           <div>
-            <p *ngIf="!showTime" class="mb-0">{{news.time | date}}</p>
-            <p *ngIf="showTime" class="mb-0">{{news.time | date: 'HH:mm:ss'}}</p>
+            <p *ngIf="!showTime" class="mb-0">{{news.created_at | date}}</p>
+            <p *ngIf="showTime" class="mb-0">{{news.created_at | date: 'HH:mm:ss'}}</p>
           </div>
         </div>
       </div>

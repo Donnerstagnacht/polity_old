@@ -1,15 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
-
-export interface News {
-  id: string,
-  sender: string,
-  connected_id: string,
-  connected_name: string,
-  time: Date,
-  info: string,
-  avatar_url: string,
-  type: string,
-}
+import { Router } from '@angular/router';
+import { News } from 'src/app/news/state/news.model';
 
 @Component({
   selector: 'app-news-list-item',
@@ -20,23 +11,23 @@ export class NewsListItemComponent implements OnInit {
   @Input() news!: News;
   showTime: boolean = false;
 
-  constructor() { }
+  constructor(private router: Router) { }
 
   ngOnInit(): void {
 
   }
 
   openProfile(): void {
-
+    this.router.navigateByUrl(`/profile/${this.news.notifier}`)
   }
 
   openConnectedId(): void {
-
+    this.router.navigateByUrl(`/profile/${this.news.notifier}`)
   }
 
   checkIfMessageReceivedToday(): void {
     const currentDate = new Date().setHours(0,0,0,0);
-    const dateOflastMessage = new Date (this.news.time).setHours(0,0,0,0);
+    const dateOflastMessage = new Date (this.news.created_at).setHours(0,0,0,0);
 
     if (currentDate === dateOflastMessage) {
       this.showTime = true

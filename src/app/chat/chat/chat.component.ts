@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MegaMenuItem, MenuItem, MessageService } from 'primeng/api';
 import { ChatService as ChatServiceStore } from '../state/chat.service';
 import { Chat } from '../state/chat.model';
-import { orgaeMenuitems, orgaMenuitemsMega } from '../state/orgaMenuItems';
+import { orgaMenuitems, orgaMenuitemsMega } from '../state/orgaMenuItems';
 import { ChatQuery } from '../state/chat.query';
 import { Subscription } from 'rxjs';
 import { RealtimeSubscription } from '@supabase/supabase-js';
@@ -15,7 +15,7 @@ import { PaginationData, PaginationFrontendService } from 'src/app/utilities/sto
   providers: [MessageService]
 })
 export class ChatComponent implements OnInit {
-  menuItems: MenuItem[] = orgaeMenuitems;
+  menuItems: MenuItem[] = orgaMenuitems;
   menuItemsMega: MegaMenuItem[] = orgaMenuitemsMega;
 
   groupFilterOn: boolean = false;

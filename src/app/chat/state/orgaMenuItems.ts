@@ -1,6 +1,6 @@
 import { MegaMenuItem, MenuItem } from "primeng/api";
 
-export const orgaeMenuitems: MenuItem[] = [
+export const orgaMenuitems: MenuItem[] = [
   {label: 'CHAT', routerLink: ['/orga'], routerLinkActiveOptions: {exact: true}},
   {label: 'NEWS', routerLink: ['/orga/news'], routerLinkActiveOptions: {exact: true}}
 ];

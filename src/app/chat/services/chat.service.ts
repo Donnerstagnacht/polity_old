@@ -13,7 +13,7 @@ export class ChatService {
 
   constructor(private readonly authentificationQuery: AuthentificationQuery) {
     this.supabaseClient = createClient(environment.supabaseUrl, environment.supabaseKey);
-    this.authentificationQuery.uuid$.subscribe((uuid: any) => {
+    this.authSubscription = this.authentificationQuery.uuid$.subscribe((uuid: any) => {
       this.loggedInID = uuid;
     });
   }

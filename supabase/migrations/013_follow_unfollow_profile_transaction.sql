@@ -70,6 +70,7 @@ BEGIN
   PERFORM insertFollowingFollowerRelationship(followerId, followingId);
   PERFORM incrementfollower_counter(followingId);
   PERFORM incrementfollowing_counter(followerId);
+  PERFORM insert_notification_from_profile(followerId, followingId, 'Neuer Follower', 'Dir folgt eine neue Person', 'account');
 
   -- Check if room already exists
   -- create new room or accept room invitation

@@ -1,80 +1,72 @@
 import { Component, OnInit } from '@angular/core';
-import { MegaMenuItem, MenuItem } from 'primeng/api';
-import { News } from 'src/app/UI-elements/news-list-item/news-list-item.component';
-import { orgaeMenuitems, orgaMenuitemsMega } from '../../chat/state/orgaMenuItems';
+import { RealtimeSubscription } from '@supabase/supabase-js';
+import { MegaMenuItem, MenuItem, MessageService } from 'primeng/api';
+import { Subscription } from 'rxjs';
+import { PaginationData, PaginationFrontendService } from 'src/app/utilities/storage/services/pagination-frontend.service';
+import { orgaMenuitems, orgaMenuitemsMega } from '../../chat/state/orgaMenuItems';
+import { News } from '../state/news.model';
+import { NewsQuery } from '../state/news.query';
+import { NewsService } from '../state/news.service';
 
 @Component({
   selector: 'app-news',
   templateUrl: './news.component.html',
-  styleUrls: ['./news.component.scss']
+  styleUrls: ['./news.component.scss'],
+  providers: [MessageService]
 })
 export class NewsComponent implements OnInit {
-  menuItems: MenuItem[] = orgaeMenuitems;
+  menuItems: MenuItem[] = orgaMenuitems;
   menuItemsMega: MegaMenuItem[] = orgaMenuitemsMega;
   newsList: News[] = [];
 
-  taskFilterOn: boolean = true;
-  amendmentFilterOn: boolean = true;
-  eventFilterOn: boolean = true;
-  voteFilterOn: boolean = true;
-  accountFilterOn: boolean = true;
+  taskFilterOn: boolean = false;
+  amendmentFilterOn: boolean = false;
+  eventFilterOn: boolean = false;
+  voteFilterOn: boolean = false;
+  accountFilterOn: boolean = false;
 
+  newsSubscription: Subscription | undefined;
+  newsFilterSubscription: Subscription | undefined;
+  newsRealTimeSubscription: RealtimeSubscription | undefined;
 
-  constructor() { }
+  paginationData: PaginationData = {
+    from: 0,
+    to: 4,
+    canLoad: true,
+    reloadDelay: 2000,
+    sizeOfNewLoad: 10,
+    numberOfSearchResults: 0
+  }
+
+  errorMessage: string = '';
+  error: boolean = false;
+  loadingInitial: boolean = false;
+
+  constructor(
+    private messageService: MessageService,
+    private newsService: NewsService,
+    private newsQuery: NewsQuery,
+    private paginationService: PaginationFrontendService
+  ) { }
 
   ngOnInit(): void {
-    this.newsList = [
-      {
-        id: 'dfdf-sdfs-sdff-sdfs',
-        sender: 'Tobias',
-        time: new Date,
-        connected_id: 'dfdf-sdfs-sdff-sdfs',
-        connected_name: 'Task Board Rosbach',
-        info: 'Flyer drucken',
-        avatar_url: 'avatar-url',
-        type: 'Task',
-      },
-      {
-        id: 'dfdf-sdfs-sdff-sdfs',
-        sender: 'Tobias',
-        time: new Date,
-        connected_id: 'dfdf-sdfs-sdff-sdfs',
-        connected_name: 'Umgehungsstraße Rosbach',
-        info: 'In Zeile 20 x einfügen',
-        avatar_url: 'avatar-url',
-        type: 'amendment'
-      },
-      {
-        id: 'dfdf-sdfs-sdff-sdfs',
-        sender: 'Tobias',
-        time: new Date,
-        connected_id: 'dfdf-sdfs-sdff-sdfs',
-        connected_name: 'Vorstandssitzung Rosbach',
-        info: 'Neuer Tagesordnungspunkt "Bericht Bezirk"',
-        avatar_url: 'avatar-url',
-        type: 'event'
-      },
-      {
-        id: 'dfdf-sdfs-sdff-sdfs',
-        sender: 'Tobias',
-        time: new Date,
-        connected_id: 'dfdf-sdfs-sdff-sdfs',
-        connected_name: 'Vorstandswahl',
-        info: 'Neuer Kandidat "Lukas Maier"',
-        avatar_url: 'avatar-url',
-        type: 'vote'
-      },
-      {
-        id: 'dfdf-sdfs-sdff-sdfs',
-        sender: 'Tobias',
-        time: new Date,
-        connected_id: 'dfdf-sdfs-sdff-sdfs',
-        connected_name: 'Neuer Follower',
-        info: 'Lara Ziegler folgt dir jetzt"',
-        avatar_url: 'avatar-url',
-        type: 'account'
-      }
-    ]
+    this.loadInitialData();
+  }
+
+  ngOnDestroy(): void {
+    if(this.newsSubscription) {
+      this.newsSubscription.unsubscribe();
+    }
+    if(this.newsFilterSubscription) {
+      this.newsFilterSubscription.unsubscribe();
+    }
+    if(this.newsRealTimeSubscription) {
+      this.newsRealTimeSubscription.unsubscribe();
+    }
+  }
+
+  loadNewData(): void {
+    this.paginationData = this.paginationService.scrollDownAndLoadAscending(this.paginationData);
   }
 
   onSearch(searchTerm: string): void {}
@@ -97,6 +89,29 @@ export class NewsComponent implements OnInit {
 
   setAccountFilter(): void {
     this.accountFilterOn = !this.accountFilterOn;
+    this.newsFilterSubscription = this.newsQuery.filterAccounts('account').subscribe((newsList: News[]) => {
+      this.newsList = newsList;
+    });
+  }
+
+  async loadInitialData(): Promise<void> {
+    try {
+      this.loadingInitial = true;
+      this.error = false;
+      this.newsRealTimeSubscription = this.newsService.getRealTimeChangesNews();
+      await this.newsService.getAllNotifications();
+      this.newsSubscription = this.newsQuery.allNews$.subscribe((newsList: News[]) => {
+        this.newsList = newsList;
+        this.paginationData.numberOfSearchResults = this.newsList.length;
+      })
+      this.messageService.add({severity: 'success', summary: 'success'});
+    } catch(error: any) {
+      this.error = true;
+      this.errorMessage = error.message;
+      this.messageService.add({severity:'error', summary: error.message});
+    } finally {
+      this.loadingInitial = false;
+    }
   }
 
 }

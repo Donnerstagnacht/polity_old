@@ -20,3 +20,5 @@ alter publication supabase_realtime add table profiles;
 alter publication supabase_realtime add table rooms;
 alter publication supabase_realtime add table rooms_messages;
 alter publication supabase_realtime add table rooms_participants;
+alter publication supabase_realtime add table notifications_of_groups;
+alter publication supabase_realtime add table notifications_of_user;
