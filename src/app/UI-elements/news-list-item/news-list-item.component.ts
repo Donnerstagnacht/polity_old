@@ -14,7 +14,7 @@ export class NewsListItemComponent implements OnInit {
   constructor(private router: Router) { }
 
   ngOnInit(): void {
-
+    this.checkIfMessageReceivedToday();
   }
 
   openProfile(): void {
@@ -28,6 +28,9 @@ export class NewsListItemComponent implements OnInit {
   checkIfMessageReceivedToday(): void {
     const currentDate = new Date().setHours(0,0,0,0);
     const dateOflastMessage = new Date (this.news.created_at).setHours(0,0,0,0);
+
+    console.log(currentDate)
+    console.log(dateOflastMessage)
 
     if (currentDate === dateOflastMessage) {
       this.showTime = true

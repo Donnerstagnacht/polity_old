@@ -3,7 +3,7 @@ import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { AuthentificationQuery } from 'src/app/authentification/state/authentification.query';
 import { environment } from 'src/environments/environment';
 import { Subscription } from 'rxjs';
-
+import { NewsContents, NewsTitles, NEWSCONTENTS, NEWSTITLES, NewsType, NEWSTYPE } from '../../news/state/news.model';
 @Injectable({
   providedIn: 'root'
 })
@@ -11,6 +11,9 @@ export class FollowingService {
   private supabaseClient: SupabaseClient;
   loggedInID: string | null = '';
   authSubscription: Subscription | undefined;
+  NEWSCONTENTS: NewsContents = NEWSCONTENTS;
+  NEWSTITILES: NewsTitles = NEWSTITLES;
+  NEWSTYPE: NewsType = NEWSTYPE;
 
   constructor(private authentificationQuery: AuthentificationQuery) {
     this.supabaseClient = createClient(environment.supabaseUrl, environment.supabaseKey);
@@ -103,7 +106,14 @@ export class FollowingService {
       loggedInID = this.loggedInID;
     }
     const followTransactionResult: { data: any, error: any } = await this.supabaseClient
-      .rpc('followtransaction', {followingid: following, followerid: loggedInID});
+      .rpc('followtransaction', {
+        followingid: following,
+        followerid: loggedInID,
+        title_in: NEWSTITLES.followUser,
+        message_in: NEWSCONTENTS.followUser,
+        type_in: NEWSTYPE.account,
+        for_admins_in: false
+      });
     if(followTransactionResult.error) throw new Error(followTransactionResult.error.message);
     return followTransactionResult;
   }

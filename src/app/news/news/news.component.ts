@@ -22,11 +22,12 @@ export class NewsComponent implements OnInit {
   taskFilterOn: boolean = false;
   amendmentFilterOn: boolean = false;
   eventFilterOn: boolean = false;
-  voteFilterOn: boolean = false;
+  groupFilterOn: boolean = false;
   accountFilterOn: boolean = false;
 
   newsSubscription: Subscription | undefined;
-  newsFilterSubscription: Subscription | undefined;
+  newsUsersFilterSubscription: Subscription | undefined;
+  newsGroupsFilterSubscription: Subscription | undefined;
   newsRealTimeSubscription: RealtimeSubscription | undefined;
 
   paginationData: PaginationData = {
@@ -53,15 +54,25 @@ export class NewsComponent implements OnInit {
     this.loadInitialData();
   }
 
-  ngOnDestroy(): void {
+  async ngOnDestroy(): Promise<void> {
     if(this.newsSubscription) {
       this.newsSubscription.unsubscribe();
     }
-    if(this.newsFilterSubscription) {
-      this.newsFilterSubscription.unsubscribe();
+    if(this.newsUsersFilterSubscription) {
+      this.newsUsersFilterSubscription.unsubscribe();
     }
     if(this.newsRealTimeSubscription) {
       this.newsRealTimeSubscription.unsubscribe();
+    }
+    if(this.newsGroupsFilterSubscription) {
+      this.newsGroupsFilterSubscription.unsubscribe();
+    }
+
+    try {
+      await this.newsService.resetNotificationsCounter();
+      await this.newsService.markNotificationsAsUnread();
+    } catch(error: any) {
+      this.messageService.add({severity: 'success', summary: 'success'});
     }
   }
 
@@ -83,14 +94,37 @@ export class NewsComponent implements OnInit {
     this.eventFilterOn = !this.eventFilterOn;
   }
 
-  setVoteFilter(): void {
-    this.voteFilterOn = !this.voteFilterOn;
+  setGroupFilter(): void {
+    this.groupFilterOn = !this.groupFilterOn;
+    if(this.groupFilterOn) {
+      this.newsGroupsFilterSubscription = this.newsQuery.filterNewsByType('groups').subscribe((newsList: News[]) => {
+        this.newsList = newsList;
+        this.paginationData.numberOfSearchResults = this.newsList.length;
+      });
+    } else {
+      this.subscribeAllNews();
+    }
   }
 
   setAccountFilter(): void {
     this.accountFilterOn = !this.accountFilterOn;
-    this.newsFilterSubscription = this.newsQuery.filterAccounts('account').subscribe((newsList: News[]) => {
+    if(this.accountFilterOn) {
+      this.newsUsersFilterSubscription = this.newsQuery.filterNewsByType('account').subscribe((newsList: News[]) => {
+        this.newsList = newsList;
+        this.paginationData.numberOfSearchResults = this.newsList.length;
+      });
+    } else {
+      this.subscribeAllNews();
+    }
+  }
+
+  subscribeAllNews(): void {
+    this.newsSubscription = this.newsQuery.allNews$.subscribe((newsList: News[]) => {
       this.newsList = newsList;
+      this.paginationData.numberOfSearchResults = this.newsList.length;
+      console.log('loaded news')
+      console.log(this.newsList)
+
     });
   }
 
@@ -100,10 +134,7 @@ export class NewsComponent implements OnInit {
       this.error = false;
       this.newsRealTimeSubscription = this.newsService.getRealTimeChangesNews();
       await this.newsService.getAllNotifications();
-      this.newsSubscription = this.newsQuery.allNews$.subscribe((newsList: News[]) => {
-        this.newsList = newsList;
-        this.paginationData.numberOfSearchResults = this.newsList.length;
-      })
+      this.subscribeAllNews();
       this.messageService.add({severity: 'success', summary: 'success'});
     } catch(error: any) {
       this.error = true;

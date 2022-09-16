@@ -20,6 +20,7 @@ CREATE TABLE IF NOT EXISTS public.profiles
     "follower_counter" bigint  DEFAULT 0::bigint,
     "following_counter" bigint  DEFAULT 0::bigint,
     "groups_counter" bigint  DEFAULT 0::bigint,
+    "unread_notifications_counter" bigint  DEFAULT 0::bigint,
     CONSTRAINT profiles_pkey PRIMARY KEY (id),
     --CONSTRAINT profiles_name_key UNIQUE (name),
     CONSTRAINT profiles_id_fkey FOREIGN KEY (id)

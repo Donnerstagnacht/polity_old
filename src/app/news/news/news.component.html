@@ -25,17 +25,20 @@
         </div>
       </form>
       <div class="w-full text-center">
-        <p-chip *ngIf="taskFilterOn" (click)="setTaskFilter()"  label="TASKS" styleClass="cursor-pointer accent-container"></p-chip>
-        <p-chip *ngIf="amendmentFilterOn" (click)="setAmendmentFilter()" label="AMENDMENTS" styleClass="cursor-pointer accent-container"></p-chip>
-        <p-chip *ngIf="eventFilterOn" (click)="setEventFilter()" label="EVENT" styleClass="cursor-pointer accent-container"></p-chip>
-        <p-chip *ngIf="voteFilterOn" (click)="setVoteFilter()" label="VOTE" styleClass="cursor-pointer accent-container"></p-chip>
-        <p-chip *ngIf="accountFilterOn" (click)="setAccountFilter()" label="ACCOUNT" styleClass="cursor-pointer accent-container"></p-chip>
+        <p-chip *ngIf="taskFilterOn" (click)="setTaskFilter()"  label="TASKS" styleClass="mr-1 mb-1 cursor-pointer accent-container"></p-chip>
+        <p-chip *ngIf="!taskFilterOn" (click)="setTaskFilter()"  label="TASKS" styleClass="mr-1 mb-1 cursor-pointer"></p-chip>
 
-        <p-chip *ngIf="!taskFilterOn" (click)="setTaskFilter()"  label="TASKS" styleClass="cursor-pointer"></p-chip>
-        <p-chip *ngIf="!amendmentFilterOn" (click)="setAmendmentFilter()" label="AMENDMENTS" styleClass="cursor-pointer"></p-chip>
-        <p-chip *ngIf="!eventFilterOn" (click)="setEventFilter()" label="EVENT" styleClass="cursor-pointer"></p-chip>
-        <p-chip *ngIf="!voteFilterOn" (click)="setVoteFilter()" label="VOTE" styleClass="cursor-pointer"></p-chip>
-        <p-chip *ngIf="!accountFilterOn" (click)="setAccountFilter()" label="ACCOUNT" styleClass="cursor-pointer"></p-chip>
+        <p-chip *ngIf="groupFilterOn" (click)="setGroupFilter()" label="GROUP" styleClass="mr-1 mb-1 cursor-pointer accent-container"></p-chip>
+        <p-chip *ngIf="!groupFilterOn" (click)="setGroupFilter()" label="GROUP" styleClass="mr-1 mb-1 cursor-pointer"></p-chip>
+
+        <p-chip *ngIf="amendmentFilterOn" (click)="setAmendmentFilter()" label="AMENDMENTS" styleClass="mr-1 mb-1 cursor-pointer accent-container"></p-chip>
+        <p-chip *ngIf="!amendmentFilterOn" (click)="setAmendmentFilter()" label="AMENDMENTS" styleClass="mr-1 mb-1 cursor-pointer"></p-chip>
+
+        <p-chip *ngIf="eventFilterOn" (click)="setEventFilter()" label="EVENT" styleClass="mr-1 mb-1 cursor-pointer accent-container"></p-chip>
+        <p-chip *ngIf="!eventFilterOn" (click)="setEventFilter()" label="EVENT" styleClass="mr-1 mb-1 cursor-pointer"></p-chip>
+
+        <p-chip *ngIf="accountFilterOn" (click)="setAccountFilter()" label="ACCOUNT" styleClass="mr-1 mb-1  cursor-pointer accent-container"></p-chip>
+        <p-chip *ngIf="!accountFilterOn" (click)="setAccountFilter()" label="ACCOUNT" styleClass="mr-1 mb-1 cursor-pointer"></p-chip>
       </div>
       <app-loading-spinner
         [error]="error"

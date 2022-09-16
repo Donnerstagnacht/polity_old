@@ -2,7 +2,8 @@
    <app-register class="flex align-items-center justify-content-center m-3"></app-register>
    <router-outlet class="flex align-items-center justify-content-center m-3"></router-outlet>
 </div> -->
+<p-toast styleClass="max-w-90"	 position="top-right">></p-toast>
 <router-outlet></router-outlet>
-<app-menu-bar-left></app-menu-bar-left>
-<app-menu-bar-bottom></app-menu-bar-bottom>
+<app-menu-bar-left [unreadMessages]="unreadNotifications"></app-menu-bar-left>
+<app-menu-bar-bottom [unreadMessages]="unreadNotifications"></app-menu-bar-bottom>
 <!-- <app-menu-bar-secondary-top></app-menu-bar-secondary-top> -->

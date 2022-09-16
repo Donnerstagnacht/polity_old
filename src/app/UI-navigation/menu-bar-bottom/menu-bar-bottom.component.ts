@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { MegaMenuItem } from 'primeng/api';
 import { AuthentificationQuery } from 'src/app/authentification/state/authentification.query';
 import { Subscription } from 'rxjs';
@@ -9,6 +9,7 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./menu-bar-bottom.component.scss']
 })
 export class MenuBarBottomComponent implements OnInit {
+  @Input() unreadMessages: number | undefined;
   display: boolean = true;
   items: MegaMenuItem[] = [];
   showAddMenu: boolean = false;

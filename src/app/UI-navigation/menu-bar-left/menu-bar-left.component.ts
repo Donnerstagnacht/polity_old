@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { AuthentificationQuery } from 'src/app/authentification/state/authentification.query';
 import { Subscription } from 'rxjs';
@@ -9,6 +9,7 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./menu-bar-left.component.scss']
 })
 export class MenuBarLeftComponent implements OnInit {
+  @Input() unreadMessages: number | undefined;
   display: boolean = true;
   items: MenuItem[] = [];
   showAddMenu:boolean = false;
@@ -19,7 +20,7 @@ export class MenuBarLeftComponent implements OnInit {
     {label: 'GRUPPEN', routerLink: ['/groups'], id: 'groups-cy'},
     {label: 'ERSTELLEN', command: () => this.toggleFullScreen(), id: 'create-cy'},
     {label: 'SUCHE', routerLink: ['/search'], id: 'search-cy'},
-    {label: 'ORGA', routerLink: ['/orga'],  id: 'orga-cy'}
+    {label: 'ORGA', routerLink: ['/orga'],  id: 'orga-cy', badge: '2', badgeStyleClass: 'badge'}
   ];
 
   loggedOutItems: MenuItem[] = [

@@ -5,6 +5,8 @@ import { MenuModule } from 'primeng/menu'
 import { SwitchThemeModule } from '../../UI-structure/switch-theme/switch-theme.module';
 import { SidebarModule } from 'primeng/sidebar';
 import { ActionsOverlayModule } from '../../UI-dialogs/actions-overlay/actions-overlay.module';
+import {BadgeModule} from 'primeng/badge';
+
 
 @NgModule({
   declarations: [
@@ -15,7 +17,8 @@ import { ActionsOverlayModule } from '../../UI-dialogs/actions-overlay/actions-o
     MenuModule,
     SwitchThemeModule,
     SidebarModule,
-    ActionsOverlayModule
+    ActionsOverlayModule,
+    BadgeModule
   ],
   exports: [
     MenuBarLeftComponent

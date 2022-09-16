@@ -169,5 +169,3 @@ GRANT EXECUTE ON FUNCTION public.increment_groups_counter(uuid) TO service_role;
 
 -- 4. Create Groups Transaction
 -- code moved to "20220627112230_create_group_transaction.sql" file
-
-

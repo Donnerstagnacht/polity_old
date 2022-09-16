@@ -85,4 +85,22 @@ export class GroupsService {
     return results;
   }
 
+  async selectAllGroupsWithUserAdmin():  Promise<{data: any, error: any}> {
+    let loggedInID: string | null = '';
+    if(this.loggedInID) {
+      loggedInID = this.loggedInID;
+    }
+    const groupsUserAdmin: {data: any, error: any} = await this.supabaseClient
+    .from('group_members')
+    .select(
+      `id,
+      group_id,
+      is_admin`
+    )
+    .eq('user_id', loggedInID)
+    .eq('is_admin', true)
+    if(groupsUserAdmin.error) throw new Error(groupsUserAdmin.error.message);
+    return groupsUserAdmin;
+  }
+
 }

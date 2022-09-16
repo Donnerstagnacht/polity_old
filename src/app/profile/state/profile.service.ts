@@ -40,7 +40,8 @@ export class ProfileService {
     await this.selectProfil(uuid)
     .then((results) => {
       const profile: Profile = results.data;
-      // console.log(profile);
+      console.log('profile data from service');
+      console.log(profile);
       this.profileStore.upsert(uuid, profile);
     })
     .catch((error) => {
@@ -104,11 +105,14 @@ export class ProfileService {
         amendment_counter,
         follower_counter,
         following_counter,
-        groups_counter`
+        groups_counter,
+        unread_notifications_counter
+        `
       )
       .eq('id', uuid)
       .single();
       if(results.error) throw  new Error(results.error.message);
+      console.log(results.data);
     return results;
   }
 

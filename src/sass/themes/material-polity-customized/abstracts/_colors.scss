@@ -13,8 +13,12 @@ $tertiaryContainer: #FFDBC6;
 $horizontal-gradient:linear-gradient(90deg, rgba(191, 232, 255, 0.81) 0%, rgba(255, 174, 216, 0.81) 100%);
 $vertical-gradient:linear-gradient(180deg, #FFD8EA 0%, #BFE8FF 100%);
 
-$successColor:#689F38;
-$errorColor:#B00020 !default;
+$successColor:#1ea97c!default;
+$successContainer: #e4f8f0!default;
+
+$errorColor: #ff5757!default; // #B00020 !default;
+$errorContainer: #ffe7e6!default;
+
 
 $test: red;
 

@@ -15,6 +15,7 @@ export interface ProfileCore {
   post_code: string;
   city: string;
   about: string;
+  unread_notifications_counter: number;
 
   fts?: string // test
 }

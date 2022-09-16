@@ -3,10 +3,18 @@
 position="bottom"
 [showCloseIcon]="false"
 [modal]="false"
-[style]="{height:'inherit'}"
+[style]="{
+  height:'inherit'
+}"
 header = "none">
+  <div class="flex justify-content-center">
     <div class="flex justify-content-around">
       <p-megaMenu  [model]="items"></p-megaMenu >
     </div>
+    <div class="flex justify-content-around align-items-center">
+      <p-badge *ngIf="unreadMessages" class="text-center mr-3 ml-1" [value]="unreadMessages.toString()"></p-badge>
+<!--       <app-switch-theme></app-switch-theme>
+ -->    </div>
+  </div>
 </p-sidebar>
 <app-actions-overlay [(showAddMenu)]="showAddMenu"></app-actions-overlay>

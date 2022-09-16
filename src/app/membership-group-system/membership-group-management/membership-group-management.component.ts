@@ -157,7 +157,7 @@ export class MembershipGroupManagementComponent implements OnInit {
 
   async cancelMembershipRequest(event: {id: string, user_id: string }): Promise<void> {
     try {
-      await this.membershipService.removeMembershipRequestById(event.id);
+      await this.membershipService.removeMembershipRequestById(event.user_id, this.selectedGroupId, event.id);
       this.messageService.add({severity:'success', summary: 'Anfrage entfernt.'});
     } catch(error: any) {
       this.messageService.add({severity:'error', summary: error.message});

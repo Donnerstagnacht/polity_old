@@ -10,6 +10,7 @@ import { environment } from '../environments/environment';
 import { MenuBarBottomModule} from './UI-navigation/menu-bar-bottom/menu-bar-bottom.module';
 import { MenuBarLeftModule } from './UI-navigation/menu-bar-left/menu-bar-left.module';
 import { HttpClientModule } from '@angular/common/http';
+import { ToastModule } from 'primeng/toast';
 
 
 @NgModule({
@@ -24,7 +25,7 @@ import { HttpClientModule } from '@angular/common/http';
 
     MenuBarBottomModule,
     MenuBarLeftModule,
-
+    ToastModule,
     environment.production ? [] : AkitaNgDevtools.forRoot(),
 
     AkitaNgRouterStoreModule

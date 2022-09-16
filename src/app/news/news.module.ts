@@ -9,12 +9,13 @@ import { NewsListItemModule } from '../UI-elements/news-list-item/news-list-item
 import { ToastModule } from 'primeng/toast';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { LoadingSpinnerModule } from '../UI-elements/loading-spinner/loading-spinner.module';
+import { NewsContents, NewsTitles } from './state/news.model';
 
 
 
 @NgModule({
   declarations: [
-    NewsComponent
+    NewsComponent,
   ],
   imports: [
     CommonModule,

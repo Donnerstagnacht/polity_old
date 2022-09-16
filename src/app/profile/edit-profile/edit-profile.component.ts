@@ -74,6 +74,7 @@ export class EditProfileComponent implements OnInit, OnDestroy {
               post_code: profile.post_code,
               city: profile.city,
               about: profile.about,
+              unread_notifications_counter: profile.unread_notifications_counter,
               fts: profile.fts
             }
             this.profile = JSON.parse(JSON.stringify(profilecore));
