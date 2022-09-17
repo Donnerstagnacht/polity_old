@@ -62,6 +62,8 @@ describe('Tests Group following system', () => {
           // check that new following is listed and can be removed
           cy.get('#edit-cy').click()
           cy.get('[data-cy="follower-edit"]').click()
+          cy.get('[data-cy="backButton"]').click()
+          cy.get('[data-cy="follower-edit"]').click()
           cy.contains('Followings').click()
           cy.get('[data-cy="filterSecondTab"]')
             .type(group1.name)
@@ -137,6 +139,8 @@ describe('Tests Group following system', () => {
           // check that new following is listed and can be removed
           cy.get('#edit-cy').click()
           cy.get('[data-cy="follower-edit"]').click()
+          cy.get('[data-cy="backButton"]').click()
+          cy.get('[data-cy="follower-edit"]').click()
           cy.contains('Followings').click()
           cy.get('[data-cy="filterSecondTab"]')
             .type(group1.name)
@@ -166,6 +170,8 @@ describe('Tests Group following system', () => {
           cy.contains('#Following', (user1FollowingBefore).toString())
           // checks that following disappeared
           cy.get('#edit-cy').click()
+          cy.get('[data-cy="follower-edit"]').click()
+          cy.get('[data-cy="backButton"]').click()
           cy.get('[data-cy="follower-edit"]').click()
           cy.contains('Followings').click()
           cy.contains(group1.name).should('not.exist')
@@ -218,6 +224,8 @@ describe('Tests Group following system', () => {
           // check that new following is listed and can be removed
           cy.get('#edit-cy').click()
           cy.get('[data-cy="follower-edit"]').click()
+          cy.get('[data-cy="backButton"]').click()
+          cy.get('[data-cy="follower-edit"]').click()
           cy.contains('Followings').click()
           cy.get('[data-cy="filterSecondTab"]')
             .type(group1.name)
@@ -231,7 +239,8 @@ describe('Tests Group following system', () => {
           cy.contains(group1.name).click()
           cy.get('#edit-cy').click()
           cy.get('[data-cy="follower-edit"]').click()
-          cy.wait(1000)
+          cy.get('[data-cy="backButton"]').click()
+          cy.get('[data-cy="follower-edit"]').click()
 
           cy.contains('Follower').click()
           cy.get('[data-cy="filterFirstTab"]')
