@@ -40,6 +40,7 @@ describe('Tests Profile following system', () => {
           cy.wait(100)
           cy.log(follower.toString())
           // click follow button
+          // cy.pause()
           cy.get('[data-cy="followButton"]').click()
           cy.wait(1000)
           cy.wait(100)
@@ -57,8 +58,17 @@ describe('Tests Profile following system', () => {
 
           // check that new following is listed and can be removed
           cy.get('#edit-cy').click()
+
           cy.get('[data-cy="follower-edit"]').click()
+          cy.get('[data-cy="backButton"]').click()
+          cy.get('[data-cy="follower-edit"]').click()
+
+
           cy.contains('Followings').click()
+          cy.wait(4000)
+          cy.wait(100)
+          cy.wait(100)
+          cy.wait(100)
           cy.get('[data-cy="filterSecondTab"]')
             .type(user2.name)
             .type('{enter}')
@@ -134,6 +144,8 @@ describe('Tests Profile following system', () => {
 
           // check that new following is listed and can be removed
           cy.get('#edit-cy').click()
+          cy.get('[data-cy="follower-edit"]').click()
+          cy.get('[data-cy="backButton"]').click()
           cy.get('[data-cy="follower-edit"]').click()
           cy.contains('Followings').click()
           cy.get('[data-cy="filterSecondTab"]')
@@ -216,6 +228,8 @@ describe('Tests Profile following system', () => {
 
           // check that new following is listed and can be removed
           cy.get('#edit-cy').click()
+          cy.get('[data-cy="follower-edit"]').click()
+          cy.get('[data-cy="backButton"]').click()
           cy.get('[data-cy="follower-edit"]').click()
           cy.contains('Followings').click()
           cy.get('[data-cy="filterSecondTab"]')
