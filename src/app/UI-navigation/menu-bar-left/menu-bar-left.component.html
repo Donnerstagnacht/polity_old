@@ -7,7 +7,7 @@ position="left"
   <div class="h-full flex flex-column">
     <div class="flex h-screen  flex flex-column justify-content-center">
       <p-menu class="px-3" [model]="items" routerLinkActive="p-menuitem-link-active"></p-menu>
-      <p-badge *ngIf="unreadMessages" class="text-center mb-3" [value]="unreadMessages.toString()"></p-badge>
+      <p-badge data-cy="unreadMessagesCounter" *ngIf="unreadMessages" class="text-center mb-3" [value]="unreadMessages.toString()"></p-badge>
       <div class="px-5 text-center">
         <app-switch-theme></app-switch-theme>
       </div>

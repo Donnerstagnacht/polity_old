@@ -204,6 +204,8 @@ BEGIN
     type_in,
     for_admins_in
   );
+  PERFORM increment_unread_message_counter_of_admins(group_id_requested);
+  PERFORM increment_unread_message_counter(user_id_requests);
 END;
 $$;
 
@@ -340,6 +342,8 @@ BEGIN
     type_in,
     for_admins_in
   );
+  PERFORM increment_unread_message_counter_of_admins(group_id_requested);
+  PERFORM increment_unread_message_counter(user_id_requests);
 END;
 $BODY$;
 
@@ -397,6 +401,8 @@ BEGIN
     type_in,
     for_admins_in
   );
+  PERFORM increment_unread_message_counter_of_admins(group_id_requested);
+  PERFORM increment_unread_message_counter(user_id_requests);
 END;
 $BODY$;
 
@@ -451,6 +457,7 @@ BEGIN
     type_in,
     for_admins_in
   );
+  PERFORM increment_unread_message_counter_of_admins(group_id_requested);
 END;
 $BODY$;
 
@@ -504,6 +511,8 @@ BEGIN
     type_in,
     for_admins_in
   );
+  PERFORM increment_unread_message_counter_of_admins(group_id_requested_in);
+  PERFORM increment_unread_message_counter(user_id_requests_in);
 END;
 $BODY$;
 
@@ -559,5 +568,7 @@ BEGIN
     type_in,
     for_admins_in
   );
+  PERFORM increment_unread_message_counter_of_admins(group_id_requested_in);
+  PERFORM increment_unread_message_counter(user_id_requests_in);
 END;
 $BODY$;

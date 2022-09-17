@@ -7,6 +7,7 @@ import { News, Notifications } from './news.model';
 import { NewsState, NewsStore } from './news.store';
 import { Subscription, Subject, Observable, BehaviorSubject, observable } from 'rxjs';
 import { GroupsService } from 'src/app/groups/services/groups.service';
+import { group } from 'console';
 
 @Injectable({ providedIn: 'root' })
 export class NewsService implements OnDestroy {
@@ -265,8 +266,30 @@ export class NewsService implements OnDestroy {
       .from('notifications_of_user')
       .update({new: false})
       .eq('notifying', this.loggedInID);
+    await this.markNotificationsAsUnreadFromGroup();
     if(markAsUnreadResponse.error) throw new Error(markAsUnreadResponse.error.message);
     return markAsUnreadResponse;
+  }
+
+  async markNotificationsAsUnreadFromGroup(): Promise<{ data: any, error: any }> {
+    console.log('mark group')
+    const groupList: {data: any, error: any} = await this.groupsService.selectAllGroupsWithUserAdmin();
+
+    console.log('GROUPLIST DATA');
+    console.log(groupList.data);
+    let groupIdsList: string[] = [];
+    groupList.data.forEach((element: any) => {
+      groupIdsList.push(element.group_id);
+    });
+    if(groupList.data.length > 0) {
+      const markAsUnreadResponse: { data: any, error: any } = await this.supabaseClient
+      .from('notifications_of_groups')
+      .update({new: false})
+      .in('notifying', groupIdsList);
+    if(markAsUnreadResponse.error) throw new Error(markAsUnreadResponse.error.message);
+      return markAsUnreadResponse;
+    }
+    return groupList;
   }
 
 }

@@ -71,6 +71,7 @@ export class NewsComponent implements OnInit {
     try {
       await this.newsService.resetNotificationsCounter();
       await this.newsService.markNotificationsAsUnread();
+      await this.newsService.markNotificationsAsUnreadFromGroup();
     } catch(error: any) {
       this.messageService.add({severity: 'success', summary: 'success'});
     }

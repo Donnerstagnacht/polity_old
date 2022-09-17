@@ -49,14 +49,16 @@
       </app-loading-spinner>
       <div *ngIf="!loadingInitial && !error">
         <div
-        infiniteScroll
-        [infiniteScrollDistance]="1"
-        [infiniteScrollUpDistance]="1.5"
-        [infiniteScrollThrottle]="50"
-        (scrolled)="loadNewData()"
-        *ngFor="let news of newsList.slice(paginationData.from, paginationData.to)">
-        <app-news-list-item [news]="news"></app-news-list-item>
-      </div>
+          infiniteScroll
+          data-cy="newsContainer"
+          [infiniteScrollDistance]="1"
+          [infiniteScrollUpDistance]="1.5"
+          [infiniteScrollThrottle]="50"
+          (scrolled)="loadNewData()"
+          *ngFor="let news of newsList.slice(paginationData.from, paginationData.to)"
+          >
+            <app-news-list-item [news]="news"></app-news-list-item>
+        </div>
       </div>
     </div>
   </div>

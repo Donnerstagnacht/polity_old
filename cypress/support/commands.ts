@@ -215,3 +215,8 @@ Cypress.Commands.add('clickFollowButtonWithoutCheck', (user: User) => {
   cy.wait(4000)
   cy.get('[data-cy="followButton"]').click()
 })
+
+Cypress.Commands.add('openNewsPage', () => {
+  cy.get('#orga-cy').click()
+  cy.get('#news-cy').click()
+})

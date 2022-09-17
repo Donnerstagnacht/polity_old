@@ -79,6 +79,28 @@ BEGIN
 END;
 $$;
 
+--2. Increment Message Counter of Admins
+DROP function if exists increment_unread_message_counter_of_admins(group_id_in uuid);
+create or replace function increment_unread_message_counter_of_admins(group_id_in uuid)
+returns void
+language plpgsql
+security definer
+as
+$$
+BEGIN
+  update profiles
+  set "unread_notifications_counter" = "unread_notifications_counter" + 1
+  where 
+  id IN (
+    SELECT user_id from group_members
+    WHERE
+      group_id = group_id_in
+      AND
+      is_admin = true
+  );
+END;
+$$;
+
 --2. Increment Follower
 DROP function if exists decrement_unread_message_counter(userId uuid);
 create or replace function decrement_unread_message_counter(userId uuid)

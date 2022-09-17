@@ -112,6 +112,12 @@ declare global {
       followProfile(): Chainable<Element>
 
       /**
+       * Custom command to open news page
+       * @example cy.openNewsPage()
+       */
+      openNewsPage(): Chainable<Element>
+
+      /**
        * Custom command to unFollowProfile
        * @example cy.unFollowProfile()
        */

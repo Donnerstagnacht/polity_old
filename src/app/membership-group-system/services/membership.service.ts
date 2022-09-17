@@ -185,7 +185,7 @@ export class MembershipService {
         group_id_requested: group_requested,
         handler_in: this.loggedInID,
         title_in: NEWSTITLES.leaveGroupForInquirer,
-        message_in: NEWSCONTENTS.leaveGroupForAdmins,
+        message_in: NEWSCONTENTS.leaveGroupForInquirer,
         title__for_admins_in: NEWSTITLES.leaveGroupForAdmins,
         message_for_admins_in: NEWSCONTENTS.leaveGroupForAdmins,
         type_in: NEWSTYPE.account,
