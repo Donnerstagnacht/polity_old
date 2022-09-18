@@ -22,7 +22,7 @@ describe('Tests Group Membership system', () => {
   })
 
   it('User requests group membership and group admin denies membership', () => {
-    cy.visit('http://localhost:4200')
+    cy.visit('')
     cy.login(user2.email, user2.password)
 
     cy.searchGroup(group1)
@@ -46,7 +46,8 @@ describe('Tests Group Membership system', () => {
     cy.contains(group1.name).click()
     cy.get('#edit-cy').click()
     cy.get('[data-cy="members-edit"]').click()
-
+    cy.get('[data-cy="backButton"]').click()
+    cy.get('[data-cy="members-edit"]').click()
     cy.contains('Beitrittsanfragen').click()
     cy.wait(4000)
     cy.wait(100)
@@ -92,9 +93,10 @@ describe('Tests Group Membership system', () => {
     cy.contains(group1.name).click()
     cy.get('#edit-cy').click()
     cy.get('[data-cy="members-edit"]').click()
-
+    cy.get('[data-cy="backButton"]').click()
+    cy.get('[data-cy="members-edit"]').click()
     cy.contains('Beitrittsanfragen').click()
-    cy.wait(4000)
+    cy.wait(5000)
     cy.wait(100)
     cy.wait(100)
     cy.wait(100)
@@ -124,7 +126,8 @@ describe('Tests Group Membership system', () => {
     cy.contains(group1.name).click()
     cy.get('#edit-cy').click()
     cy.get('[data-cy="members-edit"]').click()
-
+    cy.get('[data-cy="backButton"]').click()
+    cy.get('[data-cy="members-edit"]').click()
     cy.get('[data-cy="filterFirstTab"]')
       .type(user2.name)
       .type('{enter}')
@@ -154,7 +157,6 @@ describe('Tests Group Membership system', () => {
       cy.wait(100)
       cy.wait(100)
       cy.wait(100)
-
       cy.contains('Anfrage zurückziehen')
 
       cy.logout()
@@ -174,7 +176,8 @@ describe('Tests Group Membership system', () => {
 
         cy.get('#edit-cy').click()
         cy.get('[data-cy="members-edit"]').click()
-
+        cy.get('[data-cy="backButton"]').click()
+        cy.get('[data-cy="members-edit"]').click()
         cy.contains('Beitrittsanfragen').click()
         cy.wait(4000)
         cy.wait(100)
@@ -192,7 +195,8 @@ describe('Tests Group Membership system', () => {
         cy.wait(100)
         cy.wait(100)
         cy.wait(100)
-        cy.contains(user2.name).should('not.be.visible')
+        cy.get('[data-cy="filterFirstTab"]').clear()
+        cy.contains(user2.name).should('not.exist')
 
         cy.get('[data-cy="backButton"]').click()
         cy.get('#overview-cy').click()
@@ -278,7 +282,8 @@ describe('Tests Group Membership system', () => {
 
         cy.get('#edit-cy').click()
         cy.get('[data-cy="members-edit"]').click()
-
+        cy.get('[data-cy="backButton"]').click()
+        cy.get('[data-cy="members-edit"]').click()
         cy.wait(1000)
         cy.contains('Mitglieder').click()
         cy.wait(4000)
@@ -304,7 +309,7 @@ describe('Tests Group Membership system', () => {
   cy.login(user2.email, user2.password)
   cy.searchGroup(group1)
   cy.contains('Mitgliedschaft anfragen')
-  cy.wait(40000)
+  cy.wait(4000)
   cy.wait(100)
   cy.wait(100)
   cy.wait(100)
@@ -324,6 +329,9 @@ describe('Tests Group Membership system', () => {
 
   cy.get('#edit-cy').click()
   cy.get('[data-cy="members-edit"]').click()
+  cy.get('[data-cy="backButton"]').click()
+  cy.get('[data-cy="members-edit"]').click()
+
 
   cy.contains('Beitrittsanfragen').click()
   cy.wait(4000)
@@ -342,7 +350,7 @@ describe('Tests Group Membership system', () => {
   cy.wait(100)
   cy.wait(100)
   cy.wait(100)
-  cy.contains(user2.name).should('not.be.visible')
+  cy.contains(user2.name).should('not.exist')
   cy.logout()
   /*****************************************************
    *  END ONLY LOGIN, request and accept membership
@@ -416,7 +424,8 @@ describe('Tests Group Membership system', () => {
 
         cy.get('#edit-cy').click()
         cy.get('[data-cy="members-edit"]').click()
-
+        cy.get('[data-cy="backButton"]').click()
+        cy.get('[data-cy="members-edit"]').click()
         cy.wait(1000)
         cy.contains('Mitglieder').click()
         cy.wait(4000)
@@ -459,7 +468,8 @@ describe('Tests Group Membership system', () => {
 
   cy.get('#edit-cy').click()
   cy.get('[data-cy="members-edit"]').click()
-
+  cy.get('[data-cy="backButton"]').click()
+  cy.get('[data-cy="members-edit"]').click()
   cy.contains('Beitrittsanfragen').click()
   cy.wait(4000)
   cy.wait(100)
@@ -477,7 +487,7 @@ describe('Tests Group Membership system', () => {
   cy.wait(100)
   cy.wait(100)
   cy.wait(100)
-  cy.contains(user2.name).should('not.be.visible')
+  cy.contains(user2.name).should('not.exist')
   cy.logout()
   /*****************************************************
    *  END ONLY LOGIN, request and accept membership
@@ -510,7 +520,8 @@ describe('Tests Group Membership system', () => {
 
         cy.get('#edit-cy').click()
         cy.get('[data-cy="members-edit"]').click()
-
+        cy.get('[data-cy="backButton"]').click()
+        cy.get('[data-cy="members-edit"]').click()
         cy.wait(1000)
         cy.contains('Mitglieder').click()
         cy.wait(4000)
