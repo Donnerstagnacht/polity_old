@@ -21,15 +21,15 @@ describe('Tests search features', () => {
     cy.viewport(1024, 514)
   })
 
-  it('Searches User and navigates to user Profile', () => {
-    cy.visit('http://localhost:4200')
+  it('1. Searches User and navigates to user Profile', () => {
+    cy.visit('')
     // sets it up for laptop-screens
     cy.login(user1.email, user1.password)
     // navigate to change Profile Form
     cy.searchUser(user2)
   })
 
-  it('Searches a group and navigates to group Profile', () => {
+  it('2. Searches a group and navigates to group Profile', () => {
     // navigate to change Profile Form
     cy.searchGroup(group1)
   })

@@ -17,8 +17,8 @@ describe('Tests Profile following system', () => {
     cy.viewport(1024, 514)
   })
 
-  it('Follows user and unfollow from own following management tab (remove following)', () => {
-    cy.visit('http://localhost:4200')
+  it('1. Follows user and unfollow from own following management tab (remove following)', () => {
+    cy.visit('')
     cy.login(user1.email, user1.password)
     cy.get('#Following')
     .invoke('text')
@@ -103,7 +103,7 @@ describe('Tests Profile following system', () => {
     })
   })
 
-  it('Follows user and unfollows user from followed user profile (unfollow button)', () => {
+  it('2. Follows user and unfollows user from followed user profile (unfollow button)', () => {
     cy.login(user1.email, user1.password)
     cy.get('#Following')
     .invoke('text')
@@ -184,7 +184,7 @@ describe('Tests Profile following system', () => {
     })
   })
 
-  it('Follows user, logs out, logs in in followed account and removes follower from  follower management tab (remove follower)', () => {
+  it('3. Follows user, logs out, logs in in followed account and removes follower from  follower management tab (remove follower)', () => {
     // logs user 1 in
     cy.login(user1.email, user1.password)
     cy.get('#Following')

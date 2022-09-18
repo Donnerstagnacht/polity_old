@@ -24,7 +24,7 @@ describe('Tests notify features', () => {
   })
 
   it('1. Resets counter', () => {
-    cy.visit('http://localhost:4200')
+    cy.visit('')
     cy.login(user1.email, user1.password)
     cy.openNewsPage()
     cy.get('#profile-cy').click()

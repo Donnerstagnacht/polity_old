@@ -25,8 +25,8 @@ describe('Test chat features', () => {
     cy.viewport(1024, 514)
   })
 
-  it('Request Chat', () => {
-    cy.visit('http://localhost:4200')
+  it('1. Request Chat', () => {
+    cy.visit('')
     cy.login(user1.email, user1.password)
 
     cy.get('#orga-cy').click()
@@ -47,7 +47,7 @@ describe('Test chat features', () => {
     cy.logout()
   })
 
-  it('Denie chat request', () => {
+  it('2. Denie chat request', () => {
     cy.login(user2.email, user2.password)
     cy.openChatWithUser(user1)
     cy.contains('Du hast eine neue Chat-Anfrage. Wie möchtest du reagieren?')
@@ -63,7 +63,7 @@ describe('Test chat features', () => {
     cy.logout()
   })
 
-  it('Accept chat request', () => {
+  it('3. Accept chat request', () => {
     cy.login(user1.email, user1.password)
     cy.clickFollowButtonWithoutCheck(user2)
     // cy.wait(4000)
@@ -80,7 +80,7 @@ describe('Test chat features', () => {
     cy.contains('Ihr habt euch noch keine Nachrichten geschrieben')
   })
 
-  it('Deletes chat', () => {
+  it('4. Deletes chat', () => {
     cy.get('[data-cy="delete-chat"]').click()
     cy.get('[data-cy="filter-chats"]')
       .type(user1.name)
@@ -103,7 +103,7 @@ describe('Test chat features', () => {
     cy.logout()
   })
 
-  it('Accept chat message and follows', () => {
+  it('5. Accept chat message and follows', () => {
     cy.login(user1.email, user1.password)
     cy.clickFollowButtonWithoutCheck(user2)
     //user1: Following: 1, Follower 0
@@ -151,7 +151,7 @@ describe('Test chat features', () => {
       })
   })
 
-  it('Send chat message', () => {
+  it('6. Send chat message', () => {
     cy.login(user1.email, user1.password)
     cy.openChatWithUser(user2)
     cy.get('[data-cy="send-message"]')
@@ -195,7 +195,7 @@ describe('Test chat features', () => {
     cy.logout()
   })
 
-  it('Remove chat connection by unfollowing', () => {
+  it('7. Remove chat connection by unfollowing', () => {
     cy.login(user1.email, user1.password)
     cy.openChatWithUser(user2)
     cy.get('[data-cy="backButton"]').click()

@@ -17,8 +17,8 @@ describe('Tests Profile features', () => {
     cy.viewport(1024, 514)
   })
 
-  it('User 1 edits Profile & changes are displayed on profile wiki', () => {
-    cy.visit('http://localhost:4200')
+  it('1. User 1 edits Profile & changes are displayed on profile wiki', () => {
+    cy.visit('')
     // sets it up for laptop-screens
     cy.login(user1.email, user1.password)
     // navigate to change Profile Form
@@ -40,7 +40,7 @@ describe('Tests Profile features', () => {
     cy.checkUserWikiDataAndVisibilityExeptImage(user1)
   })
 
-  it('User 1 uploads new Profile Image & it is displayed on users profile wiki', () => {
+  it('2. User 1 uploads new Profile Image & it is displayed on users profile wiki', () => {
     cy.get('#profile-cy')
     cy.navigateFromProfileWikiToEditProfile()
     // checks if upload button exists and selects a file
@@ -72,12 +72,12 @@ describe('Tests Profile features', () => {
 
   // repeating code to setup user 2 (no test - more a setup for other tests )
   // code could be refactored
-  it('Logs user 1 out', () => {
+  it('3. Logs user 1 out', () => {
     cy.logout();
     cy.wait(4000)
   })
 
-  it('User 2 edits Profile & changes are displayed on profile wiki', () => {
+  it('4. User 2 edits Profile & changes are displayed on profile wiki', () => {
     // sets it up for laptop-screens
     cy.wait(1000)
 
@@ -101,7 +101,7 @@ describe('Tests Profile features', () => {
     cy.checkUserWikiDataAndVisibilityExeptImage(user2)
   })
 
-  it('User 2 uploads new Profile Image & it is displayed on users profile wiki', () => {
+  it('5. User 2 uploads new Profile Image & it is displayed on users profile wiki', () => {
     cy.get('#profile-cy')
     cy.navigateFromProfileWikiToEditProfile()
     // checks if upload button exists and selects a file

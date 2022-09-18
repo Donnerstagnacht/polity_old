@@ -25,8 +25,8 @@ describe('Test chat features', () => {
     cy.viewport(1024, 514)
   })
 
-  it('Creates a group, creates group chat & sends message', ( )=> {
-    cy.visit('http://localhost:4200')
+  it('1. Creates a group, creates group chat & sends message', ( )=> {
+    cy.visit('')
     cy.login(user1.email, user1.password)
     cy.get('#create-cy').click()
     cy.get('[data-cy="group"]').click()
@@ -49,7 +49,7 @@ describe('Test chat features', () => {
     cy.logout()
   })
 
-  it('Joins a group, gets added to group chat', () => {
+  it('2. Joins a group, gets added to group chat', () => {
     cy.login(user2.email, user2.password)
     cy.searchGroup(group2)
     cy.contains('Mitgliedschaft anfragen')
@@ -91,7 +91,7 @@ describe('Test chat features', () => {
 
   })
 
-  it('Can receive and send messages after joining group', () => {
+  it('3. Can receive and send messages after joining group', () => {
     cy.login(user2.email, user2.password)
 
     cy.openChatWithGroup(group2)

@@ -21,8 +21,8 @@ describe('Tests Group following system', () => {
     cy.viewport(1024, 514)
   })
 
-  it('Follows group and unfollow from group following management tab (remove following)', () => {
-    cy.visit('http://localhost:4200')
+  it('1. Follows group and unfollow from group following management tab (remove following)', () => {
+    cy.visit('')
     cy.login(user1.email, user1.password)
     cy.get('#Following')
     .invoke('text')
@@ -96,7 +96,7 @@ describe('Tests Group following system', () => {
     })
   })
 
-  it('Follows group and unfollows group with unfollow button of group profile', () => {
+  it('2. Follows group and unfollows group with unfollow button of group profile', () => {
     cy.login(user1.email, user1.password)
     cy.get('#Following')
     .invoke('text')
@@ -181,7 +181,7 @@ describe('Tests Group following system', () => {
     })
   })
 
-  it('Follows group and removes follower from group admin follower management tab (remove follower)', () => {
+  it('3. Follows group and removes follower from group admin follower management tab (remove follower)', () => {
     cy.login(user1.email, user1.password)
     cy.get('#Following')
     .invoke('text')

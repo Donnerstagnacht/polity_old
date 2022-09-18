@@ -15,10 +15,10 @@ describe('Auth lifecycle: Register, login & logout a user', () => {
   })
 
   beforeEach(() => {
-    cy.visit('http://localhost:4200')
+    cy.visit('')
   })
 
-  it('Registers, logs in & logs out a user', () => {
+  it('1. Registers, logs in & logs out a user', () => {
     // sets it up for laptop-screens
     cy.viewport(1024, 514)
     cy.register(user1.name, user1.email, user1.password)
@@ -26,12 +26,12 @@ describe('Auth lifecycle: Register, login & logout a user', () => {
     cy.logout()
   })
 
-  it('Registers a user', () => {
+  it('2. Registers a user', () => {
     cy.viewport(1024, 514)
     cy.register(user2.name, user2.email, user2.password)
   })
 
-  it('Logs in & out a user', () => {
+  it('3. Logs in & out a user', () => {
     cy.viewport(1024, 514)
     cy.login(user2.email, user2.password)
     cy.logout()

@@ -21,8 +21,8 @@ describe('Test group edit and create group features', () => {
     cy.viewport(1024, 514)
   })
 
-  it('Creates a group', () => {
-    cy.visit('http://localhost:4200')
+  it('1. Creates a group', () => {
+    cy.visit('')
     cy.login(user1.email, user1.password)
     cy.get('#create-cy').click()
     cy.get('[data-cy="group"]').click()
@@ -48,7 +48,7 @@ describe('Test group edit and create group features', () => {
     cy.checkGroupWikiDataAndVisibilityExeptImage(group1) */
   })
 
-  it('Changes a groups wiki exept image', () => {
+  it('2. Changes a groups wiki exept image', () => {
     cy.get('#groups-cy').click()
     cy.contains(group1.name).click()
     cy.get('#edit-cy').click()
@@ -66,7 +66,7 @@ describe('Test group edit and create group features', () => {
     cy.checkGroupWikiDataAndVisibilityExeptImage(group1)
   })
 
-  it('User 1 uploads new group Image & it is displayed on the groups wiki', () => {
+  it('3. User 1 uploads new group Image & it is displayed on the groups wiki', () => {
     cy.get('#profile-cy')
     cy.contains(group1.name).click()
     cy.get('#edit-cy').click()

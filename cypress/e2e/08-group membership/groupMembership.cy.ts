@@ -21,7 +21,7 @@ describe('Tests Group Membership system', () => {
     cy.viewport(1024, 514)
   })
 
-  it('User requests group membership and group admin denies membership', () => {
+  it('1. User requests group membership and group admin denies membership', () => {
     cy.visit('')
     cy.login(user2.email, user2.password)
 
@@ -72,7 +72,7 @@ describe('Tests Group Membership system', () => {
     cy.logout()
   })
 
-  it('User requests group membership and withdraws it', () => {
+  it('2. User requests group membership and withdraws it', () => {
     cy.login(user2.email, user2.password)
 
     cy.searchGroup(group1)
@@ -136,7 +136,7 @@ describe('Tests Group Membership system', () => {
     cy.logout()
   })
 
-  it('User requests membership, group admin accepts and members counter are incremented', () => {
+  it('3. User requests membership, group admin accepts and members counter are incremented', () => {
     cy.login(user2.email, user2.password)
 
     cy.get('#Gruppen')
@@ -227,7 +227,7 @@ describe('Tests Group Membership system', () => {
     })
   })
 
-  it('User leaves group and counter are decremented', () => {
+  it('4. User leaves group and counter are decremented', () => {
     cy.login(user1.email, user1.password)
 
     cy.get('#groups-cy').click()
@@ -302,7 +302,7 @@ describe('Tests Group Membership system', () => {
     })
   })
 
-  it('User leaves group from group overview and counter are decremented', () => {
+  it('5. User leaves group from group overview and counter are decremented', () => {
    /*****************************************************
    *  END ONLY LOGIN, request and accept membership
    * ***********************************************   */
@@ -445,7 +445,7 @@ describe('Tests Group Membership system', () => {
   })
 
 
-  it('Admin removes user from group and counter are decremented', () => {
+  it('6. Admin removes user from group and counter are decremented', () => {
      /*****************************************************
    *  END ONLY LOGIN, request and accept membership
    * ***********************************************   */  cy.login(user2.email, user2.password)
