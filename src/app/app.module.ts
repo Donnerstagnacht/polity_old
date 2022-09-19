@@ -11,6 +11,7 @@ import { MenuBarBottomModule} from './UI-navigation/menu-bar-bottom/menu-bar-bot
 import { MenuBarLeftModule } from './UI-navigation/menu-bar-left/menu-bar-left.module';
 import { HttpClientModule } from '@angular/common/http';
 import { ToastModule } from 'primeng/toast';
+import { ServiceWorkerModule } from '@angular/service-worker';
 
 
 @NgModule({
@@ -28,7 +29,13 @@ import { ToastModule } from 'primeng/toast';
     ToastModule,
     environment.production ? [] : AkitaNgDevtools.forRoot(),
 
-    AkitaNgRouterStoreModule
+    AkitaNgRouterStoreModule,
+      ServiceWorkerModule.register('ngsw-worker.js', {
+        enabled: environment.production,
+        // Register the ServiceWorker as soon as the application is stable
+        // or after 30 seconds (whichever comes first).
+        registrationStrategy: 'registerWhenStable:30000'
+      })
   ],
   bootstrap: [AppComponent],
   providers: [{ provide: NG_ENTITY_SERVICE_CONFIG, useValue: { baseUrl: 'https://jsonplaceholder.typicode.com' }}]
