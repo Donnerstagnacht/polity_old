@@ -10,6 +10,7 @@ import { ToastModule } from 'primeng/toast';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { LoadingSpinnerModule } from '../UI-elements/loading-spinner/loading-spinner.module';
 import { NewsContents, NewsTitles } from './state/news.model';
+import { PushNotificationsModule } from '../utilities/push-notifications/push-notifications.module';
 
 
 
@@ -27,7 +28,8 @@ import { NewsContents, NewsTitles } from './state/news.model';
     NewsListItemModule,
     ToastModule,
     InfiniteScrollModule,
-    LoadingSpinnerModule
+    LoadingSpinnerModule,
+    PushNotificationsModule
   ],
   exports: [
     NewsComponent
