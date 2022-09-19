@@ -32,6 +32,7 @@ describe('Tests search features', () => {
   it('2. Searches a group and navigates to group Profile', () => {
     // navigate to change Profile Form
     cy.searchGroup(group1)
+    cy.logout()
   })
 
 

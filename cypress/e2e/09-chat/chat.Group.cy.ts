@@ -82,7 +82,7 @@ describe('Test chat features', () => {
     cy.wait(100)
     cy.wait(100)
     cy.wait(100)
-    cy.pause()
+    // cy.pause()
     cy.contains(user2.name).should('not.exist')
     //cy.contains(user2.name).should('not.be.visible')
 
