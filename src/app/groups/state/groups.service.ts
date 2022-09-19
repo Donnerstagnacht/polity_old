@@ -12,7 +12,7 @@ export class GroupsService extends NgEntityService<GroupsState> {
 
   constructor(
     private groupsQuery: GroupsQuery,
-    protected override groupsStore: GroupsStore) {
+    protected groupsStore: GroupsStore) {
     super(groupsStore);
     this.supabaseClient = createClient(environment.supabaseUrl, environment.supabaseKey)
   }
