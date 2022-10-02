@@ -27,6 +27,7 @@
     "@datorama/akita-ng-entity-service": "^7.0.0",
     "@datorama/akita-ng-router-store": "^7.0.0",
     "@supabase/supabase-js": "^1.35.3",
+    "@types/web-push": "^3.3.2",
     "akita-filters-plugin": "^6.0.1",
     "animate.css": "^4.1.1",
     "ngx-infinite-scroll": "^14.0.0",
