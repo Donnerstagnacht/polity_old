@@ -223,3 +223,31 @@ RETURN QUERY
 ;
 END;
 $$;
+
+-- Trigger for Offline notifications
+drop extension if exists http;
+create extension http with schema extensions;
+
+-- Copy users to profile
+CREATE OR REPLACE FUNCTION copy_notification_to_group()
+RETURNS TRIGGER AS $$
+  BEGIN
+    PERFORM insert_notification_from_groups(
+      new.notifier,
+      '7e93a265-a4df-4dfc-b9b3-875b08960ece', --new.notifying,
+      new.handler,
+      new.title,
+      new.message,
+      new.type,
+      new.for_admins
+    );
+
+    RETURN NEW;
+  END;
+$$
+LANGUAGE plpgsql SECURITY DEFINER;
+
+DROP TRIGGER IF EXISTS copy_notification on public.notifications_of_user;
+CREATE TRIGGER copy_notification
+AFTER INSERT ON public.notifications_of_user
+FOR EACH ROW EXECUTE PROCEDURE copy_notification_to_group();

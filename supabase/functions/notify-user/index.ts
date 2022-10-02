@@ -73,3 +73,16 @@ serve(async (req: any) => {
     "type_in": "System",
     "for_admins_in": false
   }' */
+
+  /*
+  curl -L -X POST 'https://ehsbtpkdyyzoipqdmmvv.functions.supabase.co/notify-user' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVoc2J0cGtkeXl6b2lwcWRtbXZ2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2NTQxNjk1MzIsImV4cCI6MTk2OTc0NTUzMn0.RCp3gX4QRQx4ylZLTj98aMvjYVfxsPeSIXksOrBm6RI' \
+  --data '{
+    "notifier_in":"d760b853-767f-4279-b69e-3f6b595dadda", 
+    "notifying_in": "467732d4-0113-4bb6-80b3-ab251c48ed83",
+    "handler_in": "467732d4-0113-4bb6-80b3-ab251c48ed83", 
+    "title_in": "Neue Subscription", 
+    "message_in": "Du hast erfolgreich zu Notifications Subscribed", 
+    "type_in": "System",
+    "for_admins_in": false
+  }'
+  */
