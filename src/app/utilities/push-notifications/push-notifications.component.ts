@@ -23,7 +23,7 @@ export class PushNotificationsComponent implements OnInit {
 
   private supabaseClient: SupabaseClient;
   readonly VAPID_PUBLIC_KEY = "BK0h5R4vNPo6sxzj9ScboVJcnMQPyYZJvDUrvaFLlsC9K6DPlbHq6diDjzw8Y0Tvd5mti68fdyPa2KbDqlRFG58";
-  pushSubscriber: PushSubscriber;
+  pushSubscriber: PushSubscriber | undefined;
   authSubscription: Subscription | undefined;
   loggedInUserId: string | undefined; 
   
@@ -32,14 +32,6 @@ export class PushNotificationsComponent implements OnInit {
     private authentificationQuery: AuthentificationQuery
     ) {
       this.supabaseClient = createClient(environment.supabaseUrl, environment.supabaseKey)
-      this.pushSubscriber = {
-        endpoint: 'test1', 
-        expirationTime: 'test2', 
-        keys: {
-          p256dh: 'test3', 
-          auth: 'test4'
-        }
-      }
      }
 
   ngOnInit(): void {
@@ -50,50 +42,46 @@ export class PushNotificationsComponent implements OnInit {
 
   async subscribeToNotifications() {
     console.log('clicked')
-    this.addPushSubscriber(this.pushSubscriber);
-
     this.swPush.requestSubscription({
         serverPublicKey: this.VAPID_PUBLIC_KEY
     })
     .then((sub) => {
-      console.log(sub)
-      this.addPushSubscriber(sub)
-      .then((data: any) => {
-        console.log('finished database insert', data);
-        this.callEdgeFunction()
+      console.log('swPUsh', sub)
+      if(sub) {
+        this.addPushSubscriber(sub)
         .then((data: any) => {
-          console.log('successfull subscription', data)
+          console.log('finished database insert', data);
         })
         .catch((error: any) => {
-          console.log('failed subscribtion', error,)
+          console.log('failed database insert', error);
         });
-      })
-      .catch((error: any) => {
-        console.log('failed database insert', error);
-      });
-    }) //this.newsletterService.addPushSubscriber(sub).subscribe())
+      }
+    })
     .catch(err => console.error("Could not subscribe to notifications", err));
   }
 
   async addPushSubscriber(pushSubscriber: PushSubscriber | any): Promise<{ data: any, error: any }> {
     console.log('endpoint', pushSubscriber.endpoint)
+    console.log('adding this to database', pushSubscriber)
+
     const insertPushSubscriberResult: { data: any, error: any } = await this.supabaseClient
       .rpc('insert_into_push_notifications', {
         endpoint_in: pushSubscriber.endpoint, 
         expiration_time_in:pushSubscriber.expirationTime, 
         p256dh_in: 'Test3', 
-        auth_in: 'Test4' 
+        auth_in: 'Test4' ,
+        user_id_in: this.loggedInUserId
       })
     if(insertPushSubscriberResult.error) throw new Error(insertPushSubscriberResult.error.message);
     return insertPushSubscriberResult;
   }
 
-  async callEdgeFunction(): Promise<{data: any, error: any}> {
+/*   async callEdgeFunction(): Promise<{data: any, error: any}> {
     const response: { data: any, error: any } = await this.supabaseClient.functions.invoke('notify-user', {
       body: JSON.stringify({ userID: this.loggedInUserId })
     })
     if(response.error) throw new Error(response.error.message);
     return response;
-  }
+  } */
 
 }

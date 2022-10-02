@@ -15,23 +15,15 @@ serve(async (req: any) => {
     type: string,
     for_admins: boolean
   } = await req.json()
-  const data = {
-    message: `
-    Data received:
-    ${data_in.notifier}
-    ${data_in.notifying}
-    ${data_in.handler}
-    ${data_in.title}
-    ${data_in.message}
-    ${data_in.type}
-    ${data_in.for_admins}
-    !`,
-  }
-
-  console.log(data.message);
 
   try {
     // supabaseClient.auth.setAuth(req.headers.get('Authorization')!.replace('Bearer ', ''))
+
+    const push_notification_data: { data: any, error: any } = await supabaseClient
+      .from('push_notifications')
+      .select('*')
+      .eq('user_id', data_in.notifying)
+      .single();
 
     const insertNotification: { data: any, error: any } = await supabaseClient
     .rpc('insert_notification_from_groups', 
@@ -45,6 +37,30 @@ serve(async (req: any) => {
         for_admins_in: data_in.for_admins
       }
     )
+
+    const data = {
+      message: `
+      Data received:
+      ${data_in.notifier}
+      ${data_in.notifying}
+      ${data_in.handler}
+      ${data_in.title}
+      ${data_in.message}
+      ${data_in.type}
+      ${data_in.for_admins}
+
+      Data selected from webpush:
+      ${push_notification_data.data.id}
+      ${push_notification_data.data}
+      ${push_notification_data.data.endpoint}
+      ${push_notification_data.data.expiration_time}
+      ${push_notification_data.data.p256dh}
+      ${push_notification_data.data.auth}
+      ${push_notification_data.data.user_id}
+      !`,
+    }
+  
+    console.log(data.message);
 
     return new Response(
       JSON.stringify(data, insertNotification.data),

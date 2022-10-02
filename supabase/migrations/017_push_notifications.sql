@@ -12,11 +12,14 @@ DROP TABLE IF EXISTS public.push_notifications;
 CREATE TABLE IF NOT EXISTS public.push_notifications
 (
     id uuid NOT NULL DEFAULT uuid_generate_v4(),
+    user_id uuid NOT NULL,
     endpoint text COLLATE pg_catalog."default" DEFAULT ''::text,
     expiration_time text COLLATE pg_catalog."default" DEFAULT ''::text,
     p256dh text COLLATE pg_catalog."default" DEFAULT ''::text,
     auth text COLLATE pg_catalog."default" DEFAULT ''::text,
-    CONSTRAINT "push_notifications_pkey" PRIMARY KEY (id)
+    CONSTRAINT "push_notifications_pkey" PRIMARY KEY (id),
+    CONSTRAINT "push_notifcations_fkey" FOREIGN KEY ( user_id)
+        REFERENCES public.profiles (id) MATCH SIMPLE
 )
 TABLESPACE pg_default;
 ALTER TABLE IF EXISTS public.groups
@@ -34,13 +37,15 @@ DROP function if exists insert_into_push_notifications(
     endpoint_in text, 
     expiration_time_in text, 
     p256dh_in text, 
-    auth_in text
+    auth_in text,
+    user_id_in uuid
 );
 create or replace function insert_into_push_notifications(
     endpoint_in text, 
     expiration_time_in text, 
     p256dh_in text, 
-    auth_in text
+    auth_in text,
+    user_id_in uuid
 )
 returns void
 language plpgsql
@@ -52,13 +57,15 @@ BEGIN
         endpoint, 
         expiration_time, 
         p256dh, 
-        auth   
+        auth,
+        user_id 
     )
     VALUES (
         endpoint_in, 
         expiration_time_in, 
         p256dh_in, 
-        auth_in    
+        auth_in,
+        user_id_in 
     );
 END;
 $$;
