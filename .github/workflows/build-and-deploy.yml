@@ -10,9 +10,32 @@ on:
     branches: [ "master" ]
 
 jobs:
-  build:
+  test:
+    if: github.event_name == 'pull_request'
+    
     runs-on: ubuntu-latest
 
+    # - name: install supabase
+    #   uses: supabase/setup-cli@v1
+    #   with:
+    #     version: 1.6.0
+
+    # - name: start supabase
+    #   run: supabase start
+        
+    - name: Cypress run 
+      uses: cypress-io/github-action@v3
+      with:
+        spec: cypress/e2e/all.cy.ts
+        browser: chrome
+        start: npm run start
+        wait-on: "http://localhost:4200"
+
+  build:
+    if: github.event_name == 'push'
+
+    runs-on: ubuntu-latest
+    
     strategy:
       matrix:
         node-version: [14.x]
@@ -31,27 +54,7 @@ jobs:
         npm install
         npm run build:prod        
 
-    - name: install supabase
-      if: ${{ github.event_name == 'pull_request' }}
-      uses: supabase/setup-cli@v1
-      with:
-        version: 1.6.0
-
-    - name: start supabase
-      if: ${{ github.event_name == 'pull_request' }}
-      run: supabase start
-        
-    - name: Cypress run 
-      if: ${{ github.event_name == 'pull_request' }}
-      uses: cypress-io/github-action@v3
-      with:
-        spec: cypress/e2e/all.cy.ts
-        browser: chrome
-        start: npm run start
-        wait-on: "http://localhost:4200"
-
     - name: Deploy 🚀
-      if: ${{ github.event_name == 'push' }}
       uses: JamesIves/github-pages-deploy-action@v4
       with:
         folder: dist/polity
