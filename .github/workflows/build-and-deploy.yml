@@ -32,6 +32,7 @@ jobs:
         npm run build:prod        
         
     - name: Deploy 🚀
+      if: ${{ github.event_name == 'push' }}
       uses: JamesIves/github-pages-deploy-action@v4
       with:
         folder: dist/polity
