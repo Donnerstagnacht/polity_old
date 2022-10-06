@@ -18,14 +18,14 @@ jobs:
     steps:    
     - name: Checkout ➡️
       uses: actions/checkout@v3
-      
-    # - name: install supabase
-    #   uses: supabase/setup-cli@v1
-    #   with:
-    #     version: 1.6.0
 
-    # - name: start supabase
-    #   run: supabase start
+    - name: install supabase
+      uses: supabase/setup-cli@v1
+      with:
+        version: 1.6.0
+
+    - name: start supabase
+      run: supabase start
         
     - name: Cypress run
       uses: cypress-io/github-action@v3
