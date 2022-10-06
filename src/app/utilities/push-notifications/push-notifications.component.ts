@@ -22,7 +22,8 @@ export type PushSubscriber = {
 export class PushNotificationsComponent implements OnInit {
 
   private supabaseClient: SupabaseClient;
-  readonly VAPID_PUBLIC_KEY = "BK0h5R4vNPo6sxzj9ScboVJcnMQPyYZJvDUrvaFLlsC9K6DPlbHq6diDjzw8Y0Tvd5mti68fdyPa2KbDqlRFG58";
+  readonly VAPID_PUBLIC_KEY = "BJQhdOCOkmXaJaYhaJxM69Ju6aOFdTgW0p64hpefnNZ74MFsvEu90ToMPzr5z1P9NIsAp5TS8znGgZ2DSBIOrmE";
+  // readonly VAPID_PRIVATE_KEY = "8lS1u1czGvsWuEpLTzOcM0KGdvNDqyGcOBgR0Z1v9FA";
   pushSubscriber: PushSubscriber | undefined;
   authSubscription: Subscription | undefined;
   loggedInUserId: string | undefined; 
@@ -64,12 +65,13 @@ export class PushNotificationsComponent implements OnInit {
     console.log('endpoint', pushSubscriber.endpoint)
     console.log('adding this to database', pushSubscriber)
 
+    // TODO p256dh and auth are missing
     const insertPushSubscriberResult: { data: any, error: any } = await this.supabaseClient
       .rpc('insert_into_push_notifications', {
         endpoint_in: pushSubscriber.endpoint, 
-        expiration_time_in:pushSubscriber.expirationTime, 
-        p256dh_in: 'Test3', 
-        auth_in: 'Test4' ,
+        expiration_time_in: pushSubscriber.expirationTime, 
+        p256dh_in: 'Test3', // pushSubscriber.p256dh
+        auth_in: 'Test4' , // pushSubscriber.auth
         user_id_in: this.loggedInUserId
       })
     if(insertPushSubscriberResult.error) throw new Error(insertPushSubscriberResult.error.message);

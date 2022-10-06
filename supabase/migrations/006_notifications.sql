@@ -25,7 +25,6 @@ CREATE TABLE IF NOT EXISTS public."notifications_of_user"
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
 )
-
 TABLESPACE pg_default;
 
 ALTER TABLE IF EXISTS public."notifications_of_user"
@@ -69,7 +68,6 @@ CREATE TABLE IF NOT EXISTS public."notifications_of_groups"
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
 )
-
 TABLESPACE pg_default;
 
 ALTER TABLE IF EXISTS public."notifications_of_groups"
