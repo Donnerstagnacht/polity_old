@@ -41,11 +41,6 @@ testem.log
 .DS_Store
 Thumbs.db
 
-# Environments
-src/environments/environment.ts
-src/environments/environment.prod.ts
-supabase/functions/_shared/supabaseClient.ts
-
 # Supabase
 **/supabase/.branches
 **/supabase/.temp
