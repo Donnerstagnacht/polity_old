@@ -70,8 +70,8 @@ export class PushNotificationsComponent implements OnInit {
       .rpc('insert_into_push_notifications', {
         endpoint_in: pushSubscriber.endpoint, 
         expiration_time_in: pushSubscriber.expirationTime, 
-        p256dh_in: 'Test3', // pushSubscriber.p256dh
-        auth_in: 'Test4' , // pushSubscriber.auth
+        p256dh_in:  pushSubscriber.p256dh, // 'Test3',
+        auth_in: pushSubscriber.auth, // 'Test4'
         user_id_in: this.loggedInUserId
       })
     if(insertPushSubscriberResult.error) throw new Error(insertPushSubscriberResult.error.message);
