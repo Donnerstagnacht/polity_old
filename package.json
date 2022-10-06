@@ -5,6 +5,7 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "build:prod": "ng build --configuration=production",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "docker": "docker-compose -f ./docker/docker-compose.yml -f ./docker/dev/docker-compose.dev.yml up",
