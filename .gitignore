@@ -48,3 +48,9 @@ Thumbs.db
 # Supabase
 **/supabase/.branches
 **/supabase/.temp
+
+# deps deno
+**/deps
+**/registries
+**/npm
+**/gen

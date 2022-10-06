@@ -29,16 +29,13 @@ CREATE TABLE IF NOT EXISTS public.profiles
         ON DELETE NO ACTION
     -- CONSTRAINT name_length CHECK (char_length(name) >= 3)
 )
-
 TABLESPACE pg_default;
-
 ALTER TABLE IF EXISTS public.profiles OWNER to postgres;
 GRANT ALL ON TABLE public.profiles TO anon;
 GRANT ALL ON TABLE public.profiles TO authenticated;
 GRANT ALL ON TABLE public.profiles TO postgres;
 GRANT ALL ON TABLE public.profiles TO service_role;
 
--- review error here - probably because the table profile is not setup corectly?
 -- Copy users to profile
 CREATE OR REPLACE FUNCTION signup_copy_to_users_table()
 RETURNS TRIGGER AS $$

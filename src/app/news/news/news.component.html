@@ -25,6 +25,9 @@
         </div>
       </form>
       <div class="w-full text-center">
+        <app-push-notifications></app-push-notifications>
+      </div>
+      <div class="w-full text-center">
         <p-chip *ngIf="taskFilterOn" (click)="setTaskFilter()"  label="TASKS" styleClass="mr-1 mb-1 cursor-pointer accent-container"></p-chip>
         <p-chip *ngIf="!taskFilterOn" (click)="setTaskFilter()"  label="TASKS" styleClass="mr-1 mb-1 cursor-pointer"></p-chip>
 
