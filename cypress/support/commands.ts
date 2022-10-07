@@ -85,10 +85,70 @@ Cypress.Commands.add('uploadImage', (path: string) => {
   cy.get('input[type=file]').selectFile(path, { force: true })
 })
 
+
+Cypress.Commands.add('openProfileLoggedInUserViaMainMenu', () => {
+  cy.intercept('**/rest/v1/profiles*').as('profiles')
+  cy.get('#profile-cy').click()
+  cy.wait('@profiles')
+})
+
 Cypress.Commands.add('openProfileAndWaitForProfileData', () => {
   cy.intercept('**/rest/v1/profiles*').as('profiles')
   cy.get('#overview-cy').click()
   cy.wait('@profiles')
+})
+
+Cypress.Commands.add('openProfileExteralAndWaitForProfileData', () => {
+  cy.intercept('**/rest/v1/profiles*').as('profiles')
+  cy.get('#overview-cy-external').click()
+  cy.wait('@profiles')
+})
+
+Cypress.Commands.add('clickFollowButton', () => {
+  cy.intercept('**/rest/v1/rpc/followtransaction*').as('followtransaction')
+  cy.get('[data-cy="followButton"]').click()
+  cy.wait('@followtransaction')
+})
+
+Cypress.Commands.add('clickUnfollowButton', () => {
+  cy.intercept('**/rest/v1/rpc/unfollowtransaction*').as('unfollowtransaction')
+  // cy.get('[data-cy="followButton"]').click()
+  cy.contains('Unfollow').click()
+  cy.wait('@unfollowtransaction')
+})
+
+Cypress.Commands.add('removeFollower', (user: User) => {
+  cy.intercept('**/rest/v1/rpc/unfollow_transaction_by_id*').as('removeFollowerTransaction')
+  cy.get('[data-cy="first-table"]').within(() => {
+    cy.contains(user.name)
+    cy.get('[icon="pi pi-times"]').click()
+  })
+  cy.get('[data-cy="first-table"]').within(() => {
+    cy.contains(user.name).should('not.exist')
+  })
+  cy.wait('@removeFollowerTransaction')
+})
+
+// openEditFollowerFollowingPage
+Cypress.Commands.add('openEditFollower', () => {
+  cy.intercept('**/rest/v1/following_profile_system?select=id%2Cfollower%*').as('followerData')
+  cy.intercept('**/rest/v1/following_profile_system?select=id%2Cfollowing%*').as('followingData')
+  cy.intercept('**/rest/v1/following_group_system?select=id%2Cfollowing%*').as('followingGroupData')
+
+  cy.get('[data-cy="follower-edit"]').click()
+  // cy.wait(['@followingData', '@followerData', '@followingGroupData'])
+  cy.wait('@followingData')
+  cy.wait('@followerData')
+  cy.wait('@followingGroupData')
+
+  cy.clickBackButton()
+  cy.get('[data-cy="follower-edit"]').click()
+})
+
+Cypress.Commands.add('openEditFollowing', () => {
+  cy.intercept('**/rest/v1/following_profile_system?select=id%2Cfollowing*').as('followingData')
+  cy.get('[data-cy="follower-edit"]').click()
+  cy.wait('@followingData')
 })
 
 Cypress.Commands.add('checkUserWikiDataAndVisibilityExeptImage', (user: User) => {
@@ -147,11 +207,8 @@ Cypress.Commands.add('uploadProfileImage', () => {
 
 Cypress.Commands.add('searchUser', (user: User) => {
   cy.get('#search-cy').click()
-  // Type searchstring
   cy.get('[data-cy="searchBar"]').type(user.ftsName).type('{enter}')
-  // check if search results appear
   cy.contains(user.name).click()
-  // checks if click on search result redirects to requested page
   cy.url().should('include', 'profile')
   cy.contains(user.name)
   cy.contains(user.about)

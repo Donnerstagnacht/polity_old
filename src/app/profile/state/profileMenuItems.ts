@@ -18,13 +18,13 @@ export function profileMenuitemsMegaIsOwner(id: string): MegaMenuItem[] {
 
 export function profileMenuitems(id: string): MenuItem[] {
   const profileMenuitems: MenuItem[] = [
-    {label: 'ÜBERSICHT', routerLink: [`/profile/${id}`], routerLinkActiveOptions: {exact: true}}
+    {label: 'ÜBERSICHT', routerLink: [`/profile/${id}`], routerLinkActiveOptions: {exact: true}, id: 'overview-cy-external'}
   ];
   return profileMenuitems;
 }
 export function profileMenuitemsMega(id: string): MegaMenuItem[] {
   const profileMenuitemsMega: MegaMenuItem[] = [
-    {icon: 'pi pi-fw pi-home', /* label: 'Übersicht', */ routerLink: [`/profile/${id}`], routerLinkActiveOptions: {exact: true}}
+    {icon: 'pi pi-fw pi-home', /* label: 'Übersicht', */ routerLink: [`/profile/${id}`], routerLinkActiveOptions: {exact: true}, id: 'overview-cy-external-mob'}
   ];
   return profileMenuitemsMega;
 }

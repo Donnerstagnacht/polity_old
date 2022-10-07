@@ -78,6 +78,19 @@ declare global {
        openProfileAndWaitForProfileData(): Chainable<Element>
 
       /**
+      * Custom command to open profile which belongs not to the authenticated user and waits to complete a supabase api call to load data
+      * @example cy.openProfileExteralAndWaitForProfileData()
+      */
+      openProfileExteralAndWaitForProfileData(): Chainable<Element>
+
+            /**
+      * Custom command to open profile which belongs to the authenticated
+      * @example cy.openProfileLoggedInUser()
+      */
+      openProfileLoggedInUserViaMainMenu(): Chainable<Element>
+      
+
+      /**
        * Custom command to fill the ChangeGroup Profile Form
        * @param group - User data
        * @example cy.fillChangeGroupForm(group)
@@ -131,22 +144,42 @@ declare global {
       searchUser(user: User): Chainable<Element>
 
       /**
-       * Custom command to followProfile
-       * @example cy.followProfile()
-       */
-      followProfile(): Chainable<Element>
+      * Custom command to click follow button
+      * @example cy.clickFollowButton()
+      */
+       clickFollowButton(): Chainable<Element>
 
+      /**
+      * Custom command to click unfollow button
+      * @example cy.clickUnfollowButton()
+      */
+      clickUnfollowButton(): Chainable<Element>
+
+      /**
+      * Custom command to remove follower
+      * @param user - User data
+      * @example cy.removeFollower(user1)
+      */
+      removeFollower(user: User): Chainable<Element>
+
+      /**
+      * Custom command to open a page to edit follower
+      * @example cy.openEditFollower()
+      */
+      openEditFollower(): Chainable<Element>
+
+      /**
+      * Custom command to open a page to edit followings
+      * @example cy.openEditFollowing()
+      */
+      openEditFollowing(): Chainable<Element>
+      
       /**
        * Custom command to open news page
        * @example cy.openNewsPage()
        */
       openNewsPage(): Chainable<Element>
 
-      /**
-       * Custom command to unFollowProfile
-       * @example cy.unFollowProfile()
-       */
-      unFollowProfile(): Chainable<Element>
 
       /**
        * Custom command to searchProfileFollow
