@@ -85,7 +85,6 @@ Cypress.Commands.add('uploadImage', (path: string) => {
   cy.get('input[type=file]').selectFile(path, { force: true })
 })
 
-
 Cypress.Commands.add('openProfileLoggedInUserViaMainMenu', () => {
   cy.intercept('**/rest/v1/profiles*').as('profiles')
   cy.get('#profile-cy').click()
@@ -171,37 +170,28 @@ Cypress.Commands.add('checkUserWikiDataAndVisibilityExeptImage', (user: User) =>
   cy.contains('Über').click()
 })
 
+Cypress.Commands.add('openGroupAndWaitForGroupData', () => {
+  cy.intercept('**/rest/v1/groups*').as('groups')
+  cy.get('#overview-cy').click()
+  cy.wait('@groups')
+})
+
 Cypress.Commands.add('checkGroupWikiDataAndVisibilityExeptImage', (group: Group) => {
   cy.contains(group.name)
-  cy.wait(4000)
-  cy.wait(100)
-  cy.wait(100)
-  cy.wait(100)
-
   cy.contains(group.about).and('be.visible')
-
   cy.contains('Kontakt').click()
-  cy.wait(4000)
-  cy.wait(100)
-  cy.wait(100)
-  cy.wait(100)
-
   cy.contains(group.contactEmail).and('be.visible')
   cy.contains(group.contactPhone).and('be.visible')
   cy.contains(group.street).and('be.visible')
   cy.contains(group.postCode).and('be.visible')
   cy.contains(group.city).and('be.visible')
-
   cy.contains('Über').click()
 })
 
 Cypress.Commands.add('uploadProfileImage', () => {
-  // Setup
   cy.get('#profile-cy').click()
   cy.get('#edit-cy').click()
   cy.get('[data-cy="logout"]').click()
-
-    // Navigate to
     cy.url().should('include', 'login')
 })
 

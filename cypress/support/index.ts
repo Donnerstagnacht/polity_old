@@ -163,6 +163,12 @@ declare global {
       removeFollower(user: User): Chainable<Element>
 
       /**
+      * Custom command to open a group page and wait for data
+      * @example cy.openGroupAndWaitForGroupData()
+      */
+       openGroupAndWaitForGroupData(): Chainable<Element>
+
+      /**
       * Custom command to open a page to edit follower
       * @example cy.openEditFollower()
       */
