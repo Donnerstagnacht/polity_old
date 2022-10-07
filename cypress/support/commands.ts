@@ -2,10 +2,7 @@
 import { Group, User } from "."
 
 Cypress.Commands.add('register', (name: string, email: string, password: string) => {
-  // Setup
   cy.get('#register-cy').click()
-
-  // registers a user
   cy.get('[data-cy="name"]').clear()
   cy.get('[data-cy="name"]').type(name)
   cy.get('[data-cy="email"]').clear()
@@ -13,42 +10,30 @@ Cypress.Commands.add('register', (name: string, email: string, password: string)
   cy.get('[data-cy="password"]').clear()
   cy.get('[data-cy="password"]').type(password)
   cy.get('[data-cy="createAccount"]').click()
-
-  // Navigate to login
   cy.url().should('include', 'login')
 })
 
 Cypress.Commands.add('login', (email: string, password: string) => {
-  // Setup
   cy.get('#login-cy').click()
-
-  // Login a user
   cy.get('[data-cy="email"]').clear();
   cy.get('[data-cy="email"]').type(email);
   cy.get('[data-cy="password"]').clear();
   cy.get('[data-cy="password"]').type(password);
   cy.get('[data-cy="login"]').click();
-  cy.wait(2000)
-  // Navigate to
   cy.url().should('include', 'profile')
-  cy.wait(2000)
 })
 
 Cypress.Commands.add('logout', () => {
-  // Setup
   cy.get('#profile-cy').click()
   cy.get('#edit-cy').click()
   cy.get('[data-cy="logout"]').click()
-
-    // Navigate to
-    cy.url().should('include', 'login')
+  cy.url().should('include', 'login')
 })
 
 Cypress.Commands.add('navigateFromProfileWikiToEditProfile', () => {
   cy.get('#profile-cy').click()
-  cy.wait(1000)
   cy.get('#edit-cy').click()
-  cy.wait(1000)
+  cy.url().should('include', 'profile/edit')
   cy.get('[data-cy="profile-edit"]').click()
 })
 
@@ -70,7 +55,6 @@ Cypress.Commands.add('fillChangeProfileForm', (user: User) => {
   cy.get('[data-cy="city"]').clear()
   cy.get('[data-cy="city"]').type(user.city)
   cy.get('[data-cy="updateProfileInformationButton"]').click()
-  cy.wait(1000)
 })
 
 Cypress.Commands.add('fillChangeGroupForm', (group: Group) => {
@@ -81,6 +65,30 @@ Cypress.Commands.add('fillChangeGroupForm', (group: Group) => {
   cy.get('[data-cy="postCode"]').clear().type(group.postCode)
   cy.get('[data-cy="city"]').clear().type(group.city)
   cy.get('[data-cy="updateGroupInformationButton"]').click()
+})
+
+Cypress.Commands.add('clickBackButton', () => {
+  cy.get('[data-cy="backButton"]').click()
+})
+
+Cypress.Commands.add('checkIfImageExists', () => {
+  cy.get('img')
+  .should('be.visible')
+  .and(($img: JQuery<HTMLImageElement>) => {
+    // "naturalWidth" and "naturalHeight" are set when the image loads
+    expect($img[0].naturalWidth).to.be.greaterThan(0)
+  })
+})
+
+Cypress.Commands.add('uploadImage', (path: string) => {
+  cy.contains('Choose').and('be.visible')
+  cy.get('input[type=file]').selectFile(path, { force: true })
+})
+
+Cypress.Commands.add('openProfileAndWaitForProfileData', () => {
+  cy.intercept('**/rest/v1/profiles*').as('profiles')
+  cy.get('#overview-cy').click()
+  cy.wait('@profiles')
 })
 
 Cypress.Commands.add('checkUserWikiDataAndVisibilityExeptImage', (user: User) => {

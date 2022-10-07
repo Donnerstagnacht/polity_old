@@ -72,11 +72,36 @@ declare global {
       fillChangeProfileForm(user: User): Chainable<Element>
 
       /**
+       * Custom command to open profile and waits to complete a supabase api call to load data
+       * @example cy.openProfileAndWaitForProfileData()
+       */
+       openProfileAndWaitForProfileData(): Chainable<Element>
+
+      /**
        * Custom command to fill the ChangeGroup Profile Form
        * @param group - User data
        * @example cy.fillChangeGroupForm(group)
        */
        fillChangeGroupForm(group: Group): Chainable<Element>
+
+      /**
+      * Custom command to click the standart back button
+      * @example cy.clickBackButton()
+      */
+      clickBackButton(): Chainable<Element>
+
+      /**
+      * Custom command to check if an image exists
+      * @example cy.checkIfImageExists()
+      */
+      checkIfImageExists(): Chainable<Element>
+
+      /**
+      * Custom command to upload an image
+      * @param path - source path of image
+      * @example cy.uploadImage()
+      */
+      uploadImage(path: string): Chainable<Element>
 
       /**
        * Custom command to check if the group profile update changes are displayed on group wiki page
