@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1665137992403,
+  "timestamp": 1665150766899,
   "index": "/polity/index.html",
   "assetGroups": [
     {
@@ -57,7 +57,7 @@
         "/polity/assets/icons/icon-512x512.png",
         "/polity/assets/icons/icon-72x72.png",
         "/polity/assets/icons/icon-96x96.png",
-        "/polity/assets/images/tobi.jpg",
+        "/polity/assets/images/tobi1.jpg",
         "/polity/assets/images/tobi2.jpg",
         "/polity/color.dae87a04d07ca92b.png",
         "/polity/hue.8b1818380241e6ac.png",
@@ -95,7 +95,7 @@
     "/polity/assets/icons/icon-512x512.png": "b19b6163c3c6cab21cab7f66299f0de3ad78ce3f",
     "/polity/assets/icons/icon-72x72.png": "16e61992ac778d84f234340ad3ad9029c60acefa",
     "/polity/assets/icons/icon-96x96.png": "9e49cc60b9ddd2f0b3c0aa90dc5b03fcdc9f298b",
-    "/polity/assets/images/tobi.jpg": "51ef087160b4959db6d954ccd6034f92fd7cb7c5",
+    "/polity/assets/images/tobi1.jpg": "51ef087160b4959db6d954ccd6034f92fd7cb7c5",
     "/polity/assets/images/tobi2.jpg": "8f8651c07511b2cd69bc368332d5c697adefa4f3",
     "/polity/color.dae87a04d07ca92b.png": "ff4c4bcb2207891b292f544edb4da9d2df5d45cf",
     "/polity/common.9d266f0dad3f8461.js": "a00b2c3796efb5dd6bbb9d50fc2b37e5c68faaf6",
