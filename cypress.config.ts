@@ -5,7 +5,7 @@ export default defineConfig({
     setupNodeEvents(on, config) {
       // implement node event listeners here
     },
-    excludeSpecPattern: process.env?.['CI'] ? 'cypress/e2e/all.cy.ts': [],
+    excludeSpecPattern: [],
     defaultCommandTimeout: 10000,
     baseUrl: 'http://localhost:4200'
   },
