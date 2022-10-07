@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1665150766899,
+  "timestamp": 1665180935488,
   "index": "/polity/index.html",
   "assetGroups": [
     {
@@ -12,7 +12,7 @@
       },
       "urls": [
         "/polity/0.7a682c1a4a397337.js",
-        "/polity/479.65d8abcf49119a3b.js",
+        "/polity/479.9cd1ba0084e5f01a.js",
         "/polity/671.ac64fc7b87905c23.js",
         "/polity/691.3eaf61e38b101f40.js",
         "/polity/699.f84ea5b9e7412315.js",
@@ -28,7 +28,7 @@
         "/polity/material-light-dark-indigo.css",
         "/polity/material-light-standard-indigo.css",
         "/polity/polyfills.0cc3c5abbc0cf0f7.js",
-        "/polity/runtime.2aa0bfa49572442b.js",
+        "/polity/runtime.eea5e893bc8cc9bd.js",
         "/polity/styles.aac148b0431e3488.css"
       ],
       "patterns": []
@@ -71,7 +71,7 @@
   "dataGroups": [],
   "hashTable": {
     "/polity/0.7a682c1a4a397337.js": "8b1ed1298d6353bfaab0ec6f1a843afeb42dab97",
-    "/polity/479.65d8abcf49119a3b.js": "46eaa51db585b9e730e5b1ad75fb116b19c06766",
+    "/polity/479.9cd1ba0084e5f01a.js": "d5964e0ef8a3407cb7274e58aaccd4d15a190fef",
     "/polity/671.ac64fc7b87905c23.js": "ea871c109054c32cf600fb6a7cbc1dabd730a15a",
     "/polity/691.3eaf61e38b101f40.js": "b3e4ff98f02cf4f9efeaa503eff2c72e27561f23",
     "/polity/699.f84ea5b9e7412315.js": "f614f3ee9db2b2b9ad2954f8ec8a3a25fca9b9a5",
@@ -101,7 +101,7 @@
     "/polity/common.9d266f0dad3f8461.js": "a00b2c3796efb5dd6bbb9d50fc2b37e5c68faaf6",
     "/polity/favicon.ico": "97530a42509c80e33725afdc292c4f860b203313",
     "/polity/hue.8b1818380241e6ac.png": "f81ae627637a684614aa726e206c73ce099a01fd",
-    "/polity/index.html": "cf3d207d1161e112f293b5bc2b501a7d108bbeb4",
+    "/polity/index.html": "8ce1be11a0658fc193c8b3a0dee99d17f6014e3c",
     "/polity/main.abaf937d767e65ca.js": "8619e7514eb1db3b1d971c5ab000edc17b886667",
     "/polity/manifest.webmanifest": "d278b3cbbfc7885f338694153c58bd26efe8a04a",
     "/polity/material-light-dark-indigo.css": "cb0f469efd351087c24fe8fd10c0989a30c7cfd7",
@@ -110,7 +110,7 @@
     "/polity/primeicons.29151a741d66863a.woff": "21e477ea19e15b66344bcc23b3fbb2161092a707",
     "/polity/primeicons.5f5d08cd089b4e5d.ttf": "e6c86ca90a9fb4282fb35523d56fde00e78a1416",
     "/polity/primeicons.76044b1c189cc4d7.svg": "621775b2ec555fd2dd152a24390cf6dfeee168b1",
-    "/polity/runtime.2aa0bfa49572442b.js": "6f3ceb292b36920c1be494632de606e1991705f6",
+    "/polity/runtime.eea5e893bc8cc9bd.js": "ff710496164440177bcd08749c2060da7e258115",
     "/polity/styles.aac148b0431e3488.css": "5bac3a955bdb7f113279571c570705d9e9553884"
   },
   "navigationUrls": [
