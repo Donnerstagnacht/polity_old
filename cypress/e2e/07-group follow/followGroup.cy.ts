@@ -28,69 +28,24 @@ describe('Tests Group following system', () => {
     .invoke('text')
     .then(Number)
     .then((user1FollowingBefore: number) => {
-      cy.wait(2000)
-      cy.wait(100)
-      cy.wait(100)
       cy.log(user1FollowingBefore.toString())
-      // check the incremented value
       cy.searchGroup(group1)
-      // grab follower counter
       cy.get('#Follower')
         .invoke('text')
         .then(Number)
         .then((group1FollowerBefore: number) => {
-          cy.wait(2000)
-          cy.wait(100)
-          cy.wait(100)
           cy.log(group1FollowerBefore.toString())
-          // click follow button
-          cy.get('[data-cy="followButton"]').click()
-          cy.wait(1000)
-          cy.wait(100)
-          cy.wait(100)
-          // check the incremented follower value
+          cy.clickFollowGroupButton()
           cy.contains('#Follower', (group1FollowerBefore + 1).toString())
-
-          // go back to own profile
-          cy.get('#profile-cy').click()
-          // chat that following is incremented
-          cy.wait(2000)
-          cy.wait(100)
-          cy.wait(100)
+          cy.openProfileLoggedInUserViaMainMenu()
           cy.contains('#Following', (user1FollowingBefore + 1).toString())
-
-          // check that new following is listed and can be removed
           cy.get('#edit-cy').click()
-          cy.get('[data-cy="follower-edit"]').click()
-          cy.get('[data-cy="backButton"]').click()
-          cy.get('[data-cy="follower-edit"]').click()
-          cy.contains('Followings').click()
-          cy.get('[data-cy="filterSecondTab"]')
-            .type(group1.name)
-            .type('{enter}')
-            .wait(2000)
-          cy.get('[data-cy="second-table"]').within(() => {
-            cy.contains(group1.name)
-            cy.get('[icon="pi pi-times"]').click()
-          })
-
-          // checks that counter got reduced again after removing following
-          cy.get('#profile-cy').click()
-
-          cy.wait(4000)
-          cy.wait(100)
-          cy.wait(100)
-          cy.wait(100)
+          cy.openEditFollower()
+          cy.removeGroupFollowerFromEditFollower(group1)
+          cy.openProfileLoggedInUserViaMainMenu()
           cy.contains('#Following', (user1FollowingBefore).toString())
-
-          // checks that follower counter got decremented, too
           cy.searchGroup(group1)
-          cy.wait(4000)
-          cy.wait(100)
-          cy.wait(100)
-          cy.wait(100)
           cy.contains('#Follower', (group1FollowerBefore).toString())
-
           cy.logout()
         })
     })
@@ -102,80 +57,34 @@ describe('Tests Group following system', () => {
     .invoke('text')
     .then(Number)
     .then((user1FollowingBefore: number) => {
-      cy.wait(2000)
-      cy.wait(100)
-      cy.wait(100)
       cy.log(user1FollowingBefore.toString())
-      // check the incremented value
       cy.searchGroup(group1)
-      // grab follower counter
       cy.get('#Follower')
         .invoke('text')
         .then(Number)
         .then((group1FollowerBefore: number) => {
-          cy.wait(2000)
-          cy.wait(100)
-          cy.wait(100)
           cy.log(group1FollowerBefore.toString())
-          // click follow button
-          cy.get('[data-cy="followButton"]').click()
-          // check the incremented follower value
-          cy.wait(4000)
-          cy.wait(100)
-          cy.wait(100)
-          cy.wait(100)
-          cy.wait(100)
+          cy.clickFollowGroupButton()
           cy.contains('#Follower', (group1FollowerBefore + 1).toString())
-
-          // go back to own profile
-          cy.get('#profile-cy').click()
-          // chat that following is incremented
-          cy.wait(6000)
-          cy.wait(100)
-          cy.wait(100)
-          cy.wait(100)
+          cy.openProfileLoggedInUserViaMainMenu()
           cy.contains('#Following', (user1FollowingBefore + 1).toString())
-
-          // check that new following is listed and can be removed
           cy.get('#edit-cy').click()
-          cy.get('[data-cy="follower-edit"]').click()
-          cy.get('[data-cy="backButton"]').click()
-          cy.get('[data-cy="follower-edit"]').click()
+          cy.openEditFollower()
           cy.contains('Followings').click()
           cy.get('[data-cy="filterSecondTab"]')
             .type(group1.name)
             .type('{enter}')
-            .wait(2000)
           cy.contains(group1.name)
           cy.get('[icon="pi pi-times"]')
-
-          // clicks unfollow button
           cy.searchGroup(group1)
-          cy.wait(100)
-          cy.contains('Unfollow').click()
-          cy.wait(10000)
-          cy.wait(500)
-          cy.wait(100)
-          cy.wait(100)
-          cy.wait(100)
+          cy.clickUnfollowGroupButton()
           cy.contains('#Follower', group1FollowerBefore.toString())
-          cy.wait(2000)
-          cy.wait(500)
-          // checks that counter got reduced again after removing following
-          cy.get('#profile-cy').click()
-          cy.wait(10000)
-          cy.wait(500)
-          cy.wait(100)
-          cy.wait(100)
+          cy.openProfileLoggedInUserViaMainMenu()
           cy.contains('#Following', (user1FollowingBefore).toString())
-          // checks that following disappeared
           cy.get('#edit-cy').click()
-          cy.get('[data-cy="follower-edit"]').click()
-          cy.get('[data-cy="backButton"]').click()
-          cy.get('[data-cy="follower-edit"]').click()
+          cy.openEditFollower()
           cy.contains('Followings').click()
           cy.contains(group1.name).should('not.exist')
-
           cy.logout()
         })
     })
@@ -187,89 +96,35 @@ describe('Tests Group following system', () => {
     .invoke('text')
     .then(Number)
     .then((user1FollowingBefore: number) => {
-      cy.wait(2000)
-      cy.wait(100)
-      cy.wait(100)
       cy.log(user1FollowingBefore.toString())
-      // check the incremented value
       cy.searchGroup(group1)
-      // grab follower counter
       cy.get('#Follower')
         .invoke('text')
         .then(Number)
         .then((group1FollowerBefore: number) => {
-          cy.wait(2000)
-          cy.wait(100)
-          cy.wait(100)
           cy.log(group1FollowerBefore.toString())
-          // click follow button
-          cy.get('[data-cy="followButton"]').click()
-          // check the incremented follower value
-          cy.wait(4000)
-          cy.wait(100)
-          cy.wait(100)
-          cy.wait(100)
+          cy.clickFollowGroupButton()
           cy.contains('#Follower', (group1FollowerBefore + 1).toString())
-          cy.wait(4000)
-          // go back to own profile
-          cy.get('#profile-cy').click()
-          // chat that following is incremented
-          cy.wait(10000)
-          cy.wait(100)
-          cy.wait(100)
-          cy.wait(100)
-
+          cy.openProfileLoggedInUserViaMainMenu()
           cy.contains('#Following', (user1FollowingBefore + 1).toString())
-
-          // check that new following is listed and can be removed
           cy.get('#edit-cy').click()
-          cy.get('[data-cy="follower-edit"]').click()
-          cy.get('[data-cy="backButton"]').click()
-          cy.get('[data-cy="follower-edit"]').click()
+          cy.openEditFollower()
           cy.contains('Followings').click()
           cy.get('[data-cy="filterSecondTab"]')
             .type(group1.name)
             .type('{enter}')
-            .wait(2000)
           cy.contains(group1.name)
           cy.get('[icon="pi pi-times"]')
-
-          //goes back to groups
           cy.get('#groups-cy').click()
           cy.contains(group1.name).click()
           cy.get('#edit-cy').click()
-          cy.get('[data-cy="follower-edit"]').click()
+          cy.openEditFollowerOfGroup()
+          cy.removeFollowerFromGroupAdmin(user1)
           cy.get('[data-cy="backButton"]').click()
-          cy.get('[data-cy="follower-edit"]').click()
-
-          cy.contains('Follower').click()
-          cy.get('[data-cy="filterFirstTab"]')
-            .type(user1.name)
-            .type('{enter}')
-            .wait(2000)
-          cy.contains(user1.name)
-          cy.get('[icon="pi pi-times"]').click()
-          cy.wait(2000)
-          cy.wait(100)
-          cy.wait(100)
-          cy.contains(user1.name).should('not.exist')
-
-          cy.get('[data-cy="backButton"]').click()
-          cy.get('#overview-cy').click()
-          cy.wait(4000)
-          cy.wait(100)
-          cy.wait(100)
-          cy.wait(100)
+          cy.openGroupProfileAndWaitForGroupData()
           cy.contains('#Follower', (group1FollowerBefore).toString())
-
-          // checks that counter got reduced again after removing following
-          cy.get('#profile-cy').click()
-          cy.wait(10000)
-          cy.wait(100)
-          cy.wait(100)
-          cy.wait(100)
+          cy.openProfileLoggedInUserViaMainMenu()
           cy.contains('#Following', user1FollowingBefore.toString())
-
           cy.logout()
         })
     })

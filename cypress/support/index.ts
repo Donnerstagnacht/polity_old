@@ -77,6 +77,12 @@ declare global {
        */
        openProfileAndWaitForProfileData(): Chainable<Element>
 
+       /**
+       * Custom command to open group profile and waits to complete a supabase api call to load data
+       * @example cy.openGroupProfileAndWaitForGroupData()
+       */
+        openGroupProfileAndWaitForGroupData(): Chainable<Element>
+      
       /**
       * Custom command to open profile which belongs not to the authenticated user and waits to complete a supabase api call to load data
       * @example cy.openProfileExteralAndWaitForProfileData()
@@ -150,10 +156,22 @@ declare global {
        clickFollowButton(): Chainable<Element>
 
       /**
+      * Custom command to click follow button of a group
+      * @example cy.clickFollowGroupButton()
+      */
+      clickFollowGroupButton(): Chainable<Element>
+
+      /**
       * Custom command to click unfollow button
       * @example cy.clickUnfollowButton()
       */
       clickUnfollowButton(): Chainable<Element>
+
+      /**
+      * Custom command to click unfollow group button
+      * @example cy.clickUnfollowGroupButton()
+      */
+      clickUnfollowGroupButton(): Chainable<Element>
 
       /**
       * Custom command to remove follower
@@ -161,6 +179,27 @@ declare global {
       * @example cy.removeFollower(user1)
       */
       removeFollower(user: User): Chainable<Element>
+
+      /**
+      * Custom command to remove follower from the group admin tab
+      * @param user - User data
+      * @example cy.removeFollowerFromGroupAdmin(user1)
+      */
+       removeFollowerFromGroupAdmin(user: User): Chainable<Element>
+
+      /**
+      * Custom command to remove follower
+      * @param user - User data
+      * @example cy.removeFollower(user1)
+      */
+      removeGroupFollowerFromEditFollower(group: Group): Chainable<Element>
+
+      /**
+      * Custom command to remove follower
+      * @param group - Group data
+      * @example cy.removeGroupFollower(group1)
+      */
+      removeGroupFollowing(group: Group): Chainable<Element>
 
       /**
       * Custom command to open a group page and wait for data
@@ -174,6 +213,12 @@ declare global {
       */
       openEditFollower(): Chainable<Element>
 
+      /**
+      * Custom command to open a page to edit follower of group
+      * @example cy.openEditFollowerOfGroup()
+      */
+      openEditFollowerOfGroup(): Chainable<Element>
+      
       /**
       * Custom command to open a page to edit followings
       * @example cy.openEditFollowing()
