@@ -1,20 +1,5 @@
 -- 1. Accept chat invitation (update accepted)
-DROP function if exists update_accepted(room_id_in uuid, user_id_in uuid);
-create or replace function update_accepted(room_id_in uuid, user_id_in uuid)
-returns void
-language plpgsql
-security definer
-as
-$$
-BEGIN
-  update rooms_participants
-  set accepted = true
-  where
-  "room_id" = room_id_in
-  and
-  "user_id" = user_id_in;
-END;
-$$;
+
 
 -- 2. Check if room exists and Follow
 DROP function if exists check_if_room_already_exists_and_follow(followerId uuid, followingId uuid);
@@ -98,43 +83,6 @@ BEGIN
   PERFORM check_if_room_already_exists_and_follow(followerId, followingId);
 END;
 $$;
-
-
---delete room participants
-DROP function if exists delete_room_participants(room_id_in uuid, follower_id_in uuid, following_id_in uuid);
-create or replace function delete_room_participants(room_id_in uuid, follower_id_in uuid, following_id_in uuid)
-returns void
-language plpgsql
-security definer
-as
-$$
-BEGIN
-  DELETE FROM "rooms_participants"
-  WHERE
-  "room_id" = room_id_in
-  AND
-  "user_id" = follower_id_in
-  or
-  "user_id" = following_id_in;
-END;
-$$;
-
-
---delete room
-DROP function if exists delete_room(room_id_in uuid);
-create or replace function delete_room(room_id_in uuid)
-returns void
-language plpgsql
-security definer
-as
-$$
-BEGIN
-  DELETE FROM "rooms"
-  WHERE
-  "id" = room_id_in;
-END;
-$$;
-
 
 
 -- Check if romm exists and delete room (unfolow)
