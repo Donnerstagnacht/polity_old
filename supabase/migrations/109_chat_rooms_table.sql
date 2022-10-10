@@ -1,4 +1,3 @@
-
 CREATE TABLE IF NOT EXISTS public.rooms
 (
     id uuid NOT NULL DEFAULT uuid_generate_v4(),

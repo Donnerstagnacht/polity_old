@@ -3,7 +3,6 @@ RETURNS TRIGGER AS $$
   BEGIN
     INSERT INTO public.profiles (id)
     VALUES(new.id);
-
     RETURN NEW;
   END;
 $$

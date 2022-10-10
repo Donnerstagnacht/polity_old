@@ -36,5 +36,3 @@ GRANT EXECUTE ON FUNCTION public.create_group_transaction(text, text, uuid, text
 GRANT EXECUTE ON FUNCTION public.create_group_transaction(text, text, uuid, text) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.create_group_transaction(text, text, uuid, text) TO postgres;
 GRANT EXECUTE ON FUNCTION public.create_group_transaction(text, text, uuid, text) TO service_role;
-
-

@@ -12,17 +12,3 @@ BEGIN
   "id" = room_id;
 END;
 $$;
-
-/* DROP function if exists delete_room(room_id_in uuid);
-create or replace function delete_room(room_id_in uuid)
-returns void
-language plpgsql
-security definer
-as
-$$
-BEGIN
-  DELETE FROM "rooms"
-  WHERE
-  "id" = room_id_in;
-END;
-$$; */

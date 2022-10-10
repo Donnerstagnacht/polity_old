@@ -1,4 +1,3 @@
---TABLESPACE pg_default;
 CREATE TABLE IF NOT EXISTS public."following_profile_system"
 (
     id uuid NOT NULL DEFAULT uuid_generate_v4(),

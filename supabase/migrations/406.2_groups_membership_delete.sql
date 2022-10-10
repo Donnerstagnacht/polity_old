@@ -1,4 +1,3 @@
-
 -- 1 Delete member
 CREATE OR REPLACE FUNCTION public.delete_member(
 	user_id_requests uuid,
