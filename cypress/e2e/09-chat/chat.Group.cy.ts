@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 import {Group, Messages, User} from '../../support/index';
-describe('Test chat features', () => {
+describe('Test group chat features', () => {
   let user1: User;
   let user2: User;
   let group2: Group;
