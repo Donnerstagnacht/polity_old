@@ -1,4 +1,5 @@
 /// <reference types="cypress" />
+import { should } from "chai"
 import { Group, User } from "."
 
 Cypress.Commands.add('register', (name: string, email: string, password: string) => {
@@ -147,25 +148,60 @@ Cypress.Commands.add('removeFollower', (user: User) => {
   cy.wait('@removeFollowerTransaction')
 })
 
+Cypress.Commands.add('removeGroupMembership', (user: User) => {
+  cy.intercept('**/rest/v1/rpc/remove_membership_transaction_by_membership_id*').as('removeMembershipTransaction')
+  cy.contains('Mitglieder').click()
+  cy.filterSecondTab(user)
+  cy.contains(user.name).should('be.visible')
+    .nextAll('[data-cy="action-column"]')
+    .children('[data-cy="removeFromSecondTab"]')
+    .click()
+  cy.wait('@removeMembershipTransaction')
+  cy.contains(user.name).should('not.exist')
+})
+
+Cypress.Commands.add('removeMyGroupMembershipFromMyProfile', (group: Group) => {
+  cy.get('#edit-cy').click()
+  cy.get('[data-cy="groups-edit"]').click()
+  cy.clickBackButton()
+  cy.get('[data-cy="groups-edit"]').click()
+  cy.intercept('**/rest/v1/rpc/remove_membership_transaction_by_membership_id*').as('removeMembershipTransaction')
+  cy.filterFirstTabOfGroup(group)
+  cy.get('[data-cy="removeFromFirstTab"]').click()
+  cy.wait('@removeMembershipTransaction')
+  cy.contains(group.name).should('not.exist')
+})
+
 Cypress.Commands.add('removeFollowerFromGroupAdmin', (user: User) => {
   cy.intercept('**/rest/v1/rpc/unfollowgrouptransaction*').as('removeGroupFollowingTransaction')
-  cy.get('[data-cy="filterFirstTab"]')
+  cy.filterFirstTab(user)
+/*   cy.get('[data-cy="filterFirstTab"]')
     .type(user.name)
-    .type('{enter}')
+    .type('{enter}') */
   cy.contains(user.name)
   cy.get('[icon="pi pi-times"]').click()
   cy.wait('@removeGroupFollowingTransaction')
   cy.contains(user.name).should('not.exist')
 })
 
-
+Cypress.Commands.add('requestGroupMembership', () => {
+  cy.intercept('**/rest/v1/rpc/request_membership_transaction*').as('requestMembershipTransaction')
+  cy.contains('Mitgliedschaft anfragen')
+  cy.get('[data-cy="requestedMembershipButton"]').click()
+  cy.wait('@requestMembershipTransaction')
+  // code does not work: Cypress does not detect the ongoing websocket connection
+  // which delivers data to change the button. Therfore, the button check does not work
+  // cy.contains('Anfrage zurückziehen')
+})
 
 Cypress.Commands.add('removeGroupFollowerFromEditFollower', (group: Group) => {
   cy.contains('Followings').click()
   cy.intercept('**/rest/v1/rpc/unfollowgrouptransaction*').as('removeGroupFollowingTransaction')
-  cy.get('[data-cy="filterSecondTab"]')
+  cy.filterSecondTabOfGroup(group)
+
+/*   cy.get('[data-cy="filterSecondTab"]')
   .type(group.name)
-  .type('{enter}')
+  .type('{enter}') */
   cy.get('[data-cy="second-table"]').within(() => {
     cy.contains(group.name)
     cy.get('[icon="pi pi-times"]').click()
@@ -173,29 +209,101 @@ Cypress.Commands.add('removeGroupFollowerFromEditFollower', (group: Group) => {
   cy.wait('@removeGroupFollowingTransaction')
 })
 
-// openEditFollowerFollowingPage
+Cypress.Commands.add('leaveGroup', () => {
+  cy.contains('Austreten')
+  // cy.wait(100)
+  cy.get('[data-cy="requestedMembershipButton"]').click()
+  cy.wait(1000)
+  cy.wait(100)
+  cy.wait(100)
+  cy.wait(100)
+  cy.contains('Mitgliedschaft anfragen')
+})
+
 Cypress.Commands.add('openEditFollower', () => {
   cy.intercept('**/rest/v1/following_profile_system?select=id%2Cfollower%*').as('followerData')
   cy.intercept('**/rest/v1/following_profile_system?select=id%2Cfollowing%*').as('followingData')
   cy.intercept('**/rest/v1/following_group_system?select=id%2Cfollowing%*').as('followingGroupData')
-
   cy.get('[data-cy="follower-edit"]').click()
-  // cy.wait(['@followingData', '@followerData', '@followingGroupData'])
   cy.wait('@followingData')
   cy.wait('@followerData')
   cy.wait('@followingGroupData')
-
   cy.clickBackButton()
   cy.get('[data-cy="follower-edit"]').click()
 })
 
-// openEditFollowerFollowingPage
 Cypress.Commands.add('openEditFollowerOfGroup', () => {
   cy.intercept('**/rest/v1/following_group_system?select=id%2Cfollower%*').as('followerData')
   cy.get('[data-cy="follower-edit"]').click()
   cy.wait('@followerData')
   cy.clickBackButton()
   cy.get('[data-cy="follower-edit"]').click()
+})
+
+Cypress.Commands.add('openManageMembership', () => {
+  cy.get('#edit-cy').click()
+  cy.intercept('**/rest/v1/group_members?select=id*').as('groupMembers')
+  cy.intercept('**/rest/v1/membership_requests?select=id*').as('membershipRequests')
+  cy.get('[data-cy="members-edit"]').click()
+  cy.wait('@groupMembers')
+  cy.wait('@membershipRequests')
+  cy.clickBackButton()
+  cy.get('[data-cy="members-edit"]').click()
+  cy.url().should('include', 'edit-members')
+})
+
+Cypress.Commands.add('cancelGroupMembershipRequest', (user: User) => {
+  cy.intercept('**/rest/v1/rpc/cancel_membership_request_transaction_by_id*').as('cancelMembershipRequest')
+  cy.filterFirstTab(user)
+/*   cy.get('[data-cy="filterFirstTab"]')
+    .type(user.name)
+    .type('{enter}') */
+  cy.contains(user.name)
+  cy.get('[data-cy="removeFromFirstTab"]').click()
+  cy.wait('@cancelMembershipRequest')
+  cy.contains(user.name).should('not.exist')
+})
+
+Cypress.Commands.add('acceptGroupMembershipRequest', (user: User) => {
+  cy.intercept('**/rest/v1/rpc/confirm_membership_transaction*').as('acceptMembershipRequest')
+  cy.filterFirstTab(user)
+  /*   cy.get('[data-cy="filterFirstTab"]')
+    .type(user.name)
+    .type('{enter}') */
+  cy.contains(user.name)
+  cy.get('[data-cy="acceptFromFirstTab"]').click()
+  cy.wait('@acceptMembershipRequest')
+  cy.contains(user.name).should('not.exist')
+})
+
+Cypress.Commands.add('filterFirstTab', (user: User) => {
+  cy.get('[data-cy="filterFirstTab"]')
+  .type(user.name)
+  .type('{enter}')
+})
+
+Cypress.Commands.add('filterChats', (user: User) => {
+  cy.get('[data-cy="filter-chats"]')
+  .type(user.name)
+  .type('{enter}')
+})
+
+Cypress.Commands.add('filterFirstTabOfGroup', (group: Group) => {
+  cy.get('[data-cy="filterFirstTab"]')
+  .type(group.name)
+  .type('{enter}')
+})
+
+Cypress.Commands.add('filterSecondTab', (user: User) => {
+  cy.get('[data-cy="filterSecondTab"]')
+  .type(user.name)
+  .type('{enter}')
+})
+
+Cypress.Commands.add('filterSecondTabOfGroup', (group: Group) => {
+  cy.get('[data-cy="filterSecondTab"]')
+  .type(group.name)
+  .type('{enter}')
 })
 
 Cypress.Commands.add('openEditFollowing', () => {

@@ -72,10 +72,12 @@ describe('Tests notify features', () => {
     cy.get('[data-cy="members-edit"]').click()
 
     cy.contains('Beitrittsanfragen').click()
-    cy.get('[data-cy="filterFirstTab"]')
+    cy.filterFirstTab(user2)
+
+/*     cy.get('[data-cy="filterFirstTab"]')
       .type(user2.name)
       .type('{enter}')
-      .wait(2000)
+      .wait(2000) */
     cy.contains(user2.name)
     cy.get('[data-cy="removeFromFirstTab"]').click()
     cy.wait(200)
@@ -107,10 +109,12 @@ describe('Tests notify features', () => {
     cy.get('[data-cy="members-edit"]').click()
 
     cy.contains('Beitrittsanfragen').click()
-    cy.get('[data-cy="filterFirstTab"]')
+    cy.filterFirstTab(user2)
+
+/*     cy.get('[data-cy="filterFirstTab"]')
       .type(user2.name)
       .type('{enter}')
-      .wait(2000)
+      .wait(2000) */
     cy.contains(user2.name)
     cy.get('[data-cy="acceptFromFirstTab"]').click()
 
@@ -164,10 +168,12 @@ describe('Tests notify features', () => {
     cy.get('[data-cy="members-edit"]').click()
 
     cy.contains('Beitrittsanfragen').click()
-    cy.get('[data-cy="filterFirstTab"]')
+    cy.filterFirstTab(user2)
+
+/*     cy.get('[data-cy="filterFirstTab"]')
       .type(user2.name)
       .type('{enter}')
-      .wait(2000)
+      .wait(2000) */
     cy.contains(user2.name)
     cy.get('[data-cy="acceptFromFirstTab"]').click()
 
@@ -177,10 +183,12 @@ describe('Tests notify features', () => {
     cy.get('[data-cy="members-edit"]').click()
     cy.wait(1000)
     cy.contains('Mitglieder').click()
-    cy.get('[data-cy="filterSecondTab"]')
+    cy.filterSecondTab(user2)
+
+/*     cy.get('[data-cy="filterSecondTab"]')
       .type(user2.name)
       .type('{enter}')
-      .wait(2000)
+      .wait(2000) */
     cy.contains(user2.name)
     cy.get('[data-cy="removeFromSecondTab"]').click()
 

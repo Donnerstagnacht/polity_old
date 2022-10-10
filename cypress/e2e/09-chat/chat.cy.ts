@@ -28,17 +28,15 @@ describe('Test chat features', () => {
   it('1. Request Chat', () => {
     cy.visit('')
     cy.login(user1.email, user1.password)
-
     cy.get('#orga-cy').click()
     cy.contains(user2.name).should('not.exist')
-
     // Follows user
     cy.clickFollowButtonWithoutCheck(user2)
-
     cy.openChatWithUser(user2)
 
     cy.contains('Deine Anfrage wurde noch nicht akzeptiert.')
-    cy.get('[data-cy="backButton"]').click()
+    cy.clickBackButton()
+    // cy.get('[data-cy="backButton"]').click()
 
     cy.logout()
     cy.login(user2.email, user2.password)
@@ -68,10 +66,9 @@ describe('Test chat features', () => {
     cy.clickFollowButtonWithoutCheck(user2)
     // cy.wait(4000)
     cy.openChatWithUser(user2)
-
     cy.contains('Deine Anfrage wurde noch nicht akzeptiert.')
-    cy.get('[data-cy="backButton"]').click()
-
+    cy.clickBackButton()
+    // cy.get('[data-cy="backButton"]').click()
     cy.logout()
     cy.login(user2.email, user2.password)
     cy.openChatWithUser(user1)
@@ -82,18 +79,20 @@ describe('Test chat features', () => {
 
   it('4. Deletes chat', () => {
     cy.get('[data-cy="delete-chat"]').click()
-    cy.get('[data-cy="filter-chats"]')
+    cy.filterChats(user1)
+/*     cy.get('[data-cy="filter-chats"]')
       .type(user1.name)
       .type('{enter}')
-      .wait(2000)
+      .wait(2000) */
     cy.contains(user1.name).should('not.exist')
     cy.logout()
     cy.login(user1.email, user1.password)
     cy.get('#orga-cy').click()
-    cy.get('[data-cy="filter-chats"]')
+    cy.filterChats(user2)
+/*     cy.get('[data-cy="filter-chats"]')
       .type(user2.name)
       .type('{enter}')
-      .wait(2000)
+      .wait(2000) */
     cy.contains(user2.name).should('not.exist')
     cy.logout()
 
@@ -110,7 +109,8 @@ describe('Test chat features', () => {
     //user2: Following: 0, Follower 1
     cy.openChatWithUser(user2)
     cy.contains('Deine Anfrage wurde noch nicht akzeptiert.')
-    cy.get('[data-cy="backButton"]').click()
+    cy.clickBackButton()
+    // cy.get('[data-cy="backButton"]').click()
 
     cy.logout()
     cy.login(user2.email, user2.password)
@@ -165,19 +165,21 @@ describe('Test chat features', () => {
     cy.logout()
   })
 
-  it('Send receive chat message', () => {
+  it('7. Send receive chat message', () => {
     cy.login(user2.email, user2.password)
     cy.get('#orga-cy').click()
-    cy.get('[data-cy="filter-chats"]')
+    cy.filterChats(user1)
+/*     cy.get('[data-cy="filter-chats"]')
       .type(user1.name)
       .type('{enter}')
       .wait(2000)
-    cy.wait(4000)
+    cy.wait(4000) */
     cy.get('[data-cy="number-of-unread-messages"]').contains('1')
     cy.contains(user1.name).click()
     cy.wait(1000)
     // checks  unread messages counter reset
-    cy.get('[data-cy="backButton"]').click()
+    cy.clickBackButton()
+    // cy.get('[data-cy="backButton"]').click()
     cy.wait(10000)
     cy.wait(1000)
     cy.wait(100)
@@ -195,10 +197,11 @@ describe('Test chat features', () => {
     cy.logout()
   })
 
-  it('7. Remove chat connection by unfollowing', () => {
+  it('8. Remove chat connection by unfollowing', () => {
     cy.login(user1.email, user1.password)
     cy.openChatWithUser(user2)
-    cy.get('[data-cy="backButton"]').click()
+    cy.clickBackButton()
+    // cy.get('[data-cy="backButton"]').click()
     cy.searchUser(user2)
     cy.contains('Unfollow').click()
     cy.get('#orga-cy').click()

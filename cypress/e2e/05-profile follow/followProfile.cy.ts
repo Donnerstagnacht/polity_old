@@ -40,9 +40,10 @@ describe('Tests Profile following system', () => {
 /*           cy.clickBackButton()
           cy.get('[data-cy="follower-edit"]').click() */
           cy.contains('Followings').click()
-          cy.get('[data-cy="filterSecondTab"]')
+          cy.filterSecondTab(user2)
+/*           cy.get('[data-cy="filterSecondTab"]')
             .type(user2.name)
-            .type('{enter}')
+            .type('{enter}') */
           cy.get('[data-cy="second-table"]').within(() => {
             cy.contains(user2.name)
             cy.get('[icon="pi pi-times"]').click()
@@ -76,9 +77,11 @@ describe('Tests Profile following system', () => {
           cy.get('#edit-cy').click()
           cy.openEditFollower()
           cy.contains('Followings').click()
-          cy.get('[data-cy="filterSecondTab"]')
+          cy.filterSecondTab(user2)
+
+/*           cy.get('[data-cy="filterSecondTab"]')
             .type(user2.name)
-            .type('{enter}')
+            .type('{enter}') */
           cy.contains(user2.name)
           cy.get('[icon="pi pi-times"]')
           cy.searchUser(user2)
@@ -115,9 +118,11 @@ describe('Tests Profile following system', () => {
           cy.get('#edit-cy').click()
           cy.openEditFollower()
           cy.contains('Followings').click()
-          cy.get('[data-cy="filterSecondTab"]')
+          cy.filterSecondTab(user2)
+
+/*           cy.get('[data-cy="filterSecondTab"]')
             .type(user2.name)
-            .type('{enter}')
+            .type('{enter}') */
           cy.contains(user2.name)
           cy.get('[icon="pi pi-times"]')
           cy.logout()
@@ -129,9 +134,10 @@ describe('Tests Profile following system', () => {
             cy.log(user2InFollower.toString())
             cy.get('#edit-cy').click()
             cy.openEditFollower()
-            cy.get('[data-cy="filterFirstTab"]')
+            cy.filterFirstTab(user1)
+/*             cy.get('[data-cy="filterFirstTab"]')
               .type(user1.name)
-              .type('{enter}')
+              .type('{enter}') */
             cy.contains(user1.name)
             cy.removeFollower(user1)
             cy.openProfileLoggedInUserViaMainMenu()

@@ -189,7 +189,7 @@ declare global {
 
       /**
       * Custom command to remove follower
-      * @param user - User data
+      * @param group - Group data
       * @example cy.removeFollower(user1)
       */
       removeGroupFollowerFromEditFollower(group: Group): Chainable<Element>
@@ -200,6 +200,81 @@ declare global {
       * @example cy.removeGroupFollower(group1)
       */
       removeGroupFollowing(group: Group): Chainable<Element>
+
+      /**
+      * Custom command to request a group membership
+      * @example cy.removeGroupFollower(group1)
+      */
+      requestGroupMembership(): Chainable<Element>
+
+      /**
+      * Custom command to cancel group membershiprequest from admin tab
+      * @param user - User data
+      * @example cy.cancelGroupMembershiprequest(user1)
+      */
+      cancelGroupMembershipRequest(user: User): Chainable<Element>
+
+      /**
+      * Custom command to accept group membershiprequest from admin tab
+      * @param user - User data
+      * @example cy.acceptGroupMembershipRequest(user1)
+      */
+      acceptGroupMembershipRequest(user: User): Chainable<Element>
+
+      /**
+      * Custom command to filter the first tab for a user
+      * @param user - User data
+      * @example cy.filterFirstTab(user1)
+      */
+      filterFirstTab(user: User): Chainable<Element>
+
+      /**
+      * Custom command to filter chats
+      * @param user - User data
+      * @example cy.filterChats(user1)
+      */
+      filterChats(user: User): Chainable<Element>
+
+      /**
+      * Custom command to send a message
+      * @param message - Message data
+      * @example cy.sendMessage(message1)
+      */
+      sendMessage(message: Messages): Chainable<Element>
+
+      /**
+      * Custom command to filter the first tab of a group
+      * @param group - Group data
+      * @example cy.filterFirstTab(user1)
+      */
+      filterFirstTabOfGroup(group: Group): Chainable<Element>
+
+      /**
+      * Custom command to filter the second tab for a user
+      * @param user - User data
+      * @example cy.filterSecondTab(user1)
+      */
+      filterSecondTab(user: User): Chainable<Element>
+
+      /**
+      * Custom command to filter the second tab of a group
+      * @param group - Group data
+      * @example cy.filterSecondTab(user1)
+      */
+      filterSecondTabOfGroup(group: Group): Chainable<Element>
+
+      /**
+      * Custom command to leave a group
+      * @param user - User data
+      * @example cy.leaveGroup()
+      */
+      leaveGroup(): Chainable<Element>
+
+      /**
+      * Custom command to open the admin tab to manage groups members
+      * @example cy.openEditMemberhsip(group1)
+      */
+      openManageMembership(): Chainable<Element>
 
       /**
       * Custom command to open a group page and wait for data
@@ -354,10 +429,18 @@ declare global {
       searchGroupMember(): Chainable<Element>
 
       /**
-       * Custom command to removeGroupMembership
-       * @example cy.removeGroupMembership()
-       */
-      removeGroupMembership(): Chainable<Element>
+      * Custom command to removeGroupMembership
+      * @param user - User data
+      * @example cy.removeGroupMembership()
+      */
+      removeGroupMembership(user: User): Chainable<Element>
+
+      /**
+      * Custom command to removeMyGroupMembershipFromMyProfile from my profile
+      * @param group - Group data
+      * @example cy.removeMyGroupMembershipFromMyProfile()
+      */
+      removeMyGroupMembershipFromMyProfile(group: Group): Chainable<Element>
 
       /**
        * Custom command to searchGroupFollowing

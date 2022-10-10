@@ -71,9 +71,11 @@ describe('Tests Group following system', () => {
           cy.get('#edit-cy').click()
           cy.openEditFollower()
           cy.contains('Followings').click()
-          cy.get('[data-cy="filterSecondTab"]')
+          cy.filterSecondTabOfGroup(group1)
+
+/*           cy.get('[data-cy="filterSecondTab"]')
             .type(group1.name)
-            .type('{enter}')
+            .type('{enter}') */
           cy.contains(group1.name)
           cy.get('[icon="pi pi-times"]')
           cy.searchGroup(group1)
@@ -110,9 +112,10 @@ describe('Tests Group following system', () => {
           cy.get('#edit-cy').click()
           cy.openEditFollower()
           cy.contains('Followings').click()
-          cy.get('[data-cy="filterSecondTab"]')
+          cy.filterSecondTabOfGroup(group1)
+/*           cy.get('[data-cy="filterSecondTab"]')
             .type(group1.name)
-            .type('{enter}')
+            .type('{enter}') */
           cy.contains(group1.name)
           cy.get('[icon="pi pi-times"]')
           cy.get('#groups-cy').click()

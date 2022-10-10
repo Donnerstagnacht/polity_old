@@ -24,532 +24,201 @@ describe('Tests Group Membership system', () => {
   it('1. User requests group membership and group admin denies membership', () => {
     cy.visit('')
     cy.login(user2.email, user2.password)
-
     cy.searchGroup(group1)
-    cy.contains('Mitgliedschaft anfragen')
-    cy.wait(4000)
-    cy.wait(100)
-    cy.wait(100)
-    cy.wait(100)
-    cy.get('[data-cy="requestedMembershipButton"]').click()
-    cy.wait(4000)
-    cy.wait(100)
-    cy.wait(100)
-    cy.wait(100)
-
-    cy.contains('Anfrage zurückziehen')
-
+    cy.requestGroupMembership()
     cy.logout()
     cy.login(user1.email, user1.password)
-
     cy.get('#groups-cy').click()
     cy.contains(group1.name).click()
-    cy.get('#edit-cy').click()
-    cy.get('[data-cy="members-edit"]').click()
-    cy.get('[data-cy="backButton"]').click()
-    cy.get('[data-cy="members-edit"]').click()
-    cy.contains('Beitrittsanfragen').click()
-    cy.wait(4000)
-    cy.wait(100)
-    cy.wait(100)
-    cy.wait(100)
-
-    cy.get('[data-cy="filterFirstTab"]')
-      .type(user2.name)
-      .type('{enter}')
-      .wait(2000)
-    cy.contains(user2.name)
-    cy.get('[data-cy="removeFromFirstTab"]').click()
-    cy.wait(2000)
-
+    cy.openManageMembership()
+    cy.cancelGroupMembershipRequest(user2)
     cy.logout()
     cy.login(user1.email, user2.password)
-
-    // check the reset follow button value
     cy.searchGroup(group1)
-
     cy.contains('Mitgliedschaft anfragen')
     cy.logout()
   })
 
   it('2. User requests group membership and withdraws it', () => {
     cy.login(user2.email, user2.password)
-
     cy.searchGroup(group1)
-    cy.contains('Mitgliedschaft anfragen')
-    cy.wait(100)
-    cy.get('[data-cy="requestedMembershipButton"]').click()
-    cy.wait(1000)
-    cy.wait(100)
-    cy.wait(100)
-    cy.wait(100)
-
-    cy.contains('Anfrage zurückziehen')
-
+    cy.requestGroupMembership()
     cy.logout()
     cy.login(user1.email, user1.password)
-
     cy.get('#groups-cy').click()
     cy.contains(group1.name).click()
-    cy.get('#edit-cy').click()
-    cy.get('[data-cy="members-edit"]').click()
-    cy.get('[data-cy="backButton"]').click()
-    cy.get('[data-cy="members-edit"]').click()
-    cy.contains('Beitrittsanfragen').click()
-    cy.wait(5000)
-    cy.wait(100)
-    cy.wait(100)
-    cy.wait(100)
-
-    cy.get('[data-cy="filterFirstTab"]')
-      .type(user2.name)
-      .type('{enter}')
-      .wait(2000)
+    cy.openManageMembership()
+    cy.filterFirstTab(user2)
     cy.contains(user2.name)
-    cy.get('[data-cy="removeFromFirstTab"]')
-
     cy.logout()
     cy.login(user2.email, user2.password)
-
-    // check the reset follow button value
     cy.searchGroup(group1)
-
     cy.contains('Anfrage zurückziehen').click()
     cy.wait(4000)
     cy.contains('Mitgliedschaft anfragen')
-    cy.wait(100)
     cy.logout()
-
     cy.login(user1.email, user1.password)
-
     cy.get('#groups-cy').click()
     cy.contains(group1.name).click()
-    cy.get('#edit-cy').click()
-    cy.get('[data-cy="members-edit"]').click()
-    cy.get('[data-cy="backButton"]').click()
-    cy.get('[data-cy="members-edit"]').click()
-    cy.get('[data-cy="filterFirstTab"]')
-      .type(user2.name)
-      .type('{enter}')
-      .wait(2000)
+    cy.openManageMembership()
+    cy.filterFirstTab(user2)
     cy.contains(user2.name).should('not.exist')
     cy.logout()
   })
 
   it('3. User requests membership, group admin accepts and members counter are incremented', () => {
     cy.login(user2.email, user2.password)
-
     cy.get('#Gruppen')
     .invoke('text')
     .then(Number)
     .then((user2GroupsBefore: number) => {
-      cy.wait(2000)
-      cy.wait(100)
-      cy.wait(100)
       cy.log(user2GroupsBefore.toString())
-
-      // start
       cy.searchGroup(group1)
-      cy.contains('Mitgliedschaft anfragen')
-      cy.wait(100)
-      cy.get('[data-cy="requestedMembershipButton"]').click()
-      cy.wait(1000)
-      cy.wait(100)
-      cy.wait(100)
-      cy.wait(100)
-      cy.contains('Anfrage zurückziehen')
-
+      cy.requestGroupMembership()
       cy.logout()
       cy.login(user1.email, user1.password)
-
       cy.get('#groups-cy').click()
       cy.contains(group1.name).click()
-
       cy.get('#Mitglieder')
       .invoke('text')
       .then(Number)
       .then((group1MemberBefore: number) => {
-        cy.wait(2000)
-        cy.wait(100)
-        cy.wait(100)
         cy.log(group1MemberBefore.toString())
-
-        cy.get('#edit-cy').click()
-        cy.get('[data-cy="members-edit"]').click()
-        cy.get('[data-cy="backButton"]').click()
-        cy.get('[data-cy="members-edit"]').click()
-        cy.contains('Beitrittsanfragen').click()
-        cy.wait(4000)
-        cy.wait(100)
-        cy.wait(100)
-        cy.wait(100)
-
-        cy.get('[data-cy="filterFirstTab"]')
-          .type(user2.name)
-          .type('{enter}')
-          .wait(2000)
+        cy.openManageMembership()
+        cy.filterFirstTab(user2)
         cy.contains(user2.name)
         cy.get('[data-cy="acceptFromFirstTab"]').click()
-
-        cy.wait(4000)
-        cy.wait(100)
-        cy.wait(100)
-        cy.wait(100)
         cy.get('[data-cy="filterFirstTab"]').clear()
         cy.contains(user2.name).should('not.exist')
-
-        cy.get('[data-cy="backButton"]').click()
-        cy.get('#overview-cy').click()
-        cy.wait(4000)
-        cy.wait(100)
-        cy.wait(100)
-        cy.wait(100)
+        cy.clickBackButton()
+        cy.openGroupAndWaitForGroupData()
         cy.contains('#Mitglieder', (group1MemberBefore + 1).toString())
-
         cy.logout()
         cy.login(user2.email, user2.password)
-
-        cy.wait(4000)
-        cy.wait(100)
-        cy.wait(100)
-        cy.wait(100)
         cy.contains('#Gruppen', (user2GroupsBefore + 1).toString())
-
-        // check the reset follow button value
         cy.searchGroup(group1)
-        cy.wait(1000)
         cy.contains('Austreten')
-        cy.wait(1000)
-
         cy.logout()
-        // END
       })
     })
   })
 
-  it('4. User leaves group and counter are decremented', () => {
+  it('4. User leaves group from group overview and counter are decremented', () => {
     cy.login(user1.email, user1.password)
-
     cy.get('#groups-cy').click()
     cy.contains(group1.name).click()
-
     cy.get('#Mitglieder')
     .invoke('text')
     .then(Number)
     .then((group1MemberBefore: number) => {
-      cy.wait(2000)
-      cy.wait(100)
-      cy.wait(100)
       cy.log(group1MemberBefore.toString())
-
       cy.logout()
       cy.login(user2.email, user2.password)
-
       cy.get('#Gruppen')
       .invoke('text')
       .then(Number)
       .then((user2GroupsBefore: number) => {
-        cy.wait(2000)
-        cy.wait(100)
-        cy.wait(100)
         cy.log(user2GroupsBefore.toString())
-
-        // start
         cy.searchGroup(group1)
-        cy.contains('Austreten')
-        cy.wait(100)
-        cy.get('[data-cy="requestedMembershipButton"]').click()
-        cy.wait(1000)
-        cy.wait(100)
-        cy.wait(100)
-        cy.wait(100)
-
-        cy.contains('Mitgliedschaft anfragen')
-
-        cy.get('#profile-cy').click()
-        cy.wait(4000)
-        cy.wait(100)
-        cy.wait(100)
-        cy.wait(100)
+        cy.leaveGroup()
+        cy.openProfileLoggedInUserViaMainMenu()
         cy.contains('#Gruppen', (user2GroupsBefore -1).toString())
-
         cy.logout()
         cy.login(user1.email, user1.password)
-
         cy.get('#groups-cy').click()
         cy.contains(group1.name).click()
         cy.contains('#Mitglieder', (group1MemberBefore -1).toString())
-
-        cy.get('#edit-cy').click()
-        cy.get('[data-cy="members-edit"]').click()
-        cy.get('[data-cy="backButton"]').click()
-        cy.get('[data-cy="members-edit"]').click()
-        cy.wait(1000)
+        cy.openManageMembership()
         cy.contains('Mitglieder').click()
-        cy.wait(4000)
         cy.wait(100)
-        cy.wait(100)
-        cy.wait(100)
-
-        cy.get('[data-cy="filterSecondTab"]')
-        .type(user2.name)
-        .type('{enter}')
-        .wait(2000)
+        cy.filterSecondTab(user2)
         cy.contains(user2.name).should('not.exist')
-
         cy.logout()
       })
     })
   })
 
-  it('5. User leaves group from group overview and counter are decremented', () => {
-   /*****************************************************
-   *  END ONLY LOGIN, request and accept membership
-   * ***********************************************   */
+  it('5. User leaves group from manage own group memberhsip tab and counter are decremented', () => {
+    cy.login(user2.email, user2.password)
+    cy.searchGroup(group1)
+    cy.requestGroupMembership()
+    cy.logout()
+    cy.login(user1.email, user1.password)
+    cy.get('#groups-cy').click()
+    cy.contains(group1.name).click()
+    cy.openManageMembership()
+    cy.acceptGroupMembershipRequest(user2)
+    cy.logout()
+    cy.login(user1.email, user1.password)
+    cy.get('#groups-cy').click()
+    cy.contains(group1.name).click()
+    cy.get('#Mitglieder')
+    .invoke('text')
+    .then(Number)
+    .then((group1MemberBefore: number) => {
+      cy.log(group1MemberBefore.toString())
+      cy.logout()
+      cy.login(user2.email, user2.password)
+      cy.get('#Gruppen')
+      .invoke('text')
+      .then(Number)
+      .then((user2GroupsBefore: number) => {
+        cy.log(user2GroupsBefore.toString())
+        cy.removeMyGroupMembershipFromMyProfile(group1)
+        cy.clickBackButton()
+        cy.openProfileLoggedInUserViaMainMenu()
+        cy.contains('#Gruppen', (user2GroupsBefore -1).toString())
+        cy.searchGroup(group1)
+        cy.contains('Mitgliedschaft anfragen')
+        cy.logout()
+        cy.login(user1.email, user2.password)
+        cy.get('#groups-cy').click()
+        cy.contains(group1.name).click()
+        cy.contains('#Mitglieder', (group1MemberBefore -1).toString())
+        cy.openManageMembership()
+        cy.contains('Mitglieder').click()
+        cy.filterSecondTab(user2)
+        cy.contains(user2.name).should('not.exist')
+        cy.logout()
+      })
+    })
+  })
+
+  it('6. Admin removes user from group and counter are decremented', () => {
+  cy.visit('')
   cy.login(user2.email, user2.password)
   cy.searchGroup(group1)
   cy.contains('Mitgliedschaft anfragen')
-  cy.wait(4000)
-  cy.wait(100)
-  cy.wait(100)
-  cy.wait(100)
-  cy.get('[data-cy="requestedMembershipButton"]').click()
-  cy.wait(10000)
-  cy.wait(100)
-  cy.wait(100)
-  cy.wait(100)
-
-  cy.contains('Anfrage zurückziehen')
-
+  cy.requestGroupMembership()
   cy.logout()
   cy.login(user1.email, user1.password)
-
   cy.get('#groups-cy').click()
   cy.contains(group1.name).click()
-
-  cy.get('#edit-cy').click()
-  cy.get('[data-cy="members-edit"]').click()
-  cy.get('[data-cy="backButton"]').click()
-  cy.get('[data-cy="members-edit"]').click()
-
-
-  cy.contains('Beitrittsanfragen').click()
-  cy.wait(4000)
-  cy.wait(100)
-  cy.wait(100)
-  cy.wait(100)
-
-  cy.get('[data-cy="filterFirstTab"]')
-    .type(user2.name)
-    .type('{enter}')
-    .wait(2000)
-  cy.contains(user2.name)
-  cy.get('[data-cy="acceptFromFirstTab"]').click()
-
-  cy.wait(4000)
-  cy.wait(100)
-  cy.wait(100)
-  cy.wait(100)
-  cy.contains(user2.name).should('not.exist')
+  cy.openManageMembership()
+  cy.acceptGroupMembershipRequest(user2)
   cy.logout()
-  /*****************************************************
-   *  END ONLY LOGIN, request and accept membership
-   * ***********************************************   */
-
-    cy.login(user1.email, user1.password)
-
-    cy.get('#groups-cy').click()
-    cy.contains(group1.name).click()
-
-    cy.get('#Mitglieder')
-    .invoke('text')
-    .then(Number)
-    .then((group1MemberBefore: number) => {
-      cy.wait(2000)
-      cy.wait(100)
-      cy.wait(100)
-      cy.log(group1MemberBefore.toString())
-
-      cy.logout()
-      cy.login(user2.email, user2.password)
-
-      cy.get('#Gruppen')
-      .invoke('text')
-      .then(Number)
-      .then((user2GroupsBefore: number) => {
-        cy.wait(2000)
-        cy.wait(100)
-        cy.wait(100)
-        cy.log(user2GroupsBefore.toString())
-
-        cy.get('#edit-cy').click()
-        cy.get('[data-cy="groups-edit"]').click()
-
-        cy.wait(4000)
-        cy.wait(100)
-        cy.wait(100)
-        cy.wait(100)
-        cy.get('[data-cy="filterFirstTab"]')
-          .type(group1.name)
-          .type('{enter}')
-          .wait(2000)
-        cy.get('[data-cy="removeFromFirstTab"]').click()
-        cy.wait(4000)
-        cy.wait(100)
-        cy.wait(100)
-        cy.wait(100)
-        cy.contains(group1.name).should('not.exist')
-
-        cy.get('[data-cy="backButton"]').click()
-        cy.get('#overview-cy').click()
-        cy.wait(4000)
-        cy.wait(100)
-        cy.wait(100)
-        cy.wait(100)
-        cy.contains('#Gruppen', (user2GroupsBefore -1).toString())
-
-        cy.searchGroup(group1)
-        cy.wait(4000)
-        cy.wait(100)
-        cy.wait(100)
-        cy.wait(100)
-        cy.contains('Mitgliedschaft anfragen')
-
-        cy.logout()
-        cy.login(user1.email, user2.password)
-
-        cy.get('#groups-cy').click()
-        cy.contains(group1.name).click()
-        cy.contains('#Mitglieder', (group1MemberBefore -1).toString())
-
-        cy.get('#edit-cy').click()
-        cy.get('[data-cy="members-edit"]').click()
-        cy.get('[data-cy="backButton"]').click()
-        cy.get('[data-cy="members-edit"]').click()
-        cy.wait(1000)
-        cy.contains('Mitglieder').click()
-        cy.wait(4000)
-        cy.wait(100)
-        cy.wait(100)
-        cy.wait(100)
-
-        cy.get('[data-cy="filterSecondTab"]')
-        .type(user2.name)
-        .type('{enter}')
-        .wait(2000)
-        cy.contains(user2.name).should('not.exist')
-
-        cy.logout()
-      })
-    })
-  })
-
-
-  it('6. Admin removes user from group and counter are decremented', () => {
-     /*****************************************************
-   *  END ONLY LOGIN, request and accept membership
-   * ***********************************************   */  cy.login(user2.email, user2.password)
-  cy.searchGroup(group1)
-  cy.contains('Mitgliedschaft anfragen')
-  cy.wait(100)
-  cy.get('[data-cy="requestedMembershipButton"]').click()
-  cy.wait(4000)
-  cy.wait(100)
-  cy.wait(100)
-  cy.wait(100)
-
-  cy.contains('Anfrage zurückziehen')
-
-  cy.logout()
-  cy.login(user1.email, user1.password)
-
-  cy.get('#groups-cy').click()
-  cy.contains(group1.name).click()
-
-  cy.get('#edit-cy').click()
-  cy.get('[data-cy="members-edit"]').click()
-  cy.get('[data-cy="backButton"]').click()
-  cy.get('[data-cy="members-edit"]').click()
-  cy.contains('Beitrittsanfragen').click()
-  cy.wait(4000)
-  cy.wait(100)
-  cy.wait(100)
-  cy.wait(100)
-
-  cy.get('[data-cy="filterFirstTab"]')
-    .type(user2.name)
-    .type('{enter}')
-    .wait(2000)
-  cy.contains(user2.name)
-  cy.get('[data-cy="acceptFromFirstTab"]').click()
-
-  cy.wait(4000)
-  cy.wait(100)
-  cy.wait(100)
-  cy.wait(100)
-  cy.contains(user2.name).should('not.exist')
-  cy.logout()
-  /*****************************************************
-   *  END ONLY LOGIN, request and accept membership
-   * ***********************************************   */
     cy.login(user2.email, user2.password)
-
     cy.get('#Gruppen')
     .invoke('text')
     .then(Number)
     .then((user2GroupsBefore: number) => {
-      cy.wait(2000)
-      cy.wait(100)
-      cy.wait(100)
       cy.log(user2GroupsBefore.toString())
-
       cy.logout()
       cy.login(user1.email, user1.password)
-
       cy.get('#groups-cy').click()
       cy.contains(group1.name).click()
-
       cy.get('#Mitglieder')
       .invoke('text')
       .then(Number)
       .then((group1MemberBefore: number) => {
-        cy.wait(2000)
-        cy.wait(100)
-        cy.wait(100)
         cy.log(group1MemberBefore.toString())
-
-        cy.get('#edit-cy').click()
-        cy.get('[data-cy="members-edit"]').click()
-        cy.get('[data-cy="backButton"]').click()
-        cy.get('[data-cy="members-edit"]').click()
-        cy.wait(1000)
-        cy.contains('Mitglieder').click()
-        cy.wait(4000)
-        cy.wait(100)
-        cy.wait(100)
-        cy.wait(100)
-
-        cy.get('[data-cy="filterSecondTab"]')
-        .type(user2.name)
-        .type('{enter}')
-        .wait(2000)
-        cy.contains(user2.name).should('be.visible')
-
-        cy.get('[data-cy="removeFromSecondTab"]').click()
-        cy.wait(4000)
-        cy.wait(100)
-        cy.wait(100)
-        cy.wait(100)
-
-        cy.contains(user2.name).should('not.exist')
-
+        cy.openManageMembership()
+        cy.removeGroupMembership(user2)
         cy.logout()
         cy.login(user2.email, user2.password)
         cy.contains('#Gruppen', (user2GroupsBefore -1).toString())
-
         cy.searchGroup(group1)
         cy.contains('Mitgliedschaft anfragen')
-
         cy.logout()
       })
     })

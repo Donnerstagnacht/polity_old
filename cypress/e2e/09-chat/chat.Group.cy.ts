@@ -70,11 +70,13 @@ describe('Test chat features', () => {
     cy.wait(100)
     cy.wait(100)
     cy.wait(100)
+    cy.filterFirstTab(user2)
 
-    cy.get('[data-cy="filterFirstTab"]')
+
+/*     cy.get('[data-cy="filterFirstTab"]')
       .type(user2.name)
       .type('{enter}')
-      .wait(2000)
+      .wait(2000) */
     cy.contains(user2.name)
     cy.get('[data-cy="acceptFromFirstTab"]').click()
 
