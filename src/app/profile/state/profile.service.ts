@@ -373,6 +373,11 @@ export class ProfileService {
     this.profileStore.ui.upsert(id, update)
   }
 
+  updateUnreadNotificationCounter(id: string): void {
+    const update = {unread_notifications_counter: 0}
+    this.profileStore.upsert(id, update)
+  }
+
   updateGroupsOfProfile(id: string, groupsOfProfile: profile_list_item[]): void {
     const update = {groups: groupsOfProfile}
     this.profileStore.upsert(id, update)

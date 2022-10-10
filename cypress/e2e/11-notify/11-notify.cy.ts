@@ -27,190 +27,95 @@ describe('Tests notify features', () => {
     cy.visit('')
     cy.login(user1.email, user1.password)
     cy.openNewsPage()
-    cy.get('#profile-cy').click()
-    cy.wait(1000)
     cy.logout()
-    cy.login(user1.email, user1.password)
+    cy.login(user2.email, user2.password)
     cy.openNewsPage()    
-    cy.get('#profile-cy').click()
-    cy.wait(1000)
     cy.logout()
   })
 
   it('2. Follows User and notifies followed user', () => {
     cy.login(user1.email, user1.password)
     cy.searchUser(user2)
-    cy.contains('Follow')
-    cy.get('[data-cy="followButton"]').click()
+    cy.clickFollowButton()
     cy.logout()
     cy.login(user2.email, user2.password)
-    cy.openNewsPage()
-    cy.get('[data-cy="unreadMessagesCounter"]').contains('1')
-    cy.contains(NEWSCONTENTS.followUser)
+    cy.checkIfNotificationExists(1, NEWSCONTENTS.followUser)
     cy.logout()
-})
+  })
 
   it('3. Request group membership and notifies admins of requested group', () => {
     cy.login(user2.email, user2.password)
     cy.searchGroup(group1)
-    cy.get('[data-cy="requestedMembershipButton"]').click()
+    cy.requestGroupMembership()
     cy.logout()
-
     cy.login(user1.email, user1.password)
-    cy.get('[data-cy="unreadMessagesCounter"]').contains('1')
-    cy.openNewsPage()    
-    cy.contains(NEWSCONTENTS.requestGroupForAdmins)
+    cy.checkIfNotificationExists(1, NEWSCONTENTS.requestGroupForAdmins)
     cy.logout()
   })
 
   it('4. Admins cancels group membership request and notifies admins of group and inquirer', () => {
     cy.login(user1.email, user1.password)
-
     cy.searchGroup(group1)
-
-    cy.get('#edit-cy').click()
-    cy.get('[data-cy="members-edit"]').click()
-
-    cy.contains('Beitrittsanfragen').click()
-    cy.filterFirstTab(user2)
-
-/*     cy.get('[data-cy="filterFirstTab"]')
-      .type(user2.name)
-      .type('{enter}')
-      .wait(2000) */
-    cy.contains(user2.name)
-    cy.get('[data-cy="removeFromFirstTab"]').click()
-    cy.wait(200)
-    cy.get('#profile-cy').click()
-
-    cy.get('[data-cy="unreadMessagesCounter"]').contains('1')
-    cy.openNewsPage()
-    cy.contains(NEWSCONTENTS.cancelGroupRequestForAdmins)
+    cy.openManageMembership()
+    cy.cancelGroupMembershipRequest(user2)
+    cy.checkIfNotificationExists(1, NEWSCONTENTS.cancelGroupRequestForAdmins)
     cy.logout()
-
     cy.login(user2.email, user2.password)
-    cy.get('[data-cy="unreadMessagesCounter"]').contains('1')
-    cy.openNewsPage()
-    cy.contains(NEWSCONTENTS.cancelGroupRequestForInquirer)
+    cy.checkIfNotificationExists(1, NEWSCONTENTS.cancelGroupRequestForInquirer)
     cy.logout()
   })
 
   it('5. Accept group membership, notifies admins of group and new group member', () => {
     cy.login(user2.email, user2.password)
     cy.searchGroup(group1)
-    cy.get('[data-cy="requestedMembershipButton"]').click()
+    cy.requestGroupMembership()
     cy.logout()
-
     cy.login(user1.email, user1.password)
     cy.openNewsPage()
-
     cy.searchGroup(group1)
-    cy.get('#edit-cy').click()
-    cy.get('[data-cy="members-edit"]').click()
-
-    cy.contains('Beitrittsanfragen').click()
-    cy.filterFirstTab(user2)
-
-/*     cy.get('[data-cy="filterFirstTab"]')
-      .type(user2.name)
-      .type('{enter}')
-      .wait(2000) */
-    cy.contains(user2.name)
-    cy.get('[data-cy="acceptFromFirstTab"]').click()
-
-    cy.get('[data-cy="unreadMessagesCounter"]').contains('1')
-    cy.openNewsPage()
-    cy.contains(NEWSCONTENTS.acceptGroupRequestForAdmins)
+    cy.openManageMembership()
+    cy.acceptGroupMembershipRequest(user2)
+    cy.checkIfNotificationExists(1, NEWSCONTENTS.acceptGroupRequestForAdmins)
     cy.logout()
-
     cy.login(user2.email, user2.password)
-    cy.get('[data-cy="unreadMessagesCounter"]').contains('1')
-    cy.openNewsPage()
-    cy.contains(NEWSCONTENTS.acceptGroupRequestForInquirer)
+    cy.checkIfNotificationExists(1, NEWSCONTENTS.acceptGroupRequestForInquirer)
     cy.logout()
   })
 
   it('6. Member leaves group and notifies admins of group', () => {
     cy.login(user2.email, user2.password)
     cy.openNewsPage()
-    cy.get('#profile-cy').click()
     cy.searchGroup(group1)
-    cy.contains('Austreten').should('be.visible')
-    cy.contains('Austreten').should('be.visible').click()
-
-    cy.get('[data-cy="unreadMessagesCounter"]').contains('1')
-    cy.openNewsPage()
-    cy.contains(NEWSCONTENTS.leaveGroupForInquirer)
-
+    cy.leaveGroup()
+    cy.checkIfNotificationExists(1, NEWSCONTENTS.leaveGroupForInquirer)
     cy.logout()
-
     cy.login(user1.email, user1.password)
-    cy.get('[data-cy="unreadMessagesCounter"]').contains('1')
-    cy.openNewsPage()
-    cy.wait(4000)
-    cy.wait(100)
-    cy.wait(100)
-    cy.wait(100)
-    cy.contains(NEWSCONTENTS.leaveGroupForAdmins)
+    cy.checkIfNotificationExists(1, NEWSCONTENTS.leaveGroupForAdmins)
     cy.logout()
   })
 
   it('7. Admin deletes user, notifies other admin and deleted user', () => {
     cy.login(user2.email, user2.password)
     cy.searchGroup(group1)
-    cy.get('[data-cy="requestedMembershipButton"]').click()
+    cy.requestGroupMembership()
     cy.logout()
-
     cy.login(user1.email, user1.password)
-
     cy.searchGroup(group1)
-    cy.get('#edit-cy').click()
-    cy.get('[data-cy="members-edit"]').click()
-
-    cy.contains('Beitrittsanfragen').click()
-    cy.filterFirstTab(user2)
-
-/*     cy.get('[data-cy="filterFirstTab"]')
-      .type(user2.name)
-      .type('{enter}')
-      .wait(2000) */
-    cy.contains(user2.name)
-    cy.get('[data-cy="acceptFromFirstTab"]').click()
-
-    cy.openNewsPage()
+    cy.openManageMembership()
+    cy.acceptGroupMembershipRequest(user2)
     cy.searchGroup(group1)
-    cy.get('#edit-cy').click()
-    cy.get('[data-cy="members-edit"]').click()
-    cy.wait(1000)
-    cy.contains('Mitglieder').click()
-    cy.filterSecondTab(user2)
-
-/*     cy.get('[data-cy="filterSecondTab"]')
-      .type(user2.name)
-      .type('{enter}')
-      .wait(2000) */
-    cy.contains(user2.name)
-    cy.get('[data-cy="removeFromSecondTab"]').click()
-
-    cy.get('[data-cy="unreadMessagesCounter"]').contains('1')
-    cy.get('#profile-cy').click()
-    cy.openNewsPage()
-    cy.wait(2000)
-    cy.contains(NEWSCONTENTS.removeMemberForAdmins)
+    cy.openManageMembership()
+    cy.removeGroupMembership(user2)
+    cy.checkIfNotificationExists(3, NEWSCONTENTS.removeMemberForAdmins)
     cy.logout()
-
     cy.login(user2.email, user2.password)
-    cy.get('[data-cy="unreadMessagesCounter"]').contains('2')
-    cy.openNewsPage()
-    cy.contains(NEWSCONTENTS.removeMemberForDeletedUser)
+    cy.checkIfNotificationExists(2, NEWSCONTENTS.removeMemberForDeletedUser)
     cy.logout()
   })
 
   it('8. Reset notifications coutner after visiting news"', () => {
     cy.login(user2.email, user2.password)
     cy.openNewsPage()
-    cy.wait(2000)
-    cy.get('#profile-cy').click()
     cy.get('[data-cy="unreadMessagesCounter"]').should('not.exist')
     cy.openNewsPage()
     cy.get('[data-cy="newsContainer"]').within(() => {

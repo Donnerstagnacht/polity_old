@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { RealtimeSubscription } from '@supabase/supabase-js';
 import { MegaMenuItem, MenuItem, MessageService } from 'primeng/api';
 import { Subscription } from 'rxjs';
+import { ProfileService } from 'src/app/profile/state/profile.service';
 import { PaginationData, PaginationFrontendService } from 'src/app/utilities/storage/services/pagination-frontend.service';
 import { orgaMenuitems, orgaMenuitemsMega } from '../../chat/state/orgaMenuItems';
 import { News } from '../state/news.model';
@@ -47,11 +48,13 @@ export class NewsComponent implements OnInit {
     private messageService: MessageService,
     private newsService: NewsService,
     private newsQuery: NewsQuery,
-    private paginationService: PaginationFrontendService
+    private paginationService: PaginationFrontendService,
+    private profileService: ProfileService
   ) { }
 
   ngOnInit(): void {
     this.loadInitialData();
+    this.newsService.resetUnreadNotificationsCounter();
   }
 
   async ngOnDestroy(): Promise<void> {
@@ -130,6 +133,7 @@ export class NewsComponent implements OnInit {
   }
 
   async loadInitialData(): Promise<void> {
+    this.newsService.resetUnreadNotificationsCounter()
     try {
       this.loadingInitial = true;
       this.error = false;

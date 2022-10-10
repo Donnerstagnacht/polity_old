@@ -497,6 +497,15 @@ declare global {
        * @example cy.sendMessage()
        */
       sendMessage(message: string): Chainable<Element>
+
+      /**
+      * Custom command to check if a notification with a custom message exists
+      * @param numberOfUnreadNotifications - Number of unread notifications after notification event happend
+      * @param notificationMessage - Message which should be displayed in the notification tab 
+      * @example cy.checkIfNotificationExists(1, 'Du hast einen neuen Follower')
+      */
+      checkIfNotificationExists(numberOfUnreadNotifications: number, notificationMessage: string): Chainable<Element>
+
     }
   }
 }

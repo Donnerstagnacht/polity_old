@@ -3,11 +3,11 @@ import { ID } from '@datorama/akita';
 import { createClient, RealtimeSubscription, SupabaseClient } from '@supabase/supabase-js';
 import { AuthentificationQuery } from 'src/app/authentification/state/authentification.query';
 import { environment } from 'src/environments/environment';
-import { News, Notifications } from './news.model';
-import { NewsState, NewsStore } from './news.store';
-import { Subscription, Subject, Observable, BehaviorSubject, observable } from 'rxjs';
+import { News } from './news.model';
+import { NewsStore } from './news.store';
+import { Subscription, Subject, Observable } from 'rxjs';
 import { GroupsService } from 'src/app/groups/services/groups.service';
-import { group } from 'console';
+import { ProfileService } from 'src/app/profile/state/profile.service';
 
 @Injectable({ providedIn: 'root' })
 export class NewsService implements OnDestroy {
@@ -20,7 +20,8 @@ export class NewsService implements OnDestroy {
   constructor(
     private newsStore: NewsStore,
     private authentificationQuery: AuthentificationQuery,
-    private groupsService: GroupsService
+    private groupsService: GroupsService,
+    private profileService: ProfileService
     ) {
       this.supabaseClient = createClient(environment.supabaseUrl, environment.supabaseKey);
       this.authSubscription =  this.authentificationQuery.uuid$.subscribe((uuid: any) => {
@@ -290,6 +291,18 @@ export class NewsService implements OnDestroy {
       return markAsUnreadResponse;
     }
     return groupList;
+  }
+
+  async resetUnreadNotificationsCounter(): Promise<{data: any, error: any}> {
+    const resetResponse: {data: any, error: any} = await this.supabaseClient
+      .rpc('reset_unread_notifications_counter', {
+        user_id: this.loggedInID,
+      });
+    if(resetResponse.error) throw new Error(resetResponse.error.message);
+    if (this.loggedInID) {
+      this.profileService.updateUnreadNotificationCounter(this.loggedInID);
+    }
+    return resetResponse;
   }
 
 }

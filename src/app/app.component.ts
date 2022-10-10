@@ -57,7 +57,7 @@ export class AppComponent implements OnInit, OnDestroy {
         });
       } else {
         console.log('unsubscribe')
-        this.unreadNotifications = 0;
+        // this.unreadNotifications = 0;
         this.authSubscription?.unsubscribe();
         this.profileSubscription?.unsubscribe();
         this.profileRealTimeSubscription?.unsubscribe();

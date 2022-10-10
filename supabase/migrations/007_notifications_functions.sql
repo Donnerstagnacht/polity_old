@@ -116,6 +116,20 @@ BEGIN
 END;
 $$;
 
+DROP function if exists reset_unread_notifications_counter(user_id uuid);
+create or replace function reset_unread_notifications_counter(user_id uuid)
+returns void
+language plpgsql
+security definer
+as
+$$
+BEGIN
+  update profiles
+  set "unread_notifications_counter" = 0
+  where id = user_id;
+END;
+$$;
+
 
 --2.Select all notifications from groups where user is admin
 DROP function if exists select_notifications_from_groups_user_admin(

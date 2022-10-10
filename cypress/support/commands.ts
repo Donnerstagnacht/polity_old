@@ -411,7 +411,6 @@ Cypress.Commands.add('sendMessage', (message: string) => {
   cy.contains(message)
 })
 
-
 Cypress.Commands.add('openChatWithUser', (user: User) => {
   cy.filterChats(user)
   cy.contains(user.name).click()
@@ -433,6 +432,19 @@ Cypress.Commands.add('removeChat', (user: User) => {
 })
 
 Cypress.Commands.add('openNewsPage', () => {
-  cy.get('#orga-cy').click()
+  cy.openChatsViaMenu()
+  cy.intercept('**/rest/v1/rpc/select_notifications_from_groups_user_admin*').as('selectNews')
+  cy.intercept('**/rest/v1/rpc/reset_unread_notifications_counter*').as('resetCounter')
   cy.get('#news-cy').click()
+  cy.wait('@selectNews')
+  cy.wait('@resetCounter')
+})
+
+Cypress.Commands.add('checkIfNotificationExists', (numberOfUnreadNotifications: number, notificationMessage: string) => {
+  // not needed but makes cypress wait for a while which gives not observed data transfer via websocket a chance to success
+  cy.get('#groups-cy').click()
+  cy.openProfileLoggedInUserViaMainMenu()
+  cy.get('[data-cy="unreadMessagesCounter"]').contains(numberOfUnreadNotifications)
+  cy.openNewsPage()    
+  cy.contains(notificationMessage)
 })
