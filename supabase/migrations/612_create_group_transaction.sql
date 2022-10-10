@@ -1,5 +1,4 @@
 -- 3. Alter onGroup Create Transaction
--- 3. Alter onGroup Create Transaction
 CREATE OR REPLACE FUNCTION public.create_group_transaction(
 	name text,
 	description text,
