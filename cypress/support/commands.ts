@@ -1,5 +1,4 @@
 /// <reference types="cypress" />
-import { should } from "chai"
 import { Group, User } from "."
 
 Cypress.Commands.add('register', (name: string, email: string, password: string) => {
@@ -124,7 +123,6 @@ Cypress.Commands.add('clickFollowGroupButton', () => {
 
 Cypress.Commands.add('clickUnfollowButton', () => {
   cy.intercept('**/rest/v1/rpc/unfollowtransaction*').as('unfollowtransaction')
-  // cy.get('[data-cy="followButton"]').click()
   cy.contains('Unfollow').click()
   cy.wait('@unfollowtransaction')
 })
@@ -175,9 +173,6 @@ Cypress.Commands.add('removeMyGroupMembershipFromMyProfile', (group: Group) => {
 Cypress.Commands.add('removeFollowerFromGroupAdmin', (user: User) => {
   cy.intercept('**/rest/v1/rpc/unfollowgrouptransaction*').as('removeGroupFollowingTransaction')
   cy.filterFirstTab(user)
-/*   cy.get('[data-cy="filterFirstTab"]')
-    .type(user.name)
-    .type('{enter}') */
   cy.contains(user.name)
   cy.get('[icon="pi pi-times"]').click()
   cy.wait('@removeGroupFollowingTransaction')
@@ -198,10 +193,6 @@ Cypress.Commands.add('removeGroupFollowerFromEditFollower', (group: Group) => {
   cy.contains('Followings').click()
   cy.intercept('**/rest/v1/rpc/unfollowgrouptransaction*').as('removeGroupFollowingTransaction')
   cy.filterSecondTabOfGroup(group)
-
-/*   cy.get('[data-cy="filterSecondTab"]')
-  .type(group.name)
-  .type('{enter}') */
   cy.get('[data-cy="second-table"]').within(() => {
     cy.contains(group.name)
     cy.get('[icon="pi pi-times"]').click()
@@ -255,9 +246,6 @@ Cypress.Commands.add('openManageMembership', () => {
 Cypress.Commands.add('cancelGroupMembershipRequest', (user: User) => {
   cy.intercept('**/rest/v1/rpc/cancel_membership_request_transaction_by_id*').as('cancelMembershipRequest')
   cy.filterFirstTab(user)
-/*   cy.get('[data-cy="filterFirstTab"]')
-    .type(user.name)
-    .type('{enter}') */
   cy.contains(user.name)
   cy.get('[data-cy="removeFromFirstTab"]').click()
   cy.wait('@cancelMembershipRequest')
@@ -267,13 +255,25 @@ Cypress.Commands.add('cancelGroupMembershipRequest', (user: User) => {
 Cypress.Commands.add('acceptGroupMembershipRequest', (user: User) => {
   cy.intercept('**/rest/v1/rpc/confirm_membership_transaction*').as('acceptMembershipRequest')
   cy.filterFirstTab(user)
-  /*   cy.get('[data-cy="filterFirstTab"]')
-    .type(user.name)
-    .type('{enter}') */
   cy.contains(user.name)
   cy.get('[data-cy="acceptFromFirstTab"]').click()
   cy.wait('@acceptMembershipRequest')
   cy.contains(user.name).should('not.exist')
+})
+
+Cypress.Commands.add('rejectChatRequest', (user: User) => {
+  cy.intercept('**/rest/v1/rpc/reject_chat_request_transaction*').as('rejectChatRequest')
+  cy.contains('Du hast eine neue Chat-Anfrage. Wie möchtest du reagieren?')
+  cy.contains('Ablehnen').click()
+  cy.url().should('include', 'orga')
+  cy.wait('@rejectChatRequest')
+  cy.contains(user.name).should('not.exist')
+})
+
+Cypress.Commands.add('acceptChatRequest', () => {
+  cy.contains('Du hast eine neue Chat-Anfrage. Wie möchtest du reagieren?')
+  cy.contains('Nur akzeptieren').click()
+  cy.contains('Ihr habt euch noch keine Nachrichten geschrieben')
 })
 
 Cypress.Commands.add('filterFirstTab', (user: User) => {
@@ -285,6 +285,12 @@ Cypress.Commands.add('filterFirstTab', (user: User) => {
 Cypress.Commands.add('filterChats', (user: User) => {
   cy.get('[data-cy="filter-chats"]')
   .type(user.name)
+  .type('{enter}')
+})
+
+Cypress.Commands.add('filterChatsGroup', (group: Group) => {
+  cy.get('[data-cy="filter-chats"]')
+  .type(group.name)
   .type('{enter}')
 })
 
@@ -367,18 +373,14 @@ Cypress.Commands.add('searchUser', (user: User) => {
 })
 
 Cypress.Commands.add('fillCreateGroupForm', (group: Group, user: User) => {
- // cy.get('[data-cy="name"]').clear()
   cy.get('#name-input').clear().type(group.name)
-  // cy.get('[data-cy="about"]').clear()
   cy.get('#about-input').clear().type(group.about)
   cy.contains(group.level).click()
   cy.contains('Vorwärts').click()
-
   cy.contains(group.name)
   cy.contains(group.about)
   cy.contains(group.level)
   cy.contains(user.name)
-  // cy.contains('ERSTELLEN').click()
   cy.get('[data-cy="create-group-button"]').click()
 })
 
@@ -387,50 +389,48 @@ Cypress.Commands.add('searchGroup', (group: Group) => {
   cy.get('[data-cy="search-tab-view"]').within((tabView) => {
     cy.contains('span', 'GRUPPEN').parent().click()
   })
-  // cy.contains('span', 'GRUPPEN').click()
-  // Type searchstring
   cy.get('[data-cy="searchBar"]').type(group.ftsName).type('{enter}')
-  // check if search results appear
   cy.contains(group.name).click()
-  // checks if click on search result redirects to requested page
   cy.url().should('include', 'groups')
   cy.contains(group.name)
   cy.contains(group.about)
 })
 
-Cypress.Commands.add('openChatWithUser', (user: User) => {
+Cypress.Commands.add('openChatsViaMenu', () => {
+  cy.intercept('**/rest/v1/rpc/select_all_rooms_of_user*').as('allRoomsOfUser')
   cy.get('#orga-cy').click()
-  cy.get('[data-cy="filter-chats"]')
-    .type(user.name)
-    .type('{enter}')
-  cy.wait(4000)
-  cy.wait(100)
-  cy.wait(100)
-  cy.wait(100)
+  cy.wait('@allRoomsOfUser')
+})
+
+Cypress.Commands.add('sendMessageToProfile', (message: string) => {
+  cy.intercept('**/rest/v1/rpc/send_message_transaction*').as('sendMessage')
+  cy.get('[data-cy="send-message"]')
+  .type(message)
+  .type('{enter}')
+  cy.wait('@sendMessage')
+  cy.contains(message)
+})
+
+
+Cypress.Commands.add('openChatWithUser', (user: User) => {
+  cy.filterChats(user)
   cy.contains(user.name).click()
-  cy.wait(1000)
   cy.contains(user.name)
 })
 
 Cypress.Commands.add('openChatWithGroup', (group: Group) => {
   cy.get('#orga-cy').click()
-  cy.get('[data-cy="filter-chats"]')
-    .type(group.name)
-    .type('{enter}')
-  cy.wait(4000)
-  cy.wait(100)
-  cy.wait(100)
-  cy.wait(100)
+  cy.filterChatsGroup(group)
   cy.contains(group.name).click()
-  cy.wait(1000)
   cy.contains(group.name)
 })
 
-Cypress.Commands.add('clickFollowButtonWithoutCheck', (user: User) => {
-  cy.get('#search-cy').click()
-  cy.searchUser(user)
-  cy.wait(4000)
-  cy.get('[data-cy="followButton"]').click()
+Cypress.Commands.add('removeChat', (user: User) => {
+  cy.intercept('**/rest/v1/rpc/reject_chat_request_transaction*').as('removeChat')
+  cy.get('[data-cy="delete-chat"]').click()
+  cy.wait('@removeChat')
+  cy.filterChats(user)
+  cy.contains(user.name).should('not.exist')
 })
 
 Cypress.Commands.add('openNewsPage', () => {

@@ -236,6 +236,13 @@ declare global {
       filterChats(user: User): Chainable<Element>
 
       /**
+      * Custom command to filter chats
+      * @param group - User data
+      * @example cy.filterChats(user1)
+      */
+      filterChatsGroup(group: Group): Chainable<Element>
+
+      /**
       * Custom command to send a message
       * @param message - Message data
       * @example cy.sendMessage(message1)
@@ -386,13 +393,6 @@ declare global {
       requestGroupMembership(): Chainable<Element>
 
       /**
-       * Custom command to follow or unfollow a user (searches & clicks follow button)
-       * @param user - User data
-       * @example cy.clickFollowButtonWithoutCheck()
-       */
-      clickFollowButtonWithoutCheck(user: User): Chainable<Element>
-
-      /**
        * Custom command to withdrawGroupMembership
        * @example cy.withdrawGroupMembership()
        */
@@ -467,10 +467,24 @@ declare global {
       acceptChatRequest(): Chainable<Element>
 
       /**
-       * Custom command to rejectChatRequest
-       * @example cy.rejectChatRequest()
-       */
-      rejectChatRequest(): Chainable<Element>
+      * Custom command to removeChat
+      * @param user - User data
+      * @example cy.removeChat()
+      */
+      removeChat(user: User): Chainable<Element>
+
+      /**
+      * Custom command to rejectChatRequest
+      * @param user - User data
+      * @example cy.rejectChatRequest()
+      */
+      rejectChatRequest(user: User): Chainable<Element>
+
+      /**
+      * Custom command to openChatsViaMenu
+      * @example cy.openChatsViaMenu()
+      */
+      openChatsViaMenu(): Chainable<Element>
 
       /**
        * Custom command to searchChatPartner
@@ -486,9 +500,10 @@ declare global {
 
       /**
        * Custom command to sendMessageToProfile
+       * @param message - Message string
        * @example cy.sendMessageToProfile()
        */
-      sendMessageToProfile(): Chainable<Element>
+      sendMessageToProfile(message: string): Chainable<Element>
 
       /**
        * Custom command to sendMessageToGroup
