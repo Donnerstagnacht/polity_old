@@ -54,3 +54,7 @@ Thumbs.db
 **/registries
 **/npm
 **/gen
+
+# cypress test output
+**/cypress/videos/**
+**/cypress/screenshots/**

@@ -126,7 +126,7 @@ describe('Test chat features', () => {
     cy.login(user1.email, user1.password)
     cy.openChatsViaMenu()
     cy.openChatWithUser(user2)
-    cy.sendMessageToProfile(messages.messageFromUser1)
+    cy.sendMessage(messages.messageFromUser1)
     cy.logout()
   })
 
@@ -140,7 +140,7 @@ describe('Test chat features', () => {
     cy.openChatsViaMenu()
     cy.get('[data-cy="number-of-unread-messages"]').should('not.exist')
     cy.openChatWithUser(user1)
-    cy.sendMessageToProfile(messages.messageFromUser2)
+    cy.sendMessage(messages.messageFromUser2)
     cy.logout()
   })
 

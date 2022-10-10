@@ -243,13 +243,6 @@ declare global {
       filterChatsGroup(group: Group): Chainable<Element>
 
       /**
-      * Custom command to send a message
-      * @param message - Message data
-      * @example cy.sendMessage(message1)
-      */
-      sendMessage(message: Messages): Chainable<Element>
-
-      /**
       * Custom command to filter the first tab of a group
       * @param group - Group data
       * @example cy.filterFirstTab(user1)
@@ -499,17 +492,11 @@ declare global {
       filterChatPartnerForGroups(): Chainable<Element>
 
       /**
-       * Custom command to sendMessageToProfile
+       * Custom command to sendMessage
        * @param message - Message string
-       * @example cy.sendMessageToProfile()
+       * @example cy.sendMessage()
        */
-      sendMessageToProfile(message: string): Chainable<Element>
-
-      /**
-       * Custom command to sendMessageToGroup
-       * @example cy.sendMessageToGroup()
-       */
-      sendMessageToGroup(): Chainable<Element>
+      sendMessage(message: string): Chainable<Element>
     }
   }
 }

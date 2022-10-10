@@ -402,7 +402,7 @@ Cypress.Commands.add('openChatsViaMenu', () => {
   cy.wait('@allRoomsOfUser')
 })
 
-Cypress.Commands.add('sendMessageToProfile', (message: string) => {
+Cypress.Commands.add('sendMessage', (message: string) => {
   cy.intercept('**/rest/v1/rpc/send_message_transaction*').as('sendMessage')
   cy.get('[data-cy="send-message"]')
   .type(message)
@@ -419,7 +419,6 @@ Cypress.Commands.add('openChatWithUser', (user: User) => {
 })
 
 Cypress.Commands.add('openChatWithGroup', (group: Group) => {
-  cy.get('#orga-cy').click()
   cy.filterChatsGroup(group)
   cy.contains(group.name).click()
   cy.contains(group.name)
