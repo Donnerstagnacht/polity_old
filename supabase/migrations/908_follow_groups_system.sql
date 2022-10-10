@@ -6,19 +6,7 @@
 --**** Follow Transaction ****
 --****************************
 
---1.Insert
-DROP function if exists insertGroupFollowerRelationship(follower uuid, following uuid);
-create or replace function insertGroupFollowerRelationship(follower uuid, following uuid)
-returns void
-language plpgsql
-security definer
-as
-$$
-BEGIN
-  INSERT INTO "following_group_system" (follower, following)
-  VALUES (follower, following);
-END;
-$$;
+
 
 
 
@@ -76,21 +64,7 @@ $$;
 --****************************
 
 -- 1. delete
-DROP function if exists deleteGroupFollowerRelationship(followerId uuid, followingId uuid);
-create or replace function deleteGroupFollowerRelationship(followerId uuid, followingId uuid)
-returns void
-language plpgsql
-security definer
-as
-$$
-BEGIN
-  DELETE FROM "following_group_system"
-  WHERE
-  "follower" = followerId
-  AND
-  "following" = followingId;
-END;
-$$;
+
 
 
 --2. decrement follower
