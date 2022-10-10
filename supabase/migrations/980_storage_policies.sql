@@ -1,6 +1,4 @@
--- Set up Storage!
-insert into storage.buckets (id, name, public)
-values ('avatars', 'avatars', true);
+
 -- 1.1 CREATE
 DROP POLICY IF EXISTS "Anyone can upload an avatar." ON storage.objects;
 create policy "Anyone can upload an avatar."
