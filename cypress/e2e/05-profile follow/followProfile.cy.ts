@@ -37,13 +37,8 @@ describe('Tests Profile following system', () => {
           cy.contains('#Following', (following + 1).toString())
           cy.get('#edit-cy').click()
           cy.openEditFollower()
-/*           cy.clickBackButton()
-          cy.get('[data-cy="follower-edit"]').click() */
           cy.contains('Followings').click()
           cy.filterSecondTab(user2)
-/*           cy.get('[data-cy="filterSecondTab"]')
-            .type(user2.name)
-            .type('{enter}') */
           cy.get('[data-cy="second-table"]').within(() => {
             cy.contains(user2.name)
             cy.get('[icon="pi pi-times"]').click()
@@ -78,10 +73,6 @@ describe('Tests Profile following system', () => {
           cy.openEditFollower()
           cy.contains('Followings').click()
           cy.filterSecondTab(user2)
-
-/*           cy.get('[data-cy="filterSecondTab"]')
-            .type(user2.name)
-            .type('{enter}') */
           cy.contains(user2.name)
           cy.get('[icon="pi pi-times"]')
           cy.searchUser(user2)
@@ -92,7 +83,9 @@ describe('Tests Profile following system', () => {
           cy.get('#edit-cy').click()
           cy.get('[data-cy="follower-edit"]').click()
           cy.contains('Followings').click()
-          cy.contains(user2.name).should('not.exist')
+          cy.get('[data-cy="second-table"]').within(() => {
+            cy.contains(user2.name).should('not.exist')
+          })
           cy.logout()
         })
     })
@@ -119,10 +112,6 @@ describe('Tests Profile following system', () => {
           cy.openEditFollower()
           cy.contains('Followings').click()
           cy.filterSecondTab(user2)
-
-/*           cy.get('[data-cy="filterSecondTab"]')
-            .type(user2.name)
-            .type('{enter}') */
           cy.contains(user2.name)
           cy.get('[icon="pi pi-times"]')
           cy.logout()
@@ -135,9 +124,6 @@ describe('Tests Profile following system', () => {
             cy.get('#edit-cy').click()
             cy.openEditFollower()
             cy.filterFirstTab(user1)
-/*             cy.get('[data-cy="filterFirstTab"]')
-              .type(user1.name)
-              .type('{enter}') */
             cy.contains(user1.name)
             cy.removeFollower(user1)
             cy.openProfileLoggedInUserViaMainMenu()
@@ -148,7 +134,9 @@ describe('Tests Profile following system', () => {
             cy.get('#edit-cy').click()
             cy.get('[data-cy="follower-edit"]').click()
             cy.contains('Followings').click()
-            cy.contains(user2.name).should('not.exist')
+            cy.get('[data-cy="second-table"]').within(() => {
+              cy.contains(user2.name).should('not.exist')
+            })
             cy.logout()
           })
         })
