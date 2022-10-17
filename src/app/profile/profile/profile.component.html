@@ -2,7 +2,7 @@
 <app-menu-bar-secondary-top
   [megaMenuItemSpecial]="menuItemsMegaSpecial"
   [megaMenuItemStandart]="menuItemsMegaStandart"
-  [specialOrStandart]="profileUI.isOwner">
+  [specialOrStandart]="profileUI.isOwner || false">
 </app-menu-bar-secondary-top>
   <app-wrapper-grid [noTopBar]="false">
     <div slot="main">

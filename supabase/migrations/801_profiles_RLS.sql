@@ -16,8 +16,7 @@ CREATE POLICY "Authenticated users can view profiles."
     ON public.profiles
     AS PERMISSIVE
     FOR SELECT
-    TO public
-    --TO authenticated
+    TO authenticated
     USING (true);
 -- 6.3.1 UPDATE: Authenticated user can edit profiles
 DROP POLICY IF EXISTS "Authenticated users can update profiles." ON profiles;

@@ -9,7 +9,9 @@ Cypress.Commands.add('register', (name: string, email: string, password: string)
   cy.get('[data-cy="email"]').type(email)
   cy.get('[data-cy="password"]').clear()
   cy.get('[data-cy="password"]').type(password)
+  cy.intercept('**/auth/v1/signup*').as('register')
   cy.get('[data-cy="createAccount"]').click()
+  cy.wait('@register')
   cy.url().should('include', 'login')
 })
 
@@ -19,7 +21,9 @@ Cypress.Commands.add('login', (email: string, password: string) => {
   cy.get('[data-cy="email"]').type(email);
   cy.get('[data-cy="password"]').clear();
   cy.get('[data-cy="password"]').type(password);
+  cy.intercept('**/auth/v1/token*').as('login')
   cy.get('[data-cy="login"]').click();
+  cy.wait('@login')
   cy.url().should('include', 'profile')
 })
 

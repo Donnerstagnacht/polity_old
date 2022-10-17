@@ -27,7 +27,7 @@ export class RegisterComponent implements OnInit {
   public async createAccount() {
     try {
       await this.authentificationService.signUp(this.account);
-      this.router.navigate(['/profile']);
+      this.router.navigate(['/login']);
     } catch (error: any) {
       alert(error.error_description || error.message);
     }

@@ -360,6 +360,9 @@ export class ProfileService {
         this.updateIsProfileOwner(profil_id, false);
         console.log('not owner')
       }
+    } else {
+      this.updateIsProfileOwner(profil_id, false);
+      console.log('not owner')
     }
   }
 
