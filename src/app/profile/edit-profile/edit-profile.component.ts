@@ -61,10 +61,6 @@ export class EditProfileComponent implements OnInit, OnDestroy {
           if(profile) {
             const profilecore: ProfileCore = {
               id: profile.id,
-              amendment_counter: profile.amendment_counter,
-              follower_counter: profile.follower_counter,
-              following_counter: profile.following_counter,
-              groups_counter: profile.groups_counter,
               name: profile.name,
               website: profile.website,
               avatar_url: profile.avatar_url,
@@ -74,7 +70,6 @@ export class EditProfileComponent implements OnInit, OnDestroy {
               post_code: profile.post_code,
               city: profile.city,
               about: profile.about,
-              unread_notifications_counter: profile.unread_notifications_counter,
               fts: profile.fts
             }
             this.profile = JSON.parse(JSON.stringify(profilecore));

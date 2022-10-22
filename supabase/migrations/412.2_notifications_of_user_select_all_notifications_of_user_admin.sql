@@ -104,3 +104,23 @@ RETURN QUERY
 ;
 END;
 $$;
+
+
+DROP function if exists set_non_existing_groups_set_notifications_to_false(user_id_in uuid);
+create or replace function set_non_existing_groups_set_notifications_to_false(user_id_in uuid)
+returns void
+language plpgsql
+security definer
+as
+$$
+BEGIN
+  update notifications_of_groups
+  set "new" = false
+  where
+      notifier = user_id_in
+    AND NOT
+      title = 'Anfrage für Mitgliedschaft'
+    AND
+      for_admins = false;
+END;
+$$;

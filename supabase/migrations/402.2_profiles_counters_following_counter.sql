@@ -7,7 +7,7 @@ security definer
 as
 $$
 BEGIN
-  update profiles
+  update profiles_counters
   set "following_counter" = "following_counter" + 1
   where id = userId;
 END
@@ -22,7 +22,7 @@ security definer
 as
 $$
 BEGIN
-  update profiles
+  update profiles_counters
   set "following_counter" = "following_counter" - 1
   where id = userId;
 END;

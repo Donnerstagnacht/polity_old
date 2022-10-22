@@ -39,7 +39,9 @@ export class ProfileService {
   async upsert(uuid: string): Promise<void> {
     await this.selectProfil(uuid)
     .then((results) => {
-      const profile: Profile = results.data;
+      console.log('results inner')
+      console.log(results)
+      const profile: ProfileCore = results;
       console.log('profile data from service');
       console.log(profile);
       this.profileStore.upsert(uuid, profile);
@@ -68,6 +70,25 @@ export class ProfileService {
     return subscription;
   }
 
+  getRealTimeChangesCounters(uuid: string): RealtimeSubscription {
+    console.log('called counters', uuid)
+    const subscription = this.supabaseClient
+    .from(`profiles_counters`)
+    // .from(`profiles_counters:id=eq.${uuid}`)
+    .on('UPDATE', (payload) => {
+      console.log('update')
+      console.log(payload)
+      this.profileStore.upsert(payload.new.id, payload.new)
+    })
+/*     .on('INSERT', (payload) => {
+      console.log('insert')
+      console.log(payload)
+      this.profileStore.upsert(payload.new.id, payload.new)
+    }) */
+    .subscribe()
+    return subscription;
+  }
+
   async update(id: any, profile: Partial<ProfileCore>): Promise<PostgrestResponse<any>> {
     const update = {
       ...profile,
@@ -88,9 +109,12 @@ export class ProfileService {
     this.profileStore.remove(id);
   }
 
-  private async selectProfil(uuid: string): Promise<{data: any, error: any}> {
+  private async selectProfil(uuid: string): Promise<ProfileCore> {
     const results: {data: any, error: any} = await this.supabaseClient
-      .from('profiles')
+      .rpc('select_profile_and_counters', {
+        user_id: uuid
+      });
+/*       .from('profiles')
       .select(
         `id,
         name,
@@ -102,18 +126,23 @@ export class ProfileService {
         post_code,
         city,
         about,
-        amendment_counter,
-        follower_counter,
-        following_counter,
-        groups_counter,
-        unread_notifications_counter
+        profiles_counters (
+          amendment_counter,
+          follower_counter,
+          following_counter,
+          groups_counter,
+          unread_notifications_counter
+        )
         `
       )
       .eq('id', uuid)
-      .single();
+      .single(); */
       if(results.error) throw  new Error(results.error.message);
       console.log(results.data);
-    return results;
+      console.log(results.data[0]);
+      const profileCore: ProfileCore = results.data[0];
+      console.log(results.data[0]);
+    return profileCore;
   }
 
   async getAllFollowers(profil_id: string): Promise<void> {

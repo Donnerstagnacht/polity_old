@@ -39,13 +39,16 @@ set
   post_code = '736233',
   street = 'Liebertstraße 18',
   about = 'Ich bin ein Testmitglied',
-  website = 'wwww.test.com',
+  website = 'wwww.test.com'
+where id = '42e58ca1-2eb8-4651-93c2-cefba2e32f42';
+
+update public.profiles_counters
+set
   amendment_counter = 0,
   follower_counter = 1,
   following_counter = 2,
   groups_counter = 1
 where id = '42e58ca1-2eb8-4651-93c2-cefba2e32f42';
-
 
 update public.profiles
 set
@@ -58,13 +61,16 @@ set
   post_code = '732283',
   street = 'Liebertstraße 18',
   about = 'Ich bin ein anderes Testmitglied',
-  website = 'wwww.test2.com',
+  website = 'wwww.test2.com'
+where id = 'f8b028b8-231b-4c80-abf2-7ca787fe686f';
+
+update public.profiles_counters
+set
   amendment_counter = 0,
   follower_counter = 1,
   following_counter = 2,
   groups_counter = 2
 where id = 'f8b028b8-231b-4c80-abf2-7ca787fe686f';
-
 
 --insert groups
 insert into public.groups (

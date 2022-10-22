@@ -2,10 +2,6 @@ import { profile_list_item } from "src/app/groups/state/profile_list_item.model"
 
 export interface ProfileCore {
   id: string;
-  amendment_counter: number;
-  follower_counter: number;
-  following_counter: number;
-  groups_counter: number;
   name: string;
   website: string;
   avatar_url: string;
@@ -15,12 +11,20 @@ export interface ProfileCore {
   post_code: string;
   city: string;
   about: string;
-  unread_notifications_counter: number;
 
   fts?: string // test
 }
 
-export interface Profile extends ProfileCore {
+export interface ProfileWithCounters extends ProfileCore {
+  amendment_counter: number;
+  follower_counter: number;
+  following_counter: number;
+  groups_counter: number;
+  unread_notifications_counter: number;
+
+}
+
+export interface Profile extends ProfileWithCounters {
   groups?: profile_list_item[],
   followings: profile_list_item[],
   followers: profile_list_item[],

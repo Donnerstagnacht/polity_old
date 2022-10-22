@@ -5,7 +5,7 @@ import { ProfileService } from '../state/profile.service';
 import { FollowingService } from 'src/app/following-profiles-system/services/following.service';
 import { MegaMenuItem, MenuItem, MessageService } from 'primeng/api';
 import { profileMenuitems, profileMenuitemsIsOwner, profileMenuitemsMega, profileMenuitemsMegaIsOwner } from '../state/profileMenuItems';
-import { Profile, ProfileCore, ProfileUI } from '../state/profile.model';
+import { Profile, ProfileCore, ProfileUI, ProfileWithCounters } from '../state/profile.model';
 import { ProfileQuery } from '../state/profile.query';
 import { Subscription } from 'rxjs';
 import { RealtimeSubscription } from '@supabase/supabase-js';
@@ -22,7 +22,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   menuItemsMegaSpecial: MegaMenuItem[] = [];
   menuItemsMegaStandart: MegaMenuItem[] = [];
 
-  profile?: ProfileCore;
+  profile?: ProfileWithCounters;
   profileUI!: ProfileUI;
 
   selectedProfileId: string | null = null;
@@ -32,6 +32,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   profileUISubscription: Subscription | undefined;
   userSubscription: Subscription | undefined;
   profileRealtimeChangesSubscription: RealtimeSubscription | undefined;
+  profilesCounterRealtimeChangesSubscription: RealtimeSubscription | undefined;
   followerRealTimeChangesSubscription: RealtimeSubscription | undefined;
 
   loading: boolean = false;
@@ -92,6 +93,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
           }
         })
         this.profileRealtimeChangesSubscription = this.profileService.getRealTimeChanges(this.selectedProfileId);
+        this.profilesCounterRealtimeChangesSubscription = this.profileService.getRealTimeChangesCounters(this.selectedProfileId);
         this.followerRealTimeChangesSubscription = this.profileService.getRealTimeChangesIfStillFollower(this.selectedProfileId);
       } catch(error: any) {
         this.messageService.add({severity:'error', summary: error.message});
@@ -181,6 +183,9 @@ export class ProfileComponent implements OnInit, OnDestroy {
     }
     if(this.profileUISubscription) {
       this.profileUISubscription.unsubscribe()
+    }
+    if(this.profilesCounterRealtimeChangesSubscription) {
+      this.profilesCounterRealtimeChangesSubscription.unsubscribe()
     }
   }
 }

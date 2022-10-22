@@ -7,7 +7,7 @@ security definer
 as
 $$
 BEGIN
-  update profiles
+  update profiles_counters
   set "unread_notifications_counter" = "unread_notifications_counter" + 1
   where id = userId;
 END;
@@ -22,7 +22,7 @@ security definer
 as
 $$
 BEGIN
-  update profiles
+  update profiles_counters
   set "unread_notifications_counter" = "unread_notifications_counter" + 1
   where 
   id IN (
@@ -44,7 +44,7 @@ security definer
 as
 $$
 BEGIN
-  update profiles
+  update profiles_counters
   set "unread_notifications_counter" = "unread_notifications_counter" - 1
   where id = userId;
 END;
@@ -59,7 +59,7 @@ security definer
 as
 $$
 BEGIN
-  update profiles
+  update profiles_counters
   set "unread_notifications_counter" = 0
   where id = user_id;
 END;

@@ -90,13 +90,13 @@ Cypress.Commands.add('uploadImage', (path: string) => {
 })
 
 Cypress.Commands.add('openProfileLoggedInUserViaMainMenu', () => {
-  cy.intercept('**/rest/v1/profiles*').as('profiles')
+  cy.intercept('**/rest/v1/rpc/select_profile_and_counters*').as('profiles')
   cy.get('#profile-cy').click()
   cy.wait('@profiles')
 })
 
 Cypress.Commands.add('openProfileAndWaitForProfileData', () => {
-  cy.intercept('**/rest/v1/profiles*').as('profiles')
+  cy.intercept('**/rest/v1/rpc/select_profile_and_counters*').as('profiles')
   cy.get('#overview-cy').click()
   cy.wait('@profiles')
 })

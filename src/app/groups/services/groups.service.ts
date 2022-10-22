@@ -90,6 +90,7 @@ export class GroupsService {
     if(this.loggedInID) {
       loggedInID = this.loggedInID;
     }
+    console.log('select Admin groups', loggedInID)
     const groupsUserAdmin: {data: any, error: any} = await this.supabaseClient
     .from('group_members')
     .select(

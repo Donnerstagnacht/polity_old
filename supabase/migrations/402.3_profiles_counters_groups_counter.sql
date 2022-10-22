@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION public.increment_groups_counter(
     VOLATILE SECURITY DEFINER PARALLEL UNSAFE
 AS $BODY$
 BEGIN
-  update profiles
+  update profiles_counters
   set "groups_counter" = "groups_counter" + 1
   where id = userId;
 END
@@ -31,7 +31,7 @@ CREATE OR REPLACE FUNCTION public.decrement_groups_counter(
     VOLATILE SECURITY DEFINER PARALLEL UNSAFE
 AS $BODY$
 BEGIN
-  update profiles
+  update profiles_counters
   set "groups_counter" = "groups_counter" - 1
   where id = user_id;
 END

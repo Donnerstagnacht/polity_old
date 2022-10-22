@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { RealtimeSubscription } from '@supabase/supabase-js';
 import { MegaMenuItem, MenuItem, MessageService } from 'primeng/api';
 import { Subscription } from 'rxjs';
-import { ProfileService } from 'src/app/profile/state/profile.service';
 import { PaginationData, PaginationFrontendService } from 'src/app/utilities/storage/services/pagination-frontend.service';
 import { orgaMenuitems, orgaMenuitemsMega } from '../../chat/state/orgaMenuItems';
 import { News } from '../state/news.model';
@@ -48,8 +47,7 @@ export class NewsComponent implements OnInit {
     private messageService: MessageService,
     private newsService: NewsService,
     private newsQuery: NewsQuery,
-    private paginationService: PaginationFrontendService,
-    private profileService: ProfileService
+    private paginationService: PaginationFrontendService
   ) { }
 
   ngOnInit(): void {
@@ -72,9 +70,12 @@ export class NewsComponent implements OnInit {
     }
 
     try {
+      console.log('onDestroy')
       await this.newsService.resetNotificationsCounter();
       await this.newsService.markNotificationsAsUnread();
       await this.newsService.markNotificationsAsUnreadFromGroup();
+      await this.newsService.set_non_existing_groups_set_notifications_to_false()
+
     } catch(error: any) {
       this.messageService.add({severity: 'success', summary: 'success'});
     }

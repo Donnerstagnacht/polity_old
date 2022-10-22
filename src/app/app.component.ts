@@ -1,10 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { RealtimeSubscription } from '@supabase/supabase-js';
-import { timeStamp } from 'console';
-import { Message, MessageService } from 'primeng/api';
+import { MessageService } from 'primeng/api';
 import { Subscription, first, take, pipe, last, Observable } from 'rxjs';
 import { AuthentificationQuery } from './authentification/state/authentification.query';
-import { AuthentificationService } from './authentification/state/authentification.service';
 import { News } from './news/state/news.model';
 import { NewsQuery } from './news/state/news.query';
 import { NewsService } from './news/state/news.service';
@@ -36,8 +34,6 @@ export class AppComponent implements OnInit, OnDestroy {
     private profileQuery: ProfileQuery,
     private profileService: ProfileService,
     private messageService: MessageService,
-    private newsQuery: NewsQuery,
-    private newsStore: NewsStore,
     private newsService: NewsService
     ) { }
 
@@ -49,7 +45,7 @@ export class AppComponent implements OnInit, OnDestroy {
             this.unreadNotifications = profile.unread_notifications_counter;
           }
         });
-        this.profileRealTimeSubscription = this.profileService.getRealTimeChanges(uuid);
+        this.profileRealTimeSubscription = this.profileService.getRealTimeChangesCounters(uuid);
         this.newsRealTImeSubscription = this.newsService.getRealTimeChangesNews();
         this.newsService.getRealTimeChangesOfAdminGroups();
         this.notifierSubscription = this.newsService.notifier$.subscribe((news: News) => {

@@ -254,7 +254,7 @@ export class NewsService implements OnDestroy {
 
   async resetNotificationsCounter(): Promise<{ data: any, error: any }> {
     const resetCounterResponse: { data: any, error: any } = await this.supabaseClient
-      .from('profiles')
+      .from('profiles_counters')
       .update({unread_notifications_counter: 0})
       .eq('id', this.loggedInID);
     if(resetCounterResponse.error) throw new Error(resetCounterResponse.error.message);
@@ -267,7 +267,8 @@ export class NewsService implements OnDestroy {
       .from('notifications_of_user')
       .update({new: false})
       .eq('notifying', this.loggedInID);
-    await this.markNotificationsAsUnreadFromGroup();
+    // await this.markNotificationsAsUnreadFromGroup();
+    // await this.set_non_existing_groups_set_notifications_to_false()
     if(markAsUnreadResponse.error) throw new Error(markAsUnreadResponse.error.message);
     return markAsUnreadResponse;
   }
@@ -302,6 +303,15 @@ export class NewsService implements OnDestroy {
     if (this.loggedInID) {
       this.profileService.updateUnreadNotificationCounter(this.loggedInID);
     }
+    return resetResponse;
+  }
+
+  async set_non_existing_groups_set_notifications_to_false(): Promise<{data: any, error: any}> {
+    const resetResponse: {data: any, error: any} = await this.supabaseClient
+      .rpc('set_non_existing_groups_set_notifications_to_false', {
+        user_id_in: this.loggedInID,
+      });
+    if(resetResponse.error) throw new Error(resetResponse.error.message);
     return resetResponse;
   }
 

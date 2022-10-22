@@ -11,11 +11,6 @@ CREATE TABLE IF NOT EXISTS public.profiles
     "street" text COLLATE pg_catalog."default" DEFAULT ''::text,
     "about" text COLLATE pg_catalog."default" DEFAULT ''::text,
     "website" text COLLATE pg_catalog."default" DEFAULT ''::text,
-    "amendment_counter" bigint   DEFAULT 0::bigint,
-    "follower_counter" bigint  DEFAULT 0::bigint,
-    "following_counter" bigint  DEFAULT 0::bigint,
-    "groups_counter" bigint  DEFAULT 0::bigint,
-    "unread_notifications_counter" bigint  DEFAULT 0::bigint,
     CONSTRAINT profiles_pkey PRIMARY KEY (id),
     CONSTRAINT profiles_id_fkey FOREIGN KEY (id)
         REFERENCES auth.users (id) MATCH SIMPLE
