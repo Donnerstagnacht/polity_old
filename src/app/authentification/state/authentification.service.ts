@@ -38,6 +38,11 @@ export class AuthentificationService {
 
   async signOut() {
     const response = await this.supabaseClient.auth.signOut();
+    
+    if (response.error) {
+      throw new Error(response.error.message);
+    }
+
     this.supabaseClient.removeAllChannels();
 
     this.authentificationStore.reset();
