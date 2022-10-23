@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ID } from '@datorama/akita';
-import { createClient, RealtimeSubscription, SupabaseClient } from '@supabase/supabase-js';
+import { createClient, RealtimeChannel, SupabaseClient } from '@supabase/supabase-js';
 import { AuthentificationQuery } from '../../authentification/state/authentification.query';
 import { environment } from 'src/environments/environment';
 import { Chat } from './chat.model';
@@ -12,8 +12,8 @@ import { Subscription } from 'rxjs';
 export class ChatService {
   private supabaseClient: SupabaseClient;
 
-  profileRealtimeSubscription: RealtimeSubscription | undefined;
-  groupRealtimeSubscription: RealtimeSubscription | undefined;
+  profileRealtimeChannel: RealtimeChannel | undefined;
+  groupRealtimeChannel: RealtimeChannel | undefined;
   authSubscription: Subscription | undefined;
   authSubscription2: Subscription | undefined;
 
@@ -67,18 +67,31 @@ export class ChatService {
     this.chatStore.remove(id);
   }
 
-  getRealTimeChangesOnNewFollow(): RealtimeSubscription {
+  getRealTimeChangesOnNewFollow(): RealtimeChannel {
     let loggedInID: string | null = '';
     this.authSubscription2 = this.authentificationQuery.uuid$.subscribe((uuid: any) => {
       loggedInID = uuid;
     });
     const subscription = this.supabaseClient
-    .from<any>(`following_profile_system:following=eq.${loggedInID}`)
-    .on('INSERT', (payload) => {
+    .channel(`following_profile_system:following=eq.${loggedInID}`)
+    .on('postgres_changes',
+      {
+        event: 'INSERT',
+        schema: 'public',
+        table: 'following_profile_system'
+      },
+      payload => {
+        console.log()
+        console.log(payload);
+        this.selectAllRoomsOfUser();
+      }
+    )
+    // .from<any>(`following_profile_system:following=eq.${loggedInID}`)
+/*     .on('INSERT', (payload) => {
       console.log()
       console.log(payload);
       this.selectAllRoomsOfUser();
-    })
+    }) */
     .subscribe()
     return subscription;
   }
@@ -88,8 +101,50 @@ export class ChatService {
       allChats.forEach((chat: Chat) => {
         let roomId: string = chat.id;
         const subscription = this.supabaseClient
-        .from<any>(`rooms:id=eq.${roomId}`)
-        .on('UPDATE', (payload) => {
+        .channel(`rooms:id=eq.${roomId}`)
+        .on('postgres_changes',
+          {
+            event: 'UPDATE',
+            schema: 'public',
+            table: 'rooms'
+          },
+          payload => {
+            this.chatStore.update(
+              roomId,
+              {
+                last_message: payload.new['last_message'],
+                last_message_time: payload.new['last_message_time']
+              }
+            )
+          }
+        )
+      .on('postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'rooms'
+        },
+        payload => {
+          console.log('INSERT')
+          console.log('payload')
+          console.log(payload)
+        }
+      )
+      .on('postgres_changes',
+        {
+          event: 'DELETE',
+          schema: 'public',
+          table: 'rooms'
+        },
+        payload => {
+          console.log('DELETE')
+          console.log('Payload')
+          console.log(payload)
+          this.chatStore.remove(payload.old['id']);
+        }
+      )
+      //  .from<any>(`rooms:id=eq.${roomId}`)
+/*         .on('UPDATE', (payload) => {
           this.chatStore.update(
             roomId,
             {
@@ -97,18 +152,18 @@ export class ChatService {
               last_message_time: payload.new.last_message_time
             }
           )
-        })
-        .on('INSERT', (payload) => {
+        }) */
+/*         .on('INSERT', (payload) => {
           console.log('INSERT')
           console.log('payload')
           console.log(payload)
-        })
-        .on('DELETE', (payload) => {
+        }) */
+/*         .on('DELETE', (payload) => {
           console.log('DELETE')
           console.log('Payload')
           console.log(payload)
           this.chatStore.remove(payload.old.id);
-        })
+        }) */
         .subscribe()
         return subscription;
         })
@@ -116,15 +171,31 @@ export class ChatService {
       allChats.forEach((chat: Chat) => {
         let roomId: string = chat.id;
         const subscription = this.supabaseClient
-        .from<any>(`rooms_participants:room_id=eq.${roomId}`)
-        .on('UPDATE', (payload) => {
+          .channel(`public:rooms_participants:room_id=eq.${roomId}`)
+          .on('postgres_changes',
+            {
+              event: 'UPDATE',
+              schema: 'public',
+              table: 'rooms_participants'
+            },
+            payload => {
+              this.chatStore.update(
+                roomId,
+                {
+                  number_of_unread_messages: payload.new['number_of_unread_messages'],
+                }
+              )
+            }
+          )
+        // .from<any>(`rooms_participants:room_id=eq.${roomId}`)
+/*         .on('UPDATE', (payload) => {
           this.chatStore.update(
             roomId,
             {
               number_of_unread_messages: payload.new.number_of_unread_messages,
             }
           )
-        })
+        }) */
         .subscribe()
         return subscription;
         })

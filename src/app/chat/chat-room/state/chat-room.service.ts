@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { createClient, RealtimeSubscription, SupabaseClient } from '@supabase/supabase-js';
+import { createClient, RealtimeChannel, SupabaseClient } from '@supabase/supabase-js';
 import { Message } from 'src/app/UI-elements/message/message.component';
 import { environment } from 'src/environments/environment';
 import { ChatRoomStore, ChatRoomState } from './chat-room.store';
@@ -45,10 +45,31 @@ export class ChatRoomService {
     return messages;
   }
 
-  getRealTimeChangesMessages(room_id: string): RealtimeSubscription {
+  getRealTimeChangesMessages(room_id: string): RealtimeChannel {
     const subscription = this.supabaseClient
-    .from<any>(`rooms_messages:room_id=eq.${room_id}`)
-    .on('INSERT', (payload) => {
+      .channel(`rooms_messages:room_id=eq.${room_id}`)
+      .on('postgres_changes',
+      {
+        event: 'INSERT',
+        schema: 'public',
+        table: 'rooms_messages'
+      },
+      payload => {
+        const newMessage: Message = {
+          message_id: payload.new['message_id'],
+          created_at_in: payload.new['created_at'],
+          sender_id: payload.new['user_id'],
+          content_in: payload.new['content']
+        }
+        this.chatRoomStore.update((state: ChatRoomState) => {
+          let oldMessages: Message[] =state.messages
+          let newMessages: number = oldMessages.push(newMessage)
+          state.messages = oldMessages;
+        })
+        this.newMessageOfUserNotifier.next(newMessage.sender_id);
+      })
+    // .from<any>(`rooms_messages:room_id=eq.${room_id}`)
+/*     .on('INSERT', (payload) => {
       const newMessage: Message = {
         message_id: payload.new.message_id,
         created_at_in: payload.new.created_at,
@@ -61,7 +82,7 @@ export class ChatRoomService {
         state.messages = oldMessages;
       })
       this.newMessageOfUserNotifier.next(newMessage.sender_id);
-    })
+    }) */
     .subscribe()
     return subscription;
   }

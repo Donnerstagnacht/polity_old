@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { NgEntityService } from '@datorama/akita-ng-entity-service';
 import { GroupsStore, GroupsState } from './groups.store';
 import { Group, GroupCore } from './group.model';
-import { createClient, PostgrestResponse, RealtimeSubscription, SupabaseClient } from '@supabase/supabase-js';
+import { createClient, PostgrestResponse, RealtimeChannel, SupabaseClient } from '@supabase/supabase-js';
 import { environment } from 'src/environments/environment';
 import { profile_list_item } from './profile_list_item.model';
 import { GroupsQuery } from './groups.query';
@@ -29,12 +29,24 @@ export class GroupsService extends NgEntityService<GroupsState> {
     }
   }
 
-  getRealTimeChanges(uuid: string): RealtimeSubscription {
+  getRealTimeChanges(uuid: string): RealtimeChannel {
     const subscription = this.supabaseClient
-    .from<Group>(`groups:id=eq.${uuid}`)
+      .channel(`groups:id=eq.${uuid}`)
+      .on('postgres_changes',
+        {
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'groups'
+        },
+        payload => {
+          this.groupsStore.update(payload.new['id'], payload.new)
+        }
+      )
+      
+/*     .from<Group>(`groups:id=eq.${uuid}`)
     .on('UPDATE', (payload) => {
       this.groupsStore.update(payload.new.id, payload.new)
-    })
+    }) */
     .subscribe()
     return subscription;
   }
@@ -58,16 +70,16 @@ export class GroupsService extends NgEntityService<GroupsState> {
 
     const response: PostgrestResponse<any> = await this.supabaseClient
       .from('groups')
-      .update(group, {
+      .update(group)/* , {
       returning: 'minimal', // Don't return the value after inserting
-      })
+      }) */
       .match({id: updateId});
     if(response.error) throw new Error(response.error.message);
   }
 
   async selectGroup(uuid: string): Promise<{data: any, error: any}> {
     let results: {data: any, error: any} = await this.supabaseClient
-      .from<Group>('groups')
+      .from('groups')
       .select(
         `id,
         name,
@@ -228,11 +240,77 @@ export class GroupsService extends NgEntityService<GroupsState> {
     return members;
   }
 
-  getRealTimeChangesMembershipRequests(group_id: string): RealtimeSubscription {
+  getRealTimeChangesMembershipRequests(group_id: string): RealtimeChannel {
     console.log('test 2 activated')
     const subscription = this.supabaseClient
-    .from<any>(`membership_requests`)
-    .on('INSERT', (payload) => {
+      .channel('membership_requests')
+      .on('postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'membership_requests'
+        },
+        payload => {
+          console.log('Payload')
+          console.log(payload)
+          if(payload.new['group_requested'] === group_id) {
+            this.selectProfile(payload.new['user_requests']).then((member) => {
+              console.log(member)
+              console.log(member.data.id)
+              console.log(member.data.name)
+              console.log(member.data.avatar_url)
+              console.log()
+              let memberData: profile_list_item = {
+                id: payload.new['id'],
+                user_id: member.data.id,
+                avatar_url: member.data.avatar_url,
+                name: member.data.name
+              }
+              console.log(memberData)
+              const entity = this.groupsQuery.getEntity(group_id);
+              console.log('oldState');
+              console.log(entity?.membership_requests);
+              if(entity && entity.membership_requests) {
+                const membership_requests: profile_list_item[] = Object.assign([], entity.membership_requests)
+                membership_requests.push(memberData);
+                console.log('newState');
+                console.log(membership_requests)
+                this.groupsStore.update(group_id, {membership_requests: membership_requests})
+              }
+            })
+          }
+        }
+      )
+    .on('postgres_changes',
+      {
+        event: 'DELETE',
+        schema: 'public',
+        table: 'membership_requests'
+      },
+      payload => {
+        console.log('Payload')
+        console.log(payload)
+        if(payload.old['group_requested'] === group_id) {
+            console.log(payload.old['id'])
+            const entity = this.groupsQuery.getEntity(group_id);
+            console.log('oldState');
+            console.log(entity);
+            if(entity && entity.membership_requests) {
+              const membership_requests: profile_list_item[] = Object.assign([], entity.membership_requests)
+              let requestId: number = membership_requests.findIndex((request) => request.id === payload.old['id']);
+              membership_requests.splice(requestId, 1);
+              console.log('newState');
+              console.log(requestId)
+              console.log(payload.old['id'])
+              console.log(membership_requests);
+              this.groupsStore.update(group_id, {membership_requests: membership_requests})
+            }
+        }
+      }
+    )  
+    
+    // .from<any>(`membership_requests`)
+/*     .on('INSERT', (payload) => {
       console.log('Payload')
       console.log(payload)
       if(payload.new.group_requested === group_id) {
@@ -260,9 +338,9 @@ export class GroupsService extends NgEntityService<GroupsState> {
             this.groupsStore.update(group_id, {membership_requests: membership_requests})
           }
         })
-      }
-    })
-    .on('DELETE', (payload) => {
+      } */
+    // })
+/*     .on('DELETE', (payload) => {
       console.log('Payload')
       console.log(payload)
       if(payload.old.group_requested === group_id) {
@@ -281,18 +359,104 @@ export class GroupsService extends NgEntityService<GroupsState> {
             this.groupsStore.update(group_id, {membership_requests: membership_requests})
           }
       }
-    })
+    }) */
     .subscribe()
     return subscription;
   }
 
 
 
-  getRealTimeChangesMembers(group_id: string): RealtimeSubscription {
+  getRealTimeChangesMembers(group_id: string): RealtimeChannel {
     console.log('activated Get Members')
     const subscription = this.supabaseClient
-    .from<any>(`group_members`)
-    .on('INSERT', (payload) => {
+    .channel('group_members')
+    .on('postgres_changes',
+      {
+        event: 'INSERT',
+        schema: 'public',
+        table: 'group_members'
+      },
+      payload => {
+        console.log('Payload')
+        console.log(payload)
+        if(payload.new['group_id'] === group_id) {
+          this.selectMember(group_id, payload.new['user_id']).then((member) => {
+            console.log(member)
+            console.log(member.data[0].id)
+            console.log(member.data[0].user_id)
+            console.log(member.data[0].profiles.name)
+            console.log(member.data[0].profiles.avatar_url)
+            console.log()
+  
+            let memberData: profile_list_item = {
+              id: member.data[0].id,
+              user_id: member.data[0].user_id,
+              avatar_url: member.data[0].profiles.avatar_url,
+              name: member.data[0].profiles.name
+            }
+            console.log(memberData)
+            const entity = this.groupsQuery.getEntity(group_id);
+  
+            console.log('oldState');
+            console.log(entity);
+            if(entity && entity.members) {
+              const groupMembers: profile_list_item[] = Object.assign([], entity.members)
+              groupMembers.push(memberData);
+              console.log('newState');
+              console.log(groupMembers)
+              this.groupsStore.update(group_id, {members: groupMembers})
+            }
+          })
+        }
+      }
+    )
+    .on('postgres_changes',
+      {
+        event: 'DELETE',
+        schema: 'public',
+        table: 'group_members'
+      },
+      payload => {
+        console.log('Payload')
+        console.log(payload)
+        console.log('group.id_')
+        console.log(payload.old['group_id'])
+        console.log(group_id)
+        if(payload.old['group_id'] === group_id) {
+          this.selectProfile(payload.old['user_id']).then((member) => {
+            console.log(member)
+            console.log(member.data.id)
+            console.log(member.data.name)
+            console.log(member.data.avatar_url)
+            console.log()
+  
+            let memberData: profile_list_item = {
+              id: payload.old['id'],
+              user_id: member.data.id,
+              avatar_url: member.data.avatar_url,
+              name: member.data.name
+            }
+            console.log(memberData)
+            const entity = this.groupsQuery.getEntity(group_id);
+  
+            console.log('oldState');
+            console.log(entity?.members);
+            if(entity && entity.members) {
+              const members: profile_list_item[] = Object.assign([], entity.members)
+              let requestId: number = members.findIndex((request) => request.id === payload.old['id']);
+              members.splice(requestId, 1);
+              console.log('newState');
+              console.log(requestId)
+              console.log(payload.old['id'])
+              console.log(members);
+              this.groupsStore.update(group_id, {members: members})
+            }
+          })
+        }
+      }
+    )
+    // .from<any>(`group_members`)
+/*     .on('INSERT', (payload) => {
       console.log('Payload')
       console.log(payload)
       if(payload.new.group_id === group_id) {
@@ -324,8 +488,8 @@ export class GroupsService extends NgEntityService<GroupsState> {
           }
         })
       }
-    })
-    .on('DELETE', (payload) => {
+    }) */
+/*     .on('DELETE', (payload) => {
       console.log('Payload')
       console.log(payload)
       console.log('group.id_')
@@ -362,16 +526,105 @@ export class GroupsService extends NgEntityService<GroupsState> {
           }
         })
       }
-    })
+    }) */
     .subscribe()
     return subscription;
   }
 
-  getRealTimeChangesFollowers(group_id: string): RealtimeSubscription {
+  getRealTimeChangesFollowers(group_id: string): RealtimeChannel {
     console.log('activated Get followers')
     const subscription = this.supabaseClient
-    .from<any>(`following_group_system`)
-    .on('INSERT', (payload) => {
+      .channel(`following_group_system`)
+      .on('postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'following_group_system'
+        },
+        payload => {
+          console.log('Payload')
+          console.log(payload)
+          if(payload.new['following'] === group_id) {
+            this.selectProfile(payload.new['follower']).then((member) => {
+              console.log(member)
+              console.log(member.data.id)
+              console.log(member.data.name)
+              console.log(member.data.avatar_url)
+              console.log()
+    
+              let memberData: profile_list_item = {
+                // id: payload.old['id'],
+                user_id: member.data.id,
+                avatar_url: member.data.avatar_url,
+                name: member.data.name
+              }
+              console.log(memberData)
+              const entity = this.groupsQuery.getEntity(group_id);
+    
+              console.log('oldState');
+              console.log(entity);
+              console.log('oldState followers');
+              console.log(entity?.followers);
+    
+              if(entity && entity.followers) {
+                const groupMembers: profile_list_item[] = Object.assign([], entity.followers)
+                groupMembers.push(memberData);
+                console.log('newState');
+                console.log(groupMembers)
+                this.groupsStore.update(group_id, {followers: groupMembers})
+              }
+            })
+          }
+        }
+      )
+      .on('postgres_changes',
+        {
+          event: 'DELETE',
+          schema: 'public',
+          table: 'following_group_system'
+        },
+        payload => {
+          console.log('Payload')
+          console.log(payload)
+          console.log('group.id_')
+          console.log(payload.old['following'])
+          console.log(group_id)
+          if(payload.old['following'] === group_id) {
+            this.selectProfile(payload.old['follower']).then((member) => {
+              console.log(member)
+              console.log(member.data.id)
+              console.log(member.data.name)
+              console.log(member.data.avatar_url)
+              console.log()
+    
+              let memberData: profile_list_item = {
+                id: payload.old['id'],
+                user_id: member.data.id,
+                avatar_url: member.data.avatar_url,
+                name: member.data.name
+              }
+              console.log(memberData)
+              const entity = this.groupsQuery.getEntity(group_id);
+    
+              console.log('oldState');
+              console.log(entity?.followers);
+              if(entity && entity.followers) {
+                const followers: profile_list_item[] = Object.assign([], entity.followers)
+                let requestId: number = followers.findIndex((request) => request.id === payload.old['id']);
+                followers.splice(requestId, 1);
+                console.log('newState');
+                console.log(requestId)
+                console.log(payload.old['id'])
+                console.log(followers);
+                this.groupsStore.update(group_id, {followers: followers})
+              }
+            })
+          }
+        }
+      )
+      
+    // .from<any>(`following_group_system`)
+/*     .on('INSERT', (payload) => {
       console.log('Payload')
       console.log(payload)
       if(payload.new.following === group_id) {
@@ -404,9 +657,9 @@ export class GroupsService extends NgEntityService<GroupsState> {
             this.groupsStore.update(group_id, {followers: groupMembers})
           }
         })
-      }
-    })
-    .on('DELETE', (payload) => {
+      } */
+    // })
+/*     .on('DELETE', (payload) => {
       console.log('Payload')
       console.log(payload)
       console.log('group.id_')
@@ -443,7 +696,7 @@ export class GroupsService extends NgEntityService<GroupsState> {
           }
         })
       }
-    })
+    }) */
     .subscribe()
     return subscription;
   }

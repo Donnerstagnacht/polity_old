@@ -7,7 +7,7 @@ import { GroupsService  } from '../state/groups.service';
 import { ImgUploadObject, StorageService } from 'src/app/utilities/storage/services/storage.service';
 import { Observable, Subscription } from 'rxjs';
 import { GroupsQuery } from '../state/groups.query';
-import { RealtimeSubscription } from '@supabase/supabase-js';
+import { RealtimeChannel } from '@supabase/supabase-js';
 
 @Component({
   selector: 'app-edit-group',
@@ -26,7 +26,7 @@ export class EditGroupComponent implements OnInit, OnDestroy {
   group!: GroupCore;
 
   groupCoreSubscription: Subscription | undefined;
-  groupCoreRealtimeSubscription: RealtimeSubscription | undefined;
+  groupCoreRealtimeChannel: RealtimeChannel | undefined;
 
   constructor(
     private route: ActivatedRoute,
@@ -72,7 +72,7 @@ export class EditGroupComponent implements OnInit, OnDestroy {
           }
         }
         if(this.selectedGroupId) {
-          this.groupCoreRealtimeSubscription = this.groupsService.getRealTimeChanges(this.selectedGroupId);
+          this.groupCoreRealtimeChannel = this.groupsService.getRealTimeChanges(this.selectedGroupId);
         }
       });
     }
@@ -83,8 +83,8 @@ export class EditGroupComponent implements OnInit, OnDestroy {
     if(this.groupCoreSubscription) {
       this.groupCoreSubscription.unsubscribe()
     }
-    if(this.groupCoreRealtimeSubscription) {
-      this.groupCoreRealtimeSubscription.unsubscribe()
+    if(this.groupCoreRealtimeChannel) {
+      this.groupCoreRealtimeChannel.unsubscribe()
     }
   }
 

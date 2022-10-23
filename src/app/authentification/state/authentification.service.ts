@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { resetStores } from '@datorama/akita';
 import { PersistStateStorage } from '@datorama/akita/src/lib/persistState';
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { AuthResponse, createClient, SupabaseClient } from '@supabase/supabase-js';
 import { ChatRoomStore } from 'src/app/chat/chat-room/state/chat-room.store';
 import { ChatStore } from 'src/app/chat/state/chat.store';
 import { GroupsStore } from 'src/app/groups/state/groups.store';
@@ -9,7 +9,6 @@ import { NewsStore } from 'src/app/news/state/news.store';
 import { ProfileStore } from 'src/app/profile/state/profile.store';
 import { environment } from 'src/environments/environment';
 import { Account } from 'src/types/account';
-import { SessionResponse } from './authentification.model';
 import { AuthentificationStore } from './authentification.store';
 
 @Injectable({ providedIn: 'root' })
@@ -29,17 +28,17 @@ export class AuthentificationService {
   }
 
   async signIn(email: string, password: string) {
-    const response: SessionResponse = await this.supabaseClient.auth.signIn({ email, password });
+    const response: AuthResponse = await this.supabaseClient.auth.signInWithPassword({ email, password });
     if (response.error) throw new Error(response.error.message);
     this.authentificationStore.update({
       sessionResponse: response,
-      uuid: response.user?.id
+      uuid: response.data.user?.id
     })
   }
 
   async signOut() {
     const response = await this.supabaseClient.auth.signOut();
-    this.supabaseClient.removeAllSubscriptions();
+    this.supabaseClient.removeAllChannels();
 
     this.authentificationStore.reset();
     this.profileStore.reset();

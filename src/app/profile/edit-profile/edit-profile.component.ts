@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { RealtimeSubscription, Session } from '@supabase/supabase-js';
+import { RealtimeChannel, Session } from '@supabase/supabase-js';
 import { MessageService } from 'primeng/api';
 import { Subscription } from 'rxjs';
 import { AuthentificationQuery } from 'src/app/authentification/state/authentification.query';
@@ -25,7 +25,7 @@ export class EditProfileComponent implements OnInit, OnDestroy {
 
   profileSubscription: Subscription | undefined;
   userIdSubscription: Subscription | undefined;
-  profileRealTimeSubscription: RealtimeSubscription | undefined;
+  profileRealTimeSubscription: RealtimeChannel | undefined;
 
   constructor(
     private messageService: MessageService,

@@ -5,7 +5,7 @@ import { Chat } from '../state/chat.model';
 import { orgaMenuitems, orgaMenuitemsMega } from '../state/orgaMenuItems';
 import { ChatQuery } from '../state/chat.query';
 import { Subscription } from 'rxjs';
-import { RealtimeSubscription } from '@supabase/supabase-js';
+import { RealtimeChannel } from '@supabase/supabase-js';
 import { PaginationData, PaginationFrontendService } from 'src/app/utilities/storage/services/pagination-frontend.service';
 
 @Component({
@@ -23,8 +23,8 @@ export class ChatComponent implements OnInit {
 
   // chats$ = new Observable<Chat[]>();
   chats: Chat[] = [];
-  chatRealTimeChanges: RealtimeSubscription | undefined;
-  newFollowerRealTimeChanges: RealtimeSubscription | undefined;
+  chatRealTimeChanges: RealtimeChannel | undefined;
+  newFollowerRealTimeChanges: RealtimeChannel | undefined;
   chatSubscription: Subscription | undefined;
   filterNameSubscription: Subscription | undefined;
   filterGroupsSubscription: Subscription | undefined;

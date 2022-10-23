@@ -6,7 +6,7 @@ import { Subscription } from 'rxjs';
 import { GroupsQuery } from 'src/app/groups/state/groups.query';
 import { MembershipService } from '../services/membership.service';
 import { GroupUI } from 'src/app/groups/state/group.model';
-import { RealtimeSubscription } from '@supabase/supabase-js';
+import { RealtimeChannel } from '@supabase/supabase-js';
 
 @Component({
   selector: 'app-request-membership',
@@ -20,8 +20,8 @@ export class RequestMembershipComponent implements OnInit {
 
   authSubscription: Subscription | undefined;
   groupSubscription: Subscription | undefined;
-  stillMemberRealtimeSubscription: RealtimeSubscription | undefined;
-  stillMembershipRequestedRealtimeSubscription: RealtimeSubscription | undefined;
+  stillMemberRealtimeChannel: RealtimeChannel | undefined;
+  stillMembershipRequestedRealtimeChannel: RealtimeChannel | undefined;
 
   constructor(
     private messageService: MessageService,
@@ -32,8 +32,8 @@ export class RequestMembershipComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.stillMemberRealtimeSubscription = this.membershipService.getRealTimeChangesIfStillMembershipRequested(this.selectedGroupId);
-    this.stillMemberRealtimeSubscription = this.membershipService.getRealTimeChangesIfStillMember(this.selectedGroupId);
+    this.stillMemberRealtimeChannel = this.membershipService.getRealTimeChangesIfStillMembershipRequested(this.selectedGroupId);
+    this.stillMemberRealtimeChannel = this.membershipService.getRealTimeChangesIfStillMember(this.selectedGroupId);
     this.checkIfMembershipAlreadyRequested();
     this.checkIfAlreadyMember();
     this.groupSubscription = this.groupsQuery.selectUI$(this.selectedGroupId).subscribe((ui) => {
@@ -50,11 +50,11 @@ export class RequestMembershipComponent implements OnInit {
     if(this.groupSubscription) {
       this.groupSubscription.unsubscribe()
     }
-    if(this.stillMemberRealtimeSubscription) {
-      this.stillMemberRealtimeSubscription.unsubscribe()
+    if(this.stillMemberRealtimeChannel) {
+      this.stillMemberRealtimeChannel.unsubscribe()
     }
-    if(this.stillMembershipRequestedRealtimeSubscription) {
-      this.stillMembershipRequestedRealtimeSubscription.unsubscribe()
+    if(this.stillMembershipRequestedRealtimeChannel) {
+      this.stillMembershipRequestedRealtimeChannel.unsubscribe()
     }
   }
 

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { createClient, RealtimeSubscription, SupabaseClient } from '@supabase/supabase-js';
+import { createClient, RealtimeChannel, SupabaseClient } from '@supabase/supabase-js';
 import { AuthentificationQuery } from '../../authentification/state/authentification.query';
 import { environment } from 'src/environments/environment';
 import { GroupsService } from 'src/app/groups/state/groups.service';
@@ -94,21 +94,51 @@ export class FollowingGroupsService {
     return unfollowTransactionResult;
   }
 
-  getRealTimeChangesIfStillFollower(group_id: string): RealtimeSubscription {
+  getRealTimeChangesIfStillFollower(group_id: string): RealtimeChannel {
     let loggedInID: string | null = '';
     if(this.loggedInID) {
       loggedInID = this.loggedInID;
     }
     const subscription = this.supabaseClient
-    .from<any>(`following_group_system`)
-    .on('INSERT', (payload) => {
+      .channel('public:following_group_system')
+      .on('postgres_changes', 
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'following_group_system'
+        },
+        payload => {
+          console.log('Payload')
+          console.log(payload)
+          if(payload.new['following'] === group_id && payload.new['follower'] === loggedInID) {
+            this.groupsService.updateIsFollowing(group_id, true);
+          }
+        })
+      .on('postgres_changes', 
+        {
+          event: 'DELETE',
+          schema: 'public',
+          table: 'following_group_system'
+        },
+        payload => {
+          console.log('Payload')
+          console.log(payload)
+          console.log('group.id_')
+          console.log(payload.old['following'])
+          console.log(group_id)
+          if(payload.old['following'] === group_id && payload.old['follower'] === loggedInID) {
+            this.groupsService.updateIsFollowing(group_id, false);
+          }
+        })
+    // .from<any>(`following_group_system`)
+/*     .on('INSERT', (payload) => {
       console.log('Payload')
       console.log(payload)
       if(payload.new.following === group_id && payload.new.follower === loggedInID) {
         this.groupsService.updateIsFollowing(group_id, true);
       }
-    })
-    .on('DELETE', (payload) => {
+    }) */
+/*     .on('DELETE', (payload) => {
       console.log('Payload')
       console.log(payload)
       console.log('group.id_')
@@ -117,7 +147,7 @@ export class FollowingGroupsService {
       if(payload.old.following === group_id && payload.old.follower === loggedInID) {
         this.groupsService.updateIsFollowing(group_id, false);
       }
-    })
+    }) */
     .subscribe()
     return subscription;
   }

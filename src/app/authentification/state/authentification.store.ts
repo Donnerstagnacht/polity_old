@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Store, StoreConfig } from '@datorama/akita';
+import { AuthResponse } from '@supabase/supabase-js';
 import { ProfileCore } from 'src/app/profile/state/profile.model';
-import { SessionResponse } from '../state/authentification.model';
 
 export interface AuthentificationState {
    uuid: string |null,
    profile: ProfileCore | null,
-   sessionResponse: SessionResponse | null
+   sessionResponse: AuthResponse | null
 }
 
 export function createInitialState(): AuthentificationState {

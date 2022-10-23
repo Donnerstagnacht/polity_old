@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { createClient, RealtimeSubscription, SupabaseClient } from '@supabase/supabase-js';
+import { createClient, RealtimeChannel, SupabaseClient } from '@supabase/supabase-js';
 import { AuthentificationQuery } from 'src/app/authentification/state/authentification.query';
 import { GroupsService } from 'src/app/groups/state/groups.service';
 import { environment } from 'src/environments/environment';
@@ -217,14 +217,38 @@ export class MembershipService {
   }
 
 
-  getRealTimeChangesIfStillMembershipRequested(group_id: string): RealtimeSubscription {
+  getRealTimeChangesIfStillMembershipRequested(group_id: string): RealtimeChannel {
     let loggedInID: string | null = '';
     if(this.loggedInID) {
       loggedInID = this.loggedInID;
     }
     const subscription = this.supabaseClient
-    .from<any>(`membership_requests`)
-    .on('INSERT', (payload) => {
+    .channel('public:membership_requests')
+    // .from<any>(`membership_requests`)
+    .on('postgres_changes', 
+      {
+        event: 'INSERT',
+        schema: 'public',
+        table: 'membership_requests'
+      },
+      payload => {
+        if(payload.new['group_requested'] === group_id && payload.new['user_requests'] === loggedInID) {
+          this.groupsService.updateRequestedMembership(group_id, true);
+        }
+      }
+    )
+    .on('postgres_changes', 
+    {
+      event: 'DELETE',
+      schema: 'public',
+      table: 'membership_requests'
+    },
+    payload => {
+      if(payload.old['group_requested'] === group_id && payload.old['user_requests'] === loggedInID) {
+        this.groupsService.updateRequestedMembership(group_id, false);
+      }
+    })
+/*     .on('INSERT', (payload) => {
       if(payload.new.group_requested === group_id && payload.new.user_requests === loggedInID) {
         this.groupsService.updateRequestedMembership(group_id, true);
       }
@@ -234,38 +258,81 @@ export class MembershipService {
         this.groupsService.updateRequestedMembership(group_id, false);
       }
     })
-    .subscribe()
+    .subscribe() */
     return subscription;
   }
 
-  getRealTimeChangesIfStillMember(group_id: string): RealtimeSubscription {
+  getRealTimeChangesIfStillMember(group_id: string): RealtimeChannel {
     let loggedInID: string | null = '';
     if(this.loggedInID) {
       loggedInID = this.loggedInID;
     }
     const subscription = this.supabaseClient
-    .from<any>(`group_members`)
-    .on('INSERT', (payload) => {
+      .channel('public:group_members')
+      .on('postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'group_members'
+        },
+        payload => {
+          if(payload.new['group_id'] === group_id && payload.new['user_id'] === loggedInID) {
+            this.groupsService.updateIsMember(group_id, true);
+          }
+        }
+      )
+      .on('postgres_changes',
+      {
+        event: 'DELETE',
+        schema: 'public',
+        table: 'group_members'
+      },
+      payload => {
+        if(payload.old['group_id'] === group_id && payload.old['user_id'] === loggedInID) {
+          this.groupsService.updateIsMember(group_id, false);
+        }
+      }
+    )
+
+    // .from<any>(`group_members`)
+/*     .on('INSERT', (payload) => {
       if(payload.new.group_id === group_id && payload.new.user_id === loggedInID) {
         this.groupsService.updateIsMember(group_id, true);
       }
-    })
-    .on('DELETE', (payload) => {
+    }) */
+/*     .on('DELETE', (payload) => {
       if(payload.old.group_id === group_id && payload.old.user_id === loggedInID) {
         this.groupsService.updateIsMember(group_id, false);
       }
-    })
+    }) */
     .subscribe()
     return subscription;
   }
 
-  getRealTimeChangesIfStillAdmin(group_id: string): RealtimeSubscription {
+  getRealTimeChangesIfStillAdmin(group_id: string): RealtimeChannel {
     let loggedInID: string | null = '';
     if(this.loggedInID) {
       loggedInID = this.loggedInID;
     }
     const subscription = this.supabaseClient
-    .from<any>(`group_members:user_id=eq.${loggedInID}`)
+    .channel(`public:group_members:user_id=eq.${loggedInID}`)
+    .on('postgres_changes',
+      {
+        event: 'UPDATE',
+        schema: 'public',
+        table: 'group_members'
+      },
+      payload => {
+        if(payload.new['group_id'] === group_id) {
+          if(payload.new['is_admin']) {
+            this.groupsService.updateIsAdmin(group_id, true);
+          } else {
+            this.groupsService.updateIsAdmin(group_id, false)
+          }
+        }
+      }
+    )
+/*     .from<any>(`group_members:user_id=eq.${loggedInID}`)
     .on('UPDATE', (payload) => {
       if(payload.new.group_id === group_id) {
         if(payload.new.is_admin) {
@@ -274,7 +341,7 @@ export class MembershipService {
           this.groupsService.updateIsAdmin(group_id, false)
         }
       }
-    })
+    }) */
     .subscribe()
     return subscription;
   }

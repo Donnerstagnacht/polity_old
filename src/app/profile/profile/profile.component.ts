@@ -5,10 +5,10 @@ import { ProfileService } from '../state/profile.service';
 import { FollowingService } from 'src/app/following-profiles-system/services/following.service';
 import { MegaMenuItem, MenuItem, MessageService } from 'primeng/api';
 import { profileMenuitems, profileMenuitemsIsOwner, profileMenuitemsMega, profileMenuitemsMegaIsOwner } from '../state/profileMenuItems';
-import { Profile, ProfileCore, ProfileUI, ProfileWithCounters } from '../state/profile.model';
+import { Profile, ProfileUI, ProfileWithCounters } from '../state/profile.model';
 import { ProfileQuery } from '../state/profile.query';
 import { Subscription } from 'rxjs';
-import { RealtimeSubscription } from '@supabase/supabase-js';
+import { RealtimeChannel } from '@supabase/supabase-js';
 
 @Component({
   selector: 'app-profile',
@@ -31,9 +31,9 @@ export class ProfileComponent implements OnInit, OnDestroy {
   profileSubscription: Subscription | undefined;
   profileUISubscription: Subscription | undefined;
   userSubscription: Subscription | undefined;
-  profileRealtimeChangesSubscription: RealtimeSubscription | undefined;
-  profilesCounterRealtimeChangesSubscription: RealtimeSubscription | undefined;
-  followerRealTimeChangesSubscription: RealtimeSubscription | undefined;
+  profileRealtimeChangesSubscription: RealtimeChannel | undefined;
+  profilesCounterRealtimeChangesSubscription: RealtimeChannel | undefined;
+  followerRealTimeChangesSubscription: RealtimeChannel | undefined;
 
   loading: boolean = false;
   error: boolean = false;

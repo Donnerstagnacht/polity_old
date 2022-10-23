@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { ID } from '@datorama/akita';
-import { createClient, RealtimeSubscription, SupabaseClient } from '@supabase/supabase-js';
+import { createClient, RealtimeChannel, SupabaseClient } from '@supabase/supabase-js';
 import { AuthentificationQuery } from 'src/app/authentification/state/authentification.query';
 import { environment } from 'src/environments/environment';
 import { News } from './news.model';
@@ -141,11 +141,52 @@ export class NewsService implements OnDestroy {
     this.newsStore.set(newsList);
   }
 
-  getRealTimeChangesNews(): RealtimeSubscription {
+  getRealTimeChangesNews(): RealtimeChannel {
     console.log('called')
     console.log(this.loggedInID)
     const subscription = this.supabaseClient
-    .from<any>(`notifications_of_user:notifying=eq.${this.loggedInID}`)
+      .channel(`notifications_of_user:notifying=eq.${this.loggedInID}`)
+      .on('postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'publuc',
+          table: 'notifications_of_user'
+        },
+        payload => {
+          console.log('triggered')
+          console.log(payload);
+          this.supabaseClient
+            .from('profiles')
+            .select(`
+                avatar_url,
+                name
+            `)
+            .eq('id', payload.new['notifier'])
+            .single()
+          .then((result: any) => {
+            console.log(result)
+            const news: News = {
+              id: payload.new['id'],
+              notifier: payload.new['notifier'],
+              notifying: payload.new['notifying'],
+              handler: payload.new['handler'],
+              title: payload.new['title'],
+              message: payload.new['message'],
+              type: payload.new['type'],
+              created_at: payload.new['created_at'],
+              from_group: payload.new['from_group'],
+              avatar_url: result.data.avatar_url,
+              name: result.data.name,
+              new: payload.new['new']
+            }
+            this.newsStore.add(news);
+            this.notifier.next(news);
+            console.log('notifier called');
+          });
+    
+        }
+      )
+/*     .from<any>(`notifications_of_user:notifying=eq.${this.loggedInID}`)
     .on('INSERT', (payload) => {
       console.log('triggered')
       console.log(payload);
@@ -184,7 +225,7 @@ export class NewsService implements OnDestroy {
         state.messages = newsBefore;
       }) */
       // this.newMessageOfUserNotifier.next(newMessage.sender_id);
-    })
+    // }) */
     .subscribe()
     return subscription;
   }
@@ -200,7 +241,49 @@ export class NewsService implements OnDestroy {
     groupList.data.forEach((element: any) => {
       console.log(element);
       const subscription = this.supabaseClient
-      .from<any>(`notifications_of_groups:notifying=eq.${element.group_id}`)
+        .channel(`public:notifications_of_groups:notifying=eq.${element.group_id}`)
+        .on('postgres_changes',
+          {
+            event: 'INSERT',
+            schema: 'public',
+            table: 'notifications_of_groups'
+          },
+          payload => {
+            console.log('triggered')
+            console.log(payload);
+            if(payload.new['for_admins']) {
+              this.supabaseClient
+              .from('profiles')
+              .select(`
+                  avatar_url,
+                  name
+              `)
+              .eq('id', payload.new['notifier'])
+              .single()
+            .then((result: any) => {
+              console.log(result)
+              const news: News = {
+                id: payload.new['id'],
+                notifier: payload.new['notifier'],
+                notifying: payload.new['notifying'],
+                handler: payload.new['handler'],
+                title: payload.new['title'],
+                message: payload.new['message'],
+                type: payload.new['type'],
+                created_at: payload.new['created_at'],
+                from_group: payload.new['from_group'],
+                avatar_url: result.data.avatar_url,
+                name: result.data.name,
+                new: payload.new['new']
+              }
+              this.newsStore.add(news);
+              this.notifier.next(news);
+              console.log('notifier called');
+            });
+            }
+          }
+        )
+/*       .from<any>(`notifications_of_groups:notifying=eq.${element.group_id}`)
       .on('INSERT', (payload) => {
         console.log('triggered')
         console.log(payload);
@@ -234,7 +317,7 @@ export class NewsService implements OnDestroy {
           console.log('notifier called');
         });
         }
-      })
+      }) */
       .subscribe()
       return subscription;
     });

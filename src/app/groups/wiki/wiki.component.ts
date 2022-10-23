@@ -9,7 +9,7 @@ import { GroupsQuery } from '../state/groups.query';
 import { GroupsService as GroupsServiceState } from '../state/groups.service';
 import { Group, GroupUI } from '../state/group.model';
 import { MembershipService } from 'src/app/membership-group-system/services/membership.service';
-import { RealtimeSubscription } from '@supabase/supabase-js';
+import { RealtimeChannel } from '@supabase/supabase-js';
 @Component({
   selector: 'app-wiki',
   templateUrl: './wiki.component.html',
@@ -28,10 +28,10 @@ export class WikiComponent implements OnInit, OnDestroy {
   groupUI!: GroupUI;
 
   groupSubscription!: Subscription;
-  groupRealTimeSubscription!: RealtimeSubscription;
-  getRealTimeSubscriptionIsAdmin!: RealtimeSubscription;
-  getRealTimeSubscriptionIsFollower!: RealtimeSubscription;
-  realTimeSubscriptionFollowers!: RealtimeSubscription;
+  groupRealTimeSubscription!: RealtimeChannel;
+  getRealTimeSubscriptionIsAdmin!: RealtimeChannel;
+  getRealTimeSubscriptionIsFollower!: RealtimeChannel;
+  realTimeSubscriptionFollowers!: RealtimeChannel;
   uiSubscription!: Subscription;
 
   loadsFollow: boolean = false;

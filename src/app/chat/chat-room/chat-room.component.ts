@@ -13,7 +13,7 @@ import { ChatRoomService } from './state/chat-room.service';
 import { ChatRoomQuery } from './state/chat-room.query';
 import { Group } from 'src/app/groups/state/group.model';
 import { MessageService } from 'primeng/api';
-import { RealtimeSubscription } from '@supabase/supabase-js';
+import { RealtimeChannel } from '@supabase/supabase-js';
 import { ChatStore } from '../state/chat.store';
 import { ChatRoomStore } from './state/chat-room.store';
 import { PaginationData, PaginationFrontendService } from 'src/app/utilities/storage/services/pagination-frontend.service';
@@ -55,7 +55,7 @@ export class ChatRoomComponent implements OnInit {
   profileSubscription: Subscription | undefined;
   authSubscription: Subscription | undefined;
   messageSubscription: Subscription | undefined;
-  messageRealtimeSubscription: RealtimeSubscription | undefined;
+  messageRealtimeChannel: RealtimeChannel | undefined;
   scrollNotifierSubscription: Subscription | undefined;
 
 
@@ -155,8 +155,8 @@ export class ChatRoomComponent implements OnInit {
     if(this.profileSubscription) {
       this.profileSubscription.unsubscribe();
     }
-    if(this.messageRealtimeSubscription) {
-      this.messageRealtimeSubscription.unsubscribe();
+    if(this.messageRealtimeChannel) {
+      this.messageRealtimeChannel.unsubscribe();
     }
     if(this.messageSubscription) {
       this.messageSubscription.unsubscribe();
@@ -202,7 +202,7 @@ export class ChatRoomComponent implements OnInit {
         } else {
           console.log('undefined')
         }      })
-      this.messageRealtimeSubscription = this.chatRoomService.getRealTimeChangesMessages(this.selectedRoomId);
+      this.messageRealtimeChannel = this.chatRoomService.getRealTimeChangesMessages(this.selectedRoomId);
     } catch(error: any) {
       this.error = true;
       this.errorMessage = error.message;

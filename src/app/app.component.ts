@@ -1,12 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { RealtimeSubscription } from '@supabase/supabase-js';
+import { RealtimeChannel } from '@supabase/supabase-js';
 import { MessageService } from 'primeng/api';
-import { Subscription, first, take, pipe, last, Observable } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { AuthentificationQuery } from './authentification/state/authentification.query';
 import { News } from './news/state/news.model';
-import { NewsQuery } from './news/state/news.query';
 import { NewsService } from './news/state/news.service';
-import { NewsStore } from './news/state/news.store';
 import { Profile } from './profile/state/profile.model';
 import { ProfileQuery } from './profile/state/profile.query';
 import { ProfileService } from './profile/state/profile.service';
@@ -23,9 +21,9 @@ export class AppComponent implements OnInit, OnDestroy {
 
   profileSubscription: Subscription | undefined;
   authSubscription: Subscription | undefined;
-  profileRealTimeSubscription: RealtimeSubscription | undefined;
-  newsRealTImeSubscription: RealtimeSubscription | undefined;
-  newsRealTImeSubscriptionGroup: RealtimeSubscription | undefined;
+  profileRealTimeSubscription: RealtimeChannel | undefined;
+  newsRealTImeSubscription: RealtimeChannel | undefined;
+  newsRealTImeSubscriptionGroup: RealtimeChannel | undefined;
   notifierSubscription: Subscription | undefined;
   lastNewsSubscription: Subscription | undefined;
 

@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { RealtimeSubscription } from '@supabase/supabase-js';
+import { RealtimeChannel } from '@supabase/supabase-js';
 import { MessageService } from 'primeng/api';
 import { Subscription } from 'rxjs';
 import { Group } from 'src/app/groups/state/group.model';
@@ -26,8 +26,8 @@ export class FollowerGroupManagementComponent implements OnInit, OnDestroy {
 
   loading: boolean = false;
   followerSubscription!: Subscription;
-  realTimeSubscriptionFollower!: RealtimeSubscription;
-  realTimeSubscriptionGroup!: RealtimeSubscription;
+  realTimeSubscriptionFollower!: RealtimeChannel;
+  realTimeSubscriptionGroup!: RealtimeChannel;
 
   loadingInitial: boolean = false;
   error: boolean = false;

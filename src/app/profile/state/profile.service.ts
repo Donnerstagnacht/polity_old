@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ID } from '@datorama/akita';
-import { createClient, RealtimeSubscription, SupabaseClient, PostgrestResponse } from '@supabase/supabase-js';
+import { createClient, RealtimeChannel, SupabaseClient, PostgrestResponse } from '@supabase/supabase-js';
 import { AuthentificationQuery } from 'src/app/authentification/state/authentification.query';
 import { FollowingService } from 'src/app/following-profiles-system/services/following.service';
 import { GroupsService } from 'src/app/groups/state/groups.service';
@@ -52,34 +52,72 @@ export class ProfileService {
     })
   }
 
-  getRealTimeChanges(uuid: string): RealtimeSubscription {
+  getRealTimeChanges(uuid: string): RealtimeChannel {
     console.log('called')
     const subscription = this.supabaseClient
-    .from<ProfileCore>(`profiles:id=eq.${uuid}`)
+      .channel(`public:profiles:id=eq.${uuid}`)
+      .on('postgres_changes',
+        {
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'profiles'
+        },
+        payload => {
+          console.log('update')
+          console.log(payload)
+          this.profileStore.upsert(payload.new['id'], payload.new)
+        }
+      )
+      .on('postgres_changes',
+      {
+        event: 'INSERT',
+        schema: 'public',
+        table: 'profiles'
+      },
+      payload => {
+        console.log('insert')
+        console.log(payload)
+        this.profileStore.upsert(payload.new['id'], payload.new)
+      }
+    )
+/*     .from<ProfileCore>(`profiles:id=eq.${uuid}`)
     .on('UPDATE', (payload) => {
       console.log('update')
       console.log(payload)
       this.profileStore.upsert(payload.new.id, payload.new)
-    })
-    .on('INSERT', (payload) => {
-      console.log('insert')
+    }) */
+    // .on('INSERT', (payload) => {
+/*       console.log('insert')
       console.log(payload)
-      this.profileStore.upsert(payload.new.id, payload.new)
-    })
+      this.profileStore.upsert(payload.new.id, payload.new) */
+   // })
     .subscribe()
     return subscription;
   }
 
-  getRealTimeChangesCounters(uuid: string): RealtimeSubscription {
+  getRealTimeChangesCounters(uuid: string): RealtimeChannel {
     console.log('called counters', uuid)
     const subscription = this.supabaseClient
-    .from(`profiles_counters`)
+    .channel(`public:profiles_counters`)
+    .on('postgres_changes',
+      {
+        event: 'UPDATE',
+        schema: 'public',
+        table: 'profiles_counters'
+      },
+      payload => {
+        console.log('update')
+        console.log(payload)
+        this.profileStore.upsert(payload.new['id'], payload.new)
+      }
+    )
+/*     .from(`profiles_counters`)
     // .from(`profiles_counters:id=eq.${uuid}`)
     .on('UPDATE', (payload) => {
       console.log('update')
       console.log(payload)
       this.profileStore.upsert(payload.new.id, payload.new)
-    })
+    }) */
 /*     .on('INSERT', (payload) => {
       console.log('insert')
       console.log(payload)
@@ -100,9 +138,9 @@ export class ProfileService {
     console.log(update)
     const response: PostgrestResponse<any> = await this.supabaseClient
       .from('profiles')
-      .update(update, {
+      .update(update) /* {
         returning: 'minimal', // Don't return the value after inserting
-      })
+      }) */
       .eq('id', id)
     if (response.error) throw new Error(response.error.message);
     return response;
@@ -222,10 +260,74 @@ export class ProfileService {
     if(profiles.error) throw new Error(profiles.error.message);
   }
 
-  getRealTimeChangesFollowerSystem(profil_id: string): RealtimeSubscription {
+  getRealTimeChangesFollowerSystem(profil_id: string): RealtimeChannel {
     console.log('test 2 activated')
     const subscription = this.supabaseClient
-    .from<any>(`following_profile_system`)
+    .channel(`public:following_profile_system`)
+    .on('postgres_changes',
+      {
+        event: 'UPDATE',
+        schema: 'public',
+        table: 'following_profile_system'
+      },
+      payload => {
+        console.log('Payload')
+        console.log(payload)
+        if(payload.new['following'] === profil_id) {
+          this.groupsService.selectProfile(payload.new['follower']).then((member) => {
+            console.log(member)
+            console.log(member.data.id)
+            console.log(member.data.name)
+            console.log(member.data.avatar_url)
+            console.log()
+            let memberData: profile_list_item = {
+              id: payload.new['id'],
+              user_id: member.data.id,
+              avatar_url: member.data.avatar_url,
+              name: member.data.name
+            }
+            console.log(memberData)
+            const entity = this.profileQuery.getEntity(profil_id);
+            console.log('oldState');
+            console.log(entity?.followers);
+            if(entity && entity.followers) {
+              const followers: profile_list_item[] = Object.assign([], entity.followers)
+              followers.push(memberData);
+              console.log('newState');
+              console.log(followers)
+              this.profileStore.update(profil_id, {followers: followers})
+            }
+          })
+        }
+        if(payload.new['follower'] === profil_id) {
+          this.groupsService.selectProfile(payload.new['following']).then((member) => {
+            console.log(member)
+            console.log(member.data.id)
+            console.log(member.data.name)
+            console.log(member.data.avatar_url)
+            console.log()
+            let memberData: profile_list_item = {
+              id: payload.new['id'],
+              user_id: member.data.id,
+              avatar_url: member.data.avatar_url,
+              name: member.data.name
+            }
+            console.log(memberData)
+            const entity = this.profileQuery.getEntity(profil_id);
+            console.log('oldState');
+            console.log(entity?.followings);
+            if(entity && entity.followings) {
+              const followings: profile_list_item[] = Object.assign([], entity.followings)
+              followings.push(memberData);
+              console.log('newState');
+              console.log(followings)
+              this.profileStore.update(profil_id, {followings: followings})
+            }
+          })
+        }
+      }
+    )
+/*     .from<any>(`following_profile_system`)
     .on('INSERT', (payload) => {
       console.log('Payload')
       console.log(payload)
@@ -281,8 +383,55 @@ export class ProfileService {
           }
         })
       }
-    })
-    .on('DELETE', (payload) => {
+    }) */
+    .on('postgres_changes',
+      {
+        event: 'UPDATE',
+        schema: 'public',
+        table: 'following_profile_system'
+      },
+      payload => {
+        console.log('Payload')
+        console.log(payload)
+        if(payload.old['following'] === profil_id) {
+            console.log(payload.old['id'])
+            const profile: Profile | undefined = this.profileQuery.getEntity(profil_id);
+            console.log('oldState');
+            console.log(profile);
+            if(profile && profile.followers) {
+              const followers: profile_list_item[] = Object.assign([], profile.followers)
+              let idToSliceOut: number = followers.findIndex((follower: profile_list_item) => follower.id === payload.old['id']);
+              followers.splice(idToSliceOut, 1);
+              console.log('newState');
+              console.log(idToSliceOut)
+              console.log(payload.old['id'])
+              console.log(followers);
+              this.profileStore.update(profil_id, {followers: followers})
+            }
+        }
+        if(payload.old['follower'] === profil_id) {
+          console.log('follower')
+          const entity = this.profileQuery.getEntity(profil_id);
+          console.log('oldState');
+          console.log();
+          if(entity && entity.followings) {
+            const followings: profile_list_item[] = Object.assign([], entity.followings)
+            console.log('followings')
+            console.log(entity.followings)
+            console.log('to Delete')
+            console.log()
+            let idToSpliceOut: number = followings.findIndex((following: profile_list_item) => following.user_id === payload.old['following']);
+            console.log(idToSpliceOut)
+            console.log(payload.old['id'])
+            followings.splice(idToSpliceOut, 1);
+            console.log('newState');
+            console.log(followings);
+            this.profileStore.update(profil_id, {followings: followings})
+          }
+      }
+      }
+    )
+/*     .on('DELETE', (payload) => {
       console.log('Payload')
       console.log(payload)
       if(payload.old.following === profil_id) {
@@ -321,16 +470,80 @@ export class ProfileService {
           this.profileStore.update(profil_id, {followings: followings})
         }
     }
-    })
+    }) */
     .subscribe()
     return subscription;
   }
 
-  getRealTimeChangesGroupFollowerSystem(profil_id: string): RealtimeSubscription {
+  getRealTimeChangesGroupFollowerSystem(profil_id: string): RealtimeChannel {
     console.log('test 2 activated')
     const subscription = this.supabaseClient
-    .from<any>(`following_group_system`)
-    .on('INSERT', (payload) => {
+      .channel('following_group_system')
+      .on('postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'following_group_system'
+        },
+        payload => {
+          console.log('Payload')
+          console.log(payload)
+          if(payload.new['follower'] === profil_id) {
+            this.groupsService.selectGroup(payload.new['following']).then((group) => {
+              console.log(group)
+              console.log(group.data.id)
+              console.log(group.data.name)
+              console.log(group.data.avatar_url)
+              console.log()
+              let groupData: profile_list_item = {
+                id: payload.new['id'],
+                user_id: group.data.id,
+                avatar_url: group.data.avatar_url,
+                name: group.data.name
+              }
+              console.log(groupData)
+              const entity = this.profileQuery.getEntity(profil_id);
+              console.log('oldState');
+              console.log(entity?.followings);
+              if(entity && entity.followings) {
+                const followings: profile_list_item[] = Object.assign([], entity.followings)
+                followings.push(groupData);
+                console.log('newState');
+                console.log(followings)
+                this.profileStore.update(profil_id, {followings: followings})
+              }
+            })
+          }
+        }
+      )
+      .on('postgres_changes',
+        {
+          event: 'DELETE',
+          schema: 'public',
+          table: 'following_group_system'
+        },
+        payload => {
+          console.log('Payload')
+          console.log(payload)
+          if(payload.old['follower'] === profil_id) {
+            const entity = this.profileQuery.getEntity(profil_id);
+            console.log('oldState');
+            console.log(entity);
+            if(entity && entity.followings) {
+              const followings: profile_list_item[] = Object.assign([], entity.followings)
+              let requestId: number = followings.findIndex((request) => request.id === payload.old['id']);
+              followings.splice(requestId, 1);
+              console.log('newState');
+              console.log(requestId)
+              console.log(payload.old['id'])
+              console.log(followings);
+              this.profileStore.update(profil_id, {followings: followings})
+            }
+        }
+        }
+      )
+    // .from<any>(`following_group_system`)
+/*     .on('INSERT', (payload) => {
       console.log('Payload')
       console.log(payload)
       if(payload.new.follower === profil_id) {
@@ -359,8 +572,8 @@ export class ProfileService {
           }
         })
       }
-    })
-    .on('DELETE', (payload) => {
+    }) */
+/*     .on('DELETE', (payload) => {
       console.log('Payload')
       console.log(payload)
       if(payload.old.follower === profil_id) {
@@ -378,7 +591,7 @@ export class ProfileService {
           this.profileStore.update(profil_id, {followings: followings})
         }
     }
-    })
+    }) */
     .subscribe()
     return subscription;
   }
@@ -418,21 +631,51 @@ export class ProfileService {
     this.profileStore.upsert(id, update)
   }
 
-  getRealTimeChangesIfStillFollower(profile_id: string): RealtimeSubscription {
+  getRealTimeChangesIfStillFollower(profile_id: string): RealtimeChannel {
     let loggedInID: string | null = '';
     if(this.loggedInID) {
       loggedInID = this.loggedInID;
     }
     const subscription = this.supabaseClient
-    .from<any>(`following_profile_system`)
-    .on('INSERT', (payload) => {
+      .channel('public:following_profile_system')
+      .on('postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'following_profile_system'
+        },
+        payload => {
+          if(payload.new['following'] === profile_id && payload.new['follower'] === loggedInID) {
+            this.updateIsFollowing(profile_id, true);
+          }
+        }
+      )
+      .on('postgres_changes',
+      {
+        event: 'DELETE',
+        schema: 'public',
+        table: 'following_profile_system'
+      },
+      payload => {
+        console.log('Payload')
+        console.log(payload)
+        console.log('profile.id_')
+        console.log(payload.old['following'])
+        console.log(profile_id)
+        if(payload.old['following'] === profile_id && payload.old['follower'] === loggedInID) {
+          this.updateIsFollowing(profile_id, false);
+        }
+      }
+    )
+    // .from<any>(`following_profile_system`)
+/*     .on('INSERT', (payload) => {
       console.log('Payload')
       console.log(payload)
       if(payload.new.following === profile_id && payload.new.follower === loggedInID) {
         this.updateIsFollowing(profile_id, true);
       }
-    })
-    .on('DELETE', (payload) => {
+    }) */
+/*     .on('DELETE', (payload) => {
       console.log('Payload')
       console.log(payload)
       console.log('profile.id_')
@@ -442,14 +685,100 @@ export class ProfileService {
         this.updateIsFollowing(profile_id, false);
       }
     })
-    .subscribe()
+ */    .subscribe()
     return subscription;
   }
 
-  getRealTimeChangesGroupsOfProfile(user_id: string): RealtimeSubscription {
+  getRealTimeChangesGroupsOfProfile(user_id: string): RealtimeChannel {
     console.log('activated Get followers')
     const subscription = this.supabaseClient
-    .from<any>(`group_members`)
+      .channel(`public:group_members`)
+      .on('postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'group_members'
+        },
+        payload => {
+          console.log('Payload')
+          console.log(payload)
+          if(payload.new['user_id'] === user_id) {
+            this.groupsService.selectGroup(payload.new['group_id']).then((group) => {
+              console.log(group)
+              console.log(group.data.id)
+              console.log(group.data.name)
+              console.log(group.data.avatar_url)
+              console.log()
+    
+              let groupData: profile_list_item = {
+                // id: payload.old['id'],
+                user_id: group.data.id,
+                avatar_url: group.data.avatar_url,
+                name: group.data.name
+              }
+              console.log(groupData)
+              const entity = this.profileQuery.getEntity(user_id);
+    
+              console.log('oldState');
+              console.log(entity);
+              console.log('oldState followers');
+              console.log(entity?.followers);
+    
+              if(entity && entity.groups) {
+                const groupsOfProfile: profile_list_item[] = Object.assign([], entity.groups)
+                groupsOfProfile.push(groupData);
+                console.log('newState');
+                console.log(groupsOfProfile)
+                this.profileStore.upsert(user_id, {groups: groupsOfProfile})
+              }
+            })
+          }
+        })
+        .on('postgres_changes',
+        {
+          event: 'DELETE',
+          schema: 'public',
+          table: 'group_members'
+        },
+        payload => {
+          console.log('Payload')
+          console.log(payload)
+          console.log('group.id_')
+          console.log(payload.old['following'])
+          console.log(user_id)
+          if(payload.old['user_id'] === user_id) {
+            this.groupsService.selectGroup(payload.old['group_id']).then((group) => {
+              console.log(group)
+              console.log(group.data.id)
+              console.log(group.data.name)
+              console.log(group.data.avatar_url)
+              console.log()
+    
+              let groupData: profile_list_item = {
+                id: payload.old['id'],
+                user_id: group.data.id,
+                avatar_url: group.data.avatar_url,
+                name: group.data.name
+              }
+              console.log(groupData)
+              const entity = this.profileQuery.getEntity(user_id);
+              console.log('oldState');
+              console.log(entity?.groups);
+              if(entity && entity.groups) {
+                const groupsOfProfile: profile_list_item[] = Object.assign([], entity.groups)
+                let requestId: number = groupsOfProfile.findIndex((request) => request.id === payload.old['id']);
+                groupsOfProfile.splice(requestId, 1);
+                console.log('newState');
+                console.log(requestId)
+                console.log(payload.old['id'])
+                console.log(groupsOfProfile);
+                this.profileStore.upsert(user_id, {groups: groupsOfProfile})
+              }
+            })
+          }
+        }
+      )
+/*     .from<any>(`group_members`)
     .on('INSERT', (payload) => {
       console.log('Payload')
       console.log(payload)
@@ -484,8 +813,8 @@ export class ProfileService {
           }
         })
       }
-    })
-    .on('DELETE', (payload) => {
+    }) */
+/*     .on('DELETE', (payload) => {
       console.log('Payload')
       console.log(payload)
       console.log('group.id_')
@@ -521,7 +850,7 @@ export class ProfileService {
           }
         })
       }
-    })
+    }) */
     .subscribe()
     return subscription;
   }

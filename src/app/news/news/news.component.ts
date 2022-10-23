@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { RealtimeSubscription } from '@supabase/supabase-js';
+import { RealtimeChannel } from '@supabase/supabase-js';
 import { MegaMenuItem, MenuItem, MessageService } from 'primeng/api';
 import { Subscription } from 'rxjs';
 import { PaginationData, PaginationFrontendService } from 'src/app/utilities/storage/services/pagination-frontend.service';
@@ -28,7 +28,7 @@ export class NewsComponent implements OnInit {
   newsSubscription: Subscription | undefined;
   newsUsersFilterSubscription: Subscription | undefined;
   newsGroupsFilterSubscription: Subscription | undefined;
-  newsRealTimeSubscription: RealtimeSubscription | undefined;
+  newsRealTimeSubscription: RealtimeChannel | undefined;
 
   paginationData: PaginationData = {
     from: 0,

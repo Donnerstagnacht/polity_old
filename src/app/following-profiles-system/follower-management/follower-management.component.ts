@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { RealtimeSubscription } from '@supabase/supabase-js';
+import { RealtimeChannel } from '@supabase/supabase-js';
 import { MessageService } from 'primeng/api';
 import { AuthentificationQuery } from 'src/app/authentification/state/authentification.query';
 import { FollowingGroupsService } from 'src/app/following-groups-system/services/following-groups.service';
@@ -37,8 +37,8 @@ export class FollowerManagementComponent implements OnInit {
 
   errorMessage: string | undefined;
 
-  profileFollowerRealtimeSubscription: RealtimeSubscription | undefined;
-  groupFollowerRealtimeSubscription: RealtimeSubscription | undefined;
+  profileFollowerRealtimeChannel: RealtimeChannel | undefined;
+  groupFollowerRealtimeChannel: RealtimeChannel | undefined;
   profileSubscription: Subscription | undefined;
   authSubscription: Subscription | undefined;
 
@@ -75,11 +75,11 @@ export class FollowerManagementComponent implements OnInit {
   }
 
   ngOnDestroy(): void {
-    if(this.profileFollowerRealtimeSubscription) {
-      this.profileFollowerRealtimeSubscription.unsubscribe();
+    if(this.profileFollowerRealtimeChannel) {
+      this.profileFollowerRealtimeChannel.unsubscribe();
     }
-    if(this.groupFollowerRealtimeSubscription) {
-      this.groupFollowerRealtimeSubscription.unsubscribe();
+    if(this.groupFollowerRealtimeChannel) {
+      this.groupFollowerRealtimeChannel.unsubscribe();
     }
     if(this.authSubscription) {
       this.authSubscription.unsubscribe();
@@ -124,8 +124,8 @@ export class FollowerManagementComponent implements OnInit {
       }
     }
 
-    this.profileFollowerRealtimeSubscription = this.profileService.getRealTimeChangesFollowerSystem(this.loggedInID);
-    this.groupFollowerRealtimeSubscription = this.profileService.getRealTimeChangesGroupFollowerSystem(this.loggedInID);
+    this.profileFollowerRealtimeChannel = this.profileService.getRealTimeChangesFollowerSystem(this.loggedInID);
+    this.groupFollowerRealtimeChannel = this.profileService.getRealTimeChangesGroupFollowerSystem(this.loggedInID);
   }
 
   getProfileId(): void {

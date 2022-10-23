@@ -9,7 +9,7 @@ import { Subscription } from 'rxjs';
 import { ProfileQuery } from 'src/app/profile/state/profile.query';
 import { ProfileStore } from 'src/app/profile/state/profile.store';
 import { Profile } from 'src/app/profile/state/profile.model';
-import { RealtimeSubscription } from '@supabase/supabase-js';
+import { RealtimeChannel } from '@supabase/supabase-js';
 import { PaginationData } from 'src/app/utilities/storage/services/pagination-frontend.service';
 
 @Component({
@@ -34,7 +34,7 @@ export class MembershipUserManagementComponent implements OnInit {
 
   authSubscription: Subscription | undefined;
   profileSubscription: Subscription | undefined;
-  groupsRealtimeSubscription: RealtimeSubscription | undefined;
+  groupsRealtimeChannel: RealtimeChannel | undefined;
 
   paginationDataFirstTab: PaginationData = {
     from: 0,
@@ -68,13 +68,13 @@ export class MembershipUserManagementComponent implements OnInit {
           this.groupsOfUser = profile.groups;
         }
       })
-      this.groupsRealtimeSubscription = this.profileService.getRealTimeChangesGroupsOfProfile(this.loggedInID);
+      this.groupsRealtimeChannel = this.profileService.getRealTimeChangesGroupsOfProfile(this.loggedInID);
     }
   }
 
   ngOnDestroy(): void {
-    if(this.groupsRealtimeSubscription) {
-      this.groupsRealtimeSubscription.unsubscribe()
+    if(this.groupsRealtimeChannel) {
+      this.groupsRealtimeChannel.unsubscribe()
     }
     if(this.authSubscription) {
       this.authSubscription.unsubscribe()

@@ -61,8 +61,9 @@ export class StorageService {
 
   private getPublicUrl(path: string, bucket: string) {
     const response = this.supabaseClient.storage.from(bucket).getPublicUrl(path);
-    if (response.error)
+    if(!response.data.publicUrl)
+    // if (response.error)
       throw Error('Upload failed.');
-    return response.data!.publicURL;
+    return response.data!.publicUrl;
   }
 }

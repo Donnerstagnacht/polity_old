@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { RealtimeSubscription } from '@supabase/supabase-js';
+import { RealtimeChannel } from '@supabase/supabase-js';
 import { MessageService } from 'primeng/api';
 import { Subscription } from 'rxjs';
 import { Group } from 'src/app/groups/state/group.model';
@@ -34,8 +34,8 @@ export class MembershipGroupManagementComponent implements OnInit {
   errorMembers: boolean = false;
   errorMessage: string | undefined;
 
-  membersRealtimeSubscription: RealtimeSubscription | undefined;
-  membershipRequestsRealtimeSubscription: RealtimeSubscription | undefined;
+  membersRealtimeChannel: RealtimeChannel | undefined;
+  membershipRequestsRealtimeChannel: RealtimeChannel | undefined;
   groupSubscription: Subscription | undefined;
 
   paginationDataFirstTab: PaginationData = {
@@ -68,16 +68,16 @@ export class MembershipGroupManagementComponent implements OnInit {
     this.getSelectedId();
     this.link = `/groups/${this.selectedGroupId}/edit`;
     this.loadInitialData();
-    this.membersRealtimeSubscription = this.groupService.getRealTimeChangesMembers(this.selectedGroupId)
-    this.membershipRequestsRealtimeSubscription = this.groupService.getRealTimeChangesMembershipRequests(this.selectedGroupId)
+    this.membersRealtimeChannel = this.groupService.getRealTimeChangesMembers(this.selectedGroupId)
+    this.membershipRequestsRealtimeChannel = this.groupService.getRealTimeChangesMembershipRequests(this.selectedGroupId)
   }
 
   ngOnDestroy(): void {
-    if(this.membersRealtimeSubscription) {
-      this.membersRealtimeSubscription.unsubscribe();
+    if(this.membersRealtimeChannel) {
+      this.membersRealtimeChannel.unsubscribe();
     }
-    if(this.membershipRequestsRealtimeSubscription) {
-      this.membershipRequestsRealtimeSubscription.unsubscribe();
+    if(this.membershipRequestsRealtimeChannel) {
+      this.membershipRequestsRealtimeChannel.unsubscribe();
     }
     if(this.groupSubscription) {
       this.groupSubscription.unsubscribe();
