@@ -98,9 +98,12 @@ export class ProfileService {
     }
     console.log('update')
     console.log(update)
-    const response: PostgrestResponse<any> = await this.supabaseClient.from('profiles').upsert(update, {
-      returning: 'minimal', // Don't return the value after inserting
-    })
+    const response: PostgrestResponse<any> = await this.supabaseClient
+      .from('profiles')
+      .update(update, {
+        returning: 'minimal', // Don't return the value after inserting
+      })
+      .eq('id', id)
     if (response.error) throw new Error(response.error.message);
     return response;
   }
