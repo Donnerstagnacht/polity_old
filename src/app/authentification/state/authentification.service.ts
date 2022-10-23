@@ -51,9 +51,6 @@ export class AuthentificationService {
     this.chatStore.reset();
     resetStores();
     this.persistStorage.clear();
-    if (response.error) {
-      throw new Error(response.error.message);
-    }
   }
 
   async signUp(account: Account): Promise<any> {

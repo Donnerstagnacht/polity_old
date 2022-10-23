@@ -50,7 +50,7 @@ describe('Test group edit and create group features', () => {
     cy.get('#edit-cy').click()
     cy.get('[data-cy="group-edit"]').click()
     cy.contains('Choose').and('be.visible')
-    cy.get('input[type=file]').selectFile('C:/Users/Tobi/polity/src/assets/images/tobi2.jpg', { force: true })
+    cy.get('input[type=file]').selectFile('./cypress/images/user2.jpg', { force: true })
     cy.clickBackButton()
     cy.openGroupAndWaitForGroupData()
     cy.checkIfImageExists()
