@@ -36,7 +36,6 @@ export class StorageService {
 
   async uploadImg(
     imgUploadObject: ImgUploadObject,
-    oldFilePath: string | undefined,
     bucket: string
   ) {
     const filePath = imgUploadObject.filePath;
@@ -44,18 +43,14 @@ export class StorageService {
     const response = await this.supabaseClient.storage
       .from(bucket)
       .upload(filePath, file);
-    if (response.error)
-      throw Error('Img upload failed.');
-    const oldImg: string = oldFilePath ? oldFilePath.split(`public/${bucket}/`)[1] : '';
-    if (oldImg)
-      await this.deleteImg(oldImg, bucket);
+    if (response.error) throw Error('Img upload failed.');
     return this.getPublicUrl(filePath, bucket);
   }
 
-  private async deleteImg(path: string, bucket: string) {
-    const response = await this.supabaseClient.storage.from(bucket).remove([path]);
-    if (response.error)
-      throw Error('Removal of old img failed.');
+  public async deleteImg(filePath: string, bucket: string) {
+    const oldImg: string = filePath ? filePath.split(`public/${bucket}/`)[1] : filePath;
+    const { data, error } = await this.supabaseClient.storage.from(bucket).remove([oldImg]);
+    if (error) throw Error('Removal of old img failed.');
     return true;
   }
 

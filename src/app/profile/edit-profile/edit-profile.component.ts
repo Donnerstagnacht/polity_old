@@ -86,6 +86,7 @@ export class EditProfileComponent implements OnInit, OnDestroy {
       this.messageService.add({severity:'success', summary: 'Update erfolgreich.'});
     } catch (error: any) {;
       this.messageService.add({severity:'error', summary: error});
+      throw Error(error);
     } finally {
       this.loading = false;
     }
@@ -95,20 +96,33 @@ export class EditProfileComponent implements OnInit, OnDestroy {
     if (!this.profile) return;
     try {
       this.uploading = true;
-      const imgUploadObject: ImgUploadObject = this.storageService.createFilePath(event)
+      const imgUploadObject: ImgUploadObject = this.storageService.createFilePath(event);
+      let avatar_url = '';
       try {
-        const avatar_url = await this.storageService.uploadImg(
+        const old_avatar_url = this.profile.avatar_url || undefined;
+        const avatar_bucket = 'avatars';
+        avatar_url = await this.storageService.uploadImg(
           imgUploadObject,
-          this.profile.avatar_url || undefined,
-          'avatars'
+          avatar_bucket
         );
-        this.profile!.avatar_url = avatar_url
         await this.updateContactInformation({avatar_url:  avatar_url});
-        fileUploader.clear();
+        if (old_avatar_url) await this.storageService.deleteImg(old_avatar_url, avatar_bucket);
+        this.profile.avatar_url = avatar_url;
         this.messageService.add({severity:'success', summary: 'Upload des Avatars war erfolgreich.'});
       } catch (error: any) {
-        this.messageService.add({severity:'error', summary: error});
+        try {
+          await this.storageService.deleteImg(avatar_url, 'avatars');
+          this.messageService.add({severity:'error', summary: error});
+        } catch (imageRemovalError: any) {
+          /*
+            here we display the original error
+            the failed removal of the stale image should be logged to ELK or simmilar
+            to be able to clean up these images periodically
+          */ 
+          this.messageService.add({severity:'error', summary: error});
+        }
       }
+      fileUploader.clear();
     } catch (error: any) {
       this.messageService.add({severity:'error', summary: error.message});
     } finally {
