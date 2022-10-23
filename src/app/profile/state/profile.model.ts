@@ -15,6 +15,15 @@ export interface ProfileCore {
   fts?: string // test
 }
 
+export interface ProfileCounters {
+  id: string;
+  amendment_counter: number;
+  follower_counter: number;
+  following_counter: number;
+  groups_counter: number;
+  unread_notifications_counter: number;
+}
+
 export interface ProfileWithCounters extends ProfileCore {
   amendment_counter: number;
   follower_counter: number;

@@ -18,6 +18,7 @@ alter publication supabase_realtime add table membership_requests;
 alter table "membership_requests" replica identity full;
 alter publication supabase_realtime add table profiles;
 alter publication supabase_realtime add table profiles_counters;
+alter table "profiles_counters" replica identity full;
 
 alter publication supabase_realtime add table rooms;
 alter publication supabase_realtime add table rooms_messages;

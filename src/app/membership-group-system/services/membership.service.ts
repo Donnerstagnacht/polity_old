@@ -5,6 +5,7 @@ import { GroupsService } from 'src/app/groups/state/groups.service';
 import { environment } from 'src/environments/environment';
 import { Subscription } from 'rxjs';
 import { NEWSCONTENTS, NewsContents, NEWSTITLES, NewsTitles, NEWSTYPE, NewsType } from 'src/app/news/state/news.model';
+import { RealtimeChannelSnapshot } from 'lib/realtime';
 
 @Injectable({
   providedIn: 'root'
@@ -231,8 +232,8 @@ export class MembershipService {
         schema: 'public',
         table: 'membership_requests'
       },
-      payload => {
-        if(payload.new['group_requested'] === group_id && payload.new['user_requests'] === loggedInID) {
+      (payload: RealtimeChannelSnapshot<any>) => {
+        if(payload.record.group_requested === group_id && payload.record.user_requests === loggedInID) {
           this.groupsService.updateRequestedMembership(group_id, true);
         }
       }
@@ -243,8 +244,8 @@ export class MembershipService {
       schema: 'public',
       table: 'membership_requests'
     },
-    payload => {
-      if(payload.old['group_requested'] === group_id && payload.old['user_requests'] === loggedInID) {
+    (payload: RealtimeChannelSnapshot<any>) => {
+      if(payload.old_record.group_requested === group_id && payload.old_record.user_requests === loggedInID) {
         this.groupsService.updateRequestedMembership(group_id, false);
       }
     })
@@ -275,8 +276,8 @@ export class MembershipService {
           schema: 'public',
           table: 'group_members'
         },
-        payload => {
-          if(payload.new['group_id'] === group_id && payload.new['user_id'] === loggedInID) {
+        (payload: RealtimeChannelSnapshot<any>) => {
+          if(payload.record.group_id === group_id && payload.record.user_id === loggedInID) {
             this.groupsService.updateIsMember(group_id, true);
           }
         }
@@ -287,8 +288,8 @@ export class MembershipService {
         schema: 'public',
         table: 'group_members'
       },
-      payload => {
-        if(payload.old['group_id'] === group_id && payload.old['user_id'] === loggedInID) {
+      (payload: RealtimeChannelSnapshot<any>) => {
+        if(payload.old_record.group_id === group_id && payload.old_record.user_id === loggedInID) {
           this.groupsService.updateIsMember(group_id, false);
         }
       }
@@ -322,9 +323,9 @@ export class MembershipService {
         schema: 'public',
         table: 'group_members'
       },
-      payload => {
-        if(payload.new['group_id'] === group_id) {
-          if(payload.new['is_admin']) {
+      (payload: RealtimeChannelSnapshot<any>) => {
+        if(payload.record.group_id === group_id) {
+          if(payload.record.is_admin) {
             this.groupsService.updateIsAdmin(group_id, true);
           } else {
             this.groupsService.updateIsAdmin(group_id, false)

@@ -38,7 +38,7 @@ export class AuthentificationService {
 
   async signOut() {
     const response = await this.supabaseClient.auth.signOut();
-    
+    console.log(response)
     if (response.error) {
       throw new Error(response.error.message);
     }

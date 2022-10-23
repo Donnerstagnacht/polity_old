@@ -6,6 +6,7 @@ import { ChatRoomStore, ChatRoomState } from './chat-room.store';
 import { Observable, Subject } from 'rxjs';
 import { ChatRoomQuery } from './chat-room.query';
 import { all } from 'cypress/types/bluebird';
+import { RealtimeChannelSnapshot } from 'lib/realtime';
 
 @Injectable({ providedIn: 'root' })
 export class ChatRoomService {
@@ -54,12 +55,12 @@ export class ChatRoomService {
         schema: 'public',
         table: 'rooms_messages'
       },
-      payload => {
+      (payload: RealtimeChannelSnapshot<any>) => {
         const newMessage: Message = {
-          message_id: payload.new['message_id'],
-          created_at_in: payload.new['created_at'],
-          sender_id: payload.new['user_id'],
-          content_in: payload.new['content']
+          message_id: payload.record.message_id,
+          created_at_in: payload.record.created_at,
+          sender_id: payload.record.user_id,
+          content_in: payload.record.content
         }
         this.chatRoomStore.update((state: ChatRoomState) => {
           let oldMessages: Message[] =state.messages

@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS public.profiles_counters
 )
 TABLESPACE pg_default;
 ALTER TABLE IF EXISTS public.profiles_counters OWNER to postgres;
-GRANT ALL ON TABLE public.profiles TO anon;
-GRANT ALL ON TABLE public.profiles TO authenticated;
-GRANT ALL ON TABLE public.profiles TO postgres;
-GRANT ALL ON TABLE public.profiles TO service_role;
+GRANT ALL ON TABLE public.profiles_counters TO anon;
+GRANT ALL ON TABLE public.profiles_counters TO authenticated;
+GRANT ALL ON TABLE public.profiles_counters TO postgres;
+GRANT ALL ON TABLE public.profiles_counters TO service_role;

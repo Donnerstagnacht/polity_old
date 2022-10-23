@@ -1,15 +1,17 @@
 import { Injectable } from '@angular/core';
 import { ID } from '@datorama/akita';
-import { createClient, RealtimeChannel, SupabaseClient, PostgrestResponse } from '@supabase/supabase-js';
+import { createClient, RealtimeChannel, SupabaseClient, PostgrestResponse, RealtimeRemoveChannelResponse, RealtimePostgresChangesPayload, RealtimePostgresUpdatePayload } from '@supabase/supabase-js';
 import { AuthentificationQuery } from 'src/app/authentification/state/authentification.query';
 import { FollowingService } from 'src/app/following-profiles-system/services/following.service';
 import { GroupsService } from 'src/app/groups/state/groups.service';
 import { profile_list_item } from 'src/app/groups/state/profile_list_item.model';
 import { environment } from 'src/environments/environment';
-import { Profile, ProfileCore } from './profile.model';
+import { Profile, ProfileCore, ProfileCounters } from './profile.model';
 import { ProfileQuery } from './profile.query';
 import { ProfileStore } from './profile.store';
 import { Subscription } from 'rxjs';
+import { Database } from 'lib/database.types';
+import { RealtimeChannelSnapshot } from 'lib/realtime';
 
 @Injectable({ providedIn: 'root' })
 export class ProfileService {
@@ -24,7 +26,7 @@ export class ProfileService {
     private profileQuery: ProfileQuery,
     private authentificationQuery: AuthentificationQuery
   ) {
-    this.supabaseClient = createClient(environment.supabaseUrl, environment.supabaseKey);
+    this.supabaseClient = createClient<Database>(environment.supabaseUrl, environment.supabaseKey);
     this.authSubscription = this.authentificationQuery.uuid$.subscribe(uuid => {
       this.loggedInID = uuid;
     })
@@ -62,10 +64,10 @@ export class ProfileService {
           schema: 'public',
           table: 'profiles'
         },
-        payload => {
+        (payload: RealtimeChannelSnapshot<any>) => {
           console.log('update')
           console.log(payload)
-          this.profileStore.upsert(payload.new['id'], payload.new)
+          this.profileStore.upsert(payload.record.id, payload.record)
         }
       )
       .on('postgres_changes',
@@ -74,10 +76,10 @@ export class ProfileService {
         schema: 'public',
         table: 'profiles'
       },
-      payload => {
+      (payload: RealtimeChannelSnapshot<any>) => {
         console.log('insert')
         console.log(payload)
-        this.profileStore.upsert(payload.new['id'], payload.new)
+        this.profileStore.upsert(payload.record.id, payload.record)
       }
     )
 /*     .from<ProfileCore>(`profiles:id=eq.${uuid}`)
@@ -98,6 +100,7 @@ export class ProfileService {
   getRealTimeChangesCounters(uuid: string): RealtimeChannel {
     console.log('called counters', uuid)
     const subscription = this.supabaseClient
+    // .channel(`public:profiles_counters:id=eq.${uuid}`)
     .channel(`public:profiles_counters`)
     .on('postgres_changes',
       {
@@ -106,12 +109,24 @@ export class ProfileService {
         table: 'profiles_counters'
       },
       payload => {
-        console.log('update')
+      // (payload: RealtimeChannelSnapshot<ProfileCounters>) => {
+        console.log('update after follow')
         console.log(payload)
-        this.profileStore.upsert(payload.new['id'], payload.new)
+/*         console.log(payload.record)
+        console.log(payload.record?.amendment_counter)
+        console.log(payload.columns)
+        console.log(payload.type)
+        console.log(payload.old_record)
+        console.log(payload.schema)
+        console.log(payload.table)
+        if(payload.record) {
+          this.profileStore.upsert(payload.record.id, payload.record)
+        } */
       }
     )
-/*     .from(`profiles_counters`)
+    .subscribe()
+    return subscription;
+    /*     .from(`profiles_counters`)
     // .from(`profiles_counters:id=eq.${uuid}`)
     .on('UPDATE', (payload) => {
       console.log('update')
@@ -123,8 +138,6 @@ export class ProfileService {
       console.log(payload)
       this.profileStore.upsert(payload.new.id, payload.new)
     }) */
-    .subscribe()
-    return subscription;
   }
 
   async update(id: any, profile: Partial<ProfileCore>): Promise<PostgrestResponse<any>> {
@@ -270,18 +283,18 @@ export class ProfileService {
         schema: 'public',
         table: 'following_profile_system'
       },
-      payload => {
+      (payload: RealtimeChannelSnapshot<any>) => {
         console.log('Payload')
         console.log(payload)
-        if(payload.new['following'] === profil_id) {
-          this.groupsService.selectProfile(payload.new['follower']).then((member) => {
+        if(payload.record.following === profil_id) {
+          this.groupsService.selectProfile(payload.record.follower).then((member) => {
             console.log(member)
             console.log(member.data.id)
             console.log(member.data.name)
             console.log(member.data.avatar_url)
             console.log()
             let memberData: profile_list_item = {
-              id: payload.new['id'],
+              id: payload.record.id,
               user_id: member.data.id,
               avatar_url: member.data.avatar_url,
               name: member.data.name
@@ -299,15 +312,15 @@ export class ProfileService {
             }
           })
         }
-        if(payload.new['follower'] === profil_id) {
-          this.groupsService.selectProfile(payload.new['following']).then((member) => {
+        if(payload.record.follower === profil_id) {
+          this.groupsService.selectProfile(payload.record.following).then((member) => {
             console.log(member)
             console.log(member.data.id)
             console.log(member.data.name)
             console.log(member.data.avatar_url)
             console.log()
             let memberData: profile_list_item = {
-              id: payload.new['id'],
+              id: payload.record.id,
               user_id: member.data.id,
               avatar_url: member.data.avatar_url,
               name: member.data.name
@@ -390,26 +403,26 @@ export class ProfileService {
         schema: 'public',
         table: 'following_profile_system'
       },
-      payload => {
+      (payload: RealtimeChannelSnapshot<any>) => {
         console.log('Payload')
         console.log(payload)
-        if(payload.old['following'] === profil_id) {
-            console.log(payload.old['id'])
+        if(payload.old_record.following === profil_id) {
+            console.log(payload.old_record.id)
             const profile: Profile | undefined = this.profileQuery.getEntity(profil_id);
             console.log('oldState');
             console.log(profile);
             if(profile && profile.followers) {
               const followers: profile_list_item[] = Object.assign([], profile.followers)
-              let idToSliceOut: number = followers.findIndex((follower: profile_list_item) => follower.id === payload.old['id']);
+              let idToSliceOut: number = followers.findIndex((follower: profile_list_item) => follower.id === payload.old_record.id);
               followers.splice(idToSliceOut, 1);
               console.log('newState');
               console.log(idToSliceOut)
-              console.log(payload.old['id'])
+              console.log(payload.old_record.id)
               console.log(followers);
               this.profileStore.update(profil_id, {followers: followers})
             }
         }
-        if(payload.old['follower'] === profil_id) {
+        if(payload.old_record.follower === profil_id) {
           console.log('follower')
           const entity = this.profileQuery.getEntity(profil_id);
           console.log('oldState');
@@ -420,9 +433,9 @@ export class ProfileService {
             console.log(entity.followings)
             console.log('to Delete')
             console.log()
-            let idToSpliceOut: number = followings.findIndex((following: profile_list_item) => following.user_id === payload.old['following']);
+            let idToSpliceOut: number = followings.findIndex((following: profile_list_item) => following.user_id === payload.old_record.following);
             console.log(idToSpliceOut)
-            console.log(payload.old['id'])
+            console.log(payload.old_record.id)
             followings.splice(idToSpliceOut, 1);
             console.log('newState');
             console.log(followings);
@@ -485,18 +498,18 @@ export class ProfileService {
           schema: 'public',
           table: 'following_group_system'
         },
-        payload => {
+        (payload: RealtimeChannelSnapshot<any>) => {
           console.log('Payload')
           console.log(payload)
-          if(payload.new['follower'] === profil_id) {
-            this.groupsService.selectGroup(payload.new['following']).then((group) => {
+          if(payload.record.follower === profil_id) {
+            this.groupsService.selectGroup(payload.record.following).then((group) => {
               console.log(group)
               console.log(group.data.id)
               console.log(group.data.name)
               console.log(group.data.avatar_url)
               console.log()
               let groupData: profile_list_item = {
-                id: payload.new['id'],
+                id: payload.record.id,
                 user_id: group.data.id,
                 avatar_url: group.data.avatar_url,
                 name: group.data.name
@@ -522,20 +535,20 @@ export class ProfileService {
           schema: 'public',
           table: 'following_group_system'
         },
-        payload => {
+        (payload: RealtimeChannelSnapshot<any>) => {
           console.log('Payload')
           console.log(payload)
-          if(payload.old['follower'] === profil_id) {
+          if(payload.old_record.follower === profil_id) {
             const entity = this.profileQuery.getEntity(profil_id);
             console.log('oldState');
             console.log(entity);
             if(entity && entity.followings) {
               const followings: profile_list_item[] = Object.assign([], entity.followings)
-              let requestId: number = followings.findIndex((request) => request.id === payload.old['id']);
+              let requestId: number = followings.findIndex((request) => request.id === payload.old_record.id);
               followings.splice(requestId, 1);
               console.log('newState');
               console.log(requestId)
-              console.log(payload.old['id'])
+              console.log(payload.old_record.id)
               console.log(followings);
               this.profileStore.update(profil_id, {followings: followings})
             }
@@ -632,6 +645,7 @@ export class ProfileService {
   }
 
   getRealTimeChangesIfStillFollower(profile_id: string): RealtimeChannel {
+    console.log('Still follower called')
     let loggedInID: string | null = '';
     if(this.loggedInID) {
       loggedInID = this.loggedInID;
@@ -644,8 +658,9 @@ export class ProfileService {
           schema: 'public',
           table: 'following_profile_system'
         },
-        payload => {
-          if(payload.new['following'] === profile_id && payload.new['follower'] === loggedInID) {
+        (payload: RealtimeChannelSnapshot<any>) => {
+          console.log('still follower', payload)
+          if(payload.record.following === profile_id && payload.record.follower === loggedInID) {
             this.updateIsFollowing(profile_id, true);
           }
         }
@@ -656,13 +671,13 @@ export class ProfileService {
         schema: 'public',
         table: 'following_profile_system'
       },
-      payload => {
+      (payload: RealtimeChannelSnapshot<any>) => {
         console.log('Payload')
         console.log(payload)
         console.log('profile.id_')
-        console.log(payload.old['following'])
+        console.log(payload.old_record.following)
         console.log(profile_id)
-        if(payload.old['following'] === profile_id && payload.old['follower'] === loggedInID) {
+        if(payload.old_record['following'] === profile_id && payload.old_record.follower === loggedInID) {
           this.updateIsFollowing(profile_id, false);
         }
       }
@@ -699,11 +714,11 @@ export class ProfileService {
           schema: 'public',
           table: 'group_members'
         },
-        payload => {
+        (payload: RealtimeChannelSnapshot<any>) => {
           console.log('Payload')
           console.log(payload)
-          if(payload.new['user_id'] === user_id) {
-            this.groupsService.selectGroup(payload.new['group_id']).then((group) => {
+          if(payload.record.user_id === user_id) {
+            this.groupsService.selectGroup(payload.record.group_id).then((group) => {
               console.log(group)
               console.log(group.data.id)
               console.log(group.data.name)
@@ -740,14 +755,14 @@ export class ProfileService {
           schema: 'public',
           table: 'group_members'
         },
-        payload => {
+        (payload: RealtimeChannelSnapshot<any>) => {
           console.log('Payload')
           console.log(payload)
           console.log('group.id_')
-          console.log(payload.old['following'])
+          console.log(payload.old_record.following)
           console.log(user_id)
-          if(payload.old['user_id'] === user_id) {
-            this.groupsService.selectGroup(payload.old['group_id']).then((group) => {
+          if(payload.old_record.user_id === user_id) {
+            this.groupsService.selectGroup(payload.old_record.group_id).then((group) => {
               console.log(group)
               console.log(group.data.id)
               console.log(group.data.name)
@@ -755,7 +770,7 @@ export class ProfileService {
               console.log()
     
               let groupData: profile_list_item = {
-                id: payload.old['id'],
+                id: payload.old_record.id,
                 user_id: group.data.id,
                 avatar_url: group.data.avatar_url,
                 name: group.data.name
@@ -766,11 +781,11 @@ export class ProfileService {
               console.log(entity?.groups);
               if(entity && entity.groups) {
                 const groupsOfProfile: profile_list_item[] = Object.assign([], entity.groups)
-                let requestId: number = groupsOfProfile.findIndex((request) => request.id === payload.old['id']);
+                let requestId: number = groupsOfProfile.findIndex((request) => request.id === payload.old_record.id);
                 groupsOfProfile.splice(requestId, 1);
                 console.log('newState');
                 console.log(requestId)
-                console.log(payload.old['id'])
+                console.log(payload.old_record.id)
                 console.log(groupsOfProfile);
                 this.profileStore.upsert(user_id, {groups: groupsOfProfile})
               }

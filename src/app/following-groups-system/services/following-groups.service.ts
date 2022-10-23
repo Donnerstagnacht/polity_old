@@ -4,6 +4,7 @@ import { AuthentificationQuery } from '../../authentification/state/authentifica
 import { environment } from 'src/environments/environment';
 import { GroupsService } from 'src/app/groups/state/groups.service';
 import { Subscription } from 'rxjs';
+import { RealtimeChannelSnapshot } from 'lib/realtime';
 
 @Injectable({
   providedIn: 'root'
@@ -107,10 +108,10 @@ export class FollowingGroupsService {
           schema: 'public',
           table: 'following_group_system'
         },
-        payload => {
+        (payload: RealtimeChannelSnapshot<any>) => {
           console.log('Payload')
           console.log(payload)
-          if(payload.new['following'] === group_id && payload.new['follower'] === loggedInID) {
+          if(payload.record.following === group_id && payload.record.follower === loggedInID) {
             this.groupsService.updateIsFollowing(group_id, true);
           }
         })
@@ -120,14 +121,16 @@ export class FollowingGroupsService {
           schema: 'public',
           table: 'following_group_system'
         },
-        payload => {
+        (payload: RealtimeChannelSnapshot<any>) => {
           console.log('Payload')
           console.log(payload)
           console.log('group.id_')
-          console.log(payload.old['following'])
-          console.log(group_id)
-          if(payload.old['following'] === group_id && payload.old['follower'] === loggedInID) {
-            this.groupsService.updateIsFollowing(group_id, false);
+          if(payload.old_record) {
+            console.log(payload.old_record['following'])
+            console.log(group_id)
+            if(payload.old_record['following'] === group_id && payload.old_record['follower'] === loggedInID) {
+              this.groupsService.updateIsFollowing(group_id, false);
+            }
           }
         })
     // .from<any>(`following_group_system`)
