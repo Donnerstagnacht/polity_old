@@ -30,7 +30,7 @@ describe('Tests Profile features', () => {
   it('2. User 1 uploads new Profile Image & it is displayed on users profile wiki', () => {
     cy.get('#profile-cy')
     cy.navigateFromProfileWikiToEditProfile()
-    cy.uploadImage('C:/Users/Tobi/polity/src/assets/images/tobi1.jpg')
+    cy.uploadImage('./cypress/images/user1.jpg')
     cy.clickBackButton()
     cy.openProfileAndWaitForProfileData()
     cy.checkIfImageExists()
@@ -52,7 +52,7 @@ describe('Tests Profile features', () => {
   it('5. User 2 uploads new Profile Image & it is displayed on users profile wiki', () => {
     cy.get('#profile-cy')
     cy.navigateFromProfileWikiToEditProfile()
-    cy.uploadImage('C:/Users/Tobi/polity/src/assets/images/tobi2.jpg')
+    cy.uploadImage('./cypress/images/user2.jpg')
     cy.clickBackButton()
     cy.openProfileAndWaitForProfileData()
     cy.checkIfImageExists()
