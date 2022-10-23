@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1666521458295,
+  "timestamp": 1666527565534,
   "index": "/polity/index.html",
   "assetGroups": [
     {
@@ -12,15 +12,15 @@
       },
       "urls": [
         "/polity/0.7a682c1a4a397337.js",
-        "/polity/479.5fee94d28646f07e.js",
-        "/polity/671.ac64fc7b87905c23.js",
+        "/polity/479.787b5f1fdb223d21.js",
+        "/polity/671.59654dfbc9aa6e1d.js",
         "/polity/691.f624f3dcd166fd56.js",
         "/polity/781.a541e1cd2bc73b5e.js",
         "/polity/783.d34bb02c06e311dc.js",
         "/polity/84.a4607d8c1dd5578f.js",
-        "/polity/846.dab2ec2957cbcef0.js",
+        "/polity/846.a63d8493e00f5fb1.js",
         "/polity/985.8cfb3db96f276cef.js",
-        "/polity/common.9d266f0dad3f8461.js",
+        "/polity/common.5ae1b0240df74745.js",
         "/polity/favicon.ico",
         "/polity/index.html",
         "/polity/main.71de36f051711bda.js",
@@ -28,7 +28,7 @@
         "/polity/material-light-dark-indigo.css",
         "/polity/material-light-standard-indigo.css",
         "/polity/polyfills.0cc3c5abbc0cf0f7.js",
-        "/polity/runtime.ba3fd70d5fab646d.js",
+        "/polity/runtime.ad5391e63cdcb560.js",
         "/polity/styles.aac148b0431e3488.css"
       ],
       "patterns": []
@@ -71,13 +71,13 @@
   "dataGroups": [],
   "hashTable": {
     "/polity/0.7a682c1a4a397337.js": "8b1ed1298d6353bfaab0ec6f1a843afeb42dab97",
-    "/polity/479.5fee94d28646f07e.js": "58b9e08c4dd12950164f46b984706ef57020f7b6",
-    "/polity/671.ac64fc7b87905c23.js": "ea871c109054c32cf600fb6a7cbc1dabd730a15a",
+    "/polity/479.787b5f1fdb223d21.js": "e0d4dc8f621d55807ff613f060782971a64f7d48",
+    "/polity/671.59654dfbc9aa6e1d.js": "85f9e4b7b416ef7fb8ad3562e7e8f1fa8d1b2fca",
     "/polity/691.f624f3dcd166fd56.js": "2651243ad221ccff670cc1c8a396016ce2a86d79",
     "/polity/781.a541e1cd2bc73b5e.js": "b490d5197b8b9fe125279a1daea82d6283f28c53",
     "/polity/783.d34bb02c06e311dc.js": "495b1c6b4a87d63936edf458d53e68936851cc88",
     "/polity/84.a4607d8c1dd5578f.js": "a7f390f63d5b337ad86c20ef18fe3603978204d7",
-    "/polity/846.dab2ec2957cbcef0.js": "d04f07a7cdcee47d1b60adbb0bc1ebdd1acd861c",
+    "/polity/846.a63d8493e00f5fb1.js": "809926909198b315a13374ca3640d639a2478734",
     "/polity/985.8cfb3db96f276cef.js": "77e9f323267a4894eae391fcc43631f25a5ecb93",
     "/polity/Inter-Bold.495ff245352e2720.woff": "2aad5b7a0f94ae2085fd1ff40c03d6cf68b68c3e",
     "/polity/Inter-Bold.b19f66e15e74d7d0.woff2": "ed509b1b3e8d08809f8ca4670856b9cc1759abf3",
@@ -98,10 +98,10 @@
     "/polity/assets/images/tobi1.jpg": "51ef087160b4959db6d954ccd6034f92fd7cb7c5",
     "/polity/assets/images/tobi2.jpg": "8f8651c07511b2cd69bc368332d5c697adefa4f3",
     "/polity/color.dae87a04d07ca92b.png": "ff4c4bcb2207891b292f544edb4da9d2df5d45cf",
-    "/polity/common.9d266f0dad3f8461.js": "a00b2c3796efb5dd6bbb9d50fc2b37e5c68faaf6",
+    "/polity/common.5ae1b0240df74745.js": "5c036adf618253f4ec69cc8f68ee4ac7be29348e",
     "/polity/favicon.ico": "97530a42509c80e33725afdc292c4f860b203313",
     "/polity/hue.8b1818380241e6ac.png": "f81ae627637a684614aa726e206c73ce099a01fd",
-    "/polity/index.html": "248050c197799cfe44f8967b88873fd58d8b9f32",
+    "/polity/index.html": "46277668db12f610dcdc07d633bcd913e412257b",
     "/polity/main.71de36f051711bda.js": "a12f216fb325fcf08e729c27c5682a73c31c03ca",
     "/polity/manifest.webmanifest": "d278b3cbbfc7885f338694153c58bd26efe8a04a",
     "/polity/material-light-dark-indigo.css": "cb0f469efd351087c24fe8fd10c0989a30c7cfd7",
@@ -110,7 +110,7 @@
     "/polity/primeicons.29151a741d66863a.woff": "21e477ea19e15b66344bcc23b3fbb2161092a707",
     "/polity/primeicons.5f5d08cd089b4e5d.ttf": "e6c86ca90a9fb4282fb35523d56fde00e78a1416",
     "/polity/primeicons.76044b1c189cc4d7.svg": "621775b2ec555fd2dd152a24390cf6dfeee168b1",
-    "/polity/runtime.ba3fd70d5fab646d.js": "db2457cd3a72c54651dd23f3a0a73a14c06ffaf0",
+    "/polity/runtime.ad5391e63cdcb560.js": "301aa6a39b79a406f76cc61f0851f9cc45227259",
     "/polity/styles.aac148b0431e3488.css": "5bac3a955bdb7f113279571c570705d9e9553884"
   },
   "navigationUrls": [
