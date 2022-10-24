@@ -1,3 +1,5 @@
+DROP TRIGGER IF EXISTS signup_copy_to_profiles on auth.users;
+DROP FUNCTION IF EXISTS signup_copy_to_users_table();
 CREATE OR REPLACE FUNCTION signup_copy_to_users_table()
 RETURNS TRIGGER AS $$
   BEGIN
@@ -8,7 +10,6 @@ RETURNS TRIGGER AS $$
 $$
 LANGUAGE plpgsql SECURITY DEFINER;
 
-DROP TRIGGER IF EXISTS signup_copy_to_profiles on auth.users;
 CREATE TRIGGER signup_copy_to_profiles
 AFTER INSERT ON auth.users
 FOR EACH ROW EXECUTE PROCEDURE signup_copy_to_users_table();
