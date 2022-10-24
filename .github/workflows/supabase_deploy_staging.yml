@@ -25,5 +25,5 @@ jobs:
           version: 1.6.0
 
       - run: |
-          supabase link --project-ref $STAGING_PROJECT_ID
+          supabase link --project-ref $STAGING_PROJECT_ID -p $SUPABASE_STAGING_DB_PASSWORD
           supabase db push
