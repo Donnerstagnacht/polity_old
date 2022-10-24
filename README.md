@@ -96,14 +96,15 @@ Supabase files and functions are organized in the <code>supabase</code> folder a
    ```sh
    yarn install
    ```
-2. Install Supabase CLI
+3. Set up local development for supabase
    ```sh
-   (todo)
+   https://supabase.com/docs/guides/cli/local-development#deploy-database-changes
    ```
-3. Run Development instance
+4. Start Angular dev server
    ```sh
-   yarn start
+   ng serve
    ```
+
 <hr>
 <h1>Development server Frontend (Angular)</h1>
 Run <code>ng serve</code> for a dev server. Navigate to <code>http://localhost:4200/</code>. The application will automatically reload if you change any of the source files.
