@@ -1,6 +1,6 @@
 -- Full Text Search Profiles
 ALTER TABLE IF EXISTS public.profiles
-  DROP COLUMN fts;
+  DROP COLUMN IF EXISTS fts;
 ALTER TABLE IF EXISTS public.profiles
     ADD COLUMN fts tsvector GENERATED ALWAYS AS (to_tsvector('german'::regconfig, ((name || ' '::text) || city))) STORED;
 CREATE INDEX IF NOT EXISTS profiles_fts
@@ -10,7 +10,7 @@ CREATE INDEX IF NOT EXISTS profiles_fts
 
 -- Full Text Search Groups
 ALTER TABLE IF EXISTS public.groups
-  DROP COLUMN fts;
+  DROP COLUMN IF EXISTS fts;
   ALTER TABLE IF EXISTS public.groups
     ADD COLUMN fts tsvector GENERATED ALWAYS AS (to_tsvector('german'::regconfig, ((name || ' '::text) || level || city))) STORED;
 CREATE INDEX IF NOT EXISTS groups_fts

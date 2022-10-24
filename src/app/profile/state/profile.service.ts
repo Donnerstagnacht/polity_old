@@ -100,18 +100,26 @@ export class ProfileService {
   getRealTimeChangesCounters(uuid: string): RealtimeChannel {
     console.log('called counters', uuid)
     const subscription = this.supabaseClient
-    // .channel(`public:profiles_counters:id=eq.${uuid}`)
-    .channel(`public:profiles_counters`)
+    .channel(`public:profiles_counters:id=eq.${uuid}`)
+    // .channel('*')
     .on('postgres_changes',
       {
         event: 'UPDATE',
         schema: 'public',
         table: 'profiles_counters'
       },
-      payload => {
+      (payload: any) => {
       // (payload: RealtimeChannelSnapshot<ProfileCounters>) => {
         console.log('update after follow')
         console.log(payload)
+
+
+        if(payload.new) {
+          console.log('record exists')
+          console.log('id', payload.new.id)
+          console.log('record', payload.new)
+          this.profileStore.upsert(payload.new.id, payload.new)
+        }
 /*         console.log(payload.record)
         console.log(payload.record?.amendment_counter)
         console.log(payload.columns)

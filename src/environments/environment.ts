@@ -4,8 +4,13 @@
 
 export const environment = {
   production: false,
-  supabaseUrl: "http://localhost:54321",
+  // remote
+  supabaseUrl: "https://kmcktdfoxyginvzljeba.supabase.co",
+  supabaseKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImttY2t0ZGZveHlnaW52emxqZWJhIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NjY1NDI2MTMsImV4cCI6MTk4MjExODYxM30.ag67R34_SgBDO_NHIYyDvzs8kpnbcwci2zlWAqRbRTo",
+  // local
+/*   supabaseUrl: "http://localhost:54321",
   supabaseKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24ifQ.625_WdcF3KHqz5amU0x2X5WWHP-OEs_4qj0ssLNHzTs",
+ */
 };
 
 /*

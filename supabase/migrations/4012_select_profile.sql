@@ -20,6 +20,7 @@ CREATE TYPE profile AS (
     unread_notifications_counter bigint
 );
 
+DROP function if exists select_profile_and_counters(user_id uuid);
 create or replace function select_profile_and_counters(user_id uuid)
 returns table (
   profile profile
