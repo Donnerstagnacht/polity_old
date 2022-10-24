@@ -47,6 +47,26 @@ We are meeting every Wednesday at 8pm CET on a discord server to work on the pro
   <a href="tobias.hassebrock@gmail.com">tobias.hassebrock@gmail.com</a>
 </p>
 
+<hr>
+<h1>Get startet with development </h1>
+
+1. Clone the repo
+   ```sh
+   git clone https://github.com/Donnerstagnacht/polity.git
+   ```
+2. Install NPM packages
+   ```sh
+   yarn install
+   ```
+3. Set up local development for supabase
+   ```sh
+   https://supabase.com/docs/guides/cli/local-development#deploy-database-changes
+   ```
+4. Start Angular dev server
+   ```sh
+   ng serve
+   ```
+
 <h1>Techstack</h1>
 Polity is based 100% on OpenSource technologies and is self-hostable.
 
@@ -85,25 +105,7 @@ Supabase files and functions are organized in the <code>supabase</code> folder a
   <img src="https://user-images.githubusercontent.com/35246325/187255789-11d7ce30-75ae-4481-8ff6-a8c8739745e7.png" width="100%"/>
 ![Supbase Schema](https://user-images.githubusercontent.com/35246325/187255789-11d7ce30-75ae-4481-8ff6-a8c8739745e7.png)
 
-<hr>
-<h1>Get startet with development </h1>
 
-1. Clone the repo
-   ```sh
-   git clone https://github.com/Donnerstagnacht/polity.git
-   ```
-2. Install NPM packages
-   ```sh
-   yarn install
-   ```
-2. Install Supabase CLI
-   ```sh
-   (todo)
-   ```
-3. Run Development instance
-   ```sh
-   yarn start
-   ```
 <hr>
 <h1>Development server Frontend (Angular)</h1>
 Run <code>ng serve</code> for a dev server. Navigate to <code>http://localhost:4200/</code>. The application will automatically reload if you change any of the source files.
