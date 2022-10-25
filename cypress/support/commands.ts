@@ -102,7 +102,7 @@ Cypress.Commands.add('openProfileAndWaitForProfileData', () => {
 })
 
 Cypress.Commands.add('openGroupProfileAndWaitForGroupData', () => {
-  cy.intercept('**/rest/v1/groups*').as('group')
+  cy.intercept('**/rest/v1/rpc/select_group_and_counters*').as('group')
   cy.get('#overview-cy').click()
   cy.wait('@group')
 })
