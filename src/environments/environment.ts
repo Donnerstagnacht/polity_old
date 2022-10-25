@@ -5,8 +5,8 @@
 export const environment = {
   production: false,
   // remote
-  supabaseUrl: "https://kmcktdfoxyginvzljeba.supabase.co",
-  supabaseKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImttY2t0ZGZveHlnaW52emxqZWJhIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NjY1NDI2MTMsImV4cCI6MTk4MjExODYxM30.ag67R34_SgBDO_NHIYyDvzs8kpnbcwci2zlWAqRbRTo",
+  supabaseUrl: "https://rqabiturrjfffuskvjda.supabase.co",
+  supabaseKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJxYWJpdHVycmpmZmZ1c2t2amRhIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NjY2NDE0OTAsImV4cCI6MTk4MjIxNzQ5MH0.vKeAd0vM56P5nr-C17bgs9sr45urZW2Pt7HBq8J0A0Y",
   // local
 /*   supabaseUrl: "http://localhost:54321",
   supabaseKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24ifQ.625_WdcF3KHqz5amU0x2X5WWHP-OEs_4qj0ssLNHzTs",

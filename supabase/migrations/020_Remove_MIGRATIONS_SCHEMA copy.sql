@@ -3,6 +3,12 @@
 -- to the schema_migrations table
 DROP SCHEMA if exists public CASCADE;
 CREATE SCHEMA public;
+GRANT ALL ON schema public TO anon;
+GRANT ALL ON schema public TO authenticated;
+GRANT ALL ON schema public TO postgres;
+GRANT ALL ON schema public TO service_role;
+DELETE from auth.users CASCADE;
+
 DROP TRIGGER IF EXISTS trigger_migration_row_delete ON supabase_migrations.schema_migrations;
 DROP FUNCTION IF EXISTS supabase_migrations.signup_copy_to_users_table();
 

@@ -41,7 +41,7 @@ export class GroupsService extends NgEntityService<GroupsState> {
           table: 'groups'
         },
         (payload: RealtimeChannelSnapshot<any>) => {
-          this.groupsStore.update(payload.record.id, payload.record)
+          this.groupsStore.update(payload.new.id, payload.new)
         }
       )
       
@@ -256,15 +256,15 @@ export class GroupsService extends NgEntityService<GroupsState> {
         (payload: RealtimeChannelSnapshot<any>) => {
           console.log('Payload')
           console.log(payload)
-          if(payload.record.group_requested === group_id) {
-            this.selectProfile(payload.record.user_requests).then((member) => {
+          if(payload.new.group_requested === group_id) {
+            this.selectProfile(payload.new.user_requests).then((member) => {
               console.log(member)
               console.log(member.data.id)
               console.log(member.data.name)
               console.log(member.data.avatar_url)
               console.log()
               let memberData: profile_list_item = {
-                id: payload.record.id,
+                id: payload.new.id,
                 user_id: member.data.id,
                 avatar_url: member.data.avatar_url,
                 name: member.data.name
@@ -293,19 +293,19 @@ export class GroupsService extends NgEntityService<GroupsState> {
       (payload: RealtimeChannelSnapshot<any>) => {
         console.log('Payload')
         console.log(payload)
-        if(payload.old_record) {
-          if(payload.old_record['group_requested'] === group_id) {
-            console.log(payload.old_record['id'])
+        if(payload.old) {
+          if(payload.old['group_requested'] === group_id) {
+            console.log(payload.old['id'])
             const entity = this.groupsQuery.getEntity(group_id);
             console.log('oldState');
             console.log(entity);
             if(entity && entity.membership_requests) {
               const membership_requests: profile_list_item[] = Object.assign([], entity.membership_requests)
-              let requestId: number = membership_requests.findIndex((request) => request.id === payload.old_record!['id']);
+              let requestId: number = membership_requests.findIndex((request) => request.id === payload.old!['id']);
               membership_requests.splice(requestId, 1);
               console.log('newState');
               console.log(requestId)
-              console.log(payload.old_record['id'])
+              console.log(payload.old['id'])
               console.log(membership_requests);
               this.groupsStore.update(group_id, {membership_requests: membership_requests})
             }
@@ -384,8 +384,8 @@ export class GroupsService extends NgEntityService<GroupsState> {
       (payload: RealtimeChannelSnapshot<any>) => {
         console.log('Payload')
         console.log(payload)
-        if(payload.record.group_id === group_id) {
-          this.selectMember(group_id, payload.record.user_id).then((member) => {
+        if(payload.new.group_id === group_id) {
+          this.selectMember(group_id, payload.new.user_id).then((member) => {
             console.log(member)
             console.log(member.data[0].id)
             console.log(member.data[0].user_id)
@@ -425,11 +425,11 @@ export class GroupsService extends NgEntityService<GroupsState> {
         console.log('Payload')
         console.log(payload)
         console.log('group.id_')
-        if(payload.old_record) {
-          console.log(payload.old_record['group_id'])
+        if(payload.old) {
+          console.log(payload.old['group_id'])
           console.log(group_id)
-          if(payload.old_record['group_id'] === group_id) {
-            this.selectProfile(payload.old_record['user_id']).then((member) => {
+          if(payload.old['group_id'] === group_id) {
+            this.selectProfile(payload.old['user_id']).then((member) => {
               console.log(member)
               console.log(member.data.id)
               console.log(member.data.name)
@@ -437,7 +437,7 @@ export class GroupsService extends NgEntityService<GroupsState> {
               console.log()
     
               let memberData: profile_list_item = {
-                id: payload.old_record!['id'],
+                id: payload.old!['id'],
                 user_id: member.data.id,
                 avatar_url: member.data.avatar_url,
                 name: member.data.name
@@ -449,11 +449,11 @@ export class GroupsService extends NgEntityService<GroupsState> {
               console.log(entity?.members);
               if(entity && entity.members) {
                 const members: profile_list_item[] = Object.assign([], entity.members)
-                let requestId: number = members.findIndex((request) => request.id === payload.old_record!['id']);
+                let requestId: number = members.findIndex((request) => request.id === payload.old!['id']);
                 members.splice(requestId, 1);
                 console.log('newState');
                 console.log(requestId)
-                console.log(payload.old_record!['id'])
+                console.log(payload.old!['id'])
                 console.log(members);
                 this.groupsStore.update(group_id, {members: members})
               }
@@ -551,8 +551,8 @@ export class GroupsService extends NgEntityService<GroupsState> {
         (payload: RealtimeChannelSnapshot<any>) => {
           console.log('Payload')
           console.log(payload)
-          if(payload.record.following === group_id) {
-            this.selectProfile(payload.record.follower).then((member) => {
+          if(payload.new.following === group_id) {
+            this.selectProfile(payload.new.follower).then((member) => {
               console.log(member)
               console.log(member.data.id)
               console.log(member.data.name)
@@ -594,11 +594,11 @@ export class GroupsService extends NgEntityService<GroupsState> {
           console.log('Payload')
           console.log(payload)
           console.log('group.id_')
-          if(payload.old_record) {
-            console.log(payload.old_record['following'])
+          if(payload.old) {
+            console.log(payload.old['following'])
             console.log(group_id)
-            if(payload.old_record['following'] === group_id) {
-              this.selectProfile(payload.old_record['follower']).then((member) => {
+            if(payload.old['following'] === group_id) {
+              this.selectProfile(payload.old['follower']).then((member) => {
                 console.log(member)
                 console.log(member.data.id)
                 console.log(member.data.name)
@@ -606,7 +606,7 @@ export class GroupsService extends NgEntityService<GroupsState> {
                 console.log()
       
                 let memberData: profile_list_item = {
-                  id: payload.old_record!['id'],
+                  id: payload.old!['id'],
                   user_id: member.data.id,
                   avatar_url: member.data.avatar_url,
                   name: member.data.name
@@ -618,11 +618,11 @@ export class GroupsService extends NgEntityService<GroupsState> {
                 console.log(entity?.followers);
                 if(entity && entity.followers) {
                   const followers: profile_list_item[] = Object.assign([], entity.followers)
-                  let requestId: number = followers.findIndex((request) => request.id === payload.old_record!['id']);
+                  let requestId: number = followers.findIndex((request) => request.id === payload.old!['id']);
                   followers.splice(requestId, 1);
                   console.log('newState');
                   console.log(requestId)
-                  console.log(payload.old_record!['id'])
+                  console.log(payload.old!['id'])
                   console.log(followers);
                   this.groupsStore.update(group_id, {followers: followers})
                 }

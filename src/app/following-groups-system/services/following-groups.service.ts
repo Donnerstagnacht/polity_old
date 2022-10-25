@@ -111,7 +111,7 @@ export class FollowingGroupsService {
         (payload: RealtimeChannelSnapshot<any>) => {
           console.log('Payload')
           console.log(payload)
-          if(payload.record.following === group_id && payload.record.follower === loggedInID) {
+          if(payload.new.following === group_id && payload.new.follower === loggedInID) {
             this.groupsService.updateIsFollowing(group_id, true);
           }
         })
@@ -125,10 +125,10 @@ export class FollowingGroupsService {
           console.log('Payload')
           console.log(payload)
           console.log('group.id_')
-          if(payload.old_record) {
-            console.log(payload.old_record['following'])
+          if(payload.old) {
+            console.log(payload.old['following'])
             console.log(group_id)
-            if(payload.old_record['following'] === group_id && payload.old_record['follower'] === loggedInID) {
+            if(payload.old['following'] === group_id && payload.old['follower'] === loggedInID) {
               this.groupsService.updateIsFollowing(group_id, false);
             }
           }

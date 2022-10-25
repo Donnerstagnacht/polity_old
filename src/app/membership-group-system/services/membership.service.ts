@@ -233,7 +233,7 @@ export class MembershipService {
         table: 'membership_requests'
       },
       (payload: RealtimeChannelSnapshot<any>) => {
-        if(payload.record.group_requested === group_id && payload.record.user_requests === loggedInID) {
+        if(payload.new.group_requested === group_id && payload.new.user_requests === loggedInID) {
           this.groupsService.updateRequestedMembership(group_id, true);
         }
       }
@@ -245,7 +245,7 @@ export class MembershipService {
       table: 'membership_requests'
     },
     (payload: RealtimeChannelSnapshot<any>) => {
-      if(payload.old_record.group_requested === group_id && payload.old_record.user_requests === loggedInID) {
+      if(payload.new.group_requested === group_id && payload.new.user_requests === loggedInID) {
         this.groupsService.updateRequestedMembership(group_id, false);
       }
     })
@@ -277,7 +277,7 @@ export class MembershipService {
           table: 'group_members'
         },
         (payload: RealtimeChannelSnapshot<any>) => {
-          if(payload.record.group_id === group_id && payload.record.user_id === loggedInID) {
+          if(payload.new.group_id === group_id && payload.new.user_id === loggedInID) {
             this.groupsService.updateIsMember(group_id, true);
           }
         }
@@ -289,7 +289,7 @@ export class MembershipService {
         table: 'group_members'
       },
       (payload: RealtimeChannelSnapshot<any>) => {
-        if(payload.old_record.group_id === group_id && payload.old_record.user_id === loggedInID) {
+        if(payload.old.group_id === group_id && payload.old.user_id === loggedInID) {
           this.groupsService.updateIsMember(group_id, false);
         }
       }
@@ -324,8 +324,8 @@ export class MembershipService {
         table: 'group_members'
       },
       (payload: RealtimeChannelSnapshot<any>) => {
-        if(payload.record.group_id === group_id) {
-          if(payload.record.is_admin) {
+        if(payload.new.group_id === group_id) {
+          if(payload.new.is_admin) {
             this.groupsService.updateIsAdmin(group_id, true);
           } else {
             this.groupsService.updateIsAdmin(group_id, false)

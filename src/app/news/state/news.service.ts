@@ -252,30 +252,30 @@ export class NewsService implements OnDestroy {
           (payload: RealtimeChannelSnapshot<any>) => {
             console.log('triggered')
             console.log(payload);
-            if(payload.record.for_admins) {
+            if(payload.new.for_admins) {
               this.supabaseClient
               .from('profiles')
               .select(`
                   avatar_url,
                   name
               `)
-              .eq('id', payload.record.notifier)
+              .eq('id', payload.new.notifier)
               .single()
             .then((result: any) => {
               console.log(result)
               const news: News = {
-                id: payload.record['id'],
-                notifier: payload.record.notifier,
-                notifying: payload.record.notifying,
-                handler: payload.record.handler,
-                title: payload.record.title,
-                message: payload.record.message,
-                type: payload.record.type,
-                created_at: payload.record.created_at,
-                from_group: payload.record.from_group,
+                id: payload.new['id'],
+                notifier: payload.new.notifier,
+                notifying: payload.new.notifying,
+                handler: payload.new.handler,
+                title: payload.new.title,
+                message: payload.new.message,
+                type: payload.new.type,
+                created_at: payload.new.created_at,
+                from_group: payload.new.from_group,
                 avatar_url: result.data.avatar_url,
                 name: result.data.name,
-                new: payload.record.new
+                new: payload.new.new
               }
               this.newsStore.add(news);
               this.notifier.next(news);

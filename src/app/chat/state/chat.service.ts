@@ -113,8 +113,8 @@ export class ChatService {
             this.chatStore.update(
               roomId,
               {
-                last_message: payload.record.last_message,
-                last_message_time: payload.record.last_message_time
+                last_message: payload.new.last_message,
+                last_message_time: payload.new.last_message_time
               }
             )
           }
@@ -141,7 +141,7 @@ export class ChatService {
           console.log('DELETE')
           console.log('Payload')
           console.log(payload)
-          this.chatStore.remove(payload.record.id);
+          this.chatStore.remove(payload.new.id);
         }
       )
       //  .from<any>(`rooms:id=eq.${roomId}`)
@@ -183,7 +183,7 @@ export class ChatService {
               this.chatStore.update(
                 roomId,
                 {
-                  number_of_unread_messages: payload.record.number_of_unread_messages,
+                  number_of_unread_messages: payload.new.number_of_unread_messages,
                 }
               )
             }

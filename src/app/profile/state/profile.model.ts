@@ -16,12 +16,12 @@ export interface ProfileCore {
 }
 
 export interface ProfileCounters {
-  id: string;
-  amendment_counter: number;
-  follower_counter: number;
-  following_counter: number;
-  groups_counter: number;
-  unread_notifications_counter: number;
+  id?: string;
+  amendment_counter?: number;
+  follower_counter?: number;
+  following_counter?: number;
+  groups_counter?: number;
+  unread_notifications_counter?: number;
 }
 
 export interface ProfileWithCounters extends ProfileCore {

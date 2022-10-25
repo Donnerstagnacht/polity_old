@@ -1,4 +1,4 @@
-/* --1. Increment Follower
+--1. Increment Follower
 DROP function if exists incrementfollower_counter(userId uuid);
 create or replace function incrementfollower_counter(userId uuid)
 returns void
@@ -27,4 +27,3 @@ BEGIN
   where id = userId;
 END;
 $$;
- */
