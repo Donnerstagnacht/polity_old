@@ -5,10 +5,10 @@ CREATE TABLE IF NOT EXISTS public.groups
     name text COLLATE pg_catalog."default" NOT NULL,
     description text COLLATE pg_catalog."default" NOT NULL DEFAULT ''::text,
     creator uuid NOT NULL,
-    "member_counter" bigint NOT NULL DEFAULT '1'::bigint,
+/*     "member_counter" bigint NOT NULL DEFAULT '1'::bigint,
     "follower_counter" bigint NOT NULL DEFAULT '0'::bigint,
     "amendment_counter" bigint NOT NULL DEFAULT '0'::bigint,
-    "events_counter" bigint NOT NULL DEFAULT '0'::bigint,
+    "events_counter" bigint NOT NULL DEFAULT '0'::bigint, */
     level text COLLATE pg_catalog."default" NOT NULL DEFAULT ''::text,
     street text COLLATE pg_catalog."default" NOT NULL DEFAULT ''::text,
     "post_code" text COLLATE pg_catalog."default" NOT NULL DEFAULT ''::text,
