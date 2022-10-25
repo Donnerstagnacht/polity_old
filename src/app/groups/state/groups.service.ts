@@ -82,7 +82,11 @@ export class GroupsService extends NgEntityService<GroupsState> {
   async selectGroup(uuid: string): Promise<{data: any, error: any}> {
     // let results: {data: any, error: any} = await this.supabaseClient
     let results: {data: any, error: any} = await this.supabaseClient
-      .from('groups')
+      .rpc('select_group_and_counters', {
+        group_id: uuid
+      })
+      .single();
+/*       .from('groups')
       .select(
         `id,
         name,
@@ -100,7 +104,7 @@ export class GroupsService extends NgEntityService<GroupsState> {
         member_counter`
       )
       .eq('id', uuid)
-      .single();
+      .single(); */
     if(results.data) {
       results.data.members = [];
       results.data.membership_requests = [];
