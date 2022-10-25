@@ -7,7 +7,7 @@ security definer
 as
 $$
 BEGIN
-  update groups
+  update groups_counters
   set "follower_counter" = "follower_counter" + 1
   where id = groupId;
 END;
@@ -22,7 +22,7 @@ security definer
 as
 $$
 BEGIN
-  update groups
+  update groups_counters
   set "follower_counter" = "follower_counter" - 1
   where id = groupId;
 END;

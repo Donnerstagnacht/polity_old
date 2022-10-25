@@ -31,6 +31,23 @@ export class GroupsService extends NgEntityService<GroupsState> {
     }
   }
 
+  getRealTimeChangesGroupsCounters(uuid: string): RealtimeChannel {
+    const subscription = this.supabaseClient
+      .channel(`groups_counters:id=eq.${uuid}`)
+      .on('postgres_changes',
+        {
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'groups_counters'
+        },
+        (payload: RealtimeChannelSnapshot<any>) => {
+          this.groupsStore.update(payload.new.id, payload.new)
+        }
+      )
+    .subscribe()
+    return subscription;
+  }
+
   getRealTimeChanges(uuid: string): RealtimeChannel {
     const subscription = this.supabaseClient
       .channel(`groups:id=eq.${uuid}`)
@@ -44,14 +61,14 @@ export class GroupsService extends NgEntityService<GroupsState> {
           this.groupsStore.update(payload.new.id, payload.new)
         }
       )
-      
+    .subscribe()
+    return subscription;
+  }
+        
 /*     .from<Group>(`groups:id=eq.${uuid}`)
     .on('UPDATE', (payload) => {
       this.groupsStore.update(payload.new.id, payload.new)
     }) */
-    .subscribe()
-    return subscription;
-  }
 
   async updateGroup(group: Partial<GroupCore>, id: string | undefined) {
     const update = {

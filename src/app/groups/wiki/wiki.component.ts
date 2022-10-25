@@ -29,6 +29,7 @@ export class WikiComponent implements OnInit, OnDestroy {
 
   groupSubscription!: Subscription;
   groupRealTimeSubscription!: RealtimeChannel;
+  groupsCountersRealTimeSubscription!: RealtimeChannel;
   getRealTimeSubscriptionIsAdmin!: RealtimeChannel;
   getRealTimeSubscriptionIsFollower!: RealtimeChannel;
   realTimeSubscriptionFollowers!: RealtimeChannel;
@@ -77,22 +78,25 @@ export class WikiComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
       if(this.groupSubscription) {
-        this.groupSubscription.unsubscribe()
+        this.groupSubscription.unsubscribe();
       }
       if(this.groupRealTimeSubscription) {
-        this.groupRealTimeSubscription.unsubscribe()
+        this.groupRealTimeSubscription.unsubscribe();
       }
       if(this.getRealTimeSubscriptionIsAdmin) {
-        this.getRealTimeSubscriptionIsAdmin.unsubscribe()
+        this.getRealTimeSubscriptionIsAdmin.unsubscribe();
       }
       if(this.getRealTimeSubscriptionIsFollower) {
-        this.getRealTimeSubscriptionIsFollower.unsubscribe()
+        this.getRealTimeSubscriptionIsFollower.unsubscribe();
       }
       if(this.uiSubscription) {
-        this.uiSubscription.unsubscribe()
+        this.uiSubscription.unsubscribe();
       }
       if(this.realTimeSubscriptionFollowers) {
-        this.realTimeSubscriptionFollowers.unsubscribe()
+        this.realTimeSubscriptionFollowers.unsubscribe();
+      }
+      if(this.groupsCountersRealTimeSubscription) {
+        this.groupsCountersRealTimeSubscription.unsubscribe();
       }
   }
 
@@ -108,6 +112,7 @@ export class WikiComponent implements OnInit, OnDestroy {
           }
         })
         this.groupRealTimeSubscription = this.groupsServiceState.getRealTimeChanges(this.selectedGroupId);
+        this.groupsCountersRealTimeSubscription = this.groupsServiceState.getRealTimeChangesGroupsCounters(this.selectedGroupId);
         this.getRealTimeSubscriptionIsAdmin = this.followingGroupsService.getRealTimeChangesIfStillFollower(this.selectedGroupId);
         this.getRealTimeSubscriptionIsFollower = this.membershipService.getRealTimeChangesIfStillAdmin(this.selectedGroupId);
         this.realTimeSubscriptionFollowers = this.groupsServiceState.getRealTimeChangesFollowers(this.selectedGroupId);

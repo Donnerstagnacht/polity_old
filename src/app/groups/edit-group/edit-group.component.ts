@@ -53,16 +53,12 @@ export class EditGroupComponent implements OnInit, OnDestroy {
             name: group.name,
             description: group.description,
             creator: group.creator,
-            member_counter: group.member_counter,
-            events_counter: group.events_counter,
             level: group.level,
             street: group.street,
             post_code: group.post_code,
             city: group.city,
             contact_phone: group.contact_phone,
             avatar_url: group.avatar_url,
-            follower_counter: group.follower_counter,
-            amendment_counter: group.amendment_counter,
             contact_email: group.contact_email,
             updated_at: group.updated_at
           }

@@ -343,7 +343,7 @@ Cypress.Commands.add('checkUserWikiDataAndVisibilityExeptImage', (user: User) =>
 })
 
 Cypress.Commands.add('openGroupAndWaitForGroupData', () => {
-  cy.intercept('**/rest/v1/groups*').as('groups')
+  cy.intercept('**/rest/v1/rpc/select_group_and_counters*').as('groups')
   cy.get('#overview-cy').click()
   cy.wait('@groups')
 })
