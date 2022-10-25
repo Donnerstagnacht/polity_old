@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1666713470829,
+  "timestamp": 1666715072251,
   "index": "/polity/index.html",
   "assetGroups": [
     {
@@ -23,7 +23,7 @@
         "/polity/common.a2ffd4248e7a7a49.js",
         "/polity/favicon.ico",
         "/polity/index.html",
-        "/polity/main.9c6ff3cd187b2870.js",
+        "/polity/main.dc31fb151749a6a3.js",
         "/polity/manifest.webmanifest",
         "/polity/material-light-dark-indigo.css",
         "/polity/material-light-standard-indigo.css",
@@ -101,8 +101,8 @@
     "/polity/common.a2ffd4248e7a7a49.js": "b70c360d6bf43c017efa803cdedf4307eff0a921",
     "/polity/favicon.ico": "97530a42509c80e33725afdc292c4f860b203313",
     "/polity/hue.8b1818380241e6ac.png": "f81ae627637a684614aa726e206c73ce099a01fd",
-    "/polity/index.html": "d7a6a2dd0a703ea8bb959b665b8a9b00f66ba994",
-    "/polity/main.9c6ff3cd187b2870.js": "f035349687d4d691d8ff48aaf405a94516c4b03c",
+    "/polity/index.html": "d07b72510f39b0f42e38afebd8a5d0fb53b012f0",
+    "/polity/main.dc31fb151749a6a3.js": "9c835bbadd75aeb81cbea0fd588de081ff1ed3a1",
     "/polity/manifest.webmanifest": "d278b3cbbfc7885f338694153c58bd26efe8a04a",
     "/polity/material-light-dark-indigo.css": "cb0f469efd351087c24fe8fd10c0989a30c7cfd7",
     "/polity/material-light-standard-indigo.css": "7a39b5fcb62b731405c6a10a5536b6d7ec4d1aff",
