@@ -234,7 +234,7 @@ export class MembershipService {
       },
       (payload: RealtimeChannelSnapshot<any>) => {
         if(payload.new.group_requested === group_id && payload.new.user_requests === loggedInID) {
-          this.groupsService.updateRequestedMembership(group_id, true);
+          this.groupsService.updateMembershipRequested(group_id, true);
         }
       }
     )
@@ -246,7 +246,7 @@ export class MembershipService {
     },
     (payload: RealtimeChannelSnapshot<any>) => {
       if(payload.new.group_requested === group_id && payload.new.user_requests === loggedInID) {
-        this.groupsService.updateRequestedMembership(group_id, false);
+        this.groupsService.updateMembershipRequested(group_id, false);
       }
     })
 /*     .on('INSERT', (payload) => {
@@ -346,4 +346,5 @@ export class MembershipService {
     .subscribe()
     return subscription;
   }
+
 }

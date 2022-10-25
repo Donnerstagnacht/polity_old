@@ -40,6 +40,8 @@ describe('Tests Group Membership system', () => {
   })
 
   it('2. User requests group membership and withdraws it', () => {
+    cy.visit('')
+
     cy.login(user2.email, user2.password)
     cy.searchGroup(group1)
     cy.requestGroupMembership()

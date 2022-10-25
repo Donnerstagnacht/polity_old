@@ -287,7 +287,7 @@ export class ProfileService {
     .channel(`public:following_profile_system`)
     .on('postgres_changes',
       {
-        event: 'UPDATE',
+        event: 'INSERT',
         schema: 'public',
         table: 'following_profile_system'
       },
@@ -407,7 +407,7 @@ export class ProfileService {
     }) */
     .on('postgres_changes',
       {
-        event: 'UPDATE',
+        event: 'DELETE',
         schema: 'public',
         table: 'following_profile_system'
       },

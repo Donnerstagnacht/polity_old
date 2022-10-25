@@ -758,8 +758,8 @@ export class GroupsService extends NgEntityService<GroupsState> {
     this.groupsStore.ui.upsert(id, update)
   }
 
-  updateRequestedMembership(id: string, valueRequestedMembership: boolean): void {
-    const update = {requestedMembership: valueRequestedMembership}
+  updateMembershipRequested(id: string, requestedMembership: boolean): void {
+    const update = {requestedMembership: requestedMembership}
     this.groupsStore.ui.upsert(id, update)
   }
 
@@ -812,4 +812,5 @@ export class GroupsService extends NgEntityService<GroupsState> {
       if(membershipRequests.error) throw new Error(membershipRequests.error.message);
     return membershipRequests;
   }
+
 }

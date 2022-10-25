@@ -144,10 +144,10 @@ Cypress.Commands.add('removeFollower', (user: User) => {
     cy.contains(user.name)
     cy.get('[icon="pi pi-times"]').click()
   })
+  cy.wait('@removeFollowerTransaction')
   cy.get('[data-cy="first-table"]').within(() => {
     cy.contains(user.name).should('not.exist')
   })
-  cy.wait('@removeFollowerTransaction')
 })
 
 Cypress.Commands.add('removeGroupMembership', (user: User) => {

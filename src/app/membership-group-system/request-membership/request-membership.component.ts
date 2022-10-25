@@ -63,9 +63,9 @@ export class RequestMembershipComponent implements OnInit {
       this.membershipService.membershipAlreadyRequested(this.selectedGroupId)
       .then((results) => {
         if(results.data[0] !== undefined) {
-          this.groupsService.updateRequestedMembership(this.selectedGroupId, true)
+          this.groupsService.updateMembershipRequested(this.selectedGroupId, true)
         } else {
-          this.groupsService.updateRequestedMembership(this.selectedGroupId, false)
+          this.groupsService.updateMembershipRequested(this.selectedGroupId, false)
         }
       })
       .catch();
@@ -101,6 +101,7 @@ export class RequestMembershipComponent implements OnInit {
   async requestMembership(): Promise<void> {
     try {
       await this.membershipService.requestMembership(this.selectedGroupId);
+      this.groupsService.updateMembershipRequested(this.selectedGroupId, true);
       this.messageService.add({severity:'success', summary: 'Beitrittansfrage verschickt.'});
     } catch(error: any) {
       this.messageService.add({severity:'error', summary: error.message});
@@ -110,6 +111,7 @@ export class RequestMembershipComponent implements OnInit {
   async cancelRequestMembership(): Promise<void> {
     try {
       await this.membershipService.cancelMembershipRequest(this.selectedGroupId);
+      this.groupsService.updateMembershipRequested(this.selectedGroupId, false);
       this.messageService.add({severity:'success', summary: 'Beitrittansfrage zurückgezogen.'});
     } catch(error: any) {
       this.messageService.add({severity:'error', summary: error.message});
