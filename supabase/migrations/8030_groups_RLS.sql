@@ -31,12 +31,3 @@ CREATE POLICY "Authenticated users can update groups profile."
     TO authenticated
     USING (true)
     WITH check (true);
-
--- 4.4 DELETE: Groups can not be deleted
-DROP POLICY  IF EXISTS "Groups can not be deleted." ON groups;
-CREATE POLICY "Groups can not be deleted."
-    ON public.groups
-    AS PERMISSIVE
-    FOR DELETE
-    TO authenticated
-    USING (false);

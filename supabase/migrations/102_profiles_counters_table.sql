@@ -7,6 +7,9 @@ CREATE TABLE IF NOT EXISTS public.profiles_counters
     "groups_counter" bigint  DEFAULT 0::bigint,
     "unread_notifications_counter" bigint  DEFAULT 0::bigint,
     CONSTRAINT profiles_counters_pkey PRIMARY KEY (id),
+    CONSTRAINT profiles_counters_id_fkey FOREIGN KEY (id)
+        REFERENCES profiles.users (id) MATCH SIMPLE,
+
     CONSTRAINT profiles_counters_fkey FOREIGN KEY (id)
         REFERENCES auth.users (id) MATCH SIMPLE
         ON UPDATE NO ACTION
