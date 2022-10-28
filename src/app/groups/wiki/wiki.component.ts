@@ -25,7 +25,12 @@ export class WikiComponent implements OnInit, OnDestroy {
 
   selectedGroupId: string | undefined = undefined;
   group: Group | undefined;
-  groupUI!: GroupUI;
+  groupUI: GroupUI = {
+    isAdmin: false,
+    isFollowing: false,
+    isMember: false,
+    requestedMembership: false
+  };
 
   groupSubscription!: Subscription;
   groupRealTimeSubscription!: RealtimeChannel;
@@ -51,17 +56,28 @@ export class WikiComponent implements OnInit, OnDestroy {
     private followingGroupsService: FollowingGroupsService,
     private membershipService: MembershipService,
     private groupsQuery: GroupsQuery
-  ) { }
-
-  ngOnInit(): void {
+  ) { 
     this.getSelectedId();
+    if(this.selectedGroupId) {
+      this.groupsService.isLoggedInUserAdmin(this.selectedGroupId)
+      .then(results => {
+        if(results.data.is_admin) {
+          this.groupsServiceState.updateIsAdmin(this.selectedGroupId!, true);
+        }
+      });
+    }
+
     if(this.selectedGroupId) {
       this.uiSubscription = this.groupsQuery.selectUI$(this.selectedGroupId).subscribe((ui: GroupUI | undefined) => {
         if (ui) {
+          console.log('ui', ui)
           this.groupUI = ui;
         }
       })
     }
+  }
+
+  ngOnInit(): void {
     if(this.selectedGroupId) {
       this.checkIfLoggedInUserIsAdmin(this.selectedGroupId);
       this.checkIfAlreadyFollower();

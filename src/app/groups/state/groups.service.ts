@@ -93,6 +93,9 @@ export class GroupsService extends NgEntityService<GroupsState> {
       returning: 'minimal', // Don't return the value after inserting
       }) */
       .match({id: updateId});
+    
+    console.log('update results', response)
+
     if(response.error) throw new Error(response.error.message);
   }
 

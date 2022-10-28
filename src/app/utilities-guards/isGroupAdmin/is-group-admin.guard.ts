@@ -12,28 +12,19 @@ export class IsGroupAdminGuard implements CanActivate {
     private router: Router
   ) {}
 
-  canActivate(
+  async canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
-  ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
+  ): Promise<boolean> {
     console.log("Admin guard");
     const groupId: string = route.params['id'];
-    const isAdmin: Promise<boolean> = this.groupsService.isLoggedInUserAdmin(groupId)
-    .then((results) => {
-      const isAdminResults = results.data.is_admin;
-      if (isAdminResults) {
-        return true
-      } else {
-        console.log('no admin')
-        this.router.navigate(['/groups'])
-        return false;
-      }
-    })
-    .catch(() => {
+    try {
+      await this.groupsService.isLoggedInUserAdmin(groupId)
+      return true;
+    } catch(error: any) {
+      console.log('no admin')
+      this.router.navigate(['/groups'])
       return false;
-    });
-    return isAdmin;
-
+    }
   }
-
 }

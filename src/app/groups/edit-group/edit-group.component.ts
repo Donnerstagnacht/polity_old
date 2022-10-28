@@ -95,6 +95,8 @@ export class EditGroupComponent implements OnInit, OnDestroy {
       this.loading = true;
       await this.groupsService.updateGroup(group, id);
       this.messageService.add({severity:'success', summary: 'Update erfolgreich.'});
+    } catch(error: any) {
+      this.messageService.add({severity:'error', summary: error.message});
     } finally {
       this.loading = false;
     }
