@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
-import { Observable } from 'rxjs';
+import { ActivatedRouteSnapshot, CanActivate, Router } from '@angular/router';
 import { GroupsService } from 'src/app/groups/services/groups.service';
 
 @Injectable({
@@ -13,17 +12,14 @@ export class IsGroupAdminGuard implements CanActivate {
   ) {}
 
   async canActivate(
-    route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot
+    route: ActivatedRouteSnapshot
   ): Promise<boolean> {
-    console.log("Admin guard");
     const groupId: string = route.params['id'];
     try {
-      await this.groupsService.isLoggedInUserAdmin(groupId)
+      await this.groupsService.isLoggedInUserAdmin(groupId);
       return true;
     } catch(error: any) {
-      console.log('no admin')
-      this.router.navigate(['/groups'])
+      this.router.navigate(['/groups']);
       return false;
     }
   }
