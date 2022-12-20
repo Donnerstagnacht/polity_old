@@ -1,4 +1,4 @@
-DROP TRIGGER IF EXISTS signup_trigger_copy_to_profiles_counters_table on public.groups;
+DROP TRIGGER IF EXISTS create_group_trigger_copy_to_group_counters on public.groups;
 DROP FUNCTION IF EXISTS create_group_copy_to_group_counters_table();
 
 CREATE OR REPLACE FUNCTION create_group_copy_to_group_counters_table()

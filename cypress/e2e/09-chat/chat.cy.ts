@@ -1,10 +1,11 @@
 /// <reference types="cypress" />
-import {Group, Messages, User} from '../../support/index';
+import {Group, Messages, PopUpMessages, User} from '../../support/index';
 describe('Test chat features', () => {
   let user1: User;
   let user2: User;
   let group1: Group;
-  let messages: Messages
+  let messages1: Messages;
+  let popUpMessages1: PopUpMessages;
 
   before(() => {
     cy.fixture('user1').then((user: User) => {
@@ -16,8 +17,11 @@ describe('Test chat features', () => {
     cy.fixture('group1').then((group: Group) => {
       group1 = group;
     })
-    cy.fixture('messages').then((messagesFromFixture: Messages) => {
-      messages = messagesFromFixture;
+    cy.fixture('messages').then((messages: Messages) => {
+      messages1 = messages;
+    })
+    cy.fixture('popUpMessages').then((popUpMessages: PopUpMessages) => {
+      popUpMessages1 = popUpMessages;
     })
   })
 
@@ -31,7 +35,7 @@ describe('Test chat features', () => {
     cy.get('#orga-cy').click()
     cy.contains(user2.name).should('not.exist')
     cy.searchUser(user2)
-    cy.clickFollowButton()
+    cy.clickFollowButton(popUpMessages1.followMessage)
     cy.openChatsViaMenu()
     cy.openChatWithUser(user2)
     cy.contains('Deine Anfrage wurde noch nicht akzeptiert.')
@@ -41,10 +45,10 @@ describe('Test chat features', () => {
     cy.openChatsViaMenu()
     cy.openChatWithUser(user1)
     cy.contains('Du hast eine neue Chat-Anfrage. Wie möchtest du reagieren?')
-    cy.logout()
   })
 
   it('2. Denie chat request', () => {
+    cy.visit('')
     cy.login(user2.email, user2.password)
     cy.openChatsViaMenu()
     cy.openChatWithUser(user1)
@@ -52,15 +56,14 @@ describe('Test chat features', () => {
     cy.logout()
     cy.login(user1.email, user1.password)
     cy.searchUser(user2)
-    cy.clickUnfollowButton()
-    cy.logout()
+    cy.clickUnfollowButton(popUpMessages1.unfollowMessage)
   })
 
   it('3. Accept chat request', () => {
     cy.visit('')
     cy.login(user1.email, user1.password)
     cy.searchUser(user2)
-    cy.clickFollowButton()
+    cy.clickFollowButton(popUpMessages1.followMessage)
     cy.openChatsViaMenu()
     cy.openChatWithUser(user2)
     cy.contains('Deine Anfrage wurde noch nicht akzeptiert.')
@@ -73,6 +76,10 @@ describe('Test chat features', () => {
   })
 
   it('4. Deletes chat', () => {
+    cy.visit('')
+    cy.login(user2.email, user2.password)
+    cy.openChatsViaMenu()
+    cy.openChatWithUser(user1)
     cy.removeChat(user1)
     cy.logout()
     cy.login(user1.email, user1.password)
@@ -82,15 +89,14 @@ describe('Test chat features', () => {
     cy.logout()
     cy.login(user1.email, user1.password)
     cy.searchUser(user2)
-    cy.clickUnfollowButton()
-    cy.logout()
+    cy.clickUnfollowButton(popUpMessages1.unfollowMessage)
   })
 
   it('5. Accept chat message and follows', () => {
     cy.visit('')
     cy.login(user1.email, user1.password)
     cy.searchUser(user2)
-    cy.clickFollowButton()
+    cy.clickFollowButton(popUpMessages1.followMessage)
     cy.openChatsViaMenu()
     cy.openChatWithUser(user2)
     cy.contains('Deine Anfrage wurde noch nicht akzeptiert.')
@@ -117,20 +123,20 @@ describe('Test chat features', () => {
             cy.contains('#Following', (user2FollowingBefore + 1).toString())
             cy.searchUser(user1)
             cy.contains('#Follower', (user1FollowerBefore + 1).toString())
-            cy.logout()
           })
       })
   })
 
   it('6. Send chat message', () => {
+    cy.visit('')
     cy.login(user1.email, user1.password)
     cy.openChatsViaMenu()
     cy.openChatWithUser(user2)
-    cy.sendMessage(messages.messageFromUser1)
-    cy.logout()
+    cy.sendMessage(messages1.messageFromUser1)
   })
 
   it('7. Send receive chat message', () => {
+    cy.visit('')
     cy.login(user2.email, user2.password)
     cy.openChatsViaMenu()
     cy.filterChats(user1)
@@ -140,23 +146,22 @@ describe('Test chat features', () => {
     cy.openChatsViaMenu()
     cy.get('[data-cy="number-of-unread-messages"]').should('not.exist')
     cy.openChatWithUser(user1)
-    cy.sendMessage(messages.messageFromUser2)
-    cy.logout()
+    cy.sendMessage(messages1.messageFromUser2)
   })
 
   it('8. Remove chat connection by unfollowing', () => {
+    cy.visit('')
     cy.login(user1.email, user1.password)
     cy.openChatsViaMenu()
     cy.openChatWithUser(user2)
     cy.clickBackButton()
     cy.searchUser(user2)
-    cy.clickUnfollowButton()
+    cy.clickUnfollowButton(popUpMessages1.unfollowMessage)
     cy.openChatsViaMenu()
     cy.contains(user2.name).should('not.exist')
     cy.logout()
     cy.login(user2.email, user2.password)
     cy.openChatsViaMenu()
     cy.contains(user1.name).should('not.exist')
-    cy.logout()
   })
 })

@@ -71,17 +71,32 @@ Cypress.Commands.add('fillChangeGroupForm', (group: Group) => {
   cy.get('[data-cy="updateGroupInformationButton"]').click()
 })
 
+Cypress.Commands.add('checkPopUpMessage', (message: string) => {
+  cy.contains(message).parent().parent().find('button').click()
+  cy.contains(message).should('not.exist')
+})
+
 Cypress.Commands.add('clickBackButton', () => {
   cy.get('[data-cy="backButton"]').click()
 })
 
 Cypress.Commands.add('checkIfImageExists', () => {
+  cy.wait(1000)
+  cy.wait(1000)
+  cy.wait(1000)
+  cy.wait(1000)
+  cy.wait(100)
+  cy.wait(100)
+  cy.wait(100)
+  cy.wait(100)
+  cy.get('img').should('exist')
+  cy.get('img').invoke('attr', 'src').should('include', 'storage/v1/object/public/avatars')
   cy.get('img')
-  .should('be.visible')
-  .and(($img: JQuery<HTMLImageElement>) => {
-    // "naturalWidth" and "naturalHeight" are set when the image loads
-    expect($img[0].naturalWidth).to.be.greaterThan(0)
-  })
+    .should('be.visible')
+    .and(($img: JQuery<HTMLImageElement>) => {
+      // "naturalWidth" and "naturalHeight" are set when the image loads
+      expect($img[0].naturalWidth).to.be.greaterThan(0)
+    })
 })
 
 Cypress.Commands.add('uploadImage', (path: string) => {
@@ -101,6 +116,15 @@ Cypress.Commands.add('openProfileAndWaitForProfileData', () => {
   cy.wait('@profiles')
 })
 
+Cypress.Commands.add('openProfileAndWaitForProfileDataAndImage', () => {
+  cy.intercept('**/rest/v1/rpc/select_profile_and_counters*').as('profiles')
+  // cy.intercept('**/storage/v1/object/public/avatars*').as('profile_image')
+
+  cy.get('#overview-cy').click()
+  cy.wait('@profiles')
+  // cy.wait('@profile_image')
+})
+
 Cypress.Commands.add('openGroupProfileAndWaitForGroupData', () => {
   cy.intercept('**/rest/v1/rpc/select_group_and_counters*').as('group')
   cy.get('#overview-cy').click()
@@ -113,36 +137,40 @@ Cypress.Commands.add('openProfileExteralAndWaitForProfileData', () => {
   cy.wait('@profiles')
 })
 
-Cypress.Commands.add('clickFollowButton', () => {
+Cypress.Commands.add('clickFollowButton', (popUpMessage: string) => {
   cy.intercept('**/rest/v1/rpc/followtransaction*').as('followtransaction')
   cy.get('[data-cy="followButton"]').click()
+  cy.checkPopUpMessage(popUpMessage)
   cy.wait('@followtransaction')
 })
 
-Cypress.Commands.add('clickFollowGroupButton', () => {
+Cypress.Commands.add('clickFollowGroupButton', (popUpMessage: string) => {
   cy.intercept('**/rest/v1/rpc/followgrouptransaction*').as('followtransaction')
   cy.get('[data-cy="followButton"]').click()
+  cy.checkPopUpMessage(popUpMessage)
   cy.wait('@followtransaction')
 })
 
-Cypress.Commands.add('clickUnfollowButton', () => {
+Cypress.Commands.add('clickUnfollowButton', (popUpMessage: string) => {
   cy.intercept('**/rest/v1/rpc/unfollowtransaction*').as('unfollowtransaction')
   cy.contains('Unfollow').click()
+  cy.checkPopUpMessage(popUpMessage)
   cy.wait('@unfollowtransaction')
 })
 
-Cypress.Commands.add('clickUnfollowGroupButton', () => {
+Cypress.Commands.add('clickUnfollowGroupButton', (popUpMessage: string) => {
   cy.intercept('**/rest/v1/rpc/unfollowgrouptransaction*').as('unfollowtransaction')
-  // cy.get('[data-cy="followButton"]').click()
   cy.contains('Unfollow').click()
+  cy.checkPopUpMessage(popUpMessage)
   cy.wait('@unfollowtransaction')
 })
 
 Cypress.Commands.add('removeFollower', (user: User) => {
   cy.intercept('**/rest/v1/rpc/unfollow_transaction_by_id*').as('removeFollowerTransaction')
   cy.get('[data-cy="first-table"]').within(() => {
-    cy.contains(user.name)
-    cy.get('[icon="pi pi-times"]').click()
+    cy.contains(user.name).parent().within(() => {
+      cy.get('[icon="pi pi-times"]').click()
+    })
   })
   cy.wait('@removeFollowerTransaction')
   cy.get('[data-cy="first-table"]').within(() => {
@@ -198,16 +226,21 @@ Cypress.Commands.add('removeGroupFollowerFromEditFollower', (group: Group) => {
   cy.intercept('**/rest/v1/rpc/unfollowgrouptransaction*').as('removeGroupFollowingTransaction')
   cy.filterSecondTabOfGroup(group)
   cy.get('[data-cy="second-table"]').within(() => {
-    cy.contains(group.name)
-    cy.get('[icon="pi pi-times"]').click()
+    cy.contains(group.name).parent().within(() => {
+      cy.get('[icon="pi pi-times"]').click()
+    })
   })
   cy.wait('@removeGroupFollowingTransaction')
 })
 
 Cypress.Commands.add('leaveGroup', () => {
   cy.contains('Austreten')
-  // cy.wait(100)
+  cy.intercept('**/rest/v1/rpc/remove_membership_transaction*').as('leaveGroup')
   cy.get('[data-cy="requestedMembershipButton"]').click()
+  cy.wait('@leaveGroup')
+  cy.wait(1000)
+  cy.wait(1000)
+  cy.wait(1000)
   cy.wait(1000)
   cy.wait(100)
   cy.wait(100)
@@ -250,19 +283,21 @@ Cypress.Commands.add('openManageMembership', () => {
 Cypress.Commands.add('cancelGroupMembershipRequest', (user: User) => {
   cy.intercept('**/rest/v1/rpc/cancel_membership_request_transaction_by_id*').as('cancelMembershipRequest')
   cy.filterFirstTab(user)
-  cy.contains(user.name)
-  cy.get('[data-cy="removeFromFirstTab"]').click()
-  cy.wait('@cancelMembershipRequest')
-  cy.contains(user.name).should('not.exist')
+  cy.contains(user.name).parent().within(() => {
+    cy.get('[data-cy="removeFromFirstTab"]').click()
+    cy.wait('@cancelMembershipRequest')
+    // cy.contains(user.name).should('not.exist') // commented out due to cypress issue, therefore no disappearing realtime test
+  })
 })
 
 Cypress.Commands.add('acceptGroupMembershipRequest', (user: User) => {
   cy.intercept('**/rest/v1/rpc/confirm_membership_transaction*').as('acceptMembershipRequest')
   cy.filterFirstTab(user)
-  cy.contains(user.name)
-  cy.get('[data-cy="acceptFromFirstTab"]').click()
-  cy.wait('@acceptMembershipRequest')
-  cy.contains(user.name).should('not.exist')
+  cy.contains(user.name).parent().within(() => {
+    cy.get('[data-cy="acceptFromFirstTab"]').click()
+    cy.wait('@acceptMembershipRequest')
+    // cy.contains(user.name).should('not.exist') // commented out due to cypress issue, therefore no disappearing realtime test
+  })
 })
 
 Cypress.Commands.add('rejectChatRequest', (user: User) => {
@@ -346,6 +381,12 @@ Cypress.Commands.add('openGroupAndWaitForGroupData', () => {
   cy.intercept('**/rest/v1/rpc/select_group_and_counters*').as('groups')
   cy.get('#overview-cy').click()
   cy.wait('@groups')
+})
+
+Cypress.Commands.add('openGroupList', () => {
+  cy.intercept('**/rest/v1/group_members?select=id*').as('group_list')
+  cy.get('#groups-cy').click()
+  cy.wait('@group_list')
 })
 
 Cypress.Commands.add('checkGroupWikiDataAndVisibilityExeptImage', (group: Group) => {
@@ -446,7 +487,7 @@ Cypress.Commands.add('openNewsPage', () => {
 
 Cypress.Commands.add('checkIfNotificationExists', (numberOfUnreadNotifications: number, notificationMessage: string) => {
   // not needed but makes cypress wait for a while which gives not observed data transfer via websocket a chance to success
-  cy.get('#groups-cy').click()
+  cy.openGroupList()
   cy.openProfileLoggedInUserViaMainMenu()
   cy.get('[data-cy="unreadMessagesCounter"]').contains(numberOfUnreadNotifications)
   cy.openNewsPage()    

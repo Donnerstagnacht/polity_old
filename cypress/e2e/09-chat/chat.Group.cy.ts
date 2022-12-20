@@ -1,10 +1,11 @@
 /// <reference types="cypress" />
-import {Group, Messages, User} from '../../support/index';
+import {Group, Messages, PopUpMessages, User} from '../../support/index';
 describe('Test group chat features', () => {
   let user1: User;
   let user2: User;
   let group2: Group;
-  let messages: Messages
+  let messages1: Messages;
+  let popUpMessages1: PopUpMessages
 
   before(() => {
     cy.fixture('user1').then((user: User) => {
@@ -17,7 +18,10 @@ describe('Test group chat features', () => {
       group2 = group;
     })
     cy.fixture('messages').then((messagesFromFixture: Messages) => {
-      messages = messagesFromFixture;
+      messages1 = messagesFromFixture;
+    })
+    cy.fixture('popUpMessages').then((popUpMessages: PopUpMessages) => {
+      popUpMessages1 = popUpMessages;
     })
   })
 
@@ -32,79 +36,40 @@ describe('Test group chat features', () => {
     cy.get('[data-cy="group"]').click()
     cy.fillCreateGroupForm(group2, user1)
     cy.searchGroup(group2)
-    cy.get('#groups-cy').click()
+    cy.openGroupList()
     cy.contains(group2.name).click()
     cy.contains('#Mitglieder', group2.numberOfStartMembers)
     cy.openChatsViaMenu()
     cy.openChatWithGroup(group2)
-    cy.sendMessage(messages.messageFromUser1)
-    cy.contains(messages.messageFromUser1)
-    cy.logout()
+    cy.sendMessage(messages1.messageFromUser1)
+    cy.contains(messages1.messageFromUser1)
   })
 
   it('2. Joins a group, gets added to group chat', () => {
+    cy.visit('')
     cy.login(user2.email, user2.password)
     cy.searchGroup(group2)
     cy.requestGroupMembership()
-/*     cy.contains('Mitgliedschaft anfragen')
-    cy.wait(100)
-    cy.get('[data-cy="requestedMembershipButton"]').click() */
-
     cy.logout()
     cy.login(user1.email, user1.password)
-
-    cy.get('#groups-cy').click()
+    cy.openGroupList()
     cy.contains(group2.name).click()
     cy.openManageMembership()
     cy.acceptGroupMembershipRequest(user2)
-
-/*     cy.get('#edit-cy').click()
-    cy.get('[data-cy="members-edit"]').click()
-
-    cy.contains('Beitrittsanfragen').click()
-    cy.wait(4000)
-    cy.wait(100)
-    cy.wait(100)
-    cy.wait(100)
-    cy.filterFirstTab(user2) */
-
-
-/*     cy.get('[data-cy="filterFirstTab"]')
-      .type(user2.name)
-      .type('{enter}')
-      .wait(2000) */
-/*     cy.contains(user2.name)
-    cy.get('[data-cy="acceptFromFirstTab"]').click()
-
-    cy.wait(4000)
-    cy.wait(100)
-    cy.wait(100)
-    cy.wait(100) */
-    // cy.pause()
-    // cy.contains(user2.name).should('not.exist')
-    //cy.contains(user2.name).should('not.be.visible')
-    cy.logout()
   })
 
   it('3. Can receive and send messages after joining group', () => {
+    cy.visit('')
     cy.login(user2.email, user2.password)
     cy.openChatsViaMenu()
     cy.openChatWithGroup(group2)
-    cy.sendMessage(messages.messageFromUser2)
-/*     cy.get('[data-cy="send-message"]')
-      .type(messages.messageFromUser2)
-      .type('{enter}')
-    cy.wait(6000)
-    cy.wait(100)
-    cy.wait(100)
-    cy.wait(100) */
-    cy.contains(messages.messageFromUser2)
+    cy.sendMessage(messages1.messageFromUser2)
+    cy.contains(messages1.messageFromUser2)
     cy.logout()
     cy.login(user1.email, user1.password)
     cy.openChatsViaMenu()
     cy.openChatWithGroup(group2)
-    cy.contains(messages.messageFromUser1)
-    cy.contains(messages.messageFromUser2)
-    cy.logout()
+    cy.contains(messages1.messageFromUser1)
+    cy.contains(messages1.messageFromUser2)
   })
 })

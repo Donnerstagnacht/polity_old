@@ -14,7 +14,7 @@ ON CONFLICT (id, provider) DO NOTHING;
 
 -- Meine Versuche => builds but I can not login - password can not be encrypted?
 
-INSERT INTO auth.users (instance_id,id,aud,"role",email,encrypted_password,email_confirmed_at,last_sign_in_at,raw_app_meta_data,raw_user_meta_data,is_super_admin,created_at,updated_at,phone,phone_confirmed_at,confirmation_token,email_change,email_change_token_new,recovery_token) VALUES
+/* INSERT INTO auth.users (instance_id,id,aud,"role",email,encrypted_password,email_confirmed_at,last_sign_in_at,raw_app_meta_data,raw_user_meta_data,is_super_admin,created_at,updated_at,phone,phone_confirmed_at,confirmation_token,email_change,email_change_token_new,recovery_token) VALUES
   ('00000000-0000-0000-0000-000000000000'::uuid,'f8b028b8-231b-4c80-abf2-7ca787fe686f'::uuid,'authenticated','authenticated','4@test.com', '$2a$10$V31IziLiRRQFCO/ISWvGaOIonwHq0ePKojtkZOyVkmAeFBYAVSsba','2022-06-24T17:22:59.653Z','2022-06-24T17:22:59.657Z','{"provider": "email", "providers": ["email"]}','{}',FALSE,'2022-06-24T17:22:59.649Z','2022-06-24T17:22:59.649Z',NULL,NULL,'','','',''),
 	('00000000-0000-0000-0000-000000000000'::uuid,'42e58ca1-2eb8-4651-93c2-cefba2e32f42'::uuid,'authenticated','authenticated','5@test.com', '$2a$10$V31IziLiRRQFCO/ISWvGaOIonwHq0ePKojtkZOyVkmAeFBYAVSsba','2022-06-24T17:23:18.660Z','2022-06-24T17:23:18.666Z','{"provider": "email", "providers": ["email"]}','{}',FALSE,'2022-06-24T17:23:18.656Z','2022-06-24T17:23:18.656Z',NULL,NULL,'','','','')
 
@@ -25,10 +25,10 @@ INSERT INTO auth.identities (id,user_id,identity_data,provider,last_sign_in_at,c
   ('f8b028b8-231b-4c80-abf2-7ca787fe686f','f8b028b8-231b-4c80-abf2-7ca787fe686f'::uuid,'{"sub": "f8b028b8-231b-4c80-abf2-7ca787fe686f"}','email','2022-06-24T17:22:59.651Z','2022-06-24T17:22:59.651Z','2022-06-24T17:22:59.651Z')
 
 ON CONFLICT (id, provider) DO NOTHING;
-
+ */
 
 --Udating profiles
-update public.profiles
+/* update public.profiles
 set
   updated_at = '2022-06-24T17:23:18.656Z',
   name = 'Tobias',
@@ -48,9 +48,9 @@ set
   follower_counter = 1,
   following_counter = 2,
   groups_counter = 1
-where id = '42e58ca1-2eb8-4651-93c2-cefba2e32f42';
+where id = '42e58ca1-2eb8-4651-93c2-cefba2e32f42'; */
 
-update public.profiles
+/* update public.profiles
 set
   updated_at = '2022-04-24T17:23:18.656Z',
   name = 'Fabian',
@@ -71,9 +71,9 @@ set
   following_counter = 2,
   groups_counter = 2
 where id = 'f8b028b8-231b-4c80-abf2-7ca787fe686f';
-
+ */
 --insert groups
-insert into public.groups (
+/* insert into public.groups (
   id,
   created_at,
   name,
@@ -129,11 +129,11 @@ values (
   '123233@test.com',
   '',
   '2022-04-24T17:23:18.656Z'
-);
+); */
 
 
 
--- insert membership requests
+/* -- insert membership requests
 insert into public.membership_requests (
   id,
   created_at,
@@ -192,10 +192,10 @@ values (
   '2022-04-24T17:23:18.656Z',
   false,
   '2022-04-24T17:23:18.656Z'
-);
+); */
 
 
--- insert profile followwers
+/* -- insert profile followwers
 insert into public.following_profile_system (
   id,
   follower,
@@ -210,10 +210,10 @@ values (
   '0702b35f-9777-48c2-8e9a-a775666b6389',
   '42e58ca1-2eb8-4651-93c2-cefba2e32f42',
   'f8b028b8-231b-4c80-abf2-7ca787fe686f'
-);
+); */
 
 
--- insert group followers
+/* -- insert group followers
 insert into public.following_group_system (
   id,
   follower,
@@ -228,7 +228,7 @@ values (
   '3b783a60-0abc-4f30-bb8c-3dba4ca15d2a',
   'f8b028b8-231b-4c80-abf2-7ca787fe686f',
   'c675d42b-6077-487c-ab67-52bd569f1989'
-);
+); */
 
 
 

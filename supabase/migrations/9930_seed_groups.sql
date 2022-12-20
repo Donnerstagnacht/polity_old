@@ -28,8 +28,32 @@ values (
   '123233@test.com',
   '',
   '2022-04-24T17:23:18.656Z'
-),
-(
+);
+
+update public.groups_counters
+set
+  member_counter = 1,
+  follower_counter = 1,
+  amendment_counter = 0,
+  events_counter = 0
+where id = '308c1b44-8684-47b1-b0da-c45548846046';
+
+insert into public.groups (
+  id,
+  created_at,
+  name,
+  description,
+  creator,
+  level,
+  street,
+  post_code,
+  city,
+  contact_email,
+  contact_phone,
+  avatar_url,
+  updated_at
+)
+values (
   'c675d42b-6077-487c-ab67-52bd569f1989',
   '2022-04-24T17:23:18.656Z',
   'München',
@@ -44,3 +68,11 @@ values (
   '',
   '2022-04-24T17:23:18.656Z'
 );
+
+update public.groups_counters
+set
+  member_counter = 1,
+  follower_counter = 1,
+  amendment_counter = 0,
+  events_counter = 0
+where id = 'c675d42b-6077-487c-ab67-52bd569f1989';

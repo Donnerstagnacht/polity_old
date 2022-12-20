@@ -10,7 +10,7 @@ CREATE POLICY "Authenticated users can view profiles."
     TO authenticated
     USING (true);
 
--- 6.2 UPDATE: Authenticated user can edit profiles
+-- 6.2 UPDATE: Authenticated users can update their own profile.
 DROP POLICY IF EXISTS "Authenticated users can update their own profile." ON profiles;
 CREATE POLICY "Authenticated users can update their own profile."
     ON public.profiles

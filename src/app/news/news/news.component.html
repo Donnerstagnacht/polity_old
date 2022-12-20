@@ -50,10 +50,11 @@
         (retryAction)="loadInitialData()"
         >
       </app-loading-spinner>
-      <div *ngIf="!loadingInitial && !error">
+      <div 
+      data-cy="newsContainer"
+      *ngIf="!loadingInitial && !error">
         <div
           infiniteScroll
-          data-cy="newsContainer"
           [infiniteScrollDistance]="1"
           [infiniteScrollUpDistance]="1.5"
           [infiniteScrollThrottle]="50"

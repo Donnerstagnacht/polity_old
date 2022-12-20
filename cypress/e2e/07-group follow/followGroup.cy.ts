@@ -1,9 +1,10 @@
 /// <reference types="cypress" />
-import {Group, User} from '../../support/index';
+import {Group, PopUpMessages, User} from '../../support/index';
 describe('Tests Group following system', () => {
   let user1: User;
   let user2: User;
   let group1: Group
+  let popUpMessages1: PopUpMessages;
 
   before(() => {
     cy.fixture('user1').then((user: User) => {
@@ -14,6 +15,9 @@ describe('Tests Group following system', () => {
     })
     cy.fixture('group1').then((group: Group) => {
       group1 = group;
+    })
+    cy.fixture('popupmessages').then((popUpMessages: PopUpMessages) => {
+      popUpMessages1 = popUpMessages;
     })
   })
 
@@ -34,8 +38,8 @@ describe('Tests Group following system', () => {
         .invoke('text')
         .then(Number)
         .then((group1FollowerBefore: number) => {
-          cy.log(group1FollowerBefore.toString())
-          cy.clickFollowGroupButton()
+          cy.clickFollowGroupButton(popUpMessages1.followMessage)
+          cy.searchGroup(group1) // needed to avoid fail due to cypress issues detecting real time, does exclude realtime test
           cy.contains('#Follower', (group1FollowerBefore + 1).toString())
           cy.openProfileLoggedInUserViaMainMenu()
           cy.contains('#Following', (user1FollowingBefore + 1).toString())
@@ -46,12 +50,12 @@ describe('Tests Group following system', () => {
           cy.contains('#Following', (user1FollowingBefore).toString())
           cy.searchGroup(group1)
           cy.contains('#Follower', (group1FollowerBefore).toString())
-          cy.logout()
         })
     })
   })
 
   it('2. Follows group and unfollows group with unfollow button of group profile', () => {
+    cy.visit('')
     cy.login(user1.email, user1.password)
     cy.get('#Following')
     .invoke('text')
@@ -64,7 +68,8 @@ describe('Tests Group following system', () => {
         .then(Number)
         .then((group1FollowerBefore: number) => {
           cy.log(group1FollowerBefore.toString())
-          cy.clickFollowGroupButton()
+          cy.clickFollowGroupButton(popUpMessages1.followMessage)
+          cy.searchGroup(group1) // needed to avoid fail due to cypress issues detecting real time, does exclude realtime test
           cy.contains('#Follower', (group1FollowerBefore + 1).toString())
           cy.openProfileLoggedInUserViaMainMenu()
           cy.contains('#Following', (user1FollowingBefore + 1).toString())
@@ -72,14 +77,11 @@ describe('Tests Group following system', () => {
           cy.openEditFollower()
           cy.contains('Followings').click()
           cy.filterSecondTabOfGroup(group1)
-
-/*           cy.get('[data-cy="filterSecondTab"]')
-            .type(group1.name)
-            .type('{enter}') */
           cy.contains(group1.name)
           cy.get('[icon="pi pi-times"]')
           cy.searchGroup(group1)
-          cy.clickUnfollowGroupButton()
+          cy.clickUnfollowGroupButton(popUpMessages1.unfollowMessage)
+          cy.searchGroup(group1) // needed to avoid fail due to cypress issues detecting real time, does exclude realtime test
           cy.contains('#Follower', group1FollowerBefore.toString())
           cy.openProfileLoggedInUserViaMainMenu()
           cy.contains('#Following', (user1FollowingBefore).toString())
@@ -87,12 +89,12 @@ describe('Tests Group following system', () => {
           cy.openEditFollower()
           cy.contains('Followings').click()
           cy.contains(group1.name).should('not.exist')
-          cy.logout()
         })
     })
   })
 
   it('3. Follows group and removes follower from group admin follower management tab (remove follower)', () => {
+    cy.visit('')
     cy.login(user1.email, user1.password)
     cy.get('#Following')
     .invoke('text')
@@ -105,7 +107,8 @@ describe('Tests Group following system', () => {
         .then(Number)
         .then((group1FollowerBefore: number) => {
           cy.log(group1FollowerBefore.toString())
-          cy.clickFollowGroupButton()
+          cy.clickFollowGroupButton(popUpMessages1.followMessage)
+          cy.searchGroup(group1) // needed to avoid fail due to cypress issues detecting real time, does exclude realtime test
           cy.contains('#Follower', (group1FollowerBefore + 1).toString())
           cy.openProfileLoggedInUserViaMainMenu()
           cy.contains('#Following', (user1FollowingBefore + 1).toString())
@@ -113,12 +116,9 @@ describe('Tests Group following system', () => {
           cy.openEditFollower()
           cy.contains('Followings').click()
           cy.filterSecondTabOfGroup(group1)
-/*           cy.get('[data-cy="filterSecondTab"]')
-            .type(group1.name)
-            .type('{enter}') */
           cy.contains(group1.name)
           cy.get('[icon="pi pi-times"]')
-          cy.get('#groups-cy').click()
+          cy.openGroupList()
           cy.contains(group1.name).click()
           cy.get('#edit-cy').click()
           cy.openEditFollowerOfGroup()
@@ -128,7 +128,6 @@ describe('Tests Group following system', () => {
           cy.contains('#Follower', (group1FollowerBefore).toString())
           cy.openProfileLoggedInUserViaMainMenu()
           cy.contains('#Following', user1FollowingBefore.toString())
-          cy.logout()
         })
     })
   })

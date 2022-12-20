@@ -2,8 +2,8 @@
 -- 4. for groups
 ALTER TABLE IF EXISTS public.groups_counters ENABLE ROW LEVEL SECURITY;
 -- 4.1 CREATE: Authenticated user can create new groups
-DROP POLICY  IF EXISTS "Authenticated users can create new groups." ON groups;
-CREATE POLICY "Authenticated users can create new groups."
+DROP POLICY IF EXISTS "Authenticated users can create new group counters." ON groups_counters;
+CREATE POLICY "Authenticated users can create new group counters."
     ON public.groups_counters
     AS PERMISSIVE
     FOR INSERT
@@ -11,8 +11,8 @@ CREATE POLICY "Authenticated users can create new groups."
     WITH CHECK (true);
 
 -- 4.2 READ: Authenticated users can view groups.
-DROP POLICY  IF EXISTS "Authenticated users can view groups." ON groups;
-CREATE POLICY "Authenticated users can view groups."
+DROP POLICY IF EXISTS "Authenticated users can view group counters." ON groups_counters;
+CREATE POLICY "Authenticated users can view group counters."
     ON public.groups_counters
     AS PERMISSIVE
     FOR SELECT
@@ -20,8 +20,8 @@ CREATE POLICY "Authenticated users can view groups."
     USING (true);
 
 -- 4.3.1 UPDATE: Group admins can update  user can up
-DROP POLICY  IF EXISTS "Authenticated users can update groups profile." ON groups;
-CREATE POLICY "Authenticated users can update groups profile."
+DROP POLICY IF EXISTS "Authenticated users can update group counters." ON groups_counters;
+CREATE POLICY "Authenticated users can update group counters."
     ON public.groups_counters
     AS PERMISSIVE
     FOR UPDATE

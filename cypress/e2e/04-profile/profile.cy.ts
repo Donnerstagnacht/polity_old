@@ -28,19 +28,18 @@ describe('Tests Profile features', () => {
   })
 
   it('2. User 1 uploads new Profile Image & it is displayed on users profile wiki', () => {
+    cy.visit('')
+    cy.login(user1.email, user1.password)
     cy.get('#profile-cy')
     cy.navigateFromProfileWikiToEditProfile()
     cy.uploadImage('./cypress/images/user1.jpg')
     cy.clickBackButton()
-    cy.openProfileAndWaitForProfileData()
+    cy.openProfileAndWaitForProfileDataAndImage()
     cy.checkIfImageExists()
   })
 
-  it('3. Logs user 1 out', () => {
-    cy.logout();
-  })
-
-  it('4. User 2 edits Profile & changes are displayed on profile wiki', () => {
+  it('3. User 2 edits Profile & changes are displayed on profile wiki', () => {
+    cy.visit('')
     cy.login(user2.email, user2.password)
     cy.navigateFromProfileWikiToEditProfile()
     cy.fillChangeProfileForm(user2)
@@ -49,16 +48,14 @@ describe('Tests Profile features', () => {
     cy.checkUserWikiDataAndVisibilityExeptImage(user2)
   })
 
-  it('5. User 2 uploads new Profile Image & it is displayed on users profile wiki', () => {
+  it('4. User 2 uploads new Profile Image & it is displayed on users profile wiki', () => {
+    cy.visit('')
+    cy.login(user2.email, user2.password)
     cy.get('#profile-cy')
     cy.navigateFromProfileWikiToEditProfile()
     cy.uploadImage('./cypress/images/user2.jpg')
     cy.clickBackButton()
     cy.openProfileAndWaitForProfileData()
     cy.checkIfImageExists()
-  })
-
-  it('Logs user 2 out', () => {
-    cy.logout();
   })
 })

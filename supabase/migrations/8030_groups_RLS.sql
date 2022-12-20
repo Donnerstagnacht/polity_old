@@ -44,7 +44,7 @@ CREATE POLICY "Group admin can update groups profile."
 );
 
 
-DROP function if exists checkIfUserIsAdmin();
+/* DROP function if exists checkIfUserIsAdmin();
 create or replace function checkIfUserIsAdmin()
 returns void
 language plpgsql
@@ -63,4 +63,4 @@ BEGIN
             is_admin = true
     )
 END;
-$$;
+$$; */

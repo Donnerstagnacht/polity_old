@@ -34,6 +34,14 @@ export type Messages = {
   messageFromUser1: string
 }
 
+export type PopUpMessages = {
+  followMessage: string,
+  unfollowMessage: string,
+  requestGroup: string,
+  cancelGroupRequest: string,
+  leaveGroup: string
+}
+
 export {};
 
 declare global {
@@ -76,6 +84,12 @@ declare global {
        * @example cy.openProfileAndWaitForProfileData()
        */
        openProfileAndWaitForProfileData(): Chainable<Element>
+
+      /**
+       * Custom command to open profile and waits to complete a supabase api call to load data and the profile image
+       * @example cy.openProfileAndWaitForProfileDataAndImage()
+       */
+      openProfileAndWaitForProfileDataAndImage(): Chainable<Element>
 
        /**
        * Custom command to open group profile and waits to complete a supabase api call to load data
@@ -129,12 +143,20 @@ declare global {
        */
        checkGroupWikiDataAndVisibilityExeptImage(group: Group): Chainable<Element>
 
-            /**
+      /**
        * Custom command to check if the profile update changes are displayed on profile wiki page
        * @param user - User data
        * @example cy.checkUserWikiDataAndVisibilityExeptImage(user)
        */
       checkUserWikiDataAndVisibilityExeptImage(user: User): Chainable<Element>
+
+
+      /**
+       * Custom command to check if a pop up message appears and can be removed by click
+       * @param message - PopUp message which should be displayed
+       * @example cy.checkPopUpMessage(message)
+       */
+      checkPopUpMessage(message: string): Chainable<Element>
 
       /**
        * Custom command to uploadProfileImage
@@ -151,27 +173,31 @@ declare global {
 
       /**
       * Custom command to click follow button
+      * @param popUpMessage - Pop up message to be displayed after click
       * @example cy.clickFollowButton()
       */
-       clickFollowButton(): Chainable<Element>
+       clickFollowButton(popUpMessage: string): Chainable<Element>
 
       /**
       * Custom command to click follow button of a group
+      * @param popUpMessage - Pop up message to be displayed after click
       * @example cy.clickFollowGroupButton()
       */
-      clickFollowGroupButton(): Chainable<Element>
+      clickFollowGroupButton(popUpMessage: string): Chainable<Element>
 
       /**
       * Custom command to click unfollow button
+      * @param popUpMessage - Pop up message to be displayed after click
       * @example cy.clickUnfollowButton()
       */
-      clickUnfollowButton(): Chainable<Element>
+      clickUnfollowButton(popUpMessage: string): Chainable<Element>
 
       /**
       * Custom command to click unfollow group button
+      * @param popUpMessage - Pop up message to be displayed after click
       * @example cy.clickUnfollowGroupButton()
       */
-      clickUnfollowGroupButton(): Chainable<Element>
+      clickUnfollowGroupButton(popUpMessage: string): Chainable<Element>
 
       /**
       * Custom command to remove follower
@@ -281,6 +307,13 @@ declare global {
       * @example cy.openGroupAndWaitForGroupData()
       */
        openGroupAndWaitForGroupData(): Chainable<Element>
+
+      /**
+      * Custom command to open a the list of groups and wait for data
+      * @example cy.openGroupList()
+      */
+      openGroupList(): Chainable<Element>
+
 
       /**
       * Custom command to open a page to edit follower
