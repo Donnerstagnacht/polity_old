@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1666919420595,
+  "timestamp": 1671567391428,
   "index": "/polity/index.html",
   "assetGroups": [
     {
@@ -19,7 +19,7 @@
         "/polity/783.d34bb02c06e311dc.js",
         "/polity/84.a4607d8c1dd5578f.js",
         "/polity/846.3787c07bcd13e963.js",
-        "/polity/985.6e4c9c651d01b54e.js",
+        "/polity/985.3ec6dd3054937390.js",
         "/polity/common.a2ffd4248e7a7a49.js",
         "/polity/favicon.ico",
         "/polity/index.html",
@@ -28,7 +28,7 @@
         "/polity/material-light-dark-indigo.css",
         "/polity/material-light-standard-indigo.css",
         "/polity/polyfills.0cc3c5abbc0cf0f7.js",
-        "/polity/runtime.3fd9c22540a971ad.js",
+        "/polity/runtime.84a60e4ca8a1ac6d.js",
         "/polity/styles.aac148b0431e3488.css"
       ],
       "patterns": []
@@ -78,7 +78,7 @@
     "/polity/783.d34bb02c06e311dc.js": "495b1c6b4a87d63936edf458d53e68936851cc88",
     "/polity/84.a4607d8c1dd5578f.js": "a7f390f63d5b337ad86c20ef18fe3603978204d7",
     "/polity/846.3787c07bcd13e963.js": "2cae871fb5c8c643d0e50797f99c719ab0243e5b",
-    "/polity/985.6e4c9c651d01b54e.js": "14160cb2353e33b1d1f4e497f8119405fcc0b7d6",
+    "/polity/985.3ec6dd3054937390.js": "1cc315343d62a78dfba211b11bb90e605a35032e",
     "/polity/Inter-Bold.495ff245352e2720.woff": "2aad5b7a0f94ae2085fd1ff40c03d6cf68b68c3e",
     "/polity/Inter-Bold.b19f66e15e74d7d0.woff2": "ed509b1b3e8d08809f8ca4670856b9cc1759abf3",
     "/polity/Inter-Medium.21f5100029fda9b1.woff": "95f4a2e6124d88ab8dc9f389512a8fc00d1b5eaa",
@@ -101,7 +101,7 @@
     "/polity/common.a2ffd4248e7a7a49.js": "b70c360d6bf43c017efa803cdedf4307eff0a921",
     "/polity/favicon.ico": "97530a42509c80e33725afdc292c4f860b203313",
     "/polity/hue.8b1818380241e6ac.png": "f81ae627637a684614aa726e206c73ce099a01fd",
-    "/polity/index.html": "75996607f284da0973acfe1cde92b706bf8138dd",
+    "/polity/index.html": "3dab934aec7841466dbcb06de89ba834f5d0b0bd",
     "/polity/main.42e622f5a86cd775.js": "4412fae84454df77d8538b14834cca7da1f9aba8",
     "/polity/manifest.webmanifest": "d278b3cbbfc7885f338694153c58bd26efe8a04a",
     "/polity/material-light-dark-indigo.css": "cb0f469efd351087c24fe8fd10c0989a30c7cfd7",
@@ -110,7 +110,7 @@
     "/polity/primeicons.29151a741d66863a.woff": "21e477ea19e15b66344bcc23b3fbb2161092a707",
     "/polity/primeicons.5f5d08cd089b4e5d.ttf": "e6c86ca90a9fb4282fb35523d56fde00e78a1416",
     "/polity/primeicons.76044b1c189cc4d7.svg": "621775b2ec555fd2dd152a24390cf6dfeee168b1",
-    "/polity/runtime.3fd9c22540a971ad.js": "08fe45c2d537270365f36d346646e0f6ccc765d2",
+    "/polity/runtime.84a60e4ca8a1ac6d.js": "3ab157152de4a92893e6384cae03b98b7c848e61",
     "/polity/styles.aac148b0431e3488.css": "5bac3a955bdb7f113279571c570705d9e9553884"
   },
   "navigationUrls": [
