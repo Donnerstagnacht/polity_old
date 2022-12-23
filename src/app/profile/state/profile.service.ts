@@ -302,7 +302,6 @@ export class ProfileService {
             console.log(member.data.avatar_url)
             console.log()
             let memberData: profile_list_item = {
-              id: payload.new.id,
               user_id: member.data.id,
               avatar_url: member.data.avatar_url,
               name: member.data.name
@@ -734,7 +733,6 @@ export class ProfileService {
               console.log()
     
               let groupData: profile_list_item = {
-                // id: payload.old['id'],
                 user_id: group.data.id,
                 avatar_url: group.data.avatar_url,
                 name: group.data.name

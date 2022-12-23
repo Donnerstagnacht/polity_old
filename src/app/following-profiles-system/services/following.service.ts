@@ -37,7 +37,7 @@ export class FollowingService {
     const results: {data: any, error: any} = await this.supabaseClient
       .from('following_profile_system')
       .select(
-        `id,
+        `
         follower,
         following`
       )
@@ -61,7 +61,7 @@ export class FollowingService {
     const followers: {data: any, error: any} = await this.supabaseClient
       .from('following_profile_system')
       .select(
-        `id,
+        `
         follower,
         profiles!following_profile_system_follower_fkey (
           id,
@@ -88,7 +88,7 @@ export class FollowingService {
     const followings: {data: any, error: any} = await this.supabaseClient
     .from('following_profile_system')
     .select(
-      `id,
+      `
       following,
       profiles!following_profile_system_following_fkey (
         id,
@@ -140,14 +140,26 @@ export class FollowingService {
     return unfollowTransactionResult;
   }
 
+  async removeFollowerTransactionFromEvent(event: {id: string, user_id: string}): Promise<{data: any, error: any}> {
+    let loggedInID: string | null = '';
+    if(this.loggedInID) {
+      loggedInID = this.loggedInID;
+    }
+    const unfollowTransactionResult: { data: any, error: any } = await this.supabaseClient
+      .rpc('unfollowtransaction', {followingid: loggedInID, followerid: event.user_id});
+    if(unfollowTransactionResult.error) throw new Error(unfollowTransactionResult.error.message);
+    return unfollowTransactionResult;
+  }
+
   async removeFollowerTransactionById(event: {id: string, user_id: string}): Promise<{data: any, error: any}> {
     let loggedInID: string | null = '';
     if(this.loggedInID) {
       loggedInID = this.loggedInID;
     }
     const unfollowTransactionResult: { data: any, error: any } = await this.supabaseClient
-      .rpc('unfollow_transaction_by_id', {followingid: loggedInID, followerid: event.user_id, relationship_id: event.id});
+    .rpc('unfollow_transaction_by_id', {followingid: loggedInID, followerid: event.user_id, relationship_id: event.id});
     if(unfollowTransactionResult.error) throw new Error(unfollowTransactionResult.error.message);
     return unfollowTransactionResult;
   }
+
 }

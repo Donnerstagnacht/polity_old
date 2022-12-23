@@ -166,7 +166,7 @@ Cypress.Commands.add('clickUnfollowGroupButton', (popUpMessage: string) => {
 })
 
 Cypress.Commands.add('removeFollower', (user: User) => {
-  cy.intercept('**/rest/v1/rpc/unfollow_transaction_by_id*').as('removeFollowerTransaction')
+  cy.intercept('**/rest/v1/rpc/unfollowtransaction*').as('removeFollowerTransaction')
   cy.get('[data-cy="first-table"]').within(() => {
     cy.contains(user.name).parent().within(() => {
       cy.get('[icon="pi pi-times"]').click()
@@ -249,8 +249,8 @@ Cypress.Commands.add('leaveGroup', () => {
 })
 
 Cypress.Commands.add('openEditFollower', () => {
-  cy.intercept('**/rest/v1/following_profile_system?select=id%2Cfollower%*').as('followerData')
-  cy.intercept('**/rest/v1/following_profile_system?select=id%2Cfollowing%*').as('followingData')
+  cy.intercept('**/rest/v1/following_profile_system?select=follower%*').as('followerData')
+  cy.intercept('**/rest/v1/following_profile_system?select=following%*').as('followingData')
   cy.intercept('**/rest/v1/following_group_system?select=id%2Cfollowing%*').as('followingGroupData')
   cy.get('[data-cy="follower-edit"]').click()
   cy.wait('@followingData')

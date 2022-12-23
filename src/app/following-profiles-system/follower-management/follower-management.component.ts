@@ -160,7 +160,7 @@ export class FollowerManagementComponent implements OnInit {
     if(event.isGroup) {
     } else {
       try {
-        await this.followingService.removeFollowerTransactionById(event);
+        await this.followingService.removeFollowerTransactionFromEvent(event);
         this.messageService.add({severity:'success', summary: 'Follower entfernt.'});
       } catch(error: any) {
         this.messageService.add({severity:'error', summary: error});
