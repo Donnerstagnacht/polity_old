@@ -1,5 +1,5 @@
-DROP function if exists deleteGroupFollowerRelationship(followerId uuid, followingId uuid);
-create or replace function deleteGroupFollowerRelationship(followerId uuid, followingId uuid)
+DROP function if exists transactions.deleteGroupFollowerRelationship(followerId uuid, followingId uuid);
+create or replace function transactions.deleteGroupFollowerRelationship(followerId uuid, followingId uuid)
 returns void
 language plpgsql
 security definer

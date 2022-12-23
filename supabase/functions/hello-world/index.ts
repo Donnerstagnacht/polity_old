@@ -36,6 +36,7 @@ serve(async (req: any) => {
   try {
     // supabaseClient.auth.setAuth(req.headers.get('Authorization')!.replace('Bearer ', ''))
 
+    // wont work probably since insert_notification_from_groups got moved to transactions schema only accessible by postgres
     const insertNotification: { data: any, error: any } = await supabaseClient
     .rpc('insert_notification_from_groups', 
       {

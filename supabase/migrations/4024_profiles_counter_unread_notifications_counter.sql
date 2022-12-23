@@ -1,6 +1,6 @@
 --1. Increment Message Counter of Admins
-DROP function if exists increment_unread_message_counter(userId uuid);
-create or replace function increment_unread_message_counter(userId uuid)
+DROP function if exists transactions.increment_unread_message_counter(userId uuid);
+create or replace function transactions.increment_unread_message_counter(userId uuid)
 returns void
 language plpgsql
 security definer
@@ -14,8 +14,8 @@ END;
 $$;
 
 --2. Increment Message Counter of Admins
-DROP function if exists increment_unread_message_counter_of_admins(group_id_in uuid);
-create or replace function increment_unread_message_counter_of_admins(group_id_in uuid)
+DROP function if exists transactions.increment_unread_message_counter_of_admins(group_id_in uuid);
+create or replace function transactions.increment_unread_message_counter_of_admins(group_id_in uuid)
 returns void
 language plpgsql
 security definer

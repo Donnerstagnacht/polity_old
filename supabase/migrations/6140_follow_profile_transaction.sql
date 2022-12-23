@@ -23,10 +23,10 @@ $$
 declare
 BEGIN
   -- Create new following & update counter
-  PERFORM insertFollowingFollowerRelationship(followerId, followingId);
-  PERFORM incrementfollower_counter(followingId);
-  PERFORM incrementfollowing_counter(followerId);
-  PERFORM insert_notification_from_profile(
+  PERFORM transactions.insertFollowingFollowerRelationship(followerId, followingId);
+  PERFORM transactions.incrementfollower_counter(followingId);
+  PERFORM transactions.incrementfollowing_counter(followerId);
+  PERFORM transactions.insert_notification_from_profile(
     followerId,
     followingId,
     followerId,
@@ -35,9 +35,9 @@ BEGIN
     type_in,
     for_admins_in
   );
-  PERFORM increment_unread_message_counter(followingId);
+  PERFORM transactions.increment_unread_message_counter(followingId);
   -- Check if room already exists
   -- create new room or accept room invitation
-  PERFORM check_if_room_already_exists_and_follow(followerId, followingId);
+  PERFORM transactions.check_if_room_already_exists_and_follow(followerId, followingId);
 END;
 $$;

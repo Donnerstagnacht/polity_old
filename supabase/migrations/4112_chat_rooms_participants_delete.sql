@@ -14,8 +14,8 @@ BEGIN
 END;
 $$;
 
-DROP function if exists delete_room_participants(room_id_in uuid, follower_id_in uuid, following_id_in uuid);
-create or replace function delete_room_participants(room_id_in uuid, follower_id_in uuid, following_id_in uuid)
+DROP function if exists transactions.delete_room_participants(room_id_in uuid, follower_id_in uuid, following_id_in uuid);
+create or replace function transactions.delete_room_participants(room_id_in uuid, follower_id_in uuid, following_id_in uuid)
 returns void
 language plpgsql
 security definer

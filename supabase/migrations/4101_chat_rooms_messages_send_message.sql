@@ -1,5 +1,5 @@
-DROP function if exists insert_message(room_id_in uuid, user_id_in uuid, content_in text);
-create or replace function insert_message(room_id_in uuid, user_id_in uuid, content_in text)
+DROP function if exists transactions.insert_message(room_id_in uuid, user_id_in uuid, content_in text);
+create or replace function transactions.insert_message(room_id_in uuid, user_id_in uuid, content_in text)
 returns void
 language plpgsql
 security definer

@@ -1,4 +1,4 @@
-DROP function if exists insert_notification_from_groups(
+DROP function if exists transactions.insert_notification_from_groups(
   notifier_in uuid,
   notifying_in uuid,
   handler_in uuid,
@@ -7,7 +7,7 @@ DROP function if exists insert_notification_from_groups(
   type_in text,
   for_admins_in boolean
 );
-create or replace function insert_notification_from_groups(
+create or replace function transactions.insert_notification_from_groups(
   notifier_in uuid,
   notifying_in uuid,
   handler_in uuid,

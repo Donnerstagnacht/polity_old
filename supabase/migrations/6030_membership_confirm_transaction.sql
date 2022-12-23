@@ -30,11 +30,11 @@ security definer
 as
 $$
 BEGIN
-  PERFORM add_member(user_id_requests, group_id_requested, false, false , false);
-  PERFORM cancel_group_membership_request_by_request(requested_id);
-  PERFORM increment_groups_counter(user_id_requests);
-  PERFORM increment_group_member_counter(group_id_requested);
-  PERFORM insert_notification_from_groups(
+  PERFORM transactions.add_member(user_id_requests, group_id_requested, false, false , false);
+  PERFORM transactions.cancel_group_membership_request_by_request(requested_id);
+  PERFORM transactions.increment_groups_counter(user_id_requests);
+  PERFORM transactions.increment_group_member_counter(group_id_requested);
+  PERFORM transactions.insert_notification_from_groups(
     user_id_requests,
     group_id_requested,
     handler_in,
@@ -43,7 +43,7 @@ BEGIN
     type_in,
     for_inquirer_in
   );
-  PERFORM insert_notification_from_groups(
+  PERFORM transactions.insert_notification_from_groups(
     user_id_requests,
     group_id_requested,
     handler_in,
@@ -52,7 +52,7 @@ BEGIN
     type_in,
     for_admins_in
   );
-  PERFORM increment_unread_message_counter_of_admins(group_id_requested);
-  PERFORM increment_unread_message_counter(user_id_requests);
+  PERFORM transactions.increment_unread_message_counter_of_admins(group_id_requested);
+  PERFORM transactions.increment_unread_message_counter(user_id_requests);
 END;
 $$;

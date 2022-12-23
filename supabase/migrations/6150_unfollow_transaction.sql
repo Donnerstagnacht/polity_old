@@ -7,11 +7,11 @@ security definer
 as
 $$
 BEGIN
-  PERFORM deleteFollowingFollowerRelationship(followerId, followingId);
-  PERFORM decrementfollower_counter(followingId);
-  PERFORM decrementfollowing_counter(followerId);
+  PERFORM transactions.deleteFollowingFollowerRelationship(followerId, followingId);
+  PERFORM transactions.decrementfollower_counter(followingId);
+  PERFORM transactions.decrementfollowing_counter(followerId);
   -- delete room if exists
-  perform check_if_room_already_exists_and_delete(followerId, followingId);
+  perform transactions.check_if_room_already_exists_and_delete(followerId, followingId);
 END;
 $$;
 
@@ -24,8 +24,8 @@ security definer
 as
 $$
 BEGIN
-  PERFORM delete_following_follower_relationship_by_id(relationship_id);
-  PERFORM decrementfollower_counter(followingId);
-  PERFORM decrementfollowing_counter(followerId);
+  PERFORM transactions.delete_following_follower_relationship_by_id(relationship_id);
+  PERFORM transactions.decrementfollower_counter(followingId);
+  PERFORM transactions.decrementfollowing_counter(followerId);
 END;
 $$;

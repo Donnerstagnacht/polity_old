@@ -16,8 +16,8 @@ BEGIN
 END;
 $$;
 
-DROP function if exists update_accepted(room_id_in uuid, user_id_in uuid);
-create or replace function update_accepted(room_id_in uuid, user_id_in uuid)
+DROP function if exists transactions.update_accepted(room_id_in uuid, user_id_in uuid);
+create or replace function transactions.update_accepted(room_id_in uuid, user_id_in uuid)
 returns void
 language plpgsql
 security definer

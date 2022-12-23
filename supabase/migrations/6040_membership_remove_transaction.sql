@@ -18,9 +18,9 @@ CREATE OR REPLACE FUNCTION public.remove_membership_transaction(
 AS $BODY$
 BEGIN
   PERFORM delete_member(user_id_requests, group_id_requested);
-  PERFORM decrement_groups_counter(user_id_requests);
-  PERFORM decrement_group_member_counter(group_id_requested);
-  PERFORM insert_notification_from_groups(
+  PERFORM transactions.decrement_groups_counter(user_id_requests);
+  PERFORM transactions.decrement_group_member_counter(group_id_requested);
+  PERFORM transactions.insert_notification_from_groups(
     user_id_requests,
     group_id_requested,
     handler_in,
@@ -29,7 +29,7 @@ BEGIN
     type_in,
     for_inquirer_in
   );
-  PERFORM insert_notification_from_groups(
+  PERFORM transactions.insert_notification_from_groups(
     user_id_requests,
     group_id_requested,
     handler_in,
@@ -38,8 +38,8 @@ BEGIN
     type_in,
     for_admins_in
   );
-  PERFORM increment_unread_message_counter_of_admins(group_id_requested);
-  PERFORM increment_unread_message_counter(user_id_requests);
+  PERFORM transactions.increment_unread_message_counter_of_admins(group_id_requested);
+  PERFORM transactions.increment_unread_message_counter(user_id_requests);
 END;
 $BODY$;
 
@@ -76,10 +76,10 @@ CREATE OR REPLACE FUNCTION remove_membership_transaction_by_membership_id(
     VOLATILE SECURITY DEFINER PARALLEL UNSAFE
 AS $BODY$
 BEGIN
-  PERFORM delete_member_by_id(membership_id);
-  PERFORM decrement_groups_counter(user_id_requests);
-  PERFORM decrement_group_member_counter(group_id_requested);
-  PERFORM insert_notification_from_groups(
+  PERFORM transactions.delete_member_by_id(membership_id);
+  PERFORM transactions.decrement_groups_counter(user_id_requests);
+  PERFORM transactions.decrement_group_member_counter(group_id_requested);
+  PERFORM transactions.insert_notification_from_groups(
     user_id_requests,
     group_id_requested,
     handler_in,
@@ -88,7 +88,7 @@ BEGIN
     type_in,
     for_inquirer_in
   );
-  PERFORM insert_notification_from_groups(
+  PERFORM transactions.insert_notification_from_groups(
     user_id_requests,
     group_id_requested,
     handler_in,
@@ -97,7 +97,7 @@ BEGIN
     type_in,
     for_admins_in
   );
-  PERFORM increment_unread_message_counter_of_admins(group_id_requested);
-  PERFORM increment_unread_message_counter(user_id_requests);
+  PERFORM transactions.increment_unread_message_counter_of_admins(group_id_requested);
+  PERFORM transactions.increment_unread_message_counter(user_id_requests);
 END;
 $BODY$;

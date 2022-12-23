@@ -8,8 +8,8 @@ security definer
 as
 $$
 BEGIN
-  PERFORM insertGroupFollowerRelationship(followerId, followingId);
-  PERFORM incrementGroupfollower_counter(followingId);
-  PERFORM incrementGroupfollowing_counter(followerId);
+  PERFORM transactions.insertGroupFollowerRelationship(followerId, followingId);
+  PERFORM transactions.incrementGroupfollower_counter(followingId);
+  PERFORM transactions.incrementGroupfollowing_counter(followerId);
 END;
 $$;

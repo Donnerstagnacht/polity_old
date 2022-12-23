@@ -1,5 +1,5 @@
-DROP function if exists insertFollowingFollowerRelationship(follower uuid, following uuid);
-create or replace function insertFollowingFollowerRelationship(follower uuid, following uuid)
+DROP function if exists transactions.insertFollowingFollowerRelationship(follower uuid, following uuid);
+create or replace function transactions.insertFollowingFollowerRelationship(follower uuid, following uuid)
 returns void
 language plpgsql
 security definer

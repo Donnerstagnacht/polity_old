@@ -16,13 +16,13 @@ BEGIN
   -- Create Group, update members table and counters
   Select create_group(name, description, creator, level)
   into new_group_id;
-  perform add_member(creator, new_group_id, true, true , true);
-  perform increment_groups_counter(creator);
+  perform transactions.add_member(creator, new_group_id, true, true , true);
+  perform transactions.increment_groups_counter(creator);
 
   -- Create a new chat room
   Select insert_room()
   into new_room_id;
-  perform insert_participant(new_room_id, null, new_group_id);
+  perform transactions.insert_participant(new_room_id, null, new_group_id);
 
   return new_group_id;
 END;

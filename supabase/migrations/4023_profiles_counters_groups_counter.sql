@@ -1,5 +1,5 @@
 -- 1. Increment Groups Counter
-CREATE OR REPLACE FUNCTION public.increment_groups_counter(
+CREATE OR REPLACE FUNCTION transactions.increment_groups_counter(
 	userid uuid)
     RETURNS void
     LANGUAGE 'plpgsql'
@@ -13,17 +13,12 @@ BEGIN
 END
 $BODY$;
 
-ALTER FUNCTION public.increment_groups_counter(uuid)
+ALTER FUNCTION transactions.increment_groups_counter(uuid)
     OWNER TO postgres;
 
-GRANT EXECUTE ON FUNCTION public.increment_groups_counter(uuid) TO PUBLIC;
-GRANT EXECUTE ON FUNCTION public.increment_groups_counter(uuid) TO anon;
-GRANT EXECUTE ON FUNCTION public.increment_groups_counter(uuid) TO authenticated;
-GRANT EXECUTE ON FUNCTION public.increment_groups_counter(uuid) TO postgres;
-GRANT EXECUTE ON FUNCTION public.increment_groups_counter(uuid) TO service_role;
 
 -- 2 Decrement Groups Counter
-CREATE OR REPLACE FUNCTION public.decrement_groups_counter(
+CREATE OR REPLACE FUNCTION transactions.decrement_groups_counter(
 	user_id uuid)
     RETURNS void
     LANGUAGE 'plpgsql'
@@ -36,11 +31,6 @@ BEGIN
   where id = user_id;
 END
 $BODY$;
-ALTER FUNCTION public.decrement_groups_counter(uuid)
+ALTER FUNCTION transactions.decrement_groups_counter(uuid)
     OWNER TO postgres;
 
-GRANT EXECUTE ON FUNCTION public.decrement_groups_counter(uuid) TO PUBLIC;
-GRANT EXECUTE ON FUNCTION public.decrement_groups_counter(uuid) TO anon;
-GRANT EXECUTE ON FUNCTION public.decrement_groups_counter(uuid) TO authenticated;
-GRANT EXECUTE ON FUNCTION public.decrement_groups_counter(uuid) TO postgres;
-GRANT EXECUTE ON FUNCTION public.decrement_groups_counter(uuid) TO service_role;

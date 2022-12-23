@@ -1,5 +1,5 @@
-DROP function if exists update_groups_participants_after_message(group_id_in uuid, user_id_in uuid);
-create or replace function update_groups_participants_after_message(group_id_in uuid, user_id_in uuid)
+DROP function if exists transactions.update_groups_participants_after_message(group_id_in uuid, user_id_in uuid);
+create or replace function transactions.update_groups_participants_after_message(group_id_in uuid, user_id_in uuid)
 returns void
 language plpgsql
 security definer

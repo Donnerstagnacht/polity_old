@@ -1,6 +1,6 @@
 --1. Increment Follower
-DROP function if exists incrementfollower_counter(userId uuid);
-create or replace function incrementfollower_counter(userId uuid)
+DROP function if exists transactions.incrementfollower_counter(userId uuid);
+create or replace function transactions.incrementfollower_counter(userId uuid)
 returns void
 language plpgsql
 security definer
@@ -14,8 +14,8 @@ END;
 $$;
 
 --2. decrement follower
-DROP function if exists decrementfollower_counter(userId uuid);
-create or replace function decrementfollower_counter(userId uuid)
+DROP function if exists transactions.decrementfollower_counter(userId uuid);
+create or replace function transactions.decrementfollower_counter(userId uuid)
 returns void
 language plpgsql
 security definer

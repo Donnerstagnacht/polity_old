@@ -29,8 +29,8 @@ COST 100
 VOLATILE SECURITY DEFINER PARALLEL UNSAFE
 AS $BODY$
 BEGIN
-  PERFORM insertgroupmembershiprequest(user_id_requests, group_id_requested);
-  PERFORM insert_notification_from_groups(
+  PERFORM transactions.insertgroupmembershiprequest(user_id_requests, group_id_requested);
+  PERFORM transactions.insert_notification_from_groups(
     user_id_requests,
     group_id_requested,
     handler_in,
@@ -39,7 +39,7 @@ BEGIN
     type_in,
     for_inquirer_in
   );
-  PERFORM insert_notification_from_groups(
+  PERFORM transactions.insert_notification_from_groups(
     user_id_requests,
     group_id_requested,
     handler_in,
@@ -48,6 +48,6 @@ BEGIN
     type_in,
     for_admins_in
   );
-  PERFORM increment_unread_message_counter_of_admins(group_id_requested);
+  PERFORM transactions.increment_unread_message_counter_of_admins(group_id_requested);
 END;
 $BODY$;

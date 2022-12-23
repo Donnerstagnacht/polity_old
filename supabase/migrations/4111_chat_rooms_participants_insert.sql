@@ -1,5 +1,5 @@
-DROP function if exists insert_participant(room_id uuid, user_id uuid, group_id uuid);
-create or replace function insert_participant(room_id uuid, user_id uuid default null, group_id uuid default null, accepted boolean default true)
+DROP function if exists transactions.insert_participant(room_id uuid, user_id uuid, group_id uuid);
+create or replace function transactions.insert_participant(room_id uuid, user_id uuid default null, group_id uuid default null, accepted boolean default true)
 returns void
 language plpgsql
 security definer

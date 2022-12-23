@@ -7,8 +7,8 @@ security definer
 as
 $$
 BEGIN
-  PERFORM delete_room_participants(room_id_in, follower_id, following_id);
-  PERFORM delete_all_messages_of_room(room_id_in);
-  PERFORM delete_room(room_id_in);
+  PERFORM transactions.delete_room_participants(room_id_in, follower_id, following_id);
+  PERFORM transactions.delete_all_messages_of_room(room_id_in);
+  PERFORM transactions.delete_room(room_id_in);
 END;
 $$;

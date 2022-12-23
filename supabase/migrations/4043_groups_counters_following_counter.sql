@@ -1,6 +1,6 @@
 --1. Increment Following of group
-DROP function if exists incrementGroupfollowing_counter(userId uuid);
-create or replace function incrementGroupfollowing_counter(userId uuid)
+DROP function if exists transactions.incrementGroupfollowing_counter(userId uuid);
+create or replace function transactions.incrementGroupfollowing_counter(userId uuid)
 returns void
 language plpgsql
 security definer
@@ -14,8 +14,8 @@ END
 $$;
 
 --2. Decrement following of group
-DROP function if exists decrementGroupfollowing_counter(userId uuid);
-create or replace function decrementGroupfollowing_counter(userId uuid)
+DROP function if exists transactions.decrementGroupfollowing_counter(userId uuid);
+create or replace function transactions.decrementGroupfollowing_counter(userId uuid)
 returns void
 language plpgsql
 security definer

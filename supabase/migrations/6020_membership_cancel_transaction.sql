@@ -29,8 +29,8 @@ COST 100
 VOLATILE SECURITY DEFINER PARALLEL UNSAFE
 AS $BODY$
 BEGIN
-  PERFORM cancel_group_membership_request(user_id_requests_in, group_id_requested_in);
-  PERFORM insert_notification_from_groups(
+  PERFORM transactions.cancel_group_membership_request(user_id_requests_in, group_id_requested_in);
+  PERFORM transactions.insert_notification_from_groups(
     user_id_requests_in,
     group_id_requested_in,
     handler_in,
@@ -39,7 +39,7 @@ BEGIN
     type_in,
     for_inquirer_in
   );
-  PERFORM insert_notification_from_groups(
+  PERFORM transactions.insert_notification_from_groups(
     user_id_requests_in,
     group_id_requested_in,
     handler_in,
@@ -48,8 +48,8 @@ BEGIN
     type_in,
     for_admins_in
   );
-  PERFORM increment_unread_message_counter_of_admins(group_id_requested_in);
-  PERFORM increment_unread_message_counter(user_id_requests_in);
+  PERFORM transactions.increment_unread_message_counter_of_admins(group_id_requested_in);
+  PERFORM transactions.increment_unread_message_counter(user_id_requests_in);
 END;
 $BODY$;
 
@@ -86,8 +86,8 @@ COST 100
 VOLATILE SECURITY DEFINER PARALLEL UNSAFE
 AS $BODY$
 BEGIN
-  PERFORM cancel_group_membership_request_by_request(request_id_in);
-  PERFORM insert_notification_from_groups(
+  PERFORM transactions.cancel_group_membership_request_by_request(request_id_in);
+  PERFORM transactions.insert_notification_from_groups(
     user_id_requests_in,
     group_id_requested_in,
     handler_in,
@@ -96,7 +96,7 @@ BEGIN
     type_in,
     for_inquirer_in
   );
-  PERFORM insert_notification_from_groups(
+  PERFORM transactions.insert_notification_from_groups(
     user_id_requests_in,
     group_id_requested_in,
     handler_in,
@@ -105,7 +105,7 @@ BEGIN
     type_in,
     for_admins_in
   );
-  PERFORM increment_unread_message_counter_of_admins(group_id_requested_in);
-  PERFORM increment_unread_message_counter(user_id_requests_in);
+  PERFORM transactions.increment_unread_message_counter_of_admins(group_id_requested_in);
+  PERFORM transactions.increment_unread_message_counter(user_id_requests_in);
 END;
 $BODY$;

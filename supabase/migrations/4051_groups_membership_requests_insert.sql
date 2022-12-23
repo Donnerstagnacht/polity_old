@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION public.insertgroupmembershiprequest(
+CREATE OR REPLACE FUNCTION transactions.insertgroupmembershiprequest(
 	user_id uuid,
 	group_requested uuid)
     RETURNS void
@@ -11,11 +11,5 @@ BEGIN
   VALUES (user_id, group_requested);
 END;
 $BODY$;
-ALTER FUNCTION public.insertgroupmembershiprequest(uuid, uuid)
+ALTER FUNCTION transactions.insertgroupmembershiprequest(uuid, uuid)
     OWNER TO postgres;
-
-GRANT EXECUTE ON FUNCTION public.insertgroupmembershiprequest(uuid, uuid) TO PUBLIC;
-GRANT EXECUTE ON FUNCTION public.insertgroupmembershiprequest(uuid, uuid) TO anon;
-GRANT EXECUTE ON FUNCTION public.insertgroupmembershiprequest(uuid, uuid) TO authenticated;
-GRANT EXECUTE ON FUNCTION public.insertgroupmembershiprequest(uuid, uuid) TO postgres;
-GRANT EXECUTE ON FUNCTION public.insertgroupmembershiprequest(uuid, uuid) TO service_role;

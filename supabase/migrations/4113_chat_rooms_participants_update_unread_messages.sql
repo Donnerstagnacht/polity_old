@@ -1,6 +1,6 @@
 -- 1. Increment unread messages
-DROP function if exists update_participants_after_message(room_id_in uuid, user_id_in uuid);
-create or replace function update_participants_after_message(room_id_in uuid, user_id_in uuid)
+DROP function if exists transactions.update_participants_after_message(room_id_in uuid, user_id_in uuid);
+create or replace function transactions.update_participants_after_message(room_id_in uuid, user_id_in uuid)
 returns void
 language plpgsql
 security definer

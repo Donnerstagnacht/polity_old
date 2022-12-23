@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION public.add_member(
+CREATE OR REPLACE FUNCTION transactions.add_member(
 	user_id uuid,
 	group_id uuid,
 	is_admin boolean,
@@ -15,11 +15,5 @@ BEGIN
 END;
 $BODY$;
 
-ALTER FUNCTION public.add_member(uuid, uuid, boolean, boolean, boolean)
+ALTER FUNCTION transactions.add_member(uuid, uuid, boolean, boolean, boolean)
     OWNER TO postgres;
-
-GRANT EXECUTE ON FUNCTION public.add_member(uuid, uuid, boolean, boolean, boolean) TO PUBLIC;
-GRANT EXECUTE ON FUNCTION public.add_member(uuid, uuid, boolean, boolean, boolean) TO anon;
-GRANT EXECUTE ON FUNCTION public.add_member(uuid, uuid, boolean, boolean, boolean) TO authenticated;
-GRANT EXECUTE ON FUNCTION public.add_member(uuid, uuid, boolean, boolean, boolean) TO postgres;
-GRANT EXECUTE ON FUNCTION public.add_member(uuid, uuid, boolean, boolean, boolean) TO service_role;

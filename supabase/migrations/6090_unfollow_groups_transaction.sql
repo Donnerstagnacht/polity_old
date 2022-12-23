@@ -6,8 +6,8 @@ security definer
 as
 $$
 BEGIN
-  PERFORM deleteGroupFollowerRelationship(followerId, followingId);
-  PERFORM decrementGroupfollower_counter(followingId);
-  PERFORM decrementGroupfollowing_counter(followerId);
+  PERFORM transactions.deleteGroupFollowerRelationship(followerId, followingId);
+  PERFORM transactions.decrementGroupfollower_counter(followingId);
+  PERFORM transactions.decrementGroupfollowing_counter(followerId);
 END;
 $$;

@@ -22,13 +22,13 @@ as
 $$
 declare
 BEGIN
-  PERFORM insert_message(room_id_in, message_sender, content_in);
-  PERFORM update_room_after_message(room_id_in, content_in);
+  PERFORM transactions.insert_message(room_id_in, message_sender, content_in);
+  PERFORM transactions.update_room_after_message(room_id_in, content_in);
 
   if is_group = true then
-    PERFORM update_groups_participants_after_message(group_id_in, message_sender);
+    PERFORM transactions.update_groups_participants_after_message(group_id_in, message_sender);
   else
-    PERFORM update_participants_after_message(room_id_in, message_receiver);
+    PERFORM transactions.update_participants_after_message(room_id_in, message_receiver);
   END IF;
 END;
 $$;
