@@ -8,10 +8,7 @@ CREATE POLICY "Authenticated users can insert their own and new follow profile r
     FOR INSERT
     TO authenticated
     WITH CHECK (
-        (
-            auth.uid() = follower) 
-            OR 
-            (auth.uid() = following)
+        (auth.uid() = follower) 
     );
 
 -- 2.2 READ: Authenticated users can read follow profile relationships
