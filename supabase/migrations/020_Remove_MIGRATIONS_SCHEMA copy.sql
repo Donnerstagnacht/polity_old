@@ -1,7 +1,7 @@
 -- creating a trigger which deletes entries into the schema_migrations table once they are inserted
 -- This is needed for a hard reset since dp push does not apply migrations which are already added
 -- to the schema_migrations table
-
+/* 
 DROP SCHEMA if exists public CASCADE;
 DELETE from storage.objects;
 DELETE from auth.users CASCADE;
@@ -30,3 +30,4 @@ CREATE TRIGGER trigger_migration_row_delete
 AFTER INSERT ON supabase_migrations.schema_migrations
 FOR EACH ROW EXECUTE PROCEDURE supabase_migrations.delete_migration_versions();
 
+ */
