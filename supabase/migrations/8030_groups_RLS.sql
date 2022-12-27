@@ -29,38 +29,6 @@ CREATE POLICY "Group admin can update groups profile."
     USING (true)
     WITH check (
     id IN (
-      SELECT groups.id
-      FROM 
-        groups
-      JOIN
-        group_members
-      ON 
-        (group_members.group_id = groups.id)
-      WHERE
-        group_members.user_id = auth.uid()
-      AND
-        group_members.is_admin = true
+      SELECT securityrules.get_groups_where_loggedin_user_admin()
     )
 );
-
-
-/* DROP function if exists checkIfUserIsAdmin();
-create or replace function checkIfUserIsAdmin()
-returns void
-language plpgsql
-security definer
-as
-$$
-BEGIN
-    auth.uid() IN (
-        SELECT 
-            id 
-        FROM 
-            group_members
-        WHERE 
-            user_id = id
-        AND
-            is_admin = true
-    )
-END;
-$$; */
