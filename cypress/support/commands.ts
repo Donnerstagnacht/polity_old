@@ -135,7 +135,8 @@ Cypress.Commands.add('openGroupProfileAndWaitForGroupDataAndImage', () => {
   cy.get('#overview-cy').click()
   cy.wait('@group')
   cy.get('#edit-cy').click()
-  
+  cy.get('[data-cy="members-edit"]').should('be.visible')
+
   cy.intercept('**/rest/v1/rpc/select_group_and_counters*').as('group2')
   cy.get('#overview-cy').click()
   cy.wait('@group2')
