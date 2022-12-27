@@ -56,7 +56,7 @@ describe('Test group edit and create group features', () => {
     cy.contains('Choose').and('be.visible')
     cy.get('input[type=file]').selectFile('./cypress/images/user2.jpg', { force: true })
     cy.clickBackButton()
-    cy.openGroupAndWaitForGroupData()
+    cy.openGroupProfileAndWaitForGroupDataAndImage()
     cy.checkIfImageExists()
   })
 
