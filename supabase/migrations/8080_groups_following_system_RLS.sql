@@ -33,18 +33,5 @@ CREATE POLICY "Authenticated users can delete their own follow group relationshi
         id IN (
             SELECT securityrules.get_groups_where_loggedin_user_admin()
         )
-/*         id IN (
-            SELECT groups.id
-            FROM 
-                groups
-            JOIN
-                group_members
-            ON 
-                (group_members.group_id = groups.id)
-            WHERE
-                group_members.user_id = auth.uid()
-            AND
-                group_members.is_admin = true
-        ) */
     );
 
