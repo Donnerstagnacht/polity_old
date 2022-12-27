@@ -134,10 +134,11 @@ Cypress.Commands.add('openGroupProfileAndWaitForGroupDataAndImage', () => {
   cy.intercept('**/rest/v1/rpc/select_group_and_counters*').as('group')
   cy.get('#overview-cy').click()
   cy.wait('@group')
-
-  cy.intercept('**/rest/v1/rpc/select_group_and_counters*').as('group')
+  cy.get('#edit-cy').click()
+  
+  cy.intercept('**/rest/v1/rpc/select_group_and_counters*').as('group2')
   cy.get('#overview-cy').click()
-  cy.wait('@group')
+  cy.wait('@group2')
 })
 
 Cypress.Commands.add('openProfileExteralAndWaitForProfileData', () => {
