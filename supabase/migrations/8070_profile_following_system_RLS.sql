@@ -30,6 +30,9 @@ CREATE POLICY "Authenticated users can delete their own follow profile relations
     USING (
         (auth.uid() = follower) 
         OR 
-        (auth.uid() = following)
+        --(auth.uid() = following)
+        (auth.uid() IN (
+            SELECT securityrules.get_followers_of_loggedin_user()
+        ))
     );
 
