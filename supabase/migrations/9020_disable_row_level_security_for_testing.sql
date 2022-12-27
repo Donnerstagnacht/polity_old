@@ -1,7 +1,7 @@
 --disable row level security for testing without taking user roles into account
 --ALTER TABLE following_group_system DISABLE ROW LEVEL SECURITY;
 --ALTER TABLE following_profile_system DISABLE ROW LEVEL SECURITY;
-ALTER TABLE group_members DISABLE ROW LEVEL SECURITY;
+--ALTER TABLE group_members DISABLE ROW LEVEL SECURITY;
 --ALTER TABLE groups DISABLE ROW LEVEL SECURITY;
 --ALTER TABLE groups_counters DISABLE ROW LEVEL SECURITY;
 --ALTER TABLE membership_requests DISABLE ROW LEVEL SECURITY;
