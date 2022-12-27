@@ -81,14 +81,6 @@ Cypress.Commands.add('clickBackButton', () => {
 })
 
 Cypress.Commands.add('checkIfImageExists', () => {
-  cy.wait(1000)
-  cy.wait(1000)
-  cy.wait(1000)
-  cy.wait(1000)
-  cy.wait(100)
-  cy.wait(100)
-  cy.wait(100)
-  cy.wait(100)
   cy.get('img').should('exist')
   cy.get('img').invoke('attr', 'src').should('include', 'storage/v1/object/public/avatars')
   cy.get('img')
@@ -118,14 +110,31 @@ Cypress.Commands.add('openProfileAndWaitForProfileData', () => {
 
 Cypress.Commands.add('openProfileAndWaitForProfileDataAndImage', () => {
   cy.intercept('**/rest/v1/rpc/select_profile_and_counters*').as('profiles')
-  // cy.intercept('**/storage/v1/object/public/avatars*').as('profile_image')
-
   cy.get('#overview-cy').click()
   cy.wait('@profiles')
-  // cy.wait('@profile_image')
+
+  // leave profile page and visit it again to stabilize image display test (not needed theoretically)
+  cy.intercept('**/rest/v1/group_members?select=id*').as('group_list')
+  cy.get('#groups-cy').click()
+  cy.wait('@group_list')
+
+  cy.intercept('**/rest/v1/rpc/select_profile_and_counters*').as('profilesSecond')
+  cy.get('#profile-cy').click()
+  cy.wait('@profilesSecond')
 })
 
 Cypress.Commands.add('openGroupProfileAndWaitForGroupData', () => {
+  cy.intercept('**/rest/v1/rpc/select_group_and_counters*').as('group')
+  cy.get('#overview-cy').click()
+  cy.wait('@group')
+})
+
+Cypress.Commands.add('openGroupProfileAndWaitForGroupDataAndImage', () => {
+  // leave profile page and visit it again to stabilize image display test (not needed theoretically)
+  cy.intercept('**/rest/v1/rpc/select_group_and_counters*').as('group')
+  cy.get('#overview-cy').click()
+  cy.wait('@group')
+
   cy.intercept('**/rest/v1/rpc/select_group_and_counters*').as('group')
   cy.get('#overview-cy').click()
   cy.wait('@group')

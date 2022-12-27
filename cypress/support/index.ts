@@ -95,7 +95,14 @@ declare global {
        * Custom command to open group profile and waits to complete a supabase api call to load data
        * @example cy.openGroupProfileAndWaitForGroupData()
        */
-        openGroupProfileAndWaitForGroupData(): Chainable<Element>
+      openGroupProfileAndWaitForGroupData(): Chainable<Element>
+
+             /**
+       * Custom command to open group profile and waits to complete a supabase api call to load data
+       * @example cy.openGroupProfileAndWaitForGroupDataAndImage()
+       */
+        openGroupProfileAndWaitForGroupDataAndImage(): Chainable<Element>
+      
       
       /**
       * Custom command to open profile which belongs not to the authenticated user and waits to complete a supabase api call to load data

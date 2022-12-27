@@ -55,7 +55,7 @@ describe('Tests Profile features', () => {
     cy.navigateFromProfileWikiToEditProfile()
     cy.uploadImage('./cypress/images/user2.jpg')
     cy.clickBackButton()
-    cy.openProfileAndWaitForProfileData()
+    cy.openProfileAndWaitForProfileDataAndImage()
     cy.checkIfImageExists()
   })
 })
