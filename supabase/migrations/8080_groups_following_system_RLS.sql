@@ -1,6 +1,6 @@
 -- 1. for following_group_system
 ALTER TABLE IF EXISTS public.following_group_system ENABLE ROW LEVEL SECURITY;
--- 1.1 CREATE: Authenticated user insert new follow group relationships
+
 DROP POLICY  IF EXISTS "Authenticated users can insert their own and new follow group relationships" ON public.following_group_system;
 CREATE POLICY "Authenticated users can insert their own and new follow group relationships"
     ON public.following_group_system
@@ -11,7 +11,6 @@ CREATE POLICY "Authenticated users can insert their own and new follow group rel
         (auth.uid() = follower)
     );
 
--- 1.2 READ: Authenticated users can read all follow group relationships
 DROP POLICY  IF EXISTS "Authenticated users can read follow group relationships." ON public.following_group_system;
 CREATE POLICY "Authenticated users can read follow group relationships."
     ON public.following_group_system
@@ -20,7 +19,6 @@ CREATE POLICY "Authenticated users can read follow group relationships."
     TO authenticated
     USING (true);
 
--- 1.3 DELETE: Logged in user can delete their own follow group relationships
 DROP POLICY  IF EXISTS "Authenticated users can delete their own follow group relationships and admins can delete follower of group." ON public.following_group_system;
 CREATE POLICY "Authenticated users can delete their own follow group relationships and admins can delete follower of group."
     ON public.following_group_system
