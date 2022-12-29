@@ -124,6 +124,8 @@ describe('Tests notify features', () => {
     cy.login(user2.email, user2.password)
     cy.openNewsPage()
     cy.get('[data-cy="unreadMessagesCounter"]').should('not.exist')
+    // test stabilization -deactivates real time
+    cy.get('#profile-cy').click()
     cy.openNewsPage()
     cy.get('[data-cy="newsContainer"]').within(() => {
       cy.contains('NEW').should('not.exist')

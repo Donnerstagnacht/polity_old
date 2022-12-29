@@ -8,7 +8,6 @@ CREATE POLICY "Admins of group should be able to insert a new group membership"
     FOR INSERT
     TO authenticated
     WITH CHECK (
-        --true
         group_id IN (
             SELECT securityrules.get_groups_where_loggedin_user_admin()
         )
@@ -41,7 +40,6 @@ CREATE POLICY "Authenticated users can delete their own group membership and adm
     FOR DELETE
     TO authenticated
     USING (
-        --true
         (auth.uid() IN (
             SELECT securityrules.get_memberships_of_loggedin_user()
         ))
