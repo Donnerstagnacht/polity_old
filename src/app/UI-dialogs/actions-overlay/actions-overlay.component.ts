@@ -11,6 +11,7 @@ export class ActionsOverlayComponent implements OnInit {
   @Output() showAddMenuChange: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   showCreateGroupMenu: boolean = false;
+  showCreateEventMenu: boolean = false;
 
   constructor(private menuService: MenuService) { }
 
@@ -20,6 +21,12 @@ export class ActionsOverlayComponent implements OnInit {
     this.showCreateGroupMenu = true;
     this.showAddMenu = false;
     this.menuService.showGroupMenu();
+  }
+
+  openAddEventPanel(): void {
+    this.showCreateEventMenu = true;
+    this.showAddMenu = false;
+    this.menuService.showEventMenu();
   }
 
 }

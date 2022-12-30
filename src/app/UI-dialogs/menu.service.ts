@@ -6,6 +6,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 })
 export class MenuService {
   showCreateGroupMenu =  new BehaviorSubject<boolean>(false);
+  showCreateEventMenu =  new BehaviorSubject<boolean>(false);
 
   constructor() { }
 
@@ -17,9 +18,19 @@ export class MenuService {
     this.showCreateGroupMenu.next(false);
   }
 
-  getMenuStatus(): Observable<boolean> {
+  getGroupMenuStatus(): Observable<boolean> {
     return this.showCreateGroupMenu.asObservable();
   }
 
+  showEventMenu(): void {
+    this.showCreateEventMenu.next(true);
+  }
 
+  hideEventMenu(): void {
+    this.showCreateEventMenu.next(false);
+  }
+
+  getEventMenuStatus(): Observable<boolean> {
+    return this.showCreateEventMenu.asObservable();
+  }
 }

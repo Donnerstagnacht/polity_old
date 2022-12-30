@@ -12,10 +12,11 @@
       <p-divider></p-divider>
       <p data-cy="amendment" class="hover-menu cursor-pointer">Antrag</p>
       <p-divider></p-divider>
-      <p data-cy="event" class="hover-menu cursor-pointer">Veranstaltung</p>
+      <p data-cy="event" class="hover-menu cursor-pointer" (click)="openAddEventPanel()">Veranstaltung</p>
     </div>
   </div>
 </div>
 </p-sidebar>
 
 <app-create-group [showAddGroupDialog]="showCreateGroupMenu"></app-create-group>
+<app-create-event [showAddEventDialog]="showCreateEventMenu"></app-create-event>

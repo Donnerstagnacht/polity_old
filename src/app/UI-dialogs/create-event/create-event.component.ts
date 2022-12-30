@@ -1,24 +1,20 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { AuthentificationQuery } from 'src/app/authentification/state/authentification.query';
-import { Group } from 'src/app/groups/state/group.model';
+import { carouselPages } from '../create-group/create-group.component';
 import { ProfileCore } from 'src/app/profile/state/profile.model';
-import { ProfileQuery } from 'src/app/profile/state/profile.query';
-import { GroupsService } from '../../groups/services/groups.service';
-import { MenuService } from '../menu.service';
 import { Subscription } from 'rxjs';
-
-
-export interface carouselPages {
-  pageNumber: number
-}
+import { AuthentificationQuery } from 'src/app/authentification/state/authentification.query';
+import { MenuService } from '../menu.service';
+import { ProfileQuery } from 'src/app/profile/state/profile.query';
+import { Event } from 'src/app/events/state/event.model';
+import { EventsService } from 'src/app/events/state/events.service';
 
 @Component({
-  selector: 'app-create-group',
-  templateUrl: './create-group.component.html',
-  styleUrls: ['./create-group.component.scss']
+  selector: 'app-create-event',
+  templateUrl: './create-event.component.html',
+  styleUrls: ['./create-event.component.scss']
 })
-export class CreateGroupComponent implements OnInit {
-  @Input() showAddGroupDialog: boolean = true;
+export class CreateEventComponent implements OnInit {
+  @Input() showAddEventDialog: boolean = true;
   showInput: boolean = true;
   carouselPages: carouselPages[] = [];
   page: number = 0;
@@ -29,22 +25,26 @@ export class CreateGroupComponent implements OnInit {
   profileSubscription: Subscription | undefined;
 
 
-  newGroup: Group = {
+  newEvent: Event = {
     name: '',
+    date: '',
+    time: '',
+    rythm: 'string',
+    online_or_real: 'string',
+    online_link: '',
     description: '',
-    level: '',
-    creator: '',
-    street: '',
-    post_code: '',
-    city: '',
-    contact_email: '',
-    contact_phone: '',
-    avatar_url: ''
+    event_type: '',
+    host_group: '',
+    delegates_calculation_type: '',
+    number_of_delegates: 0,
+    number_of_executed_board_members: 0,
+    gender_quota_speaking: false,
+    participants_counter: 0
   }
 
   constructor(
     private authentificationQuery: AuthentificationQuery,
-    private groupsService: GroupsService,
+    private eventsService: EventsService,
     private menuService: MenuService,
     private profileQuery: ProfileQuery
   ) { }
@@ -66,7 +66,7 @@ export class CreateGroupComponent implements OnInit {
     ]
 
     this.menuSubscription = this.menuService.getGroupMenuStatus().subscribe((menuStatus) => {
-      this.showAddGroupDialog = menuStatus;
+      this.showAddEventDialog = menuStatus;
     })
 
   }
@@ -93,9 +93,13 @@ export class CreateGroupComponent implements OnInit {
     }
   }
 
-  assignGroupCreator(): void {
+  setRythm(rythm: string) {
+    this.newEvent.rythm = rythm;
+  }
+
+  assignEventCreator(): void {
     if(this.loggedInUser) {
-      this.newGroup.creator = this.loggedInUser.id;
+      this.newEvent.creator = this.loggedInUser.id;
     }
   }
 
@@ -119,28 +123,28 @@ export class CreateGroupComponent implements OnInit {
     }
   }
 
-  setLevel(level: string) {
-    this.newGroup.level = level;
-  }
-
-  createGroup(): void {
-    this.assignGroupCreator();
-    console.log(this.newGroup)
-    this.groupsService.createGroupTransaction(
-      this.newGroup
+  createEvent(): void {
+    this.assignEventCreator();
+    console.log(this.newEvent)
+    this.eventsService.createEventTransaction(
+      this.newEvent
     ).then((result) => {
-      this.showAddGroupDialog = false;
-      this.newGroup = {
+      this.showAddEventDialog = false;
+      this.newEvent = {
         name: '',
+        date: '',
+        time: '',
+        rythm: 'string',
+        online_or_real: 'string',
+        online_link: '',
         description: '',
-        level: '',
-        creator: '',
-        street: '',
-        post_code: '',
-        city: '',
-        contact_email: '',
-        contact_phone: '',
-        avatar_url: ''
+        event_type: '',
+        host_group: '',
+        delegates_calculation_type: '',
+        number_of_delegates: 0,
+        number_of_executed_board_members: 0,
+        gender_quota_speaking: false,
+        participants_counter: 0
       }
       this.page = 0;
     })

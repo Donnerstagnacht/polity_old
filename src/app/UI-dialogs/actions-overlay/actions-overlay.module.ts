@@ -4,6 +4,7 @@ import { ActionsOverlayComponent } from './actions-overlay.component';
 import { SidebarModule } from 'primeng/sidebar';
 import { DividerModule } from 'primeng/divider';
 import { CreateGroupModule } from '../create-group/create-group.module';
+import { CreateEventModule } from '../create-event/create-event.module';
 
 
 
@@ -15,7 +16,8 @@ import { CreateGroupModule } from '../create-group/create-group.module';
     CommonModule,
     SidebarModule,
     DividerModule,
-    CreateGroupModule
+    CreateGroupModule,
+    CreateEventModule
   ], exports: [
     ActionsOverlayComponent
   ]
