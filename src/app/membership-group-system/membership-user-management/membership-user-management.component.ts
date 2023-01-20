@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { GroupsService } from 'src/app/groups/services/groups.service';
 import { MembershipService } from '../services/membership.service';
@@ -36,14 +36,28 @@ export class MembershipUserManagementComponent implements OnInit {
   profileSubscription: Subscription | undefined;
   groupsRealtimeChannel: RealtimeChannel | undefined;
 
+  visibleItems = 10;
+  @HostListener("window:resize", []) updateDays() {
+    if (window.innerWidth >= 1440) {
+      this.visibleItems = 10; // lg
+    } else if (window.innerWidth >= 1024) {
+      this.visibleItems = 8;//md
+    } else if (window.innerWidth  >= 768) {
+      this.visibleItems = 5;//sm
+    } else if (window.innerWidth < 768) {
+      this.visibleItems = 3;//xs
+    }
+  }
   paginationDataFirstTab: PaginationData = {
     from: 0,
-    to: 2,
+    to: this.visibleItems,
     canLoad: true,
     reloadDelay: 2000,
     sizeOfNewLoad: 10,
     numberOfSearchResults: 0
   }
+
+  
 
   constructor(
     private membershipService: MembershipService,
@@ -137,6 +151,7 @@ export class MembershipUserManagementComponent implements OnInit {
         }
         groupsOfUser.push(group);
       })
+      console.log('groups transformed', groupsOfUser)
       this.profileStore.upsert(this.loggedInID, {groups: groupsOfUser})
     }
     if(groupList.error) throw new Error(groupList.error.message);

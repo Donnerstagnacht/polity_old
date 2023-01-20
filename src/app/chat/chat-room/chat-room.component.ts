@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, Renderer2, ViewChild, HostListener } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FollowingService } from 'src/app/following-profiles-system/services/following.service';
 import { GroupsService } from 'src/app/groups/state/groups.service';
@@ -60,9 +60,21 @@ export class ChatRoomComponent implements OnInit {
 
 
   checkView: boolean = true;
+  visibleItems = 10;
+  @HostListener("window:resize", []) updateDays() {
+    if (window.innerWidth >= 1440) {
+      this.visibleItems = 10; // lg
+    } else if (window.innerWidth >= 1024) {
+      this.visibleItems = 8;//md
+    } else if (window.innerWidth  >= 768) {
+      this.visibleItems = 5;//sm
+    } else if (window.innerWidth < 768) {
+      this.visibleItems = 3;//xs
+    }
+  }
   paginationData: PaginationData = {
     from: 0,
-    to: 10,
+    to: this.visibleItems,
     canLoad: true,
     reloadDelay: 2000,
     sizeOfNewLoad: 10,

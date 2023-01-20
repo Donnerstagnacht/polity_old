@@ -30,3 +30,8 @@ CREATE TABLE IF NOT EXISTS public.events
 TABLESPACE pg_default;
 ALTER TABLE IF EXISTS public.events
     OWNER to postgres;
+
+GRANT ALL ON TABLE public.events TO anon;
+GRANT ALL ON TABLE public.events TO authenticated;
+GRANT ALL ON TABLE public.events TO postgres;
+GRANT ALL ON TABLE public.events TO service_role;

@@ -52,19 +52,19 @@ export class MyGroupsListComponent implements OnInit {
           avatar_url: ''
         }
         switch(group.level) {
-          case 'local': {
+          case 'Lokal': {
             this.localGroupList.push(group);
             break;
           }
-          case 'regional': {
+          case 'Regional': {
             this.regionalGroupList.push(group);
             break;
           }
-          case 'federal': {
+          case 'Federal': {
             this.federalGroupList.push(group);
             break;
           }
-          case 'international': {
+          case 'International': {
             this.internationalGroupList.push(group);
             break;
           }

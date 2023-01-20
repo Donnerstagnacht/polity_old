@@ -18,12 +18,14 @@ export class ActionsOverlayComponent implements OnInit {
   ngOnInit(): void {}
 
   openAddGroupPanel(): void {
+    this.showCreateEventMenu = false
     this.showCreateGroupMenu = true;
     this.showAddMenu = false;
     this.menuService.showGroupMenu();
   }
 
   openAddEventPanel(): void {
+    this.showCreateGroupMenu = false
     this.showCreateEventMenu = true;
     this.showAddMenu = false;
     this.menuService.showEventMenu();

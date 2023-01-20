@@ -10,6 +10,7 @@ import { EditGroupComponent } from './edit-group/edit-group.component';
 import { EditComponent } from './edit/edit.component';
 import { MyGroupsListComponent } from './my-groups-list/my-groups-list.component';
 import { WikiComponent } from './wiki/wiki.component';
+import { EventListComponent } from './event-list/event-list.component';
 
 
 
@@ -43,7 +44,12 @@ const routes: Routes = [
     path: ':id/edit-members',
     component: MembershipGroupManagementComponent,
     canActivate: [IsLoggedInGuard, IsGroupAdminGuard]
-  }
+  },
+  {
+    path: ':id/events',
+    component: EventListComponent,
+    canActivate: [IsLoggedInGuard]
+  },
 ];
 
 @NgModule({

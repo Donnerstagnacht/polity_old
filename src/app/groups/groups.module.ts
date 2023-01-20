@@ -33,13 +33,16 @@ import { WikiHeaderModule } from '../UI-elements/wiki-header/wiki-header.module'
 import { KeyFiguresModule } from '../UI-elements/key-figures/key-figures.module';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { LoadingSpinnerModule } from '../UI-elements/loading-spinner/loading-spinner.module';
+import { EventListComponent } from './event-list/event-list.component';
+import { ChipsPickerGenericModule } from '../UI-elements/chips-picker-generic/chips-picker-generic.module';
 
 @NgModule({
   declarations: [
     WikiComponent,
     MyGroupsListComponent,
     EditGroupComponent,
-    EditComponent
+    EditComponent,
+    EventListComponent
   ],
   imports: [
     CommonModule,
@@ -71,7 +74,8 @@ import { LoadingSpinnerModule } from '../UI-elements/loading-spinner/loading-spi
     WikiHeaderModule,
     KeyFiguresModule,
     HttpClientModule,
-    LoadingSpinnerModule
+    LoadingSpinnerModule,
+    ChipsPickerGenericModule
   ]
 })
 export class GroupsModule { }

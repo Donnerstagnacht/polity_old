@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { carouselPages } from '../create-group/create-group.component';
 import { ProfileCore } from 'src/app/profile/state/profile.model';
 import { Subscription } from 'rxjs';
@@ -7,6 +7,7 @@ import { MenuService } from '../menu.service';
 import { ProfileQuery } from 'src/app/profile/state/profile.query';
 import { Event } from 'src/app/events/state/event.model';
 import { EventsService } from 'src/app/events/state/events.service';
+import { ChipElement } from 'src/app/UI-elements/chips-picker-generic/chips-picker-generic.component';
 
 @Component({
   selector: 'app-create-event',
@@ -14,7 +15,7 @@ import { EventsService } from 'src/app/events/state/events.service';
   styleUrls: ['./create-event.component.scss']
 })
 export class CreateEventComponent implements OnInit {
-  @Input() showAddEventDialog: boolean = true;
+  showAddEventDialog: boolean = true;
   showInput: boolean = true;
   carouselPages: carouselPages[] = [];
   page: number = 0;
@@ -24,13 +25,27 @@ export class CreateEventComponent implements OnInit {
   menuSubscription: Subscription | undefined;
   profileSubscription: Subscription | undefined;
 
+  chips: ChipElement[] = [
+    {
+      choosen: true,
+      label: 'Täglich'
+    },
+    {
+      choosen: false,
+      label: 'Wöchentlich'
+    },
+    {
+      choosen: false,
+      label: 'Monatlich'
+    },
+  ]
 
   newEvent: Event = {
     name: '',
     date: '',
     time: '',
-    rythm: 'string',
-    online_or_real: 'string',
+    rythm: 'Täglich',
+    online_or_real: '',
     online_link: '',
     description: '',
     event_type: '',
@@ -65,7 +80,7 @@ export class CreateEventComponent implements OnInit {
       }
     ]
 
-    this.menuSubscription = this.menuService.getGroupMenuStatus().subscribe((menuStatus) => {
+    this.menuSubscription = this.menuService.getEventMenuStatus().subscribe((menuStatus) => {
       this.showAddEventDialog = menuStatus;
     })
 

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { RealtimeChannel } from '@supabase/supabase-js';
 import { MessageService } from 'primeng/api';
@@ -38,9 +38,21 @@ export class MembershipGroupManagementComponent implements OnInit {
   membershipRequestsRealtimeChannel: RealtimeChannel | undefined;
   groupSubscription: Subscription | undefined;
 
+  visibleItems = 10;
+  @HostListener("window:resize", []) updateDays() {
+    if (window.innerWidth >= 1440) {
+      this.visibleItems = 10; // lg
+    } else if (window.innerWidth >= 1024) {
+      this.visibleItems = 8;//md
+    } else if (window.innerWidth  >= 768) {
+      this.visibleItems = 5;//sm
+    } else if (window.innerWidth < 768) {
+      this.visibleItems = 3;//xs
+    }
+  }
   paginationDataFirstTab: PaginationData = {
     from: 0,
-    to: 2,
+    to: this.visibleItems,
     canLoad: true,
     reloadDelay: 2000,
     sizeOfNewLoad: 10,
@@ -49,7 +61,7 @@ export class MembershipGroupManagementComponent implements OnInit {
 
   paginationDataSecondTab: PaginationData = {
     from: 0,
-    to: 2,
+    to: this.visibleItems,
     canLoad: true,
     reloadDelay: 2000,
     sizeOfNewLoad: 10,

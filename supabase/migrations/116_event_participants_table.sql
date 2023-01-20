@@ -22,3 +22,8 @@ ALTER TABLE IF EXISTS public."events_participants"
 
 COMMENT ON TABLE public."events_participants"
     IS 'Stores the user-event relationship (event participants)';
+
+GRANT ALL ON TABLE public.events_participants TO anon;
+GRANT ALL ON TABLE public.events_participants TO authenticated;
+GRANT ALL ON TABLE public.events_participants TO postgres;
+GRANT ALL ON TABLE public.events_participants TO service_role;

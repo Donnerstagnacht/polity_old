@@ -1,0 +1,49 @@
+<p-toast styleClass="max-w-90"	 position="top-right">></p-toast>
+<app-menu-bar-secondary-top
+  [megaMenuItemSpecial]="menuItemsMegaSpecial"
+  [megaMenuItemStandart]="menuItemsMegaStandart"
+  [specialOrStandart]="groupUI.isAdmin || false">
+</app-menu-bar-secondary-top>
+<app-wrapper-grid [noTopBar]="false">
+<div slot="main">
+    <app-loading-spinner
+    [error]="error"
+    [loading]="loading"
+    [errorMessage]="errorMessage"
+    (retryAction)="loadInitialData(this.selectedGroupId!)"
+    >
+    </app-loading-spinner>
+
+    <app-chips-picker-generic
+        [chips]="chips"
+        [multipleChoicesPossible]="true"
+        (newLabelList)="setFilter($event)"
+    ></app-chips-picker-generic>
+
+    <div *ngIf="!loading && !error" class="mb-8">
+        <div class="mx-4">
+          <div class="flex flex-row">
+            <i class="pi pi-angle-down align-items-center flex justify-content-center mr-4 on-dark-surface-in-dark-theme"></i>
+            <h4 class="onSurface flex align-items-center justify-content-center">KOMMENDE</h4>
+          </div>
+        </div>
+    </div>
+
+    <div *ngIf="!loading && !error" class="mb-8">
+        <div class="mx-4">
+          <div class="flex flex-row">
+            <i class="pi pi-angle-down align-items-center flex justify-content-center mr-4 on-dark-surface-in-dark-theme"></i>
+            <h4 class="onSurface flex align-items-center justify-content-center">VERGANGENE</h4>
+          </div>
+        </div>
+    </div>
+</div>
+<div slot="side">
+    <app-menu-bar-secondary-right
+    [menuItemsSpecial]="menuItemsSpecial"
+    [menuItemsStandart]="menuItemsStandart"
+    [specialOrStandart]="groupUI.isAdmin">
+    </app-menu-bar-secondary-right>
+</div>
+</app-wrapper-grid>
+  

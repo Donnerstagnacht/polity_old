@@ -1,0 +1,13 @@
+<div *ngIf="!multipleChoicesPossible" class="flex flex-row justify-content-center">
+    <div *ngFor="let chip of chips">
+        <p-chip *ngIf="!chip.choosen" (click)="activate(chip.label)"  class="mr-2" label="{{chip.label}}" styleClass="cursor-pointer"></p-chip>
+        <p-chip *ngIf="chip.choosen" class="mr-2" label="{{chip.label}}" styleClass="cursor-pointer accent-container on-light-surface-in-dark-theme"></p-chip>
+    </div>
+</div>
+
+<div *ngIf="multipleChoicesPossible" class="flex flex-row justify-content-center">
+    <div *ngFor="let chip of chips">
+        <p-chip *ngIf="!chip.choosen" (click)="publishNewLabels(chip.label)"  class="mr-2" label="{{chip.label}}" styleClass="cursor-pointer"></p-chip>
+        <p-chip *ngIf="chip.choosen" (click)="publishNewLabels(chip.label)" class="mr-2" label="{{chip.label}}" styleClass="cursor-pointer accent-container on-light-surface-in-dark-theme"></p-chip>
+    </div>
+</div>

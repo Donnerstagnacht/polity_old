@@ -19,7 +19,8 @@
       >
         <ng-template let-carouselPage pTemplate="item">
           <div *ngIf="carouselPage.pageNumber === 1" class="max-width-carousel">
-              <form>
+            <h1>Erstelle ein Event</h1>
+            <form>
                 <span class="mt-2 p-input-filled p-float-label w-full  p-input-icon-right">
                   <i class="pi pi-check success-color" [class.hide]="!name.valid || name.pristine"></i>
                   <input
@@ -52,8 +53,11 @@
                   <label class="transparent-background"  for="float-input">Beschreibung</label>
                 </span>
 
-                <app-chips-picker (choosenOption)="setRythm($event)" [multipeOptionsPossible]="false"></app-chips-picker>
-
+             <app-chips-picker-generic
+                  [chips]="chips"
+                  (newLabel)="setRythm($event)"
+              >
+              </app-chips-picker-generic>
               </form>
 
           </div>

@@ -11,6 +11,7 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
 import { ChipsPickerModule } from 'src/app/UI-elements/chips-picker/chips-picker.module';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
+import { ChipsPickerGenericModule } from 'src/app/UI-elements/chips-picker-generic/chips-picker-generic.module';
 
 
 @NgModule({
@@ -27,7 +28,8 @@ import { InputTextModule } from 'primeng/inputtext';
     ChipsPickerModule,
     InputTextModule,
     InputTextareaModule,
-    ButtonModule
+    ButtonModule,
+    ChipsPickerGenericModule
   ],
   exports: [
     CreateGroupComponent

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AuthentificationQuery } from 'src/app/authentification/state/authentification.query';
 import { Group } from 'src/app/groups/state/group.model';
 import { ProfileCore } from 'src/app/profile/state/profile.model';
@@ -6,6 +6,7 @@ import { ProfileQuery } from 'src/app/profile/state/profile.query';
 import { GroupsService } from '../../groups/services/groups.service';
 import { MenuService } from '../menu.service';
 import { Subscription } from 'rxjs';
+import { ChipElement } from 'src/app/UI-elements/chips-picker-generic/chips-picker-generic.component';
 
 
 export interface carouselPages {
@@ -18,7 +19,7 @@ export interface carouselPages {
   styleUrls: ['./create-group.component.scss']
 })
 export class CreateGroupComponent implements OnInit {
-  @Input() showAddGroupDialog: boolean = true;
+  showAddGroupDialog: boolean = true;
   showInput: boolean = true;
   carouselPages: carouselPages[] = [];
   page: number = 0;
@@ -28,11 +29,25 @@ export class CreateGroupComponent implements OnInit {
   menuSubscription: Subscription | undefined;
   profileSubscription: Subscription | undefined;
 
+  chips: ChipElement[] = [
+    {
+      choosen: true,
+      label: 'Lokal'
+    },
+    {
+      choosen: false,
+      label: 'Regional'
+    },
+    {
+      choosen: false,
+      label: 'Federal'
+    },
+  ]
 
   newGroup: Group = {
     name: '',
     description: '',
-    level: '',
+    level: 'Lokal',
     creator: '',
     street: '',
     post_code: '',
