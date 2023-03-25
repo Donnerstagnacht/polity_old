@@ -26,7 +26,7 @@
     "@angular/service-worker": "^15.2.4",
     "@datorama/akita": "^8.0.1",
     "@datorama/akita-ng-entity-service": "^8.0.0",
-    "@datorama/akita-ng-router-store": "^7.0.0",
+    "@datorama/akita-ng-router-store": "^8.0.0",
     "@supabase/supabase-js": "^2.0.4",
     "@types/web-push": "^3.3.2",
     "akita-filters-plugin": "^6.0.1",
