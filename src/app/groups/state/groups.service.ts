@@ -87,7 +87,7 @@ export class GroupsService extends NgEntityService<GroupsState> {
     console.log(updateId),
     console.log(update)
 
-    const response: PostgrestResponse<any> = await this.supabaseClient
+    const response = await this.supabaseClient
       .from('groups')
       .update(group)/* , {
       returning: 'minimal', // Don't return the value after inserting

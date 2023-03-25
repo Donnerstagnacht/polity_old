@@ -10,7 +10,7 @@ import { Event } from './event.model';
 export class EventsService extends NgEntityService<EventsState> {
   private supabaseClient: SupabaseClient;
 
-  constructor(protected override eventsStore: EventsStore) {
+  constructor(protected eventsStore: EventsStore) {
     super(eventsStore);
     this.supabaseClient = createClient<Database>(environment.supabaseUrl, environment.supabaseKey)
   }
